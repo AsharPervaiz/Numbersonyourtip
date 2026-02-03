@@ -126,6 +126,7 @@ export default function Home() {
     { name: "Rent Calculator", href: "/rent-calculator" },
     { name: "Time Calculator", href: "/time-calculator" },
     { name: "Unit Calculator", href: "/unit-conversion-calculator" },
+    { name: "Dose Calculator", href: "/dose-calculator" },
     
     // ... add more as needed
   ].map((item, index) => (
