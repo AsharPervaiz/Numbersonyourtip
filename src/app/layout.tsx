@@ -95,6 +95,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         Calorie Calculator
       </Link>
     </li>
+    <li>
+      <Link href="/dose-calculator" style={{ textDecoration: "none", color: "inherit" }}>
+        Dose Calculator
+      </Link>
+    </li>
   </ul>
 </div>
 
@@ -118,7 +123,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </Link>
     </li>
     <li>
-      <Link href="/gpa-percentage-calculator" style={{ textDecoration: "none", color: "inherit" }}>
+      <Link href="/gpa-percentage" style={{ textDecoration: "none", color: "inherit" }}>
         GPA Percentage Calculator
       </Link>
     </li>
@@ -128,7 +133,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </Link>
     </li>
     <li>
-      <Link href="/time-percentage-calculator" style={{ textDecoration: "none", color: "inherit" }}>
+      <Link href="/time-calculator" style={{ textDecoration: "none", color: "inherit" }}>
         Time Calculator
       </Link>
     </li>
@@ -147,6 +152,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <li>
       <Link href="/currency-converter" style={{ textDecoration: "none", color: "inherit" }}>
         Currency Converter
+      </Link>
+    </li>
+    <li>
+      <Link href="/password-generator" style={{ textDecoration: "none", color: "inherit" }}>
+        Password Generator
+      </Link>
+    </li>
+    <li>
+      <Link href="/text-converter" style={{ textDecoration: "none", color: "inherit" }}>
+        Text Converter
+      </Link>
+    </li>
+    <li>
+      <Link href="/text-generator" style={{ textDecoration: "none", color: "inherit" }}>
+        Text Generator
       </Link>
     </li>
     <li>
