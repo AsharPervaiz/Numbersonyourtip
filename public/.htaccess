@@ -1,0 +1,22 @@
+RewriteEngine On
+
+# --- Force trailing slash for blog URLs, but ignore real files and directories ---
+RewriteCond %{REQUEST_URI} ^/blog/[^/]+$ 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1/ [R=301,L]
+
+# --- Show /blog/... but load from root ---
+RewriteRule ^blog/what-is-vat/?$ /what-is-vat/ [L]
+RewriteRule ^blog/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/?$ /medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/ [L]
+RewriteRule ^blog/ultimate-iv-infusion-calculator-guide/?$ /ultimate-iv-infusion-calculator-guide/ [L]
+RewriteRule ^blog/the-smart-renters-guide-what-you-can-actually-afford/?$ /the-smart-renters-guide-what-you-can-actually-afford/ [L]
+RewriteRule ^blog/how-do-i-calculate-my-net-worth/?$ /how-do-i-calculate-my-net-worth/ [L]
+RewriteRule ^blog/best-free-financial-calculators-for-everyday-money-questions/?$ /best-free-financial-calculators-for-everyday-money-questions/ [L]
+RewriteRule ^blog/can-ai-replace-financial-calculators/?$ /can-ai-replace-financial-calculators/ [L]
+RewriteRule ^blog/renting-vs-buying-a-home/?$ /renting-vs-buying-a-home/ [L]
+RewriteRule ^blog/healthy-bodyfat-percentage-by-age-and-gender/?$ /healthy-bodyfat-percentage-by-age-and-gender/ [L]
+RewriteRule ^blog/what-is-numbers-on-your-tip/?$ /what-is-numbers-on-your-tip/ [L]
+RewriteRule ^blog/matrix-calculator-guide/?$ /matrix-calculator-guide/ [L]
+RewriteRule ^blog/2026-tax-brackets/?$ /2026-tax-brackets/ [L]
+RewriteRule ^blog/how-many-calories-to-lose-weight/?$ /how-many-calories-to-lose-weight/ [L]

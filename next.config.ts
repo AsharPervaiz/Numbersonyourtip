@@ -1,9 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "export",        // static export
-  trailingSlash: true,     // important for inner pages
+  output: "export",
+  trailingSlash: true,
   reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "flagcdn.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

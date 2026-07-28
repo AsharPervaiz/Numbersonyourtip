@@ -1,59 +1,16 @@
-"use client";
-import { useState } from "react";
+import { Metadata } from "next";
+import DoseCalculator from "../components/DoseCalculator";
 
-export default function DoseCalculator() {
-  const [weight, setWeight] = useState("");
-  const [dosePerKg, setDosePerKg] = useState("");
-  const [result, setResult] = useState<number | null>(null);
+export const metadata: Metadata = {
+  title: "Dose Calculator | Weight-Based Medication Dosing Tool (Free)",
+  description:
+    "Use our free dose calculator to compute accurate medication doses by patient weight in mg/kg or mg/lb. Works for pediatric, adult, and veterinary dosing.",
+  metadataBase: new URL("https://numbersonyourtip.com"),
+  alternates: {
+    canonical: "https://numbersonyourtip.com/dose-calculator/",
+  },
+};
 
-  const calculateDose = () => {
-    const w = Number(weight) || 0;
-    const doseKg = Number(dosePerKg) || 0;
-
-    const singleDose = w * doseKg;
-    setResult(singleDose);
-  };
-
-  const handleClear = () => {
-    setWeight("");
-    setDosePerKg("");
-    setResult(null);
-  };
-
-  return (
-    <div className="calc-card single-calc">
-      <h2 className="calc-title">Dose Calculator</h2>
-
-      <input
-        className="calc-input"
-        type="number"
-        placeholder="Patient Weight (kg)"
-        value={weight}
-        onChange={(e) => setWeight(e.target.value)}
-      />
-
-      <input
-        className="calc-input"
-        type="number"
-        placeholder="Dose per kg (mg/kg)"
-        value={dosePerKg}
-        onChange={(e) => setDosePerKg(e.target.value)}
-      />
-
-      <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-        <button className="calc-button" onClick={calculateDose}>
-          Calculate
-        </button>
-        <button className="calc-button calc-clear" onClick={handleClear}>
-          Clear
-        </button>
-      </div>
-
-      {result !== null && (
-        <div className="calc-result">
-          <p>Single Dose: {result.toFixed(2)} mg</p>
-        </div>
-      )}
-    </div>
-  );
+export default function Page() {
+  return <DoseCalculator />;
 }

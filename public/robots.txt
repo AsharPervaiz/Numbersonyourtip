@@ -1,2 +1,15 @@
 User-agent: *
-Disallow: /
+Disallow: /admin/
+Disallow: /login/
+Disallow: /signin/
+Disallow: /signup/
+Disallow: /account/
+Disallow: /user/
+Disallow: /dashboard/
+Disallow: /cgi-bin/
+Disallow: /cdn-cgi/
+Disallow: /*?utm_
+Disallow: /?*
+Disallow: /*&utm_
+
+Sitemap: https://numbersonyourtip.com/sitemap.xml
