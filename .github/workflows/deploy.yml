@@ -53,9 +53,12 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./out/
-          # Change this if the domain is served from somewhere else — an addon
-          # domain or subdomain uses its own folder, not public_html.
-          server-dir: ./public_html/
+          # The deploy FTP account is scoped to public_html in cPanel, so it
+          # lands there on login and its root already IS the web root. Naming
+          # public_html again here would upload into public_html/public_html/,
+          # which reports success while changing nothing on the live site.
+          # Only change this if the FTP account is ever given a wider scope.
+          server-dir: ./
           # Only changed files go up. The action keeps a state file on the
           # server to work out the difference, so a normal deploy moves a
           # handful of files rather than all 800+.
