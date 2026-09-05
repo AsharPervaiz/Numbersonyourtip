@@ -2,12 +2,26 @@ import { Metadata } from "next";
 import RentingVsBuying from "../components/RentingVsBuyingHome";
 
 export const metadata: Metadata = {
-  title: "Renting vs. Buying a Home: How to Decide With Numbers (2026 Guide)",
+  title: "Renting vs Buying: Deciding With Numbers",
   description:
-    "Rent or buy in 2026? We break down the real costs, the price-to-rent ratio,the break-even point, and a side-by-side 10-year wealth comparison — so you can make the decision with your actual numbers, not guesswork.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "The break-even point, the price-to-rent ratio, and why the old rule that renting throws money away stopped holding.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/blog/renting-vs-buying-a-home/",
+    canonical: "/blog/renting-vs-buying-a-home/",
+  },
+  openGraph: {
+    title: "Renting vs. Buying a Home: How to Decide With Numbers (2026 Guide)",
+    description:
+      "Real costs, price-to-rent ratio, break-even point, and a 10-year wealth comparison — decide with your own numbers, not guesswork.",
+    url: "/blog/renting-vs-buying-a-home/",
+    type: "article",
+    publishedTime: "2026-06-14T00:00:00.000Z",
+    authors: ["Ashar Pervaiz"],
+    section: "Finance",
+  },
+  twitter: {
+    title: "Renting vs. Buying a Home (2026)",
+    description:
+      "Real costs, price-to-rent, break-even, and a 10-year wealth comparison.",
   },
 };
 

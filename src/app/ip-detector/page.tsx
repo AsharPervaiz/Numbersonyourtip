@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import IPDetector from "../components/IPDetector";
 
 export const metadata: Metadata = {
-  title: "Free IP Address Detector | Find Your IP & Location Instantly",
+  title: "IP Address Detector — Your Public IP",
   description:
-    "Instantly detect your public IP address, ISP, city, country, timezone, and ASN. Look up any IP for free — no sign-up, no limits, works on all devices.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "See your public IP address, provider and approximate location — plus how accurate IP geolocation really is and what your address does not reveal.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/ip-detector/",
+    canonical: "/ip-detector/",
+  },
+  openGraph: {
+    title: "IP Address Detector — Your Public IP",
+    description:
+      "Your public address is your router's, not your device's. Here is what it reveals and what it does not.",
+    url: "/ip-detector/",
+    type: "article",
+  },
+  twitter: {
+    title: "IP Address Detector — Your Public IP",
+    description:
+      "Public IP, provider and approximate location, with honest accuracy limits.",
   },
 };
 

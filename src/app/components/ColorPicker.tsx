@@ -58,6 +58,45 @@ const getLuminance = (hex: string) => {
 const getOnColor = (hex: string) =>
   getLuminance(hex) > 0.45 ? "#1a1a1a" : "#ffffff";
 
+const FAQS: [string, string][] = [
+  [
+    "What is the difference between HEX, RGB and HSL?",
+    "They are three notations for the same colour, and each is convenient for something different. HEX packs red, green and blue into pairs of hex digits and is ideal for copying an exact value between tools. RGB gives the same three channels as decimal numbers and adds transparency easily. HSL describes hue, saturation and lightness, which is the only one of the three you can adjust deliberately.",
+  ],
+  [
+    "Why should I use HSL when designing?",
+    "Because it lets you change one property at a time. Making a colour darker in HEX or RGB means adjusting three numbers together and hoping the hue does not drift. In HSL you lower the lightness value and everything else stays put, which is what makes generating consistent tints and shades straightforward.",
+  ],
+  [
+    "How do I read a HEX code without converting it?",
+    "Read it as three pairs — red, green, blue — each running from 00 to FF. All three pairs equal means a shade of grey, so #333333 and #CCCCCC are grey at a glance. The three-digit shorthand doubles each character, so #F0A is #FF00AA, which is why only some colours can be written that way. An eight-digit code adds a fourth pair for transparency.",
+  ],
+  [
+    "How do I build a colour palette that works?",
+    "Derive every colour from one base rather than picking them independently. Monochromatic uses one hue at different lightness levels and is almost impossible to get wrong. Analogous uses neighbouring hues for a calm effect. Complementary uses the opposite hue for a single strong accent. In practice a workable interface palette is one dominant colour, one supporting colour, one accent used sparingly, and several neutral greys doing most of the work.",
+  ],
+  [
+    "What contrast ratio do I need for readable text?",
+    "At least 4.5:1 for normal body text and 3:1 for large text and meaningful interface elements, with 7:1 as the stricter standard for long-form reading. The scale runs from 1:1 for identical colours up to 21:1 for black on white. Light grey text on white is currently fashionable and frequently fails outright.",
+  ],
+  [
+    "Why do two very different colours sometimes fail a contrast check?",
+    "Because contrast depends on relative luminance rather than on how different the colours look. A mid red on a mid green looks wildly different and can be nearly unreadable, because both sit at similar brightness. This is why contrast has to be measured rather than judged by eye.",
+  ],
+  [
+    "Is it enough to use colour alone to show status?",
+    "No. Around one in twelve men has some form of colour vision deficiency, so a red and green indicator distinguished only by hue conveys nothing to them. Add a second signal — a shape, an icon, or a text label — so the meaning survives without the colour.",
+  ],
+  [
+    "Why does my brand colour look different on another screen?",
+    "Because a HEX code is an instruction rather than a guarantee. What a viewer sees depends on their display, its calibration and its colour profile, which is why the same value can look noticeably different on two monitors side by side. There is no way to control this from your end beyond choosing colours that remain acceptable across a range of displays.",
+  ],
+  [
+    "Will my screen colours print correctly?",
+    "Not always. Screens emit light and mix red, green and blue; print reflects light and mixes cyan, magenta, yellow and black. Some bright, saturated screen colours have no printable equivalent, and the conversion quietly substitutes the nearest one available. Anything going to print should be signed off from a physical proof rather than from a monitor.",
+  ],
+];
+
 export default function ColorTool() {
   const boxRef = useRef<HTMLDivElement | null>(null);
   const hueRef = useRef<HTMLDivElement | null>(null);
@@ -285,6 +324,21 @@ export default function ColorTool() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+
       <div className="single-page-padding ct-root">
         <h1>
           Color Picker &amp; Palette Generator — HEX, RGB, HSL Color Codes
@@ -686,322 +740,217 @@ export default function ColorTool() {
 
         {/* ─── SEO Content ─── */}
 
-        <h2>What Is a Color Picker?</h2>
+        <h2>Three Ways to Write the Same Colour</h2>
         <p>
-          A color picker is a tool that lets you select any color visually and
-          get its exact values across every format — HEX for web CSS, RGB for
-          screen displays, HSL for design adjustments, CMYK for print
-          production, and LAB/XYZ for precision color science. This tool works
-          as a hex color code finder, an RGB to HEX converter, a hex to HSL
-          converter, and a color contrast checker — all in one interface. Pick a
-          color from the gradient canvas, type a hex code directly, or use the
-          EyeDropper to sample any pixel on your screen.
+          HEX, RGB and HSL are not three kinds of colour. They are three
+          notations for the same thing, and the reason all three survive is that
+          each is easy to do something different with.
         </p>
 
-        <h2>What Is a Palette Generator?</h2>
-        <p>
-          A palette generator uses color theory to build harmonious sets of
-          colors from a single seed color. Rather than guessing which colors
-          look good together, you get mathematically balanced relationships:
-          complementary pairs, triadic triplets, analogic families, and more.
-          This makes it a brand color palette generator — pick your primary
-          brand color, select a harmony mode, and generate a complete palette
-          ready for your website, app, or design system.
-        </p>
-
-        <h2>Supported Color Formats</h2>
-        <p>
-          This tool converts between six color formats in real time. Click any
-          format value to copy it to your clipboard:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Format
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Example
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Best Used For
-                </th>
+              <tr>
+                <th>Notation</th>
+                <th>Describes</th>
+                <th>Good for</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["HEX", "#3F7FE0", "CSS, web design, brand guidelines"],
-                [
-                  "RGB",
-                  "rgb(63, 127, 224)",
-                  "Screens, digital design, JavaScript",
-                ],
-                [
-                  "HSL",
-                  "hsl(220, 72%, 56%)",
-                  "Design adjustments — easy to tweak lightness and saturation",
-                ],
-                [
-                  "CMYK",
-                  "cmyk(72%, 43%, 0%, 12%)",
-                  "Print design — magazines, packaging, business cards",
-                ],
-                [
-                  "LAB",
-                  "L 53, a 5, b -55",
-                  "Perceptually uniform — accurate color matching across devices",
-                ],
-                [
-                  "XYZ",
-                  "23, 22, 72",
-                  "Device-independent CIE standard, scientific applications",
-                ],
-              ].map(([format, example, use], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {format}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {example}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {use}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>HEX</td>
+                <td>Red, green and blue as pairs of hex digits</td>
+                <td>Copying an exact colour between tools</td>
+              </tr>
+              <tr>
+                <td>RGB</td>
+                <td>The same three channels as decimal numbers</td>
+                <td>Code, and adding transparency with an alpha value</td>
+              </tr>
+              <tr>
+                <td>HSL</td>
+                <td>Hue, saturation and lightness</td>
+                <td>Adjusting a colour deliberately</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>How to Convert HEX to RGB</h2>
         <p>
-          HEX and RGB represent the same thing — red, green, and blue channel
-          values — just in different number systems. A HEX color code like
-          #3F7FE0 is three pairs of hexadecimal digits: 3F for red, 7F for
-          green, E0 for blue. To convert each pair to RGB, convert from base-16
-          to base-10: 3F = 63, 7F = 127, E0 = 224, giving rgb(63, 127, 224).
-        </p>
-        <p>
-          This tool handles the conversion automatically — pick or enter any
-          color and all six formats update in real time. This makes it both an
-          RGB to HEX converter (click the HEX value to copy) and a hex to HSL
-          converter (click HSL to copy that format).
+          HSL is the one worth learning if you design rather than just copy
+          values. In HEX or RGB, making a colour slightly darker means changing
+          three numbers in a coordinated way and hoping the hue does not shift.
+          In HSL you reduce one number — lightness — and everything else stays
+          where it was.
         </p>
 
-        <h2>Color Harmony Modes Explained</h2>
+        <h2>Reading a HEX Code Without a Converter</h2>
         <p>
-          Color harmony is the art of combining colors that look aesthetically
-          pleasing together. The palette generator uses color theory to
-          calculate these harmonies mathematically:
+          A HEX colour is three pairs: red, green, blue. Each pair runs from 00
+          to FF, which is 0 to 255 in decimal.
+        </p>
+        <pre>
+          #RRGGBB{"\n"}#FF0000 → all red, no green, no blue{"\n"}#000000 → black
+          {"\n"}#FFFFFF → white{"\n"}#808080 → mid grey (equal channels)
+        </pre>
+        <p>
+          Two shortcuts follow from that. Any code with all three pairs equal is
+          a shade of grey, so #333333 and #CCCCCC are grey without needing to be
+          converted. And the three-digit form is just the six-digit one with each
+          pair doubled — #F0A expands to #FF00AA — which is why only some colours
+          can be written in shorthand.
+        </p>
+        <p>
+          An eight-digit code adds a fourth pair for transparency, where 00 is
+          fully transparent and FF fully opaque.
+        </p>
+
+        <h2>Building a Palette That Holds Together</h2>
+        <p>
+          Palettes fail in two opposite ways: every colour fighting for
+          attention, or everything so similar that nothing stands out. Both come
+          from picking colours independently rather than deriving them from one
+          another.
+        </p>
+        <p>
+          The reliable approach is to choose one base colour and generate the
+          rest from it by moving around the hue circle in a defined way.
         </p>
         <ul className="custom-list">
           <li>
-            <strong>Analogic:</strong> Adjacent colors on the wheel — calm,
-            cohesive, and easy on the eyes. Great for backgrounds and subtle UI
-            themes.
+            <strong>Monochromatic</strong> — one hue at several lightness and
+            saturation levels. Impossible to get wrong, and can be flat without
+            an accent.
           </li>
           <li>
-            <strong>Complementary:</strong> Colors directly opposite each other
-            on the wheel. This is the complementary color finder mode — it
-            creates high contrast and visual energy. Perfect for call-to-action
-            buttons against a background.
+            <strong>Analogous</strong> — neighbouring hues. Harmonious and
+            low-contrast, which suits backgrounds and calm interfaces.
           </li>
           <li>
-            <strong>Analogic &amp; Complement:</strong> The richest blend — a
-            family of adjacent colors plus one contrasting accent. The most
-            versatile mode for full website palettes.
+            <strong>Complementary</strong> — the hue directly opposite. Maximum
+            contrast, which makes it excellent for a single accent and
+            exhausting if used in equal amounts.
           </li>
           <li>
-            <strong>Triadic:</strong> Three colors equally spaced around the
-            wheel — vibrant, dynamic, and balanced. Popular in playful or
-            creative brands.
-          </li>
-          <li>
-            <strong>Quadratic:</strong> Four colors forming a rectangle on the
-            wheel — complex and versatile, ideal for data visualization and
-            dashboards.
-          </li>
-          <li>
-            <strong>Monochrome:</strong> Tints and shades of a single hue —
-            clean, elegant, and impossible to get wrong. The safest starting
-            point for minimalist design.
-          </li>
-        </ul>
-
-        <h2>What Are Complementary Colors?</h2>
-        <p>
-          Complementary colors sit directly opposite each other on the color
-          wheel. Red and green, blue and orange, yellow and purple are the
-          classic pairs. When placed side by side, complementary colors create
-          maximum visual contrast — which is why they are used so heavily in
-          call-to-action design, sports branding, and advertising. Select
-          "Complementary" in the palette generator to instantly find the
-          complementary pair for any color you pick.
-        </p>
-
-        <h2>What Is the 60-30-10 Color Rule?</h2>
-        <p>
-          The 60-30-10 rule is a design guideline for distributing colors in any
-          visual project. It works for websites, interiors, presentations, and
-          brand identity:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>60% — Dominant color:</strong> Your main background or
-            primary brand color. Sets the overall tone and mood. Usually the
-            most neutral or muted color in your palette.
-          </li>
-          <li>
-            <strong>30% — Secondary color:</strong> Used for supporting elements
-            like sidebars, cards, sections, or secondary buttons. Creates visual
-            interest without competing with the dominant color.
-          </li>
-          <li>
-            <strong>10% — Accent color:</strong> The boldest, most contrasting
-            color. Reserved for call-to-action buttons, links, highlights, and
-            elements you want the eye drawn to first.
+            <strong>Triadic</strong> — three hues evenly spaced. Vivid and
+            balanced, and it needs one dominant colour with the other two held
+            back.
           </li>
         </ul>
         <p>
-          Generate a 3-color palette using the Complementary or Analogic mode,
-          then apply the 60-30-10 split to your design. The result is a
-          balanced, professional color scheme that avoids the common mistake of
-          using too many colors at equal weight.
+          The common failure is treating a harmony rule as a licence to use every
+          colour it produces at full strength. A workable interface palette is
+          usually one dominant colour, one supporting colour and one accent used
+          sparingly, with several neutral greys doing most of the actual work.
         </p>
 
-        <h2>Color Contrast Checker</h2>
+        <h2>Contrast Is Not a Matter of Taste</h2>
         <p>
-          The contrast preview section under the color picker shows how your
-          selected color looks with white text, black text, and as text on a
-          white background. This is a quick color contrast checker for
-          accessibility — ensuring text remains readable against your chosen
-          background. WCAG accessibility guidelines recommend a contrast ratio
-          of at least 4.5:1 for normal text and 3:1 for large text. Dark colors
-          generally need white text; light colors need black text. The preview
-          updates in real time as you pick.
+          Whether text is readable against a background is measurable rather than
+          subjective. Contrast ratio compares the relative luminance of two
+          colours and runs from 1:1, meaning identical, to 21:1 for black on
+          white.
         </p>
 
-        <h2>How to Use This Tool for Brand Design</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Step 1:</strong> Pick your primary brand color using the
-            color picker or enter its HEX code directly.
-          </li>
-          <li>
-            <strong>Step 2:</strong> Switch to the Palette Generator and select
-            a harmony mode — Analogic &amp; Complement is the most versatile for
-            brand palettes.
-          </li>
-          <li>
-            <strong>Step 3:</strong> Adjust the color count (3 to 9 colors) and
-            click Generate.
-          </li>
-          <li>
-            <strong>Step 4:</strong> Lock any colors you love and regenerate to
-            explore variations.
-          </li>
-          <li>
-            <strong>Step 5:</strong> Export your palette as CSS variables, JSON,
-            or a HEX list for your design system.
-          </li>
-          <li>
-            <strong>Step 6:</strong> Apply the 60-30-10 rule to distribute your
-            palette across your website or app.
-          </li>
-        </ul>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Ratio</th>
+                <th>Generally suitable for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>At least 4.5:1</td>
+                <td>Normal body text</td>
+              </tr>
+              <tr>
+                <td>At least 3:1</td>
+                <td>Large text, and meaningful interface elements</td>
+              </tr>
+              <tr>
+                <td>At least 7:1</td>
+                <td>The stricter standard, useful for long-form reading</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <p>
-          Once you have your brand colors finalized and you are building design
-          assets, our{" "}
-          <Link href="/image-resizer/" className="my-link">
-            image resizer
-          </Link>{" "}
-          can prepare images in the exact dimensions your design requires, and
-          our{" "}
-          <Link href="/image-converter/" className="my-link">
-            image converter
-          </Link>{" "}
-          handles format conversions between PNG, JPEG, WebP, and other formats
-          for web-optimized delivery.
+          Two points that catch designers out. Contrast depends on luminance
+          rather than on how different two colours look, so two vivid colours of
+          similar brightness — a mid red on a mid green, for instance — can be
+          nearly unreadable despite looking wildly different. And light grey text
+          on white, currently fashionable, frequently fails outright.
         </p>
-
-        <h2>Frequently Asked Questions</h2>
-        {[
-          [
-            "How do I generate a color palette?",
-            "Pick a color using the visual picker or enter a HEX code, switch to the Palette Generator tab, select a harmony mode (Complementary, Analogic, Triadic, etc.), set the number of colors, and click Generate. The palette is built using color theory calculations via The Color API.",
-          ],
-          [
-            "What does locking a color do?",
-            "Locking a palette color preserves it when you regenerate. Unlocked slots get new colors while the locked ones stay fixed. This is useful when you have found one or two colors you love and want to explore variations around them.",
-          ],
-          [
-            "How do I export a palette for CSS?",
-            "Click 'Copy CSS vars' to get a :root { } block with named CSS custom properties for each color. You can also use 'Copy all HEX' for a comma-separated list or 'Copy JSON' for structured data with names and RGB values.",
-          ],
-          [
-            "Can I pick a color from my screen?",
-            "Yes. Click the eyedropper icon next to the HEX input to activate the browser's native EyeDropper API. This works in Chrome, Edge, and Opera. Click any pixel on your screen to sample its exact color.",
-          ],
-          [
-            "How do I convert HEX to RGB?",
-            "This tool does it automatically — pick any color and both HEX and RGB values appear instantly. To convert manually: each pair of hex digits represents a 0–255 value for red, green, and blue. #FF8800 = rgb(255, 136, 0).",
-          ],
-          [
-            "What are complementary colors?",
-            "Complementary colors are opposite each other on the color wheel — like blue and orange, red and green, or yellow and purple. They create maximum contrast when used together. Select the 'Complementary' harmony mode in the palette generator to find the complementary pair for any color.",
-          ],
-          [
-            "What is the 60-30-10 color rule?",
-            "It is a design guideline: use your dominant color for 60% of the design (backgrounds), a secondary color for 30% (cards, sidebars), and an accent color for 10% (buttons, links, highlights). This prevents visual chaos and creates professional-looking color distribution.",
-          ],
-          [
-            "Can I use this for print design (CMYK)?",
-            "Yes. CMYK values are shown in the format grid and update in real time. Note that on-screen CMYK is an approximation — for production-accurate print colors, always verify with your print provider's color profile.",
-          ],
-          [
-            "Is this tool free to use?",
-            "Yes — completely free with no sign-up and no limits. Pick colors, generate palettes, export CSS, save palettes, and convert between all six color formats without restrictions.",
-          ],
-        ].map(([q, a], i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => setOpenFAQ(openFAQ === i ? null : i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Build Better Color Systems</h2>
         <p>
-          Whether you are designing a website, building a brand identity,
-          preparing artwork for print, or checking accessibility contrast, this
-          tool gives you precise color values and harmonious palette generation
-          in one place. Pick a color, get every format, generate a palette, and
-          export it — all without leaving the page. For your visual assets, our{" "}
-          <Link href="/image-resizer/" className="my-link">
-            image resizer
-          </Link>{" "}
-          handles dimension adjustments and our{" "}
-          <Link href="/image-converter/" className="my-link">
-            image converter
-          </Link>{" "}
-          prepares images in the right format for web or print.
+          Colour should also never be the only thing carrying meaning. Around one
+          in twelve men has some form of colour vision deficiency, so a red and
+          green status indicator distinguished only by hue conveys nothing to
+          them. Add a shape, a label or an icon alongside it.
         </p>
+
+        <h2>Why the Same Colour Looks Different Elsewhere</h2>
+        <p>
+          A HEX code is an instruction, not a guarantee. What a viewer actually
+          sees depends on their screen, its calibration and its colour profile,
+          which is why a brand colour can look noticeably different across two
+          monitors in the same room.
+        </p>
+        <p>
+          Print is a larger discontinuity. Screens emit light and mix red, green
+          and blue; print reflects light and mixes cyan, magenta, yellow and
+          black. Some screen colours — particularly bright, saturated ones — have
+          no printable equivalent at all, and the conversion silently substitutes
+          the nearest available. Anything destined for print should be checked as
+          a proof rather than approved on screen.
+        </p>
+        <p>
+          For picking and converting values, use the tool above. For counting
+          characters in the CSS you write around them, the{" "}
+          <Link href="/word-char-counter/" className="my-link">
+            word and character counter
+          </Link>{" "}
+          is on hand.
+        </p>
+        <h2>Colour and Contrast Questions</h2>
+        {FAQS.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => setOpenFAQ(isOpen ? null : i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setOpenFAQ(isOpen ? null : i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
       </div>
     </>
   );

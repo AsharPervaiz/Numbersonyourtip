@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ReviewedBy from "./ReviewedBy";
 
 /* ─────────────────────────────────────────
    Types
@@ -212,7 +213,7 @@ function StockResultPanel({ result }: { result: StockResult | null }) {
           style={{ marginRight: "6px" }}
         />
         This is a calculated estimate, not drug-specific guidance. Always verify
-        against the prescribing physician's instructions and current drug
+        against the prescribing physician&apos;s instructions and current drug
         references before administration.
       </div>
     </div>
@@ -222,6 +223,45 @@ function StockResultPanel({ result }: { result: StockResult | null }) {
 /* ─────────────────────────────────────────
    Main Calculator Page
 ───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "What does 'desired over have times quantity' mean?",
+    "It is the standard stock dose formula: divide the dose you want by the strength you have, then multiply by the quantity that strength comes in. Desired is the prescribed dose, Have is the stock strength printed on the label, and Quantity is the unit that strength is expressed in — one tablet, 5 mL, or the vial volume. The same equation is also taught as need over have, D ÷ H × Q, and stock required over stock strength.",
+  ],
+  [
+    "Why do I multiply by 5 for a syrup but not for tablets?",
+    "Because the quantity term differs. A tablet strength is expressed per tablet, so Q is 1 and multiplying changes nothing. A suspension is labelled per 5 mL, so Q is 5 and leaving it out gives an answer five times too small. The alternative is to convert the label to mg per mL first by dividing by 5, then not multiply at all. Both work; doing half of each is what produces the error.",
+  ],
+  [
+    "How do I read a label that says 40 mg/mL instead of 80 mg/2 mL?",
+    "They can describe the same vial. When the label states a concentration per millilitre, the quantity term is 1 mL and the calculation is a straight division of dose by concentration. When it states a total in a stated volume, use that volume as Q. Treating a per-millilitre concentration as though it were the whole vial contents halves every dose drawn.",
+  ],
+  [
+    "What should I do if the answer is 1.2 tablets?",
+    "Treat it as a signal rather than an instruction. A fraction that is not a clean half usually means the available strength does not suit the prescribed dose, or a number was transcribed wrongly. Check whether another strength or a liquid form exists before considering splitting. Only scored, immediate-release tablets divide reliably — coated, enteric and modified-release tablets must not be broken, and capsules cannot be split at all.",
+  ],
+  [
+    "How do I convert a percentage strength into mg per mL?",
+    "A percentage is grams per 100 mL, so multiply the percentage by 10 to get mg/mL. A 2% solution is 2 g in 100 mL, which is 20 mg/mL. A 10% solution is 100 mg/mL. Entering the percentage figure directly as a concentration understates the strength tenfold, which is one of the most consequential errors in stock dose calculation.",
+  ],
+  [
+    "How many doses will a bottle give me?",
+    "Divide the bottle volume by the volume of a single dose, then divide that by the number of doses per day to get days of supply. A 100 mL bottle at 8 mL per dose holds twelve full doses, which at three times daily lasts four days. Round down: a partial dose left at the bottom of the bottle is not a dose.",
+  ],
+  [
+    "Can I measure a liquid dose with a kitchen spoon?",
+    "Use an oral syringe or the measuring device supplied with the medicine. Household spoons vary substantially in capacity — enough that the same measured 'teaspoon' can differ by a factor approaching two between utensils in one drawer. On an adult paracetamol dose that is tolerable; on a paediatric antibiotic or anything with a narrow margin it is not.",
+  ],
+  [
+    "How do I check my answer without redoing the calculation?",
+    "Compare the dose to the stock strength before you calculate. If the dose required is larger than the stock strength, the answer must be more than one unit of stock; if smaller, less than one. A 400 mg dose from a 250 mg/5 mL bottle must fall between 5 and 10 mL, which confirms 8 mL and immediately rules out 1.6 mL or 80 mL.",
+  ],
+  [
+    "Should I enter the single dose or the total daily dose?",
+    "The single dose. This calculator converts one prescribed dose into tablets or millilitres. If the prescription is written as a daily total to be divided — 40 mg/kg/day in three doses, for example — divide it by the frequency first, and bring the per-dose figure here.",
+  ],
+];
+
 export default function DoseStockCalculator() {
   const [mode, setMode] = useState<"tablet" | "syrup">("tablet");
   const [requiredDose, setRequiredDose] = useState("");
@@ -315,9 +355,24 @@ export default function DoseStockCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       {/* ---- MAIN CONTENT ---- */}
       <div className="single-page-padding">
-        <h1>Dose Stock Calculator — Tablets & Syrup Dosing</h1>
+        <h1>Dose Stock Calculator — Desired Over Have (D ÷ H × Q)</h1>
+
 
         <p>
           Select tablet or syrup mode, enter the prescribed dose and the
@@ -419,706 +474,295 @@ export default function DoseStockCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Dose Stock Calculator?</h2>
+        <h2>The Same Formula Under Four Different Names</h2>
         <p>
-          A dose stock calculator is a clinical tool that answers the most
-          practical question in medication administration: you know how many
-          milligrams the patient needs — now how much of the available stock do
-          you actually give? It converts a prescribed dose in mg into a physical
-          quantity — a number of tablets or a volume of liquid in mL — based on
-          the strength of the medication you have on hand.
+          Search for how to work out a dose from stock and you will meet the
+          same equation wearing several different labels. It gets taught as
+          &quot;desired over have&quot;, written on whiteboards as D ÷ H × Q,
+          called &quot;need over have times volume&quot; in some nursing
+          programmes, and printed in textbooks as stock required over stock
+          strength. They are one formula.
         </p>
-        <p>
-          This tool is used every day by nurses at the bedside, pharmacists
-          behind the dispensing counter, paramedics in the field, and parents
-          measuring liquid medicine at home. It eliminates the manual arithmetic
-          that is responsible for a significant proportion of medication
-          administration errors, especially in pediatric and high-alert drug
-          settings.
-        </p>
-        <p>
-          The dose stock calculator is always used after the total required dose
-          in mg has been established. If you need to first determine the correct
-          dose based on a patient's body weight, use our{" "}
-          <Link href="/dose-calculator/" className="my-link">
-            dose calculator
-          </Link>{" "}
-          to get the mg figure, then bring that value here.
-        </p>
-
-        <h2>The Dose Stock Formulas</h2>
-        <p>
-          Both tablet and liquid calculations follow the same core logic: divide
-          what you need by what each unit contains.
-        </p>
-
-        <h3>Tablet Formula</h3>
-        <pre>Tablets to Give = Required Dose (mg) ÷ Dose per Tablet (mg)</pre>
-
-        <h3>Liquid / Syrup Formula</h3>
         <pre>
-          Volume to Give (mL) = (Required Dose ÷ Concentration) × Volume per
-          Dose
+          Amount to give = (Dose you want ÷ Strength you have) × Quantity that
+          strength comes in
         </pre>
         <p>
-          For intravenous preparations — drawing from a vial for IV
-          administration — the volume formula is the same, but you also need to
-          calculate the infusion rate and drip rate. Our{" "}
-          <Link href="/iv-calculator/" className="my-link">
-            IV calculator
-          </Link>{" "}
-          handles that second step.
+          The three inputs map onto the prescription and the label like this:
         </p>
 
-        <h2>Step-by-Step Calculation Examples</h2>
-
-        <h3>Example 1: Tablet Calculation</h3>
-        <p>
-          A patient is prescribed <strong>750 mg</strong> of amoxicillin. The
-          tablets available are <strong>250 mg each</strong>.
-        </p>
-        <ul className="custom-list">
-          <li>
-            Tablets to Give = 750 ÷ 250 = <strong>3 tablets</strong>
-          </li>
-        </ul>
-        <p>Straightforward — no splitting needed.</p>
-
-        <h3>Example 2: Tablet Splitting Required</h3>
-        <p>
-          A patient is prescribed <strong>375 mg</strong> of the same drug. Only{" "}
-          <strong>250 mg tablets</strong> are in stock.
-        </p>
-        <ul className="custom-list">
-          <li>
-            Tablets to Give = 375 ÷ 250 = <strong>1.5 tablets</strong> (one
-            whole tablet + half a tablet)
-          </li>
-        </ul>
-        <p>
-          The calculator displays fractional tablets clearly. If the tablet is
-          not scored and cannot be split safely, the pharmacist may need to
-          source an alternative strength or switch to a liquid formulation.
-        </p>
-
-        <h3>Example 3: Syrup / Liquid Calculation</h3>
-        <p>
-          A child needs <strong>120 mg</strong> of ibuprofen. The available
-          suspension is labelled <strong>100 mg per 5 mL</strong>.
-        </p>
-        <ul className="custom-list">
-          <li>
-            Concentration = 100 mg ÷ 5 mL = <strong>20 mg/mL</strong>
-          </li>
-          <li>
-            Volume to Give = (120 ÷ 100) × 5 = <strong>6 mL</strong>
-          </li>
-        </ul>
-        <p>
-          The child receives 6 mL of the ibuprofen suspension, measured with an
-          oral syringe for accuracy.
-        </p>
-
-        <h3>Example 4: Injectable Volume From a Vial</h3>
-        <p>
-          A patient requires <strong>80 mg</strong> of gentamicin IV. The
-          available vial contains <strong>40 mg/mL</strong>.
-        </p>
-        <ul className="custom-list">
-          <li>
-            Volume to Draw = 80 ÷ 40 = <strong>2 mL</strong>
-          </li>
-        </ul>
-        <p>
-          Draw up 2 mL from the vial, then use our{" "}
-          <Link href="/iv-calculator/" className="my-link">
-            IV calculator
-          </Link>{" "}
-          to determine the correct infusion rate for delivery.
-        </p>
-
-        <h2>Quick Reference: Common Stock Dose Calculations</h2>
-        <p>
-          The table below shows how different prescribed doses map to tablet or
-          liquid quantities for commonly stocked strengths. These are
-          calculation examples, not prescribing recommendations.
-        </p>
-
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Prescribed Dose
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Stock Available
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Amount to Give
-                </th>
+              <tr>
+                <th>Term</th>
+                <th>Also called</th>
+                <th>Where you read it</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  500 mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  250 mg tablets
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  2 tablets
-                </td>
+                <td>D — Desired</td>
+                <td>Need, dose required, prescribed dose</td>
+                <td>The prescription</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  750 mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  500 mg tablets
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1.5 tablets
-                </td>
+                <td>H — Have</td>
+                <td>Stock strength, on-hand strength, available dose</td>
+                <td>The box or bottle label</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1000 mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  500 mg tablets
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  2 tablets
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  150 mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  100 mg/5 mL syrup
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  7.5 mL
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  200 mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  250 mg/5 mL syrup
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  4 mL
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  80 mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  40 mg/mL injection
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  2 mL
+                <td>Q — Quantity</td>
+                <td>Stock volume, vehicle, unit</td>
+                <td>
+                  The label: 1 tablet, 5 mL, 2 mL — the amount that H comes in
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Understanding the Inputs — Tablet Mode</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Required Dose (mg):</strong> The total dose the patient must
-            receive, as prescribed by the healthcare provider. If you need to
-            calculate this from the patient's body weight first, use our{" "}
-            <Link href="/dose-calculator/" className="my-link">
-              weight-based dose calculator
-            </Link>{" "}
-            and bring the mg result here.
-          </li>
-          <li>
-            <strong>Available Dose per Tablet (mg):</strong> The strength
-            printed on the tablet packaging — for example, 250 mg, 500 mg, or 1
-            g (1,000 mg). This is the active drug content of one individual
-            tablet.
-          </li>
-          <li>
-            <strong>Quantity in Stock (tablets):</strong> The number of tablets
-            currently available. The calculator uses this to confirm whether
-            your stock is sufficient to cover the dose.
-          </li>
-        </ul>
-
-        <h2>Understanding the Inputs — Syrup Mode</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Required Dose (mg):</strong> The prescribed dose to be
-            administered, either from the prescription directly or from a{" "}
-            <Link href="/dose-calculator/" className="my-link">
-              medication dose calculation
-            </Link>{" "}
-            based on patient weight.
-          </li>
-          <li>
-            <strong>Available Dose per Volume (mg/mL):</strong> The
-            concentration of the liquid medicine. If your label reads "250 mg
-            per 5 mL," divide 250 by 5 to get 50 mg/mL before entering. This
-            conversion is one of the most common sources of error — the section
-            below explains how to handle it.
-          </li>
-          <li>
-            <strong>Volume (mL) per Dose:</strong> The standard dose volume
-            specified in the prescription or drug reference. The calculator
-            scales the result to this volume.
-          </li>
-        </ul>
-
-        <h2>How to Convert "mg per 5 mL" to "mg per mL"</h2>
         <p>
-          Many liquid medications — especially pediatric syrups — list their
-          concentration as mg per 5 mL rather than mg per mL. This is a frequent
-          source of confusion and calculation errors. The conversion is simple:
-          divide the mg by the stated volume.
+          Q is the part people drop, because for tablets it is 1 and multiplying
+          by 1 feels invisible. The moment the stock is a liquid, Q becomes 5 mL
+          or 10 mL and omitting it produces an answer that is wrong by that
+          factor.
         </p>
 
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <h2>Reading the Three Numbers Off a Real Label</h2>
+        <p>
+          A bottle reading{" "}
+          <strong>&quot;Amoxicillin 250 mg/5 mL — 100 mL&quot;</strong> contains
+          four numbers and only two of them belong in the formula. The 250 mg is
+          H. The 5 mL is Q. The 100 mL is the bottle size, which tells you how
+          many doses you can get out of it but plays no part in working out a
+          single dose. The drug name is not a number at all, but checking it
+          against the prescription is the step that catches the errors
+          arithmetic cannot.
+        </p>
+        <p>
+          If the prescription asks for 400 mg:
+        </p>
+        <pre>(400 ÷ 250) × 5 = 1.6 × 5 = 8 mL</pre>
+        <p>
+          A useful habit is to state the answer with its unit attached from the
+          start — &quot;8 mL&quot;, not &quot;8&quot;. A bare number carries no
+          protection against being read as 8 tablets, 8 mg, or 8 spoonfuls by
+          whoever picks the note up next.
+        </p>
+
+        <h2>Tablets, and What to Do With a Fraction</h2>
+        <p>
+          For solid dose forms Q is one tablet, so the formula collapses to a
+          division:
+        </p>
+        <pre>Tablets = Dose required ÷ Strength per tablet</pre>
+        <p>
+          A 75 mg prescription against 25 mg tablets is three tablets. A 30 mg
+          prescription against the same stock is 1.2 tablets, and that is where
+          the arithmetic stops being useful and a decision starts.
+        </p>
+
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Label Reads
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Conversion
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Enter as mg/mL
-                </th>
+              <tr>
+                <th>Result</th>
+                <th>What it usually means</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  100 mg / 5 mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  100 ÷ 5
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  20 mg/mL
+                <td>A whole number</td>
+                <td>Give that many tablets</td>
+              </tr>
+              <tr>
+                <td>Exactly one half</td>
+                <td>
+                  Acceptable only if the tablet is scored and the formulation
+                  allows splitting
                 </td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  125 mg / 5 mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  125 ÷ 5
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  25 mg/mL
+                <td>A third, a quarter, or 1.2</td>
+                <td>
+                  The available strength is wrong for this dose — check for
+                  another strength, a liquid form, or a transcription error
                 </td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  250 mg / 5 mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  250 ÷ 5
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  50 mg/mL
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  200 mg / 10 mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  200 ÷ 10
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  20 mg/mL
+                <td>Less than half a tablet</td>
+                <td>
+                  Almost always signals the wrong stock strength was entered
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+
         <p>
-          Always check the label carefully. Two bottles of the same drug can
-          have different concentrations — a "250 mg/5 mL" bottle and a "125 mg/5
-          mL" bottle look similar on the shelf but deliver very different doses
-          per milliliter.
+          Splitting is not a purely mechanical question. A scored,
+          immediate-release tablet generally divides acceptably. A film-coated,
+          enteric-coated, or modified-release tablet does not: breaking the
+          coating on a modified-release product can release the whole dose at
+          once instead of over twelve hours, converting a routine dose into an
+          overdose. Capsules cannot be split at all. When the arithmetic
+          produces a fraction the formulation will not support, the answer is a
+          different preparation, not a sharper knife.
         </p>
 
-        <h2>Where Dose Stock Calculation Fits in the Clinical Workflow</h2>
+        <h2>Liquids: the Per-5-mL Problem</h2>
         <p>
-          In clinical practice, medication administration follows three
-          sequential calculation steps. Each step uses a different tool:
+          Oral suspensions are almost universally labelled per 5 mL because that
+          is a spoon, not because it is a convenient unit for calculation. Two
+          equally valid routes exist and mixing them is the classic error.
+        </p>
+        <p>
+          <strong>Route one — keep Q as 5 mL.</strong> Use the label as it is
+          written and let the formula handle it: (Dose ÷ 250) × 5.
+        </p>
+        <p>
+          <strong>Route two — convert to mg/mL first.</strong> Divide the
+          labelled strength by 5, then divide the dose by the result: 250 ÷ 5 =
+          50 mg/mL, so a 400 mg dose is 400 ÷ 50 = 8 mL.
+        </p>
+        <p>
+          Both give 8 mL. What produces a five-fold error is converting the
+          strength to mg/mL and then still multiplying by 5, or leaving the
+          strength as 250 and forgetting to multiply. Pick one route and use it
+          every time rather than choosing per problem.
+        </p>
+        <p>
+          Measure the result with an oral syringe rather than a kitchen spoon.
+          Household teaspoons vary by a factor of roughly two between the
+          smallest and largest in an average drawer, which on a paediatric dose
+          is the difference between a therapeutic and a doubled dose.
+        </p>
+
+        <h2>Vials and Injections</h2>
+        <p>
+          Injectable stock uses the same three terms, with Q as the vial volume:
+        </p>
+        <pre>
+          Volume to draw = (Dose required ÷ Vial strength) × Vial volume
+        </pre>
+        <p>
+          Drawing 60 mg from a vial labelled 80 mg in 2 mL: (60 ÷ 80) × 2 = 1.5
+          mL.
+        </p>
+        <p>
+          Two label conventions cause trouble here. Some vials are labelled as a
+          total (80 mg/2 mL); others as a concentration (40 mg/mL). They describe
+          the same vial. If the label gives a concentration, Q is 1 mL and the
+          calculation is a plain division. Reading 40 mg/mL as though it were 40
+          mg in the whole vial halves every dose drawn from it.
+        </p>
+        <p>
+          Percentage-strength solutions are the second. A 2% solution is 2 g per
+          100 mL, which is 20 mg/mL. Treating the 2 as milligrams per millilitre
+          understates the strength tenfold. Convert any percentage to mg/mL
+          before it goes anywhere near the formula — the{" "}
+          <Link href="/iv-calculator/" className="my-link">
+            IV calculator
+          </Link>{" "}
+          covers this in the context of infusion rates.
+        </p>
+
+        <h2>Running the Formula Backwards</h2>
+        <p>
+          The same relationship answers a question that comes up at every
+          discharge: will this bottle last?
+        </p>
+        <pre>
+          Doses in the bottle = Bottle volume ÷ Volume per dose{"\n"}Days of
+          supply = Doses in the bottle ÷ Doses per day
+        </pre>
+        <p>
+          A 100 mL bottle giving 8 mL per dose holds 12 full doses. At three
+          times daily that is four days — short of a five-day course, and the
+          kind of thing better noticed at the counter than at the weekend.
+          Fractional doses at the end of a bottle count as unusable; twelve and a
+          half doses is twelve.
+        </p>
+
+        <h2>Checking Your Own Answer</h2>
+        <p>
+          Estimation before calculation catches most order-of-magnitude errors.
+          If the dose required is larger than the stock strength, the answer must
+          be more than one unit of stock. If it is smaller, the answer must be
+          less than one. A 400 mg dose from a 250 mg/5 mL bottle must therefore
+          land between 5 and 10 mL, which makes 8 mL believable and instantly
+          rules out 1.6 mL or 80 mL.
         </p>
         <ul className="custom-list">
           <li>
-            <strong>Step 1 — Calculate the dose in mg:</strong> Use our{" "}
-            <Link href="/dose-calculator/" className="my-link">
-              dose calculator
-            </Link>{" "}
-            to multiply the patient's weight by the prescribed mg/kg rate to get
-            the total dose in milligrams.
+            Ratio first: is the dose bigger or smaller than the stock strength,
+            and does your answer sit on the right side of one unit?
           </li>
           <li>
-            <strong>Step 2 — Calculate how much stock to give:</strong> Use this
-            dose stock calculator to convert that mg figure into the number of
-            tablets or mL of liquid needed from the available stock.
+            Units attached: mL for liquids, tablets for solids, stated out loud
+            with the number.
           </li>
           <li>
-            <strong>
-              Step 3 — For IV medications, calculate infusion parameters:
-            </strong>{" "}
-            If the route is intravenous, use our{" "}
-            <Link href="/iv-calculator/" className="my-link">
-              IV calculator
-            </Link>{" "}
-            to determine infusion rate (mL/hr) or drip rate (drops/min) for safe
-            delivery.
+            Q accounted for: 1 for tablets, 5 mL for a per-5-mL suspension, the
+            vial volume for injections.
+          </li>
+          <li>
+            Percentages converted to mg/mL before use, never entered as
+            themselves.
+          </li>
+          <li>
+            The drug name on the label read against the prescription, not just
+            the strength.
           </li>
         </ul>
         <p>
-          For a deeper understanding of how the body processes the drug after
-          administration — including half-life, clearance, and volume of
-          distribution — see our{" "}
-          <Link href="/pharmacokinetics-calculator/" className="my-link">
-            pharmacokinetics calculator
+          Where the prescription gives a rate per kilogram rather than a finished
+          dose, work that out first with the{" "}
+          <Link href="/dose-calculator/" className="my-link">
+            dosage calculator
           </Link>
-          .
+          , then bring the resulting milligrams back here to convert into
+          tablets or millilitres.
         </p>
+        <h2>Stock Dose Questions, Answered</h2>
 
-        <h2>Who Uses a Dose Stock Calculator?</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Nurses and nursing students</strong> — performing bedside
-            drug calculations before administration and preparing for NCLEX and
-            other licensing exam dosage questions
-          </li>
-          <li>
-            <strong>Pharmacists and pharmacy technicians</strong> — verifying
-            dispensing quantities and confirming tablet or liquid dose accuracy
-            before supply
-          </li>
-          <li>
-            <strong>Parents and home caregivers</strong> — measuring the correct
-            volume of over-the-counter liquid medicines like paracetamol or
-            ibuprofen for children
-          </li>
-          <li>
-            <strong>Paramedics and first responders</strong> — calculating field
-            drug doses from the stock available in emergency kits
-          </li>
-          <li>
-            <strong>Veterinary professionals</strong> — converting mg doses to
-            tablet counts or liquid volumes for animal patients. Our{" "}
-            <Link href="/dose-calculator/" className="my-link">
-              dose calculator
-            </Link>{" "}
-            handles the weight-based step for any species
-          </li>
-          <li>
-            <strong>Medical and pharmacy students</strong> — practicing
-            pharmaceutical calculations for clinical exams and board preparation
-          </li>
-        </ul>
-
-        <h2>Common Stock Dose Calculation Errors and How to Avoid Them</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Confusing "mg per 5 mL" with "mg per mL."</strong> This is
-            the single most common liquid dosing error. A syrup labelled "250
-            mg/5 mL" contains 50 mg per mL, not 250. Always convert before
-            entering.
-          </li>
-          <li>
-            <strong>Rounding fractional tablets incorrectly.</strong> If the
-            calculation says 1.5 tablets but the tablet is not scored, rounding
-            to 1 or 2 gives either a 33% underdose or a 33% overdose. Contact
-            the pharmacist for an alternative strength or formulation.
-          </li>
-          <li>
-            <strong>Using the wrong tablet strength from the shelf.</strong>{" "}
-            Medications often come in multiple strengths — 250 mg and 500 mg
-            tablets of the same drug may look nearly identical. Always read the
-            blister pack or bottle label immediately before calculating.
-          </li>
-          <li>
-            <strong>Decimal point misplacement.</strong> Writing 0.5 mL instead
-            of 5 mL — or vice versa — is a 10x error. A calculator removes this
-            risk, but always double-check that the value you entered matches the
-            label.
-          </li>
-          <li>
-            <strong>
-              Forgetting to divide daily dose into individual doses.
-            </strong>{" "}
-            A prescription that reads "1,500 mg/day in 3 divided doses" means
-            each dose is 500 mg, not 1,500 mg. Enter the per-dose figure, not
-            the daily total.
-          </li>
-        </ul>
-
-        <h2>Why Accurate Stock Dose Calculations Matter</h2>
-        <p>
-          Dispensing the wrong number of tablets or the wrong volume of syrup is
-          one of the most common sources of medication error in both hospital
-          and home settings. A patient given half the required dose may fail to
-          reach therapeutic drug levels, and a double dose risks toxicity. This
-          risk is highest in three situations: pediatric dosing, where
-          weight-based doses are small and proportional errors are large;
-          high-alert medications like warfarin, digoxin, and insulin, where the
-          margin between therapeutic and toxic is narrow; and home
-          administration by non-medical caregivers, who may not be familiar with
-          the concentration conversion step.
-        </p>
-        <p>
-          A reliable dose stock calculator removes the arithmetic from this
-          process entirely and provides a transparent calculation the clinician
-          or caregiver can verify at a glance before administering.
-        </p>
-
-        <h2>Important Safety Notes</h2>
-        <ul className="custom-list">
-          <li>
-            This calculator provides a mathematical result based on the values
-            entered. It is designed to support — not replace — professional
-            clinical judgment.
-          </li>
-          <li>
-            Always verify results against the prescribing physician's
-            instructions and current drug references (BNF, Micromedex, Lexicomp,
-            or equivalent) before administration.
-          </li>
-          <li>
-            For intravenous medications, always confirm infusion rates using a
-            dedicated{" "}
-            <Link href="/iv-calculator/" className="my-link">
-              IV calculator
-            </Link>{" "}
-            in addition to the stock volume calculation.
-          </li>
-          <li>
-            If a tablet calculation produces a result that requires splitting an
-            unscored tablet, contact the prescriber or pharmacist for an
-            alternative formulation or strength.
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions About Dose Stock Calculation</h2>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(0)}>
-            How do I calculate how many tablets to give for a prescribed dose?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 0 && (
-            <p>
-              Divide the required dose in mg by the dose per tablet in mg. For
-              example, if 500 mg is needed and each tablet is 250 mg, then 500 ÷
-              250 = 2 tablets. Enter these values into the Tablet mode above for
-              an instant result. If you first need to calculate the total mg
-              dose from body weight, use our{" "}
-              <Link href="/dose-calculator/" className="my-link">
-                dose calculator
-              </Link>{" "}
-              before coming here.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(1)}>
-            How do I convert a syrup label from "mg per 5 mL" to "mg per mL"?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 1 && (
-            <p>
-              Divide the milligrams by the stated volume. If the label reads
-              "250 mg per 5 mL," divide 250 by 5 to get 50 mg/mL, then enter 50
-              into the Available Dose per Volume field. This conversion is a
-              standard step in pharmacy and nursing practice for all liquid
-              medications.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(2)}>
-            Can this calculator be used for pediatric dosing?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 2 && (
-            <p>
-              Yes. The stock dose formula works identically for children and
-              adults — it depends only on the required dose in mg and the
-              available stock strength. For pediatric patients, the required
-              dose is typically smaller since it is derived from body weight.
-              Use our{" "}
-              <Link href="/dose-calculator/" className="my-link">
-                weight-based dose calculator
-              </Link>{" "}
-              to get the correct pediatric mg dose, then use this tool to
-              determine the tablets or mL to administer.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(3)}>
-            What is the difference between a dose stock calculator and a dose
-            calculator?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 3 && (
-            <p>
-              A{" "}
-              <Link href="/dose-calculator/" className="my-link">
-                dose calculator
-              </Link>{" "}
-              determines the total amount of drug required in mg, based on the
-              patient's weight and the prescribed mg/kg rate. A dose stock
-              calculator (this tool) takes that mg figure and converts it into
-              the physical quantity to administer — number of tablets or mL of
-              liquid — from the medication you have available. Both steps are
-              performed sequentially in clinical practice.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(4)}>
-            What do I do if the result is a fraction and my tablet cannot be
-            split?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 4 && (
-            <p>
-              If the calculator returns a fractional result (for example, 1.5
-              tablets) and the available tablet is not scored for splitting, do
-              not attempt to break it. Contact the pharmacist to request either
-              a different tablet strength that divides evenly or a liquid
-              formulation that can be measured precisely with an oral syringe.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(5)}>
-            Can I use the syrup mode for injectable or IV medications?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 5 && (
-            <p>
-              Yes — the volume calculation is identical whether you are drawing
-              from a syrup bottle or a medication vial. However, for intravenous
-              administration you also need to calculate the infusion rate
-              (mL/hr) and drip rate (drops/min). Our{" "}
-              <Link href="/iv-calculator/" className="my-link">
-                IV calculator
-              </Link>{" "}
-              handles that step. Use both tools together for complete IV
-              medication preparation.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(6)}>
-            Does this tool replace medical or pharmacist advice?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 6 && (
-            <p>
-              No. This calculator provides a mathematical result based on the
-              values you enter and is intended to support professional clinical
-              judgment, not replace it. All dosing decisions must follow a
-              licensed healthcare provider's prescription and be verified
-              against current drug references before any medication is given.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(7)}>
-            How should I measure liquid doses at home?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 7 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 7 && (
-            <p>
-              Always use an oral syringe or the graduated measuring cup that
-              comes with the medication. Kitchen spoons are inaccurate and can
-              easily lead to over- or under-dosing, especially for children.
-              Draw the liquid to the exact mL line the calculator indicates,
-              hold the syringe at eye level to check, and administer slowly.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(8)}>
-            Should I enter the total daily dose or the single-dose amount?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 8 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 8 && (
-            <p>
-              Enter the single-dose amount — the mg the patient receives at one
-              time. If the prescription reads "1,500 mg/day in 3 divided doses,"
-              the single dose is 1,500 ÷ 3 = 500 mg. Enter 500 mg, not 1,500 mg.
-              Entering the full daily total without dividing is one of the most
-              common causes of accidental overdosing.
-            </p>
-          )}
-        </div>
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        <ReviewedBy medical />
       </div>
 
       {/* ---- SIDEBAR ---- */}

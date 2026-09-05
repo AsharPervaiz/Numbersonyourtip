@@ -2,14 +2,27 @@ import { Metadata } from "next";
 import WhatIsVat from "../components/WhatIsVat";
 
 export const metadata: Metadata = {
-  title: "What is VAT? Complete Guide to Value Added Tax (2026)",
+  title: "What Is VAT, and Who Actually Pays It?",
   description:
-    "Learn what VAT (Value Added Tax) is, how it works globally, how to calculate VAT, and why it matters for businesses and consumers. Includes examples and free VAT calculator.",
-  keywords:
-    "VAT meaning, value added tax explained, VAT calculation, VAT calculator, how to calculate VAT, VAT rate by country, VAT vs, sales tax, add VAT calculator, remove VAT from price, net to gross VAT",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "VAT is collected at every stage and borne by one person. How the credit chain works, and what you can and cannot reclaim.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/blog/what-is-vat/",
+    canonical: "/blog/what-is-vat/",
+  },
+  openGraph: {
+    title: "What Is VAT? The Chain, the Reclaim and the Threshold",
+    description:
+      "A worked chain from forest to living room showing why only the final consumer pays, plus what you cannot reclaim and why zero-rated is not exempt.",
+    url: "/blog/what-is-vat/",
+    type: "article",
+    publishedTime: "2026-03-25T00:00:00.000Z",
+    modifiedTime: "2026-08-29T00:00:00.000Z",
+    authors: ["Ashar Pervaiz"],
+    section: "Finance",
+  },
+  twitter: {
+    title: "What Is VAT, and Who Actually Pays It?",
+    description:
+      "Collected at every stage, borne by one person. The chain, the reclaim, the threshold.",
   },
 };
 

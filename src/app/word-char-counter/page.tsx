@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import WordCharCounter from "../components/WordCharCounter";
 
 export const metadata: Metadata = {
-  title: "Word & Character Counter | Count Words, Characters & More Instantly",
+  title: "Word & Character Counter",
   description:
-    "Free Word and Character Counter to instantly count words, characters, sentences, and paragraphs. Paste your text and get instant analysis for writing, editing, and content creation.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Count words, characters, sentences and reading time as you type, and find out why two tools can disagree about the same text.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/word-char-counter/",
+    canonical: "/word-char-counter/",
+  },
+  openGraph: {
+    title: "Word & Character Counter",
+    description:
+      "What counts as a word, characters with and without spaces, and why emoji break limits.",
+    url: "/word-char-counter/",
+    type: "article",
+  },
+  twitter: {
+    title: "Word & Character Counter",
+    description:
+      "Count words, characters and reading time, with nothing sent to a server.",
   },
 };
 

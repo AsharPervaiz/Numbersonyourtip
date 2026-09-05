@@ -7,11 +7,95 @@ type Currency = {
   name: string;
 };
 
+/* ─────────────────────────────────────────
+   Fallback currency list
+   Renders on the server and works instantly
+   even before the live currency list loads
+   (or if the rates API is unreachable).
+───────────────────────────────────────── */
+const POPULAR_CURRENCIES: Currency[] = [
+  { code: "USD", name: "US Dollar" },
+  { code: "EUR", name: "Euro" },
+  { code: "GBP", name: "British Pound Sterling" },
+  { code: "PKR", name: "Pakistani Rupee" },
+  { code: "INR", name: "Indian Rupee" },
+  { code: "AED", name: "UAE Dirham" },
+  { code: "SAR", name: "Saudi Riyal" },
+  { code: "CAD", name: "Canadian Dollar" },
+  { code: "AUD", name: "Australian Dollar" },
+  { code: "JPY", name: "Japanese Yen" },
+  { code: "CNY", name: "Chinese Yuan" },
+  { code: "CHF", name: "Swiss Franc" },
+  { code: "BDT", name: "Bangladeshi Taka" },
+  { code: "TRY", name: "Turkish Lira" },
+  { code: "ZAR", name: "South African Rand" },
+  { code: "NGN", name: "Nigerian Naira" },
+  { code: "KES", name: "Kenyan Shilling" },
+  { code: "SGD", name: "Singapore Dollar" },
+  { code: "HKD", name: "Hong Kong Dollar" },
+  { code: "NZD", name: "New Zealand Dollar" },
+  { code: "SEK", name: "Swedish Krona" },
+  { code: "NOK", name: "Norwegian Krone" },
+  { code: "DKK", name: "Danish Krone" },
+  { code: "PLN", name: "Polish Zloty" },
+  { code: "MXN", name: "Mexican Peso" },
+  { code: "BRL", name: "Brazilian Real" },
+  { code: "EGP", name: "Egyptian Pound" },
+  { code: "QAR", name: "Qatari Riyal" },
+  { code: "KWD", name: "Kuwaiti Dinar" },
+  { code: "LKR", name: "Sri Lankan Rupee" },
+  { code: "NPR", name: "Nepalese Rupee" },
+];
+
+/* ─────────────────────────────────────────
+   FAQ data (also used to build the FAQPage
+   JSON-LD schema, so schema and on-page copy
+   always match exactly)
+───────────────────────────────────────── */
+const faqs: [string, string][] = [
+  [
+    "Why is the rate I get worse than the rate I looked up?",
+    "Because published rates are the mid-market rate — the midpoint between wholesale buying and selling prices — and almost nobody transacts at it. What you receive is that rate plus a margin, which is frequently presented as a rate rather than as a fee. Comparing the rate you were offered against the mid-market rate at that moment shows the true cost, whatever the fee line says.",
+  ],
+  [
+    "Is a commission-free exchange actually free?",
+    "Usually not. Charging nothing while moving the rate two or three percent is a common structure, and it costs more than a visible fee against a near-mid-market rate. A stated fee has the advantage of being comparable — you can add it up — whereas a margin built into the rate has to be worked out by comparing against mid-market.",
+  ],
+  [
+    "Should I pay in my own currency when a card machine abroad offers?",
+    "No — always choose the local currency. Being offered your home currency is dynamic currency conversion, which lets the merchant's payment provider set the exchange rate, and they set it in their favour. Declining lets your own card issuer convert instead, normally at a materially better rate. If a terminal shows two amounts, take the one in local money.",
+  ],
+  [
+    "How do I work out what a transfer really cost?",
+    "Divide the amount that arrived by the amount you sent to get your effective rate, then compare that against the mid-market rate at the time. Sending 1,000 and having 1,062 arrive when mid-market was 1.1000 means an effective rate of 1.0620 against a possible 1,100 — a cost of 38, or about 3.5%, however the provider described its charges.",
+  ],
+  [
+    "Where is currency exchange most expensive?",
+    "Airport and station desks, where the margin reflects the absence of alternatives rather than the cost of the service. High street bureaux are usually better and often improve for larger amounts. Cash withdrawals abroad can carry a transaction fee plus a cash advance charge if made on a credit card, which is easy to overlook.",
+  ],
+  [
+    "Which rate should I use for an invoice or a tax return?",
+    "The rate for the date the transaction occurred, not today's. That is the figure any audit will check against, and reconstructing it later is much harder than recording it at the time. Note both the rate and the date when the conversion happens, alongside the source you took it from.",
+  ],
+  [
+    "How often do exchange rates change?",
+    "Continuously during trading hours, so any rate you look up is a snapshot rather than a fixed price. For a small conversion the movement between checking and transacting is negligible; for a large transfer it can exceed the fee you were comparing. A quote is only valid for as long as the provider states.",
+  ],
+  [
+    "Does my card charge extra for spending abroad?",
+    "Many do, as a foreign transaction fee applied on top of the conversion. The difference between cards is often larger than the difference between exchange methods, so it is worth checking before travelling rather than discovering it on the statement afterwards.",
+  ],
+  [
+    "Can I use these rates for an actual transaction?",
+    "They are indicative and intended for estimating. Use them to compare options, budget a trip, or sanity-check a quote you have been given. For settlement, the rate that applies is the one your provider quotes at the moment the transaction executes, which will differ from any reference rate shown here.",
+  ],
+];
+
 export default function CurrencyConverter() {
   const [amount, setAmount] = useState("1");
   const [from, setFrom] = useState("USD");
   const [to, setTo] = useState("PKR");
-  const [currencies, setCurrencies] = useState<Currency[]>([]);
+  const [currencies, setCurrencies] = useState<Currency[]>(POPULAR_CURRENCIES);
   const [rate, setRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
@@ -21,19 +105,32 @@ export default function CurrencyConverter() {
     setOpenFAQ(openFAQ === index ? null : index);
   };
 
-  /* Fetch all currencies */
+  const handleFAQKey = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleFAQ(index);
+    }
+  };
+
+  /* Fetch the full 160+ currency list; fallback list stays in place if it fails */
   useEffect(() => {
     const fetchCurrencies = async () => {
-      const res = await fetch(
-        `https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGE_API_KEY}/codes`,
-      );
-      const data = await res.json();
-      setCurrencies(
-        data.supported_codes.map((c: [string, string]) => ({
-          code: c[0],
-          name: c[1],
-        })),
-      );
+      try {
+        const res = await fetch(
+          `https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGE_API_KEY}/codes`,
+        );
+        const data = await res.json();
+        if (Array.isArray(data.supported_codes)) {
+          setCurrencies(
+            data.supported_codes.map((c: [string, string]) => ({
+              code: c[0],
+              name: c[1],
+            })),
+          );
+        }
+      } catch {
+        // keep the fallback POPULAR_CURRENCIES list
+      }
     };
     fetchCurrencies();
   }, []);
@@ -41,12 +138,17 @@ export default function CurrencyConverter() {
   /* Fetch rate when from/to changes */
   useEffect(() => {
     const fetchRate = async () => {
-      const res = await fetch(
-        `https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGE_API_KEY}/pair/${from}/${to}`,
-      );
-      const data = await res.json();
-      setRate(data.conversion_rate);
-      setLastUpdated(data.time_last_update_utc);
+      try {
+        const res = await fetch(
+          `https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGE_API_KEY}/pair/${from}/${to}`,
+        );
+        const data = await res.json();
+        setRate(data.conversion_rate ?? null);
+        setLastUpdated(data.time_last_update_utc ?? null);
+      } catch {
+        setRate(null);
+        setLastUpdated(null);
+      }
     };
     fetchRate();
   }, [from, to]);
@@ -55,483 +157,328 @@ export default function CurrencyConverter() {
     amount && rate ? (Number(amount) * rate).toFixed(2) : "";
 
   return (
-    <>
-      {/* ---- PAGE LAYOUT WRAPPER ---- */}
-      <div className="page-layout single-page-padding">
-        <div className="single-page-padding">
-          <h1>Currency Converter — Live Exchange Rates</h1>
+    <div className="page-layout">
+      {/* FAQ JSON-LD schema for rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
 
-          <p>
-            Select your currencies and enter an amount to get a live conversion
-            instantly.
-          </p>
+      <div className="single-page-padding">
+        <h1>Currency Converter — Live Exchange Rates</h1>
 
-          <div className="single-page-padding">
-            <div className="calc-card single-calc">
-              {/* FROM ROW */}
-              <div
-                style={{ display: "flex", gap: "10px", marginBottom: "14px" }}
-              >
-                <input
-                  className="calc-input"
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  style={{ flex: "1" }}
-                />
-                <select
-                  className="calc-input"
-                  value={from}
-                  onChange={(e) => setFrom(e.target.value)}
-                  style={{ flex: "2.5" }}
-                >
-                  {currencies.map((c) => (
-                    <option key={c.code} value={c.code}>
-                      {c.name} ({c.code})
-                    </option>
-                  ))}
-                </select>
-              </div>
+        <p>
+          Convert any amount between 160+ world currencies using live,
+          market-based exchange rates updated in real time. Enter an amount,
+          pick your two currencies, and see the converted value along with the
+          exact mid-market rate and the timestamp it was last updated.
+        </p>
 
-              {/* TO ROW */}
-              <div style={{ display: "flex", gap: "10px" }}>
-                <input
-                  className="calc-input"
-                  type="text"
-                  value={convertedAmount}
-                  readOnly
-                  style={{ flex: "1" }}
-                />
-                <select
-                  className="calc-input"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  style={{ flex: "2.5" }}
-                >
-                  {currencies.map((c) => (
-                    <option key={c.code} value={c.code}>
-                      {c.name} ({c.code})
-                    </option>
-                  ))}
-                </select>
-              </div>
+        <div className="calc-card single-calc">
+          {/* FROM ROW */}
+          <div style={{ display: "flex", gap: "10px", marginBottom: "14px" }}>
+            <input
+              className="calc-input"
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              style={{ flex: "1" }}
+              aria-label="Amount to convert"
+            />
+            <select
+              className="calc-input"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+              style={{ flex: "2.5" }}
+              aria-label="From currency"
+            >
+              {currencies.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.name} ({c.code})
+                </option>
+              ))}
+            </select>
+          </div>
 
-              {rate && (
-                <div className="calc-result" style={{ marginTop: "10px" }}>
-                  1 {from} ≈ {rate.toFixed(4)} {to}
-                </div>
-              )}
-              {lastUpdated && (
-                <div
-                  className="calc-last-updated"
-                  style={{
-                    marginTop: "10px",
-                    fontSize: "0.9rem",
-                    color: "#ffffff",
-                  }}
-                >
-                  Last updated:{" "}
-                  {new Date(Date.parse(lastUpdated)).toLocaleString()}
-                </div>
-              )}
+          {/* TO ROW */}
+          <div style={{ display: "flex", gap: "10px" }}>
+            <input
+              className="calc-input"
+              type="text"
+              value={convertedAmount}
+              readOnly
+              style={{ flex: "1" }}
+              aria-label="Converted amount"
+            />
+            <select
+              className="calc-input"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              style={{ flex: "2.5" }}
+              aria-label="To currency"
+            >
+              {currencies.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.name} ({c.code})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {rate && (
+            <div className="calc-result" style={{ marginTop: "10px" }}>
+              1 {from} ≈ {rate.toFixed(4)} {to}
             </div>
-          </div>
-
-          <h2>What Is a Currency Converter?</h2>
-          <p>
-            A <strong>currency converter</strong> is an online tool that
-            calculates how much one currency is worth in another using live or
-            updated <strong>exchange rates</strong>. Whether you're converting{" "}
-            <strong>USD to PKR</strong>, <strong>EUR to USD</strong>, or any
-            other currency pair, our free{" "}
-            <strong>online currency converter</strong> gives you instant,
-            accurate results based on real-time market rates — no registration
-            required.
-          </p>
-
-          <h2>How Exchange Rates Work</h2>
-          <p>
-            An <strong>exchange rate</strong> tells you how much of one currency
-            you need to buy one unit of another. For example, if the{" "}
-            <strong>USD to EUR exchange rate</strong> is 0.92, one US dollar
-            buys 0.92 euros. Exchange rates are not fixed — they fluctuate
-            constantly based on supply and demand in global forex markets,
-            interest rate decisions by central banks, inflation data, trade
-            balances, and geopolitical events. Our converter pulls{" "}
-            <strong>live exchange rates</strong> so your conversions always
-            reflect current market conditions.
-          </p>
-
-          <h2>Most Searched Currency Conversions</h2>
-          <p>
-            Our tool supports 150+ currencies. Here are the most commonly
-            converted currency pairs worldwide:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <strong>USD to PKR</strong> — US Dollar to Pakistani Rupee
-            </li>
-            <li>
-              <strong>USD to EUR</strong> — US Dollar to Euro
-            </li>
-            <li>
-              <strong>USD to INR</strong> — US Dollar to Indian Rupee
-            </li>
-            <li>
-              <strong>GBP to USD</strong> — British Pound to US Dollar
-            </li>
-            <li>
-              <strong>EUR to USD</strong> — Euro to US Dollar
-            </li>
-            <li>
-              <strong>USD to AED</strong> — US Dollar to UAE Dirham
-            </li>
-            <li>
-              <strong>USD to SAR</strong> — US Dollar to Saudi Riyal
-            </li>
-            <li>
-              <strong>USD to CAD</strong> — US Dollar to Canadian Dollar
-            </li>
-            <li>
-              <strong>AUD to USD</strong> — Australian Dollar to US Dollar
-            </li>
-            <li>
-              <strong>USD to JPY</strong> — US Dollar to Japanese Yen
-            </li>
-          </ul>
-
-          <h2>How to Use the Currency Converter</h2>
-          <p>
-            Using our <strong>free currency converter</strong> is simple:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <strong>Step 1:</strong> Enter the amount you want to convert in
-              the top input field.
-            </li>
-            <li>
-              <strong>Step 2:</strong> Select your source currency (the currency
-              you have) from the first dropdown.
-            </li>
-            <li>
-              <strong>Step 3:</strong> Select your target currency (the currency
-              you want) from the second dropdown.
-            </li>
-            <li>
-              <strong>Step 4:</strong> The converted amount and current exchange
-              rate appear instantly — updated automatically as you change
-              values.
-            </li>
-          </ul>
-
-          <h2>Understanding Currency Exchange Rate Types</h2>
-
-          <h3>1. Spot Rate (Live / Real-Time Rate)</h3>
-          <p>
-            The <strong>spot exchange rate</strong> is the current market rate
-            at which two currencies can be exchanged immediately. This is the
-            rate our converter uses, making it ideal for day traders, travelers
-            checking live rates, and anyone needing the most current{" "}
-            <strong>foreign exchange rate</strong>.
-          </p>
-
-          <h3>2. Mid-Market Rate</h3>
-          <p>
-            The <strong>mid-market rate</strong> (also called the interbank
-            rate) is the midpoint between the buy and sell prices of two
-            currencies. Banks and money transfer services typically add a markup
-            above this rate. Our calculator displays the mid-market rate so you
-            can compare it against what your bank or service charges.
-          </p>
-
-          <h3>3. Fixed vs. Floating Exchange Rates</h3>
-          <p>
-            Some currencies are <strong>pegged (fixed)</strong> to another
-            currency — for example, the UAE Dirham (AED) is pegged to the US
-            Dollar at a fixed rate of 3.6725. Most major currencies like the
-            Euro, British Pound, and Japanese Yen are <strong>floating</strong>,
-            meaning their value shifts with market forces daily.
-          </p>
-
-          <h2>Currency Conversion for Travel — What You Need to Know</h2>
-          <p>
-            When traveling internationally, <strong>currency conversion</strong>{" "}
-            helps you budget accurately. A few important tips:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <strong>Always check live rates</strong> before exchanging money
-              at airports or hotels, which typically offer worse rates
-            </li>
-            <li>
-              <strong>Use the mid-market rate as a benchmark</strong> — if a
-              money changer's rate is significantly lower, look elsewhere
-            </li>
-            <li>
-              <strong>Credit card foreign transaction fees</strong> typically
-              add 1–3% on top of the exchange rate
-            </li>
-            <li>
-              <strong>Dynamic currency conversion (DCC)</strong> at ATMs and
-              shops abroad often applies unfavorable rates — always pay in the
-              local currency
-            </li>
-          </ul>
-
-          <h2>Benefits of Our Free Online Currency Converter</h2>
-          <ul className="custom-list">
-            <li>
-              <strong>Live exchange rates</strong> — updated regularly for
-              accurate, real-world conversions
-            </li>
-            <li>
-              <strong>150+ currencies supported</strong> — including USD, EUR,
-              GBP, INR, PKR, AED, SAR, JPY, CNY, CAD, AUD, and more
-            </li>
-            <li>
-              <strong>Instant results</strong> — no button to press; conversion
-              updates automatically
-            </li>
-            <li>
-              <strong>Rate timestamp displayed</strong> — see exactly when the
-              rate was last updated
-            </li>
-            <li>
-              <strong>Free and mobile-friendly</strong> — works on any device
-              with no sign-up or download required
-            </li>
-          </ul>
-
-          <h2>Frequently Asked Questions About Currency Conversion</h2>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(0)}>
-              What is today's USD to PKR exchange rate?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 0 && (
-              <p>
-                The USD to PKR rate changes daily based on the forex market. Use
-                the converter above — select USD as the source currency and PKR
-                as the target — to see the current live exchange rate. The
-                last-updated timestamp below the result tells you exactly how
-                recent the rate is.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(1)}>
-              Does this converter use live exchange rates?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 1 && (
-              <p>
-                Yes. Our currency converter uses real-time, market-based
-                exchange rates sourced from a reliable forex data provider.
-                Every conversion reflects the most recently available rate, and
-                the exact timestamp of the last update is displayed below the
-                result so you always know how current the data is.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(2)}>
-              How many currencies does this converter support?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 2 && (
-              <p>
-                Our tool supports over <strong>150 global currencies</strong>,
-                covering all major world currencies (USD, EUR, GBP, JPY, CNY,
-                INR, AUD, CAD) as well as regional currencies across Asia, the
-                Middle East, Africa, and Latin America including PKR, AED, SAR,
-                BDT, NGN, KES, and many more.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(3)}>
-              What is the difference between the exchange rate and the
-              mid-market rate?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 3 && (
-              <p>
-                The <strong>mid-market rate</strong> is the pure interbank rate
-                — the midpoint between buy and sell prices — with no markup
-                applied. Banks, airports, and transfer services add a margin
-                above this rate as their fee or profit. Our converter shows the
-                mid-market rate, which you can use as a benchmark to evaluate
-                how good or bad the rate your bank or money changer is offering
-                actually is.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(4)}>
-              Can I use this converter to send money abroad?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 4 && (
-              <p>
-                Our tool shows you the converted amount and live exchange rate
-                so you can calculate exactly how much the recipient will get.
-                However, actual money transfers require a payment service (such
-                as Wise, Western Union, or your bank). Use our converter to
-                compare the rate offered by any transfer service against the
-                live mid-market rate before sending money internationally.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(5)}>
-              Why do exchange rates change every day?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 5 && (
-              <p>
-                Exchange rates fluctuate because currency values are determined
-                by supply and demand in global forex markets, which operate 24
-                hours a day. Key factors that move exchange rates include
-                central bank interest rate decisions, inflation data, GDP
-                growth, trade balances, political stability, and market
-                sentiment. Major news events — such as a U.S. Federal Reserve
-                rate announcement — can shift exchange rates significantly
-                within minutes.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(6)}>
-              Is this currency converter free?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 6 && (
-              <p>
-                Yes — completely free with no account, no subscription, and no
-                hidden fees. Simply open the page, select your currencies, enter
-                an amount, and get the converted value instantly. It works on
-                all devices including smartphones, tablets, and desktops.
-              </p>
-            )}
-          </div>
+          )}
+          {lastUpdated && (
+            <div
+              className="calc-last-updated"
+              style={{
+                marginTop: "10px",
+                fontSize: "0.9rem",
+                color: "#ffffff",
+              }}
+            >
+              Last updated: {new Date(Date.parse(lastUpdated)).toLocaleString()}
+            </div>
+          )}
         </div>
 
-        {/* ---- SIDEBAR ---- */}
-        <aside className="sidebar">
-          <div className="sidebar-box">
-            <p style={{ fontSize: "20px", fontWeight: 600 }}>Related Tools</p>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              <li>
-                <Link href="/image-converter/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Image Converter
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/image-compressor/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Image Compressor
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/image-resizer/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Image Resizer
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/password-generator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Password Generator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/text-generator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Text Generator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/text-converter/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Text Converter
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/word-char-counter/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Word Counter
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/color-picker/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Color Picker
-                  </span>
-                </Link>
-              </li>
+        {/* ---- SEO CONTENT ---- */}
 
-              <style jsx>{`
-                .hover-item:hover {
-                  text-decoration: underline;
-                }
-              `}</style>
-            </ul>
-          </div>
-        </aside>
+        <h2>The Rate You See Is Not the Rate You Get</h2>
+        <p>
+          Look up an exchange rate anywhere and you will be shown the mid-market
+          rate — the midpoint between what buyers are offering and what sellers
+          are asking on the wholesale market. It is the honest reference rate,
+          and almost nobody transacts at it.
+        </p>
+        <p>
+          What you actually receive is that rate plus a margin. The margin is
+          frequently presented as a favourable rate rather than as a fee, which
+          is why an exchange advertised as commission-free can still be the more
+          expensive option.
+        </p>
+        <pre>
+          Mid-market rate: 1 unit = 1.1000{"\n"}Rate offered to you: 1 unit =
+          1.0670{"\n"}
+          {"\n"}Margin: 3% — charged as a rate, not shown as a fee
+        </pre>
+        <p>
+          The way to see it is to compare the rate you were given against the
+          mid-market rate for that moment. The gap is the true cost, whatever the
+          fee line says.
+        </p>
+
+        <h2>Where the Cost Hides</h2>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Typical shape of the cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Airport exchange desks</td>
+                <td>Very wide margin, often with a fixed fee on top</td>
+              </tr>
+              <tr>
+                <td>High street bureaux</td>
+                <td>Narrower margin; better rates for larger amounts</td>
+              </tr>
+              <tr>
+                <td>Bank card abroad</td>
+                <td>A card scheme rate plus a foreign transaction fee</td>
+              </tr>
+              <tr>
+                <td>Cash withdrawal abroad</td>
+                <td>
+                  Transaction fee, plus a cash advance charge on credit cards
+                </td>
+              </tr>
+              <tr>
+                <td>Specialist transfer services</td>
+                <td>An explicit fee against a rate near mid-market</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The last row is worth noting because it looks worse and is often
+          cheaper. A visible fee alongside a near-mid-market rate is usually
+          better value than no fee and a rate quietly moved three percent, and it
+          has the advantage of being comparable — you can add it up.
+        </p>
+
+        <h2>Always Decline Conversion at the Terminal</h2>
+        <p>
+          When a card machine or cash dispenser abroad offers to charge you in
+          your home currency rather than the local one, that is dynamic currency
+          conversion, and it is essentially always the worse choice.
+        </p>
+        <p>
+          The offer sounds helpful — you see the amount in familiar money and
+          avoid uncertainty. What you are agreeing to is letting the merchant&apos;s
+          payment provider set the exchange rate, and they set it in their
+          favour. Declining lets your own card issuer convert instead, usually at
+          a materially better rate.
+        </p>
+        <p>
+          The rule is simple: always pay in the local currency. If a terminal
+          shows you two amounts and one is in your home currency, choose the
+          other one.
+        </p>
+
+        <h2>Rates Move, and Quotes Go Stale</h2>
+        <p>
+          Currency rates change continuously during trading hours, so any rate
+          you look up is a snapshot rather than a fixed price. For a small
+          conversion the movement between checking and transacting is negligible.
+          For a large transfer it can exceed the fee you were comparing.
+        </p>
+        <p>
+          Two consequences follow. A quote is only valid for as long as the
+          provider says it is, and a rate that looked good yesterday tells you
+          nothing about today. And converting an amount for a document — an
+          invoice, an expense claim, a tax return — should use the rate for the
+          date the transaction occurred rather than today&apos;s, since that is
+          the figure any audit will check against.
+        </p>
+
+        <h2>Working Out the True Cost of a Transfer</h2>
+        <p>
+          Comparing two providers means putting both on the same footing, which
+          takes one calculation.
+        </p>
+        <pre>
+          Amount actually received ÷ Amount sent = your effective rate{"\n"}
+          Compare that against the mid-market rate at the time
+        </pre>
+        <p>
+          Sending 1,000 and having 1,062 arrive when the mid-market rate was
+          1.1000 means the effective rate was 1.0620, against a possible 1,100 —
+          a cost of 38, or about 3.5%, regardless of how the provider described
+          its charges.
+        </p>
+        <p>
+          Do this once for each provider you are considering and the comparison
+          becomes trivial. It also reveals the common case where a provider
+          charging an explicit fee delivers more money than one charging nothing.
+        </p>
+
+        <h2>Practical Habits</h2>
+        <ul className="custom-list">
+          <li>
+            Compare against the mid-market rate rather than against another
+            provider&apos;s retail rate, so you are measuring the cost rather
+            than choosing between two versions of it.
+          </li>
+          <li>
+            Pay in local currency every time a terminal offers you a choice.
+          </li>
+          <li>
+            Avoid exchanging at airports and stations, where the margin reflects
+            the absence of alternatives rather than the cost of the service.
+          </li>
+          <li>
+            For anything documented, record the rate and the date you used. Later
+            reconstruction is much harder than noting it at the time.
+          </li>
+          <li>
+            Check whether your card charges a foreign transaction fee before
+            travelling, since the difference between cards is often larger than
+            the difference between exchange methods.
+          </li>
+        </ul>
+        <p>
+          Rates shown here are indicative and intended for estimating rather than
+          for settlement. For working out tax on a converted amount, the{" "}
+          <Link href="/vat-calculator/" className="my-link">
+            VAT calculator
+          </Link>{" "}
+          and{" "}
+          <Link href="/income-tax-calculator/" className="my-link">
+            income tax calculator
+          </Link>{" "}
+          handle those separately.
+        </p>
+        <section>
+          <h2>Currency Exchange Questions</h2>
+
+          {faqs.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => handleFAQKey(e, i)}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </section>
+
       </div>
-    </>
+
+      {/* ---- SIDEBAR ---- */}
+      <aside className="sidebar">
+        <div className="sidebar-box">
+          <p style={{ fontSize: "18px", fontWeight: 600, margin: "0 0 12px" }}>
+            Related Tools
+          </p>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {[
+              ["/image-converter/", "Image Converter"],
+              ["/image-compressor/", "Image Compressor"],
+              ["/image-resizer/", "Image Resizer"],
+              ["/password-generator/", "Password Generator"],
+              ["/text-generator/", "Text Generator"],
+              ["/text-converter/", "Text Converter"],
+              ["/word-char-counter/", "Word Counter"],
+              ["/color-picker/", "Color Picker"],
+            ].map(([href, label]) => (
+              <li key={href} style={{ marginBottom: "6px" }}>
+                <Link href={href} className="my-link">
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    </div>
   );
 }

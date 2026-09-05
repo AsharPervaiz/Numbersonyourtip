@@ -1,7 +1,18 @@
 ---
+# This file is intentionally a no-op.
+#
+# It previously ran `npm install`, `npm run build` and `pm2 restart mynextapp`,
+# which could never work: next.config.ts sets `output: "export"`, so the build
+# produces a plain folder of HTML, CSS and JS with no server in it. There is no
+# Node process to start and nothing for pm2 to restart, which is why setting the
+# project up as a cPanel Node application did not work.
+#
+# Deployment is handled by .github/workflows/deploy.yml instead: GitHub Actions
+# builds the site on a clean runner and uploads out/ into public_html over FTPS.
+# Nothing needs to run on the server.
+#
+# Left in place rather than deleted so that cPanel's Git Version Control, if it
+# is still connected to this repository, does not fall back to older behaviour.
 deployment:
   tasks:
-    - export NODE_ENV=production
-    - npm install
-    - npm run build
-    - pm2 restart mynextapp || true
+    - /bin/true

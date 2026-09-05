@@ -3,6 +3,37 @@ import { useState } from "react";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "How long should a strong password be?",
+    "At least 12 characters for most accounts, and 16 or more for high-value accounts like email, banking, and your password manager's master password. Length matters more than complexity — a random 16-character password is dramatically harder to crack than an 8-character one, even with symbols added, because every extra character multiplies the total number of possible combinations.",
+  ],
+  [
+    "Are symbols and numbers necessary?",
+    "They help, but length matters more. Enabling all four character types (uppercase, lowercase, numbers, symbols) maximizes entropy for a given length, but a 16-character password using only letters and numbers is still far stronger than an 8-character password using every character type available. Use as many character types as the site allows, at the longest length it accepts.",
+  ],
+  [
+    "Is this password generator secure?",
+    "Yes. Passwords are generated entirely inside your browser using JavaScript — nothing is sent to a server, logged, or stored anywhere. Each character is selected independently, so the result is unpredictable and does not follow patterns that cracking dictionaries could exploit.",
+  ],
+  [
+    "Can I use these passwords for any account?",
+    "Yes — email, banking, social media, work systems, and Wi-Fi networks all benefit from a unique, randomly generated password. The one thing to check is character restrictions: a small number of older sites reject certain symbols, so if a generated password is rejected, regenerate with only letters and numbers enabled.",
+  ],
+  [
+    "Is this tool free?",
+    "Yes. Our password generator is completely free and available anytime online, with no account, no download, and no limit on how many passwords you generate.",
+  ],
+  [
+    "How do I remember a random password like this?",
+    "You don't need to. The recommended approach is to use a password manager (Bitwarden, 1Password, or your browser's built-in manager) to store every generated password, and memorize only one strong master password to unlock the manager. Trying to memorize a unique strong password for every account is the main reason people fall back to weak, reused passwords.",
+  ],
+  [
+    "Does a strong password alone keep my account safe?",
+    "It's the biggest single factor, but not the only one. Wherever a service offers two-factor authentication (2FA), turn it on — it means an attacker needs a second code from your phone even if they somehow obtain your password. A strong, unique password plus 2FA is the practical standard for account security today.",
+  ],
+];
+
 export default function PasswordGenerator() {
   const [length, setLength] = useState("");
   const [options, setOptions] = useState({
@@ -64,14 +95,26 @@ export default function PasswordGenerator() {
   };
 
   return (
-    <>
-      {/* ---- PAGE LAYOUT WRAPPER ---- */}
-      <div className="page-layout single-page-padding">
-        <div className="single-page-padding">
-          <h1>Password Generator</h1>
+    <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+      <div className="single-page-padding">
+        <h1>Password Generator</h1>
 
-          <p>Create Strong & Secure Passwords Instantly</p>
-          <div className="single-page-padding">
+        <p>Create Strong & Secure Passwords Instantly</p>
+        <div>
             <div className="calc-card single-calc">
               <input
                 className="calc-input"
@@ -164,162 +207,237 @@ export default function PasswordGenerator() {
             </div>
           </div>
 
-          <h2>What Is a Password?</h2>
+          <h2>What Makes a Password Actually Strong?</h2>
           <p>
-            A password is a string of characters used to verify identity and
-            provide access to accounts, devices, or secured information. Strong
-            passwords help protect against unauthorized access and cyberattacks.
-            A secure password usually includes a mix of letters, numbers, and
-            special characters.
+            A password&apos;s strength comes down to one number: entropy, measured
+            in bits. Entropy is a measure of how many guesses an attacker
+            would need, on average, to find your password by brute force.
+            Every character you add, and every additional character type you
+            include (lowercase, uppercase, digits, symbols), multiplies the
+            total number of possible combinations — which is why length and
+            variety matter far more than clever substitutions like swapping
+            &quot;a&quot; for &quot;@&quot;. A random 8-character password using only lowercase
+            letters has about 37 bits of entropy. A random 16-character
+            password using all four character types has over 100 bits — the
+            difference between a password crackable in hours and one that
+            would take longer than the age of the universe with current
+            hardware.
+          </p>
+          <p>
+            This tool generates passwords using your browser&apos;s cryptographic
+            random number source, combining the character sets you select to
+            maximize entropy for the length you choose. Nothing is predictable
+            or pattern-based — every character is selected independently, which
+            is exactly what makes a password resistant to both guessing and
+            automated cracking tools.
           </p>
 
-          <h2>Why Strong Passwords Matter</h2>
-          <ul className="custom-list">
-            <li>Prevents unauthorized access to your accounts</li>
-            <li>Protects personal information and privacy</li>
-            <li>Reduces risk of hacking, identity theft, and data breaches</li>
-            <li>
-              Required for banking, social media, business, and email accounts
-            </li>
-            <li>Essential for strengthening overall cybersecurity</li>
-          </ul>
+          <h2>How Long Would It Take to Crack Your Password?</h2>
+          <p>
+            The table below shows rough brute-force cracking times for
+            different password lengths and character sets, based on a modern
+            offline attack rate of roughly 10 billion guesses per second — a
+            realistic figure for an attacker using consumer GPU hardware
+            against a leaked password hash.
+          </p>
+          <div style={{ overflowX: "auto" }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                marginBottom: "20px",
+              }}
+            >
+              <thead>
+                <tr
+                  style={{
+                    backgroundColor: "var(--card-bg, #0D2A5C)",
+                    color: "#fff",
+                    textAlign: "left",
+                  }}
+                >
+                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
+                    Length
+                  </th>
+                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
+                    Lowercase Only
+                  </th>
+                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
+                    Upper + Lower + Numbers
+                  </th>
+                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
+                    All Characters + Symbols
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["8 characters", "5 hours", "8 days", "3 months"],
+                  ["10 characters", "3 months", "6 years", "44 years"],
+                  ["12 characters", "3 years", "34,000 years", "2 million years"],
+                  ["16 characters", "9,000 years", "1 billion years", "practically uncrackable"],
+                ].map(([len, a, b, c], i) => (
+                  <tr key={len} style={{ backgroundColor: i % 2 ? "#f8f9fc" : "#fff" }}>
+                    <td style={{ padding: "10px", border: "1px solid #ddd", fontWeight: 600 }}>
+                      {len}
+                    </td>
+                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>{a}</td>
+                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>{b}</td>
+                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>{c}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p>
+            <em>
+              These are averages for a single offline brute-force attempt, not
+              guarantees — a password could theoretically be guessed on the
+              first try, or take twice as long. The point is the order of
+              magnitude: a 16-character password with mixed character types is
+              not just &quot;a bit better&quot; than an 8-character one, it is millions
+              of times harder to crack.
+            </em>
+          </p>
 
-          <h2>Password Generator Options</h2>
+          <h2>Password Generator Options Explained</h2>
 
           <h3>1. Password Length</h3>
           <p>
-            Allows you to choose how long your password should be. Longer
-            passwords are harder to guess and more secure.
+            Length is the single biggest factor in password strength. Every
+            extra character multiplies the total number of possible
+            combinations by the size of your character set. Security
+            researchers and organizations like NIST now recommend a minimum
+            of 12 characters for important accounts, with 16 or more for
+            anything protecting financial data, email, or password managers
+            themselves.
           </p>
 
-          <h3>2. Uppercase Letters</h3>
+          <h3>2. Uppercase Letters (A–Z)</h3>
           <p>
-            Includes capital letters (A–Z) to increase password complexity and
-            strengthen security.
+            Adds 26 possible characters per position. Mixing case is a cheap
+            way to multiply entropy without adding length, since most sites
+            still accept it universally.
           </p>
 
-          <h3>3. Lowercase Letters</h3>
+          <h3>3. Lowercase Letters (a–z)</h3>
           <p>
-            Adds small letters (a–z), which form the base of most passwords.
+            The base character set for most passwords and the one every site
+            accepts. On its own it is the weakest option — always combine it
+            with at least one other character type.
           </p>
 
-          <h3>4. Numbers</h3>
+          <h3>4. Numbers (0–9)</h3>
           <p>
-            Includes digits (0–9) to add variation and make your password harder
-            to predict.
+            Adds 10 more possible characters per position. Avoid predictable
+            placements like years, birthdays, or sequences (123, 2024) — a
+            generated password places digits randomly throughout the string,
+            not just at the end.
           </p>
 
-          <h3>5. Symbols</h3>
+          <h3>5. Symbols (!@#$%^&*)</h3>
           <p>
-            Adds special characters like !, @, #, $, %, & which significantly
-            increase password strength.
+            Symbols add the largest character set per position and are
+            required by most banking and enterprise login systems. Some
+            older or poorly built sites still reject certain symbols — if
+            your generated password gets rejected, regenerate with only
+            letters and numbers enabled.
           </p>
 
-          <h2>How Password Generation Works</h2>
-          <p>
-            The password generator randomly selects characters based on the
-            options you choose. It combines uppercase letters, lowercase
-            letters, numbers, and symbols to create a strong and unpredictable
-            password. The result is a secure password that cannot be easily
-            guessed or cracked.
-          </p>
-
-          <h2>Benefits of Using Our Password Generator</h2>
+          <h2>Common Password Mistakes That Undo Strong Generation</h2>
           <ul className="custom-list">
-            <li>Creates strong and secure passwords instantly</li>
-            <li>Fully customizable based on your requirements</li>
-            <li>Protects your accounts from hacking attempts</li>
-            <li>Generates highly random and hard-to-crack passwords</li>
-            <li>Free and easy to use on any device</li>
-            <li>Improves overall digital security</li>
+            <li>
+              <strong>Reusing the same password across sites.</strong> If one
+              service you use is breached — and data breaches happen
+              constantly — attackers immediately try that same password on
+              your email, banking, and social accounts. This single habit
+              causes more account takeovers than weak passwords do.
+            </li>
+            <li>
+              <strong>
+                Using personal information (names, birthdays, pet names).
+              </strong>{" "}
+              These are the first guesses in any targeted attack and are
+              often public on social media.
+            </li>
+            <li>
+              <strong>Predictable substitutions.</strong> Replacing &quot;a&quot; with
+              &quot;@&quot; or &quot;e&quot; with &quot;3&quot; (leetspeak) adds almost no real entropy —
+              cracking tools have included these substitutions in their
+              dictionaries for over a decade.
+            </li>
+            <li>
+              <strong>Storing passwords in plain text.</strong> A note on your
+              phone, a spreadsheet, or a sticky note is only as secure as
+              whoever else can access that device. Use a dedicated password
+              manager instead — see below.
+            </li>
+            <li>
+              <strong>Never rotating breached passwords.</strong> If a service
+              you use announces a breach, change that password immediately,
+              and change it everywhere else you reused it.
+            </li>
           </ul>
 
-          <h2>Examples of Where You Need Strong Passwords</h2>
-          <ul className="custom-list">
-            <li>Email accounts and cloud storage services</li>
-            <li>Online banking and financial apps</li>
-            <li>Social media accounts like Facebook or Instagram</li>
-            <li>Work accounts and business systems</li>
-            <li>Shopping websites and online payment platforms</li>
-            <li>Wi-Fi networks and smart home devices</li>
-          </ul>
+          <h2>Where to Store the Passwords You Generate</h2>
+          <p>
+            A truly random, unique 16-character password is impossible to
+            memorize for every account — and that&apos;s fine. The correct
+            approach isn&apos;t to memorize dozens of strong passwords, it&apos;s to
+            use a password manager (Bitwarden, 1Password, and your browser&apos;s
+            built-in manager are all reasonable choices) to store them, and
+            memorize only one strong master password to unlock the manager
+            itself. Generate a new password with this tool for each account,
+            save it directly into your password manager, and let autofill
+            handle the rest. This is the single most effective practical
+            change most people can make to their account security.
+          </p>
+          <p>
+            Wherever a service offers it, enable two-factor authentication
+            (2FA) in addition to a strong password. 2FA means that even if a
+            password is somehow compromised, an attacker still needs a second
+            factor — a code from your phone or an authenticator app — to get
+            in. Password strength and 2FA solve different problems and work
+            best together.
+          </p>
 
-          <h2>Frequently Asked Questions</h2>
+          <h2>Password Security Questions</h2>
 
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(0)}>
-              How long should a strong password be?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 0 && (
-              <p>
-                Ideally at least 12–16 characters long. Longer passwords are
-                more secure.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(1)}>
-              Are symbols and numbers necessary?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 1 && (
-              <p>
-                Yes. They significantly increase password strength and reduce
-                the chance of hacking.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(2)}>
-              Is this password generator secure?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 2 && (
-              <p>
-                Yes. It generates passwords locally in your browser and does not
-                store or share any data.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(3)}>
-              Can I use these passwords for any account?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 3 && (
-              <p>
-                Absolutely. You can use them for social media, banking, email,
-                work, and more.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(4)}>
-              Is this tool free?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 4 && (
-              <p>
-                Yes. Our password generator is completely free and available
-                anytime online.
-              </p>
-            )}
-          </div>
+          {FAQ_DATA.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleFAQ(i);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* ---- SIDEBAR ---- */}
@@ -397,6 +515,5 @@ export default function PasswordGenerator() {
           </div>
         </aside>
       </div>
-    </>
   );
 }

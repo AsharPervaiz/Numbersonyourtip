@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import FuelCostCalculator from "../components/FuelCostCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Fuel Cost Calculator | Trip Fuel Cost, Cost Per KM & Gas Split (Free)",
+  title: "Fuel Cost Calculator — MPG and L/100km",
   description:
-    "Free fuel cost calculator online for any trip — find how much gas you need, total cost, cost per km/mile, toll charges, & per-passenger split. Supports L/100km, km/L, and MPG.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Trip fuel cost, cost per mile or kilometre, and fair fuel splits — with conversions between US MPG, imperial MPG, L/100 km and km/L that actually line up.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/fuel-cost-calculator/",
+    canonical: "/fuel-cost-calculator/",
+  },
+  openGraph: {
+    title: "Fuel Cost Calculator — MPG and L/100km",
+    description:
+      "Trip cost, cost per mile, commute budgets and fuel splits, plus why the four efficiency units are not interchangeable.",
+    url: "/fuel-cost-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Fuel Cost Calculator — MPG and L/100km",
+    description:
+      "Trip fuel cost, cost per mile, and conversions between MPG, L/100 km and km/L.",
   },
 };
 

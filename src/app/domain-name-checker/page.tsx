@@ -1,16 +1,27 @@
 import { Metadata } from "next";
-import DomainLookup from "../components/DomainNameChecker";
+import DomainNameChecker from "../components/DomainNameChecker";
 
 export const metadata: Metadata = {
-  title: "Free Domain Name Checker | Check Availability Across All Extensions",
+  title: "Domain Name Checker — Availability & Price",
   description:
-    "Free domain name checker — check if a website name is taken across .com, .net, .org, .io, .co, .dev, .app, and .ai at once. No sign-up, no purchase required, live RDAP/WHOIS data.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Check domain availability across extensions, and the three things availability does not tell you: premium pricing, trademark risk and the domain's past.",
   alternates: {
-    canonical: "https://numbersonyourtip/domain-name-checker/",
+    canonical: "/domain-name-checker/",
+  },
+  openGraph: {
+    title: "Domain Name Checker — Availability & Price",
+    description:
+      "Available is the first check, not the only one. Premium pricing, renewals, trademarks and domain history.",
+    url: "/domain-name-checker/",
+    type: "article",
+  },
+  twitter: {
+    title: "Domain Name Checker — Availability & Price",
+    description:
+      "Domain availability across extensions, plus what to check before you register.",
   },
 };
 
 export default function Page() {
-  return <DomainLookup />;
+  return <DomainNameChecker />;
 }

@@ -265,44 +265,40 @@ function VATResultPanel({ result }: { result: VATResult | null }) {
 
 const FAQ_DATA = [
   {
-    q: "How do I add VAT to a price?",
-    a: "Multiply the net (pre-VAT) price by the VAT rate divided by 100, then add the result. For example, to add 20% VAT to 500: VAT = 500 × 0.20 = 100, Total = 500 + 100 = 600. Select 'Add VAT to price' in the calculator and enter the net price and rate for instant results.",
-  },
-  {
     q: "How do I remove VAT from a price?",
-    a: "Divide the gross (VAT-inclusive) price by (1 + VAT rate ÷ 100). For 20% VAT on 600: Net = 600 ÷ 1.20 = 500, VAT = 600 − 500 = 100. Select 'Remove VAT from price' mode to reverse-calculate any VAT-inclusive amount.",
+    a: "Divide the gross price by 1 plus the rate — at 20% that means dividing by 1.20, so 600 gross is 500 net. Do not subtract the percentage: taking 20% off 600 gives 480, which is wrong by 20. The error happens because VAT is a percentage of the net price, not of the gross, so subtracting takes a fifth of the wrong number.",
   },
   {
-    q: "How do I calculate VAT from a gross amount?",
-    a: "Use the reverse VAT formula: divide the gross price by (1 + rate/100) to get the net, then subtract net from gross to find the VAT component. This calculator handles it automatically in 'Remove VAT' mode — enter the gross amount and the rate.",
+    q: "Why is subtracting 20% from the total not the same as removing VAT?",
+    a: "Because the two percentages are applied to different bases. VAT of 20% is calculated on the net figure, so on a net 100 the VAT is 20 and the gross is 120. Working backwards, the 20 of VAT is one sixth of 120, not one fifth. Subtracting a fifth of the gross removes too much, and the size of the error grows with the rate — trivial at 5%, substantial at 25%.",
   },
   {
-    q: "What is the VAT rate in the UK?",
-    a: "The standard UK VAT rate is 20%. A reduced rate of 5% applies to domestic fuel, home energy-saving materials, and children's car seats. Some items are zero-rated (0%) including most food, children's clothing, and books.",
+    q: "How do I work out just the VAT amount in a total?",
+    a: "Multiply the gross by the rate divided by 100 plus the rate. That produces a simple fraction at common rates: one sixth at 20%, one fifth at 25%, one eleventh at 10% and one twenty-first at 5%. A gross of 120 at 20% therefore contains 20 of VAT, since 120 divided by 6 is 20. These fractions make it possible to check almost any receipt mentally.",
   },
   {
-    q: "What is the difference between zero-rated and VAT-exempt?",
-    a: "Zero-rated means VAT is charged at 0% — the supply is within the VAT system, so the seller can reclaim input VAT. Exempt means the supply is outside the VAT system entirely — no VAT is charged and input VAT on related purchases generally cannot be reclaimed.",
+    q: "How do I add VAT to a price?",
+    a: "Multiply the net price by 1 plus the rate — 1.20 for 20%, 1.05 for 5%, 1.25 for 25%. A net 500 at 20% becomes 600. Calculating the VAT separately and adding it gives the same result, but the single multiplication avoids an intermediate rounding step, which matters when you are totalling a column of invoice lines.",
   },
   {
-    q: "What is the difference between VAT and sales tax?",
-    a: "VAT is collected at every stage of the supply chain, with each business reclaiming the VAT it paid on inputs and remitting only the difference. Sales tax is collected once at the final point of sale. VAT is used in most of the world; sales tax is primarily used in the United States.",
+    q: "Why does my invoice total differ by a penny from my accounting software?",
+    a: "Almost always rounding order rather than an arithmetic error. Rounding the VAT on each line and then adding produces a slightly different total from calculating VAT on the summed net. Three lines of 12.49 at 20% give 7.50 the first way and 7.49 the second. Pick one convention and apply it consistently, since the difference compounds across a ledger instead of cancelling out.",
   },
   {
-    q: "What is the difference between VAT and GST?",
-    a: "They are functionally the same — both are consumption taxes collected at each stage of the supply chain with input tax credit mechanisms. GST is the term used in India, Australia, Canada, New Zealand, and Singapore. VAT is used in Europe, the Middle East, and most of Africa and Asia. The mechanics are nearly identical; only the names and specific rate structures differ.",
+    q: "What is the difference between zero-rated and exempt?",
+    a: "Both show no VAT on the customer's invoice and they behave in opposite ways behind it. A zero-rated supply is still a taxable supply, so the business charges nothing but can still reclaim the VAT it paid on its own costs. An exempt supply falls outside the VAT charge entirely, so no input VAT can be reclaimed and that VAT becomes a real cost to the business.",
   },
   {
-    q: "Do I charge VAT on exports?",
-    a: "In most countries, exports are zero-rated — you do not charge VAT to foreign customers, but you can still reclaim input VAT on business costs related to making that export. Rules vary by country and service type, so verify with your local tax authority.",
+    q: "How much VAT does a registered business actually pay over?",
+    a: "The difference between output VAT charged on sales and input VAT paid on purchases. A business charging 12,000 and paying 8,000 in a quarter remits 4,000. When input exceeds output — common during heavy investment, or for a business making zero-rated supplies — the period ends in a reclaim rather than a payment.",
   },
   {
-    q: "Can I reclaim VAT as a business?",
-    a: "Yes. VAT-registered businesses offset input VAT (paid on purchases) against output VAT (collected on sales). If input exceeds output — common for exporters or businesses making large capital purchases — you can claim a refund from the tax authority.",
+    q: "Is VAT the same as sales tax or GST?",
+    a: "Not quite. VAT is charged at every stage of the supply chain with businesses reclaiming what they paid, so the tax accumulates only on the value added at each step. Sales tax is typically charged once, at the final retail sale. GST is structurally very close to VAT and the terms are often used interchangeably, though the rate bands and registration rules differ by country.",
   },
   {
-    q: "Is this VAT calculator free?",
-    a: "Yes — completely free with no sign-up. Add or remove VAT from any price at any rate. The visual breakdown shows pre-VAT price, VAT amount, post-VAT total, and a gauge for the VAT burden.",
+    q: "Which VAT rate should I use?",
+    a: "The one set by law for that product or service in the country of supply, which is not a matter of choice. Most systems run a standard rate, one or more reduced rates for specified categories, and zero-rated or exempt treatments for others. Rates and category rules also change over time, so confirm the current figure with the relevant tax authority before filing.",
   },
 ];
 
@@ -386,7 +382,7 @@ export default function VATCalculator() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
 
-        <h1>Free VAT Calculator Online — Add or Remove VAT From Any Price</h1>
+        <h1>VAT Calculator — Add VAT or Reverse It Out of a Total</h1>
         <p>
           Add VAT to a net price or use the reverse VAT calculator to extract
           VAT from a gross amount — at any rate (5%, 15%, 18%, 20%, 25%, or
@@ -457,349 +453,358 @@ export default function VATCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is VAT and How Does It Work?</h2>
+        <h2>Two Directions, and Only One of Them Is Obvious</h2>
         <p>
-          VAT (Value Added Tax) is an indirect consumption tax levied on goods
-          and services at each stage of production and sale. It is one of the
-          most common forms of taxation worldwide, used in over 160 countries.
-          Unlike a sales tax that is applied only at the final point of sale,
-          VAT is collected at every stage of the supply chain — from
-          manufacturers to wholesalers to retailers — with each business
-          reclaiming the VAT it paid on inputs and remitting only the difference
-          to the government.
+          Every VAT calculation goes one of two ways. You either have a price
+          without VAT and need the total, or you have a total that already
+          includes VAT and need to work backwards. The first is a multiplication
+          most people get right. The second is where nearly all VAT errors
+          happen, because the instinctive move — subtract the percentage — is
+          wrong.
         </p>
         <p>
-          For consumers, VAT appears as an addition to the final price of a
-          product or service. For businesses, it is a tax they collect on behalf
-          of the government and must accurately account for in their records.
-          This calculator handles both sides: adding VAT to a net price for
-          invoicing, and reverse-calculating VAT from a gross amount for
-          accounting and reclaim purposes. If you are managing broader business
-          finances alongside VAT, our{" "}
-          <Link href="/income-tax-calculator/" className="my-link">
-            income tax calculator
-          </Link>{" "}
-          handles annual income tax for salaried and self-employed individuals.
+          Take a gross figure of 120 at a 20% rate. Subtracting 20% gives 96.
+          The correct answer is 100. The gap is not a rounding artefact; it is a
+          structural error that recurs on every invoice processed that way.
+        </p>
+        <p>
+          The reason is what the percentage is applied to. VAT is 20%{" "}
+          <em>of the net price</em>, not 20% of the gross. When you subtract 20%
+          from the gross you are taking a fifth of the wrong number — a fifth of
+          120 rather than a fifth of 100. Getting this one distinction right
+          removes the majority of VAT mistakes.
         </p>
 
-        <h2>How to Add VAT to a Price</h2>
+        <h2>Adding VAT to a Price</h2>
         <p>
-          Use this when you have the net price (before tax) and need to find the
-          total price the customer pays. Select "Add VAT to price" in the
-          dropdown above.
+          Going upward is straightforward. Convert the rate into a multiplier
+          and multiply once:
         </p>
-        <pre>
-          VAT Amount = Net Price × (VAT Rate ÷ 100){"\n"}Gross Price = Net Price
-          + VAT Amount
-        </pre>
-        <p>
-          <strong>Example — Add 20% VAT:</strong> A product costs 500 (ex-VAT)
-          and the VAT rate is 20%. VAT = 500 × 0.20 = 100. Gross price = 500 +
-          100 = <strong>600</strong>. This is what an add 20% VAT calculator
-          does — enter 500 and 20% above to see the same result with a full
-          breakdown.
-        </p>
+        <pre>Gross = Net × (1 + rate)</pre>
 
-        <h2>How to Remove VAT From a Price — Reverse VAT Calculator</h2>
-        <p>
-          Use this when you have a price that already includes VAT and need to
-          extract the original pre-VAT amount and the tax component. This is the
-          reverse VAT calculation — essential for businesses reclaiming input
-          tax and for accountants splitting gross amounts. Select "Remove VAT
-          from price" in the dropdown.
-        </p>
-        <pre>
-          Net Price = Gross Price ÷ (1 + VAT Rate ÷ 100){"\n"}VAT Amount = Gross
-          Price − Net Price
-        </pre>
-        <p>
-          <strong>Example — Remove 20% VAT from 600:</strong> Net = 600 ÷ 1.20 =
-          500. VAT = 600 − 500 = <strong>100</strong>. This answers the common
-          question of how to calculate VAT from a gross amount — the formula
-          divides by 1.20 (for 20%), not by 0.20, which is a frequent mistake.
-        </p>
-
-        <h2>VAT Rates by Country</h2>
-        <p>
-          VAT rates vary significantly across countries. Here is a reference
-          table for the most common rates — enter any of these in the calculator
-          above:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Country
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Standard Rate
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Reduced Rates
-                </th>
+              <tr>
+                <th>Rate</th>
+                <th>Multiply the net price by</th>
+                <th>Net 500 becomes</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["United Kingdom", "20%", "5%, 0%"],
-                ["Germany", "19%", "7%"],
-                ["France", "20%", "10%, 5.5%, 2.1%"],
-                ["UAE", "5%", "0%"],
-                ["India (GST)", "18%", "12%, 5%, 0%"],
-                ["Pakistan", "18%", "Varies by category"],
-                ["Australia (GST)", "10%", "0%"],
-                ["Canada (GST/HST)", "5–15%", "By province"],
-                ["Saudi Arabia", "15%", "0%"],
-                ["Hungary", "27%", "18%, 5%"],
-                ["Denmark", "25%", "0%"],
-                ["South Africa", "15%", "0%"],
-                ["New Zealand (GST)", "15%", "0%"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              <tr>
+                <td>5%</td>
+                <td>1.05</td>
+                <td>525</td>
+              </tr>
+              <tr>
+                <td>10%</td>
+                <td>1.10</td>
+                <td>550</td>
+              </tr>
+              <tr>
+                <td>15%</td>
+                <td>1.15</td>
+                <td>575</td>
+              </tr>
+              <tr>
+                <td>20%</td>
+                <td>1.20</td>
+                <td>600</td>
+              </tr>
+              <tr>
+                <td>21%</td>
+                <td>1.21</td>
+                <td>605</td>
+              </tr>
+              <tr>
+                <td>25%</td>
+                <td>1.25</td>
+                <td>625</td>
+              </tr>
             </tbody>
           </table>
         </div>
+
         <p>
-          Many countries have multiple rates. The standard rate applies to most
-          goods and services, while reduced rates cover essentials like food,
-          medicine, and children's items. Zero-rated goods are within the VAT
-          system but charged at 0%. Exempt goods are outside the VAT system
-          entirely.
+          Calculating the VAT separately and then adding it gives the same
+          answer, but the single multiplication is worth the habit — it removes
+          an intermediate rounding step, which matters once you are adding up a
+          column of invoice lines.
         </p>
 
-        <h2>VAT vs. Sales Tax — What Is the Difference?</h2>
+        <h2>Removing VAT: the Reverse Calculation</h2>
         <p>
-          This is one of the most commonly confused distinctions in taxation.
-          The difference between VAT and sales tax comes down to where in the
-          supply chain the tax is collected:
+          Going downward is a division by the same multiplier, never a
+          subtraction:
         </p>
-        <ul className="custom-list">
-          <li>
-            <strong>VAT (Value Added Tax)</strong> — collected at every stage of
-            the supply chain. Each business charges VAT on sales (output tax),
-            reclaims VAT on purchases (input tax), and remits the difference.
-            The tax burden ultimately falls on the final consumer, but the
-            collection happens throughout the chain. Used across Europe, the
-            Middle East, and most of Asia and Africa.
-          </li>
-          <li>
-            <strong>Sales Tax</strong> — charged only once at the final point of
-            sale to the end consumer. Simpler to administer but does not provide
-            the input reclaim mechanism that VAT offers. Used primarily in the
-            United States, where rates vary by state and city.
-          </li>
-        </ul>
+        <pre>Net = Gross ÷ (1 + rate)</pre>
+        <p>A gross price of 600 at 20% is 600 ÷ 1.20 = 500.</p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rate</th>
+                <th>Divide the gross price by</th>
+                <th>Gross 600 becomes</th>
+                <th>Wrong answer from subtracting</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>5%</td>
+                <td>1.05</td>
+                <td>571.43</td>
+                <td>570.00</td>
+              </tr>
+              <tr>
+                <td>15%</td>
+                <td>1.15</td>
+                <td>521.74</td>
+                <td>510.00</td>
+              </tr>
+              <tr>
+                <td>20%</td>
+                <td>1.20</td>
+                <td>500.00</td>
+                <td>480.00</td>
+              </tr>
+              <tr>
+                <td>25%</td>
+                <td>1.25</td>
+                <td>480.00</td>
+                <td>450.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <p>
-          For consumers, the practical effect is similar — both add tax to the
-          price you pay. For businesses, VAT involves more accounting complexity
-          but avoids the tax-on-tax cascade that can occur with single-stage
-          sales taxes.
+          Notice that the error grows with the rate. At 5% the shortcut is out
+          by under two units and might survive unnoticed; at 25% it is out by
+          thirty. Anyone reconciling accounts in a high-rate jurisdiction finds
+          this quickly. Anyone in a low-rate one may not, which is the more
+          dangerous position.
         </p>
 
-        <h2>VAT vs. GST — What Is the Difference?</h2>
+        <h2>Pulling Out Just the VAT Element</h2>
         <p>
-          The difference between VAT and GST is primarily one of naming, not
-          mechanics. Both are multi-stage consumption taxes with input tax
-          credit systems. GST (Goods and Services Tax) is the term used in
-          India, Australia, Canada, New Zealand, and Singapore. VAT is the term
-          used in Europe, the Middle East, and most of Africa. The underlying
-          structure — businesses collect tax on sales, reclaim tax on purchases,
-          and remit the net difference — is functionally identical. The main
-          differences are in the specific rate structures and exemption
-          categories, which vary by country regardless of what the tax is
-          called.
-        </p>
-
-        <h2>Common Uses of a VAT Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Business invoicing</strong> — quickly add the correct VAT to
-            a net price when issuing invoices. Our{" "}
-            <Link href="/freelancer-tax-calculator/" className="my-link">
-              freelancer tax calculator
-            </Link>{" "}
-            also handles platform fees and income tax for self-employed
-            professionals.
-          </li>
-          <li>
-            <strong>VAT reclaim (input tax)</strong> — extract the exact VAT
-            component from a gross receipt to claim it back. Use the "Remove
-            VAT" mode.
-          </li>
-          <li>
-            <strong>Consumer price comparison</strong> — compare suppliers who
-            quote ex-VAT versus inc-VAT by converting both to the same basis.
-          </li>
-          <li>
-            <strong>Financial reporting</strong> — split gross amounts into net
-            and VAT for accurate bookkeeping.
-          </li>
-          <li>
-            <strong>Import duties</strong> — calculate VAT on imported goods
-            where it is charged on customs value plus duty.
-          </li>
-          <li>
-            <strong>Property transactions</strong> — VAT applies to commercial
-            property sales and construction in many countries.
-          </li>
-          <li>
-            <strong>Discount calculations</strong> — when applying a discount to
-            a VAT-inclusive price, use our{" "}
-            <Link href="/discount-calculator/" className="my-link">
-              discount calculator
-            </Link>{" "}
-            first, then recalculate VAT on the discounted amount.
-          </li>
-        </ul>
-
-        <h2>How Businesses Account for VAT</h2>
-        <p>
-          VAT-registered businesses collect output tax on sales and pay input
-          tax on purchases. At regular intervals — monthly or quarterly — they
-          submit a VAT return reporting the difference:
+          Often you do not want the net figure at all — you want to know how
+          much of a gross amount is tax, to record it or reclaim it. Two routes
+          give the same answer.
         </p>
         <pre>
-          VAT Payable = Output Tax (collected on sales) − Input Tax (paid on
+          VAT = Gross − (Gross ÷ (1 + rate)){"\n"}or, in one step: VAT = Gross ×
+          rate ÷ (100 + rate)
+        </pre>
+        <p>
+          The second form produces a set of fractions worth committing to
+          memory, because they turn the calculation into arithmetic you can do
+          without a calculator at all.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rate</th>
+                <th>VAT fraction of the gross</th>
+                <th>In practice</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>20%</td>
+                <td>1/6</td>
+                <td>Divide the gross by 6</td>
+              </tr>
+              <tr>
+                <td>25%</td>
+                <td>1/5</td>
+                <td>Divide the gross by 5</td>
+              </tr>
+              <tr>
+                <td>10%</td>
+                <td>1/11</td>
+                <td>Divide the gross by 11</td>
+              </tr>
+              <tr>
+                <td>5%</td>
+                <td>1/21</td>
+                <td>Divide the gross by 21</td>
+              </tr>
+              <tr>
+                <td>15%</td>
+                <td>3/23</td>
+                <td>No clean shortcut — use the formula</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          A receipt for 120 at a 20% rate contains 20 of VAT, because 120 ÷ 6 =
+          20. That single fact makes it possible to sanity-check almost any
+          gross figure in your head, which is the fastest way to catch an
+          invoice that has been calculated the wrong way round.
+        </p>
+
+        <h2>Where a Penny Goes Missing</h2>
+        <p>
+          Two people can calculate the same invoice correctly and disagree by a
+          small amount, and the reason is rounding order rather than arithmetic.
+        </p>
+        <p>
+          Consider three lines at 12.49 each, VAT at 20%. Rounding the VAT on
+          each line gives 2.50 three times, totalling 7.50. Calculating VAT on
+          the summed net of 37.47 gives 7.494, which rounds to 7.49. Both
+          methods are defensible and they differ by a penny.
+        </p>
+        <p>
+          The practical rule is to pick one convention and apply it
+          consistently, since the discrepancy compounds across a ledger rather
+          than cancelling out. Where a tax authority specifies which method to
+          use on invoices, that instruction overrides preference. Keeping
+          unrounded values through intermediate steps and rounding only at the
+          final total is the approach that produces the fewest reconciliation
+          problems.
+        </p>
+
+        <h2>Which Rate Applies, and the Zero-Rated Trap</h2>
+        <p>
+          Most systems run more than one rate. A standard rate covers most
+          goods and services, a reduced rate applies to specified categories,
+          and some items carry no VAT at all. The distinction that catches
+          businesses out is between two things that both show 0 on an invoice
+          and are not the same.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Treatment</th>
+                <th>VAT charged to the customer</th>
+                <th>Can the business reclaim its input VAT?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Standard rated</td>
+                <td>At the standard rate</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Reduced rated</td>
+                <td>At the lower rate</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Zero rated</td>
+                <td>None — but it is still a taxable supply</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Exempt</td>
+                <td>None — the supply is outside the VAT charge</td>
+                <td>No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Zero-rated and exempt look identical on a customer receipt and behave
+          in opposite ways behind it. A business making zero-rated supplies
+          charges nothing but still recovers the VAT it paid on its own costs,
+          often ending each period in a refund position. A business making
+          exempt supplies recovers nothing, so the VAT on its purchases becomes
+          a real cost absorbed into its margins. Which category a product falls
+          into is set by law and is not a choice.
+        </p>
+
+        <h2>What Registered Businesses Actually Pay</h2>
+        <p>
+          For a VAT-registered business, VAT is not a cost — it is a flow
+          passing through. What gets paid over is the difference between two
+          totals:
+        </p>
+        <pre>
+          Payable = Output VAT (charged on sales) − Input VAT (paid on
           purchases)
         </pre>
         <p>
-          If output exceeds input, the business remits the difference. If input
-          exceeds output — common for exporters or businesses with high capital
-          expenditure — the business receives a refund. Accurate VAT calculation
-          at every transaction is essential for correct returns. If you are
-          tracking your overall business finances, our{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          shows how business assets and liabilities add up, and our{" "}
-          <Link href="/bill-split-calculator/" className="my-link">
-            bill split calculator
-          </Link>{" "}
-          handles splitting shared business expenses.
-        </p>
-
-        <h2>Tips for Businesses Managing VAT</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Register at the right time</strong> — most countries have a
-            threshold below which registration is optional. Registering early
-            lets you reclaim input VAT but also requires you to charge and
-            account for VAT on all sales.
-          </li>
-          <li>
-            <strong>Keep accurate VAT invoices</strong> — for both sales
-            (output) and purchases (input). Poor record-keeping is the most
-            common reason for VAT penalties.
-          </li>
-          <li>
-            <strong>Understand zero-rating vs exemption</strong> — zero-rated
-            supplies let you reclaim input VAT; exempt supplies do not. The
-            distinction directly affects your VAT return.
-          </li>
-          <li>
-            <strong>File returns on time</strong> — late filing and late payment
-            attract penalties and interest in virtually every jurisdiction.
-          </li>
-          <li>
-            <strong>Use accounting software</strong> — QuickBooks, Xero, Zoho
-            Books, and similar tools automate VAT tracking and return
-            preparation, reducing errors.
-          </li>
-          <li>
-            <strong>Monitor your effective tax burden</strong> — use our{" "}
-            <Link href="/salary-hike-calculator/" className="my-link">
-              salary hike calculator
-            </Link>{" "}
-            to see how VAT on business expenses interacts with your take-home
-            pay as a business owner.
-          </li>
-        </ul>
-
-        <h2>How to Use This VAT Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Step 1:</strong> Enter the price — either the net price
-            (before VAT) or the gross price (including VAT), depending on which
-            mode you select.
-          </li>
-          <li>
-            <strong>Step 2:</strong> Enter the VAT rate percentage (e.g. 20 for
-            UK standard, 18 for Pakistan/India GST, 5 for UAE).
-          </li>
-          <li>
-            <strong>Step 3:</strong> Choose "Add VAT to price" (net → gross) or
-            "Remove VAT from price" (gross → net).
-          </li>
-          <li>
-            <strong>Step 4:</strong> Click Calculate. The panel shows pre-VAT
-            price, VAT amount, post-VAT total, VAT burden gauge, and a visual
-            breakdown bar.
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {FAQ_DATA.map(({ q, a }, i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              />
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          Whether you are adding VAT to an invoice, extracting VAT from a
-          receipt for reclaim, or comparing prices across suppliers and
-          countries, this calculator gives you the exact breakdown in seconds.
-          Enter any price at any rate and see the net, VAT, and gross amounts
-          with a clear visual split.
+          A business charging 12,000 of output VAT in a quarter while paying
+          8,000 of input VAT remits 4,000. If the figures reverse — common for
+          a business in a period of heavy investment, or one making zero-rated
+          supplies — the result is a reclaim rather than a payment.
         </p>
         <p>
-          For related tools, our{" "}
+          This is why the direction of a calculation matters so much in
+          bookkeeping. Recording a gross amount where a net one belongs, or the
+          reverse, does not just misstate one line; it misstates the reclaim
+          position for the whole period. It is also why the reverse calculation
+          gets used far more often than people expect — supplier receipts
+          usually show a gross total, and the input VAT has to be extracted from
+          it before anything can be reclaimed.
+        </p>
+        <p>
+          Rates and category rules differ by country and change over time, so
+          confirm the current rate with your own tax authority before filing
+          anything. For the background on how VAT works as a system, see our
+          guide to{" "}
+          <Link href="/blog/what-is-vat/" className="my-link">
+            what VAT is and how it is charged
+          </Link>
+          . For working out what you owe on income rather than sales, the{" "}
           <Link href="/income-tax-calculator/" className="my-link">
             income tax calculator
           </Link>{" "}
-          handles annual income tax across six countries, our{" "}
+          and the{" "}
           <Link href="/freelancer-tax-calculator/" className="my-link">
             freelancer tax calculator
           </Link>{" "}
-          covers self-employment tax with platform fees, our{" "}
-          <Link href="/discount-calculator/" className="my-link">
-            discount calculator
-          </Link>{" "}
-          handles percentage-off calculations, and our{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          tracks your complete financial picture.
+          handle those separately.
         </p>
+        <h2>VAT Questions, Answered</h2>
+
+        {FAQ_DATA.map(({ q, a }, i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
       </div>
 
       {/* ---- SIDEBAR ---- */}

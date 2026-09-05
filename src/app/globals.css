@@ -41,7 +41,10 @@ li {
   font-weight: 500;
   color: #1b3066;
   text-decoration: none;
-  margin: 0 4px;
+  /* Left margin only. The right margin opened a visible gap before the
+     punctuation that follows a link in 94 places, and a site-wide scan found
+     no case where anything relied on it for spacing after a link. */
+  margin: 0 0 0 4px;
 }
 @media (max-width: 1024px) {
   .con-para {
@@ -567,6 +570,24 @@ input::placeholder {
   font-weight: 600;
   color: #111;
   line-height: 1.3;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* "New" flag on recently added tools in the mega menu */
+.menu-new-chip {
+  display: inline-block;
+  background: #d92d20;
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .menu-link-desc {
@@ -1013,7 +1034,10 @@ input::placeholder {
 @media (max-width: 768px) {
   .section-two-inner {
     grid-template-columns: 1fr; /* stack items */
-    padding: 60px 10px 40px 10px;
+    /* The 60/40 padding was sized for the two-column desktop layout; stacked
+       on a phone it just added a large empty band. Side padding now comes
+       from the page gutter. */
+    padding: 8px 0 18px;
     gap: 20px;
   }
 
@@ -1561,6 +1585,12 @@ input::placeholder {
   margin-right: 8px;
   font-size: 16px;
   color: #777;
+  flex-shrink: 0;
+}
+
+.search-input-shell {
+  position: relative;
+  width: 100%;
 }
 
 .search-input {
@@ -1568,6 +1598,42 @@ input::placeholder {
   outline: none;
   width: 100%;
   font-size: 15px;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.search-typewriter {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  font-size: 15px;
+  color: #8a8a8a;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  z-index: 0;
+}
+
+.search-cursor {
+  display: inline-block;
+  margin-left: 1px;
+  font-weight: 400;
+  color: #1b3066;
+  animation: search-cursor-blink 1s step-end infinite;
+}
+
+@keyframes search-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Dropdown */
@@ -2180,6 +2246,9 @@ input::placeholder {
 .founder-photo {
   height: 50px;
   width: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .content-blog {
@@ -2242,7 +2311,9 @@ ul.custom-list li {
 .blog-container {
   display: flex;
   gap: 40px;
-  padding: 60px 1%;
+  /* No top padding: the breadcrumb now sits directly above from the root
+     layout, and 60px on top of its own margin left a large empty band. */
+  padding: 0 1% 60px;
 }
 
 /* 70% CONTENT */
@@ -2487,7 +2558,7 @@ ul.custom-list li {
 @media (max-width: 768px) {
   .section-new {
     font-family: "Montserrat", sans-serif;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 }
 
@@ -2515,6 +2586,16 @@ ul.custom-list li {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 24px;
+}
+
+.grid-new.how-it-works-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .grid-new.how-it-works-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .card {
@@ -2646,11 +2727,27 @@ ul.custom-list li {
 
 /* Responsive */
 @media (max-width: 768px) {
+  /* One consistent rhythm between homepage sections instead of padding and
+     margin stacking up to ~130px of empty space. */
   .section-new {
-    padding: 32px 12px 40px;
+    padding: 0;
   }
 
-  .grid-new {
+  .section-new.how-it-works-section {
+    padding-top: 0;
+  }
+
+  .grid-new,
+  .grid-new.how-it-works-grid {
+    margin-bottom: 0;
+  }
+
+  .header-new {
+    margin-bottom: 14px;
+  }
+
+  .grid-new,
+  .grid-new.how-it-works-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2661,6 +2758,13 @@ ul.custom-list li {
   .trustBanner {
     flex-direction: column;
     text-align: center;
+  }
+
+  .homepage-faq {
+    padding: 0;
+    /* the component sets 60/50 inline */
+    margin-top: 24px !important;
+    margin-bottom: 24px !important;
   }
 }
 
@@ -2767,7 +2871,7 @@ ul.custom-list li {
 .key {
   border: none;
   cursor: pointer;
-  padding: clamp(9px, 2.5vw, 13px) 0;
+
   border-radius: clamp(7px, 2vw, 10px);
   font-family: "Space Mono", monospace;
   font-size: clamp(0.72rem, 2vw, 0.92rem);
@@ -2779,7 +2883,7 @@ ul.custom-list li {
     background 0.15s;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation; /* removes 300ms tap delay on mobile */
-  min-height: 44px; /* Apple HIG touch target minimum */
+  min-height: 40px; /* Apple HIG touch target minimum */
 }
 
 .key:hover {
@@ -5532,5 +5636,1522 @@ ul.custom-list li {
   .tz-card-body {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+.faq-answer-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.faq-answer-wrap.open {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer-inner {
+  overflow: hidden;
+}
+
+.faq-answer-inner p {
+  margin: 8px 0 16px 0;
+}
+
+/* ── Responsive tables ──
+   Tables authored without an overflow wrapper were pushing several pages
+   wider than the viewport on mobile. Scoped to small screens so desktop
+   table layout is unchanged. */
+@media (max-width: 768px) {
+  .single-page-padding table,
+  .blog-content table,
+  article table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ── Shared content tables ──────────────────────────────────────────────
+   Reusable wrapper for editorial tables inside calculator and guide
+   content. The wrapper owns the horizontal scroll so the table itself can
+   stay a real table on every breakpoint. */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 0 22px;
+}
+.table-wrap table {
+  width: 100%;
+  min-width: 460px;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.table-wrap th,
+.table-wrap td {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  vertical-align: top;
+}
+.table-wrap thead th {
+  background: var(--card-bg, #f5f5f5);
+  font-weight: 700;
+}
+.table-wrap tbody tr:nth-child(even) {
+  background: #fafbfd;
+}
+@media (max-width: 768px) {
+  /* the wrapper already scrolls, so keep table semantics intact here */
+  .table-wrap table {
+    display: table;
+  }
+}
+
+/* ============================================================
+   BREADCRUMBS (site-wide, rendered from the root layout)
+   ============================================================ */
+.crumbs {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.crumbs ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.crumbs li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.crumbs a {
+  color: #1b3066;
+  text-decoration: none;
+}
+.crumbs a:hover {
+  text-decoration: underline;
+}
+.crumbs .crumbs-sep {
+  color: #b6bcc9;
+}
+.crumbs [aria-current="page"] {
+  color: #6b7280;
+  /* keep a long final crumb from wrapping the whole trail on small screens */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60vw;
+}
+@media (max-width: 600px) {
+  .crumbs {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .crumbs [aria-current="page"] {
+    max-width: 46vw;
+  }
+}
+
+/* ============================================================
+   BLOG INDEX
+   Horizontal cards: the thumbnails already carry the title as
+   artwork, so the text heading is sized as a link rather than a
+   display heading to avoid saying the same thing twice.
+   ============================================================ */
+.blog-index {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: left;
+}
+.blog-index-head {
+  margin-bottom: 42px;
+}
+.blog-index-head h1 {
+  font-size: 40px;
+  line-height: 1.15;
+  margin: 0 0 16px;
+}
+.blog-index p {
+  line-height: 1.7;
+  margin: 0 0 14px;
+}
+.blog-index .blog-lede {
+  font-size: 19px;
+  color: #333;
+}
+.blog-index h2 {
+  font-size: 24px;
+  margin: 0 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eef0f5;
+}
+.blog-featured,
+.blog-all,
+.blog-groups {
+  margin-bottom: 48px;
+}
+
+/* --- card --- */
+.post-row {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 22px;
+  align-items: start;
+  padding: 20px 0;
+  border-bottom: 1px solid #eceff5;
+}
+.post-list .post-row:last-child {
+  border-bottom: 0;
+}
+.post-row-featured {
+  grid-template-columns: 300px 1fr;
+  gap: 26px;
+  padding: 22px;
+  border: 1px solid #e2e7f0;
+  border-radius: 14px;
+  background: #fbfcfe;
+}
+.post-thumb {
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
+  line-height: 0;
+}
+.post-thumb img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 47 / 30;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.25s ease;
+}
+.post-row:hover .post-thumb img {
+  transform: scale(1.03);
+}
+.post-body {
+  min-width: 0;
+}
+.post-meta-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 8px !important;
+}
+.post-cat {
+  background: #eef2fb;
+  color: #1b3066;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.post-badge {
+  background: #d8a13a;
+  color: #241a05;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+.post-dot {
+  color: #c3c8d4;
+}
+.post-title {
+  font-size: 20px;
+  line-height: 1.35;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.post-row-featured .post-title {
+  font-size: 24px;
+}
+.post-title a {
+  color: #14203f;
+  text-decoration: none;
+}
+.post-title a:hover {
+  color: #1f9fb8;
+  text-decoration: underline;
+}
+.post-excerpt {
+  color: #4a5163;
+  font-size: 15.5px;
+  margin: 0 0 10px !important;
+}
+.post-more {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f9fb8;
+  text-decoration: none;
+}
+.post-more:hover {
+  text-decoration: underline;
+}
+
+/* --- controls --- */
+.blog-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip,
+.sort-toggle {
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #dfe4ee;
+  background: #fff;
+  color: #33405c;
+  padding: 7px 14px;
+  border-radius: 20px;
+  transition: 0.15s ease;
+}
+.chip:hover,
+.sort-toggle:hover {
+  border-color: #1f9fb8;
+  color: #1f9fb8;
+}
+.chip-on {
+  background: #1b3066;
+  border-color: #1b3066;
+  color: #fff;
+}
+.chip-on:hover {
+  color: #fff;
+  border-color: #1b3066;
+}
+.chip-count {
+  opacity: 0.65;
+  font-size: 12px;
+  margin-left: 2px;
+}
+.sort-toggle {
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.result-count {
+  font-size: 13.5px;
+  color: #6b7280;
+  margin: 0 0 6px !important;
+}
+
+/* --- group notes --- */
+.blog-groups dl {
+  margin: 0 0 18px;
+}
+.blog-groups dl > div {
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f2f7;
+}
+.blog-groups dt {
+  font-weight: 700;
+  color: #14203f;
+  margin-bottom: 4px;
+}
+.blog-groups dt span {
+  font-weight: 400;
+  color: #8b93a5;
+  font-size: 14px;
+}
+.blog-groups dd {
+  margin: 0;
+  color: #4a5163;
+  line-height: 1.7;
+}
+
+/* --- responsive --- */
+@media (max-width: 700px) {
+  .blog-index {
+    padding: 0;
+  }
+  .blog-index-head h1 {
+    font-size: 28px;
+  }
+  .blog-index .blog-lede {
+    font-size: 16.5px;
+  }
+  .blog-index h2 {
+    font-size: 20px;
+  }
+  /* Keep cards horizontal on mobile. Stacking them full width made the
+     thumbnail — which is itself the title as artwork — repeat the heading
+     directly beneath it. At this size the tile reads as a marker, not a
+     second headline. */
+  .post-row,
+  .post-row-featured {
+    grid-template-columns: 104px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .post-row-featured {
+    padding: 14px;
+  }
+  /* keep the tile's native ratio — a square crop sliced the baked-in
+     title into half-words */
+  .post-thumb img {
+    aspect-ratio: 47 / 30;
+  }
+  .post-title,
+  .post-row-featured .post-title {
+    font-size: 17px;
+  }
+  .post-excerpt {
+    font-size: 14.5px;
+  }
+  .post-meta-top {
+    font-size: 12px;
+    gap: 6px;
+  }
+  .blog-controls {
+    justify-content: flex-start;
+  }
+  .filter-chips {
+    gap: 6px;
+  }
+  .chip,
+  .sort-toggle {
+    font-size: 13px;
+    padding: 6px 11px;
+  }
+}
+
+/* ============================================================
+   CATEGORY PAGES — single column
+   The scientific calculator that used to sit in the right column
+   has been removed, so the content takes the full width.
+   ============================================================ */
+.section-two-inner.single-col {
+  grid-template-columns: 1fr;
+  max-width: 900px;
+  padding: 40px 20px 50px;
+}
+.section-two-inner.single-col .icon-grid1 {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+.section-two-inner.single-col p,
+.section-two-inner.single-col li {
+  line-height: 1.75;
+}
+/* keep prose comfortable to read even though the column is now wide */
+.section-two-inner.single-col > section > p {
+  max-width: 760px;
+}
+
+/* --- related guides --- */
+.related-guides {
+  margin-top: 44px;
+  padding-top: 8px;
+}
+.related-guides ul {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.related-guides li {
+  margin: 0;
+}
+.related-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: 16px 18px;
+  border: 1px solid #e4e8f1;
+  border-radius: 12px;
+  background: #fff;
+  text-decoration: none;
+  transition: 0.18s ease;
+}
+.related-card:hover {
+  border-color: #1f9fb8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(27, 48, 103, 0.08);
+}
+.related-title {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #14203f;
+}
+.related-blurb {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #4a5163;
+}
+
+@media (max-width: 900px) {
+  .section-two-inner.single-col .icon-grid1 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 768px) {
+  .section-two-inner.single-col {
+    padding: 20px 0 40px;
+  }
+  .related-guides ul {
+    grid-template-columns: 1fr;
+  }
+}
+/* Two columns all the way down — a single column made the list very tall
+   and wasted the width. */
+@media (max-width: 480px) {
+  .section-two-inner.single-col .icon-grid1 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .section-two-inner.single-col .calc-card {
+    padding: 10px 12px !important;
+  }
+  .section-two-inner.single-col .calc-card .card-title {
+    font-size: 13px !important;
+  }
+}
+
+/* Grid items default to min-width:auto, so a wide child (a .table-wrap with
+   its 460px min-width table, or a <pre>) stretches the track past the
+   viewport and the text gets clipped on small screens. */
+/* Applies to the homepage hero too, not just the category pages: a grid
+   item defaults to min-width:auto, so a wide child stretches the 1fr track
+   past the padded container and the row runs under the viewport edge. */
+.section-two-inner > * {
+  min-width: 0;
+}
+.section-two-inner.single-col .table-wrap {
+  max-width: 100%;
+}
+
+/* .more-tools carries its own 10px side margin, which left the H1 out of
+   line with the breadcrumb and body text now that .single-col supplies the
+   page padding. */
+.section-two-inner.single-col .more-tools {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ============================================================
+   PAGE GUTTERS
+   main carries "container mobile-padding" in the root layout, but
+   .mobile-padding was never defined, so on phones every page ran flush to
+   both edges — breadcrumbs, headings and cards alike. This is the single
+   place that gutter is set.
+   ============================================================ */
+.mobile-padding {
+  padding: 40px 0;
+}
+@media (max-width: 768px) {
+  .mobile-padding {
+    padding: 20px 9px;
+  }
+  /* These two break out of the container with width:100vw and a negative
+     left margin. Inside a padded main that overshoots the viewport by the
+     gutter, so let them size to the content box instead. Their -40px top
+     margin also over-pulled once main's top padding dropped to 24px. */
+  .section-two,
+  .calc-hero-section {
+    width: auto;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  .crumbs {
+    margin-bottom: 20px;
+  }
+}
+@media (max-width: 420px) {
+  .mobile-padding {
+    padding: 18px 7px;
+  }
+}
+
+/* The three hero stats sit in a flex row with a 40px gap, which is far too
+   wide on a phone. Keep all three on one line by shrinking the gap and the
+   type rather than letting them wrap. */
+@media (max-width: 768px) {
+  .stats-wrapper {
+    flex-wrap: nowrap;
+    /* top-align: with center alignment a label that wraps to two lines
+       shifted its neighbours out of line */
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .stat-item {
+    min-width: 0;
+    flex: 1 1 0;
+  }
+  .stat-number {
+    font-size: 24px;
+  }
+  .stat-label {
+    font-size: 11.5px;
+    line-height: 1.35;
+  }
+  .stat-divider {
+    height: 32px;
+    flex: 0 0 1px;
+  }
+}
+@media (max-width: 360px) {
+  .stats-wrapper {
+    gap: 10px;
+  }
+  .stat-number {
+    font-size: 21px;
+  }
+  .stat-label {
+    font-size: 10.5px;
+  }
+}
+
+/* ============================================================
+   MEET THE FOUNDER CARD
+   Side-by-side on desktop. On a phone the fixed 152px photo left the
+   text about 150px wide, so the quote broke to two or three words a
+   line — the photo moves above the text instead.
+   ============================================================ */
+.founder-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.founder-card > img {
+  width: 152px;
+  height: 152px;
+  flex-shrink: 0;
+}
+.founder-card > div > p {
+  margin-bottom: 6px !important;
+}
+
+@media (max-width: 600px) {
+  .founder-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .founder-card > img {
+    align-self: center;
+    width: 128px;
+    height: 128px;
+  }
+}
+
+/* ============================================================
+   MIXED NUMBER CALCULATOR
+   ============================================================ */
+.mn-main {
+  /* flex child inside .page-layout — without this a wide table stretches
+     the column past the sidebar */
+  min-width: 0;
+  flex: 1;
+}
+
+.mn-row {
+  display: flex;
+  /* stretch so all three labels sit on the same top line while the shorter
+     operator control centres itself against the input block below */
+  align-items: stretch;
+  justify-content: center;
+  /* all three controls stay on one line at every width — the inputs shrink
+     instead of wrapping */
+  flex-wrap: nowrap;
+  gap: 14px;
+}
+.mn-operand {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mn-operand-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+.mn-fields {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mn-fields input {
+  font: inherit;
+  text-align: center;
+  border: 1px solid #dfe4ee;
+  border-radius: 8px;
+  padding: 8px 4px;
+  background: #fff;
+  color: #14203f;
+  width: 62px;
+}
+.mn-fields input:focus {
+  outline: 2px solid #1f9fb8;
+  outline-offset: 1px;
+  border-color: #1f9fb8;
+}
+.mn-whole {
+  font-size: 22px !important;
+  font-weight: 600;
+  height: 66px;
+}
+.mn-frac {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.mn-frac input {
+  width: 62px;
+  padding: 4px;
+}
+.mn-bar {
+  display: block;
+  width: 54px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 2px;
+}
+
+.mn-op-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.mn-op-select {
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+  /* deliberately shorter than the value boxes so the operator reads as a
+     separator rather than a fourth input */
+  height: 40px;
+  margin-top: 13px;
+  width: 74px;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  border: 1px solid #dfe4ee;
+  border-radius: 8px;
+  background: #fff;
+  color: #14203f;
+  padding: 0 4px;
+  transition: 0.15s ease;
+}
+.mn-op-select:hover {
+  border-color: #1f9fb8;
+}
+.mn-op-select:focus {
+  outline: 2px solid #1f9fb8;
+  outline-offset: 1px;
+  border-color: #1f9fb8;
+}
+.mn-op-select option {
+  font-size: 16px;
+  text-align: center;
+}
+
+.mn-hint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 14px 0 12px;
+  line-height: 1.6;
+}
+
+.mn-eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+.mn-answer {
+  font-size: 34px;
+  font-weight: 600;
+  color: #14203f;
+  line-height: 1.1;
+  margin-bottom: 3px;
+  word-break: break-word;
+}
+.mn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  border-top: 1px solid #eceff5;
+  padding-top: 14px;
+}
+.mn-grid strong {
+  display: block;
+  font-size: 17px;
+  color: #14203f;
+  word-break: break-word;
+}
+.mn-grid em {
+  display: block;
+  font-style: normal;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.mn-steps {
+  border-top: 1px solid #eceff5;
+  padding-top: 14px;
+}
+.mn-steps ol {
+  margin: 0;
+  padding-left: 20px;
+}
+.mn-steps li {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #4a5163;
+  margin-bottom: 7px;
+}
+
+@media (max-width: 600px) {
+  .mn-row {
+    gap: 8px;
+  }
+  .mn-fields {
+    gap: 6px;
+  }
+  .mn-fields input,
+  .mn-frac input {
+    width: 48px;
+  }
+  .mn-bar {
+    width: 42px;
+  }
+  .mn-whole {
+    font-size: 19px !important;
+    height: 60px;
+  }
+  .mn-op-select {
+    width: 58px;
+    height: 36px;
+    /* (66 - 36) / 2 — keeps it centred against the input block */
+    margin-top: 15px;
+    font-size: 18px;
+  }
+  .mn-operand-label {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .mn-answer {
+    font-size: 30px;
+  }
+  .mn-grid {
+    gap: 10px;
+  }
+}
+@media (max-width: 380px) {
+  .mn-row {
+    gap: 6px;
+  }
+  .mn-fields input,
+  .mn-frac input {
+    width: 42px;
+  }
+  .mn-bar {
+    width: 36px;
+  }
+  .mn-op-select {
+    width: 50px;
+  }
+}
+
+/* ============================================================
+   FOOTER SOCIAL LINKS
+   ============================================================ */
+.footer-social {
+  list-style: none;
+  /* Six icons will not fit one row in a 216px footer column, so lay them
+     out as a deliberate 3 x 2 grid rather than letting them wrap unevenly. */
+  display: grid;
+  grid-template-columns: repeat(3, 34px);
+  gap: 8px;
+  padding: 0;
+  margin: 16px 0 0;
+}
+.footer-social li {
+  margin: 0;
+}
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #dfe4ee;
+  font-size: 13px;
+  text-decoration: none;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+.footer-social a:hover,
+.footer-social a:focus-visible {
+  background: #1f9fb8;
+  border-color: #1f9fb8;
+  color: #fff;
+  transform: translateY(-2px);
+}
+.footer-social a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .footer-social {
+    /* plenty of room once the footer stacks — one row, bigger tap targets */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .footer-social a {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+}
+
+/* Category headings in the homepage library now link to their category page.
+   Keep them looking like headings, not like body links. */
+.cardTitle a {
+  color: inherit;
+  text-decoration: none;
+}
+.cardTitle a:hover,
+.cardTitle a:focus-visible {
+  color: #1f9fb8;
+  text-decoration: underline;
+}
+
+/* Library cards size to their content. Stretching a 3-tool category to match
+   a 12-tool one beside it left a large blank area in the short card. */
+.grid-new:not(.how-it-works-grid) {
+  align-items: start;
+}
+
+/* ============================================================
+   AUTHOR PAGE
+   ============================================================ */
+.author-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.author-page h2 {
+  margin-top: 34px;
+}
+.author-page p {
+  line-height: 1.75;
+}
+.author-hero {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 26px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #e8ecf3;
+}
+.author-hero img {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 3px solid #1f9fb8;
+  flex-shrink: 0;
+}
+.author-hero h1 {
+  margin: 0 0 4px;
+  font-size: 34px;
+}
+.author-role {
+  margin: 0 0 2px !important;
+  font-weight: 600;
+  color: #1b3066;
+}
+.author-sub {
+  margin: 0 0 12px !important;
+  color: #6b7280;
+  font-size: 15px;
+}
+.author-links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+}
+.author-links li {
+  margin: 0;
+}
+.author-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1b3066;
+  text-decoration: none;
+  border: 1px solid #dfe4ee;
+  border-radius: 20px;
+  padding: 7px 14px;
+  transition: 0.15s ease;
+}
+.author-links a:hover {
+  border-color: #1f9fb8;
+  color: #1f9fb8;
+}
+.author-articles {
+  padding-left: 20px;
+  margin: 16px 0 0;
+}
+.author-articles li {
+  margin-bottom: 9px;
+  line-height: 1.5;
+}
+.author-articles a {
+  color: #14203f;
+  font-weight: 600;
+  text-decoration: none;
+}
+.author-articles a:hover {
+  color: #1f9fb8;
+  text-decoration: underline;
+}
+.author-articles span {
+  display: block;
+  font-size: 13px;
+  color: #8b93a5;
+}
+
+@media (max-width: 600px) {
+  .author-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .author-hero img {
+    width: 104px;
+    height: 104px;
+  }
+  .author-hero h1 {
+    font-size: 27px;
+  }
+}
+
+/* ============================================================
+   AUTHOR BYLINE + END-OF-POST AUTHOR BOX
+   ============================================================ */
+.byline-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+.byline-author:hover {
+  color: #1f9fb8;
+}
+
+.author-box {
+  margin: 44px 0 10px;
+}
+.author-box-heading {
+  margin: 0 0 12px !important;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+.author-box-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 20px;
+  background: #f7f9fd;
+  border: 1px solid #e2e9f4;
+  border-left: 5px solid #1f9fb8;
+  border-radius: 12px;
+}
+.author-box-inner > a {
+  flex-shrink: 0;
+  line-height: 0;
+}
+.author-box-inner img {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid #1f9fb8;
+}
+.author-box-name {
+  margin: 0 !important;
+  font-size: 19px;
+  font-weight: 700;
+}
+.author-box-name a {
+  color: #1b3066;
+  text-decoration: none;
+}
+.author-box-name a:hover {
+  text-decoration: underline;
+}
+.author-box-role {
+  margin: 2px 0 8px !important;
+  font-size: 14px;
+  color: #1f9fb8;
+}
+.author-box-bio {
+  margin: 0 0 10px !important;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #43506b;
+}
+.author-box-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+.author-box-links a {
+  color: #1b3066;
+  text-decoration: none;
+}
+.author-box-links a:hover {
+  color: #1f9fb8;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .author-box-inner {
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+  }
+  .author-box-inner img {
+    width: 74px;
+    height: 74px;
+  }
+}
+
+/* ===== GOLD CALCULATOR ===== */
+.gc-main {
+  /* flex child inside .page-layout — without this the karat table
+     stretches the column past the sidebar */
+  min-width: 0;
+  flex: 1;
+}
+
+.gc-metal-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.gc-metal {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.gc-metal:hover {
+  border-color: #d8a13a;
+}
+.gc-metal.active {
+  background: #d8a13a;
+  border-color: #d8a13a;
+  color: #ffffff;
+}
+
+.gc-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.gc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.gc-grow {
+  flex: 1 1 130px;
+}
+.gc-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+.gc-field input,
+.gc-field select {
+  font: inherit;
+  font-size: 15px;
+  border: 1px solid #dfe4ee;
+  border-radius: 8px;
+  padding: 10px 10px;
+  background: #ffffff;
+  color: #14203f;
+  height: 42px;
+  max-width: 100%;
+}
+.gc-field input:focus,
+.gc-field select:focus {
+  outline: 2px solid #d8a13a;
+  outline-offset: 1px;
+  border-color: #d8a13a;
+}
+
+.gc-spot {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+  margin: 4px 0 16px;
+}
+.gc-spot strong {
+  color: #ffffff;
+}
+.gc-link {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #d8a13a;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.gc-spot-note {
+  display: block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 3px;
+}
+
+.gc-toggle {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.gc-toggle i {
+  font-size: 11px;
+  color: #d8a13a;
+  transition: transform 0.25s ease;
+}
+.gc-toggle i.rotate {
+  transform: rotate(180deg);
+}
+
+.gc-costs {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 14px;
+  margin-bottom: 4px;
+}
+.gc-hint {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.66);
+  margin: 2px 0 0;
+}
+
+/* ── Result panel ── */
+.gc-eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+.gc-answer {
+  font-size: 32px;
+  font-weight: 600;
+  color: #14203f;
+  line-height: 1.1;
+  word-break: break-word;
+}
+.gc-sub {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 4px 0 0;
+}
+
+.gc-flow {
+  border-top: 1px solid #eceff5;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.gc-flow-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #4a5163;
+}
+.gc-flow-row strong {
+  color: #14203f;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+.gc-flow-total {
+  border-top: 1px solid #eceff5;
+  padding-top: 8px;
+  font-size: 15px;
+}
+.gc-flow-total strong {
+  font-size: 17px;
+}
+.gc-flow-back strong {
+  color: #1f7a4d;
+}
+.gc-spread {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #fdf6e8;
+  border: 1px solid #f0dfba;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-top: 4px;
+  font-size: 13.5px;
+  color: #7a5a1c;
+}
+.gc-spread strong {
+  color: #8a5a12;
+  font-size: 17px;
+  word-break: break-word;
+}
+.gc-spread em {
+  display: block;
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: #9a7433;
+  margin-top: 1px;
+}
+
+.gc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  border-top: 1px solid #eceff5;
+  padding-top: 14px;
+}
+.gc-grid strong {
+  display: block;
+  font-size: 16px;
+  color: #14203f;
+  word-break: break-word;
+}
+.gc-grid em {
+  display: block;
+  font-style: normal;
+  font-size: 11.5px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.gc-note {
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: #8a90a0;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .gc-row {
+    gap: 10px;
+  }
+  .gc-field input,
+  .gc-field select {
+    font-size: 14px;
+    height: 40px;
+  }
+  .gc-answer {
+    font-size: 28px;
+  }
+  .gc-grid {
+    gap: 10px;
+  }
+  .gc-metal {
+    padding: 7px 16px;
+  }
+}
+
+/* ===== IP DETECTOR =====
+   These seven classes were referenced by IPDetector.tsx but never had any
+   rules, so the tool rendered as unstyled flow content: the IP at body size,
+   the detail rows in a single ragged column and no separation around the
+   lookup field. */
+.ip-hero {
+  position: relative;
+  text-align: center;
+  padding: 26px 16px 20px;
+  border-bottom: 1px solid #eceff5;
+}
+
+.ip-hero-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -60%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(31, 159, 184, 0.13) 0%,
+    rgba(31, 159, 184, 0.05) 45%,
+    rgba(31, 159, 184, 0) 70%
+  );
+  pointer-events: none;
+}
+
+.ip-hero-value {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(26px, 5vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #14203f;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  word-break: break-all;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.ip-hero-value:hover {
+  background: rgba(31, 159, 184, 0.09);
+  color: #14688a;
+}
+
+.ip-hero-copied {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #9aa1b0;
+  transition: color 0.2s ease;
+}
+.ip-hero-copied.show {
+  color: #1f7a4d;
+}
+
+.ip-lookup-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 4px;
+}
+.ip-lookup-row .tool-input {
+  flex: 1;
+  min-width: 0;
+  box-shadow: inset 0 0 0 1px #e0e4ec;
+}
+
+.ip-lookup-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f9fb8;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(31, 159, 184, 0.35);
+  transition: background 0.2s ease;
+}
+.ip-lookup-back:hover {
+  background: rgba(31, 159, 184, 0.09);
+}
+
+.ip-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 22px;
+  padding: 18px 16px 20px;
+}
+
+@media (max-width: 600px) {
+  .ip-hero {
+    padding: 20px 12px 16px;
+  }
+  .ip-hero-ring {
+    width: 190px;
+    height: 190px;
+  }
+  .ip-lookup-row {
+    flex-wrap: wrap;
+    padding: 14px 12px 4px;
+  }
+  .ip-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 16px 12px 18px;
   }
 }

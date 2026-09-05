@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import BodyFatCalculator from "../components/BodyFatCalculator";
 
 export const metadata: Metadata = {
-  title: "Body Fat Calculator | Estimate Your Body Fat Percentage (Free)",
+  title: "Body Fat Percentage Calculator",
   description:
-    "Use our free body fat calculator to estimate your body fat percentage with the U.S. Navy formula. See your category, fat mass, lean mass, and fitness target instantly.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Estimate body fat percentage from neck, waist and hip measurements, with exact tape placement, honest accuracy limits and healthy ranges by sex and age.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/body-fat-calculator/",
+    canonical: "/body-fat-calculator/",
+  },
+  openGraph: {
+    title: "Body Fat Percentage Calculator",
+    description:
+      "A tape-measure body fat estimate, plus where to place the tape, how accurate it really is, and what the number cannot tell you.",
+    url: "/body-fat-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Body Fat Percentage Calculator",
+    description:
+      "Body fat from tape measurements, with placement guidance and honest error bands.",
   },
 };
 

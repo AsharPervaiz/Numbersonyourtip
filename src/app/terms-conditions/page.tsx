@@ -3,9 +3,24 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms and Conditions | Numbers On Your Tip",
+  title: "Terms and Conditions",
   description:
     "Read the Terms and Conditions for Numbers On Your Tip. Learn about usage rules, limitations, privacy, and your rights while using our online calculators and tools.",
+  alternates: {
+    canonical: "/terms-conditions/",
+  },
+  openGraph: {
+    title: "Terms and Conditions | Numbers On Your Tip",
+    description:
+      "Usage rules, limitations, and your rights when using our calculators and tools.",
+    url: "/terms-conditions/",
+    type: "website",
+  },
+  twitter: {
+    title: "Terms and Conditions | Numbers On Your Tip",
+    description:
+      "Usage rules, limitations, and your rights on Numbers On Your Tip.",
+  },
 };
 
 export default function TermsAndConditions() {

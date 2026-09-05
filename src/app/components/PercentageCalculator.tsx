@@ -306,44 +306,40 @@ export default function PercentageCalculator() {
   /* ── FAQ data (also used for JSON-LD schema) ── */
   const faqs: [string, string][] = [
     [
-      "How do I calculate a percentage?",
-      "Divide the part by the whole, then multiply by 100. Formula: Percentage = (Part ÷ Whole) × 100. For example, 20 out of 80 = (20 ÷ 80) × 100 = 25%.",
+      "What is the difference between percent and percentage points?",
+      "When the underlying quantity is itself a percentage, the gap between two values is measured in percentage points and the relative change between them in percent. A rate moving from 4% to 6% has risen 2 percentage points, which is a 50% increase. Saying rates rose 2% would mean a move to 4.08%, so the two are not interchangeable.",
     ],
     [
-      "What is X% of Y?",
-      "To find X% of Y, multiply Y by X and divide by 100. Formula: (Y × X) ÷ 100. Example: 15% of 200 = (200 × 15) ÷ 100 = 30. Our calculator does this automatically the moment you type both values.",
+      "Why is a 2 point rise sometimes 50% and sometimes 5%?",
+      "Because percent change always depends on the starting value. Going from 4% to 6% is 2 points and a 50% increase; going from 40% to 42% is also 2 points but only a 5% increase. The same absolute movement means very different things at different points on the scale, which is why the base matters more than the change.",
     ],
     [
-      "How to calculate percentage of marks?",
-      "Add up all the marks you scored, divide by the total possible marks, then multiply by 100. Example: 425 obtained ÷ 500 total × 100 = 85%. This is the standard method used for school and university exam results.",
+      "How do I find the original price before a discount?",
+      "Divide rather than adding the percentage back. A price of 90 after a 25% reduction was 90 ÷ 0.75 = 120. Adding 25% to 90 gives 112.50, which is wrong because the original discount was calculated on the larger number. Reversing any percentage is always a division: divide by 1 minus the decrease, or by 1 plus the increase.",
     ],
     [
-      "How do I calculate percentage increase or decrease?",
-      "Percentage change = ((New value − Old value) ÷ Old value) × 100. A positive result is an increase, a negative result is a decrease. Example: going from 80 to 100 is a ((100 − 80) ÷ 80) × 100 = 25% increase.",
+      "How do I calculate a percentage increase between two numbers?",
+      "Subtract the old value from the new one, divide by the old value, and multiply by 100. From 240 to 300 that is 60 ÷ 240 × 100 = 25%. The divisor is always the original figure — not the new one, and not the average of the two. Change is measured relative to where you started.",
     ],
     [
-      "What is a reverse percentage calculation?",
-      "A reverse percentage finds the original value before a percentage was applied. Formula: Original = Final ÷ (1 + rate) for an increase, or Final ÷ (1 − rate) for a decrease. Example: if a discounted price is $80 after 20% off, original = 80 ÷ 0.8 = $100.",
+      "How do I work out a percentage of marks?",
+      "Divide the marks obtained by the marks available and multiply by 100, so 68 out of 80 is 85%. Across several assessments of different sizes, add the raw marks first and divide once at the end. Averaging the percentages only works when every assessment carried equal weight.",
     ],
     [
-      "How do I convert a decimal to a percentage?",
-      "Multiply the decimal by 100 and add a percent sign. Example: 0.75 → 75%. To convert a percentage back to a decimal, divide by 100: 45% → 0.45.",
+      "Can I average two percentages together?",
+      "Only when they represent equally sized groups. A student scoring 90% on a 20-mark paper and 60% on an 80-mark paper has 66% overall, not 75% — the raw totals are 66 out of 100. Averaging the two percentages ignores the weights and here overstates the result by nine points, enough to change a grade.",
     ],
     [
-      "What is the difference between percentage and percentile?",
-      "Percentage is a portion of 100 (your score out of the total). Percentile is your rank compared to others. Scoring 80% means you got 80 out of 100 marks. Being in the 80th percentile means you scored higher than 80% of test-takers.",
+      "Is a percentage over 100 possible?",
+      "For growth, yes — tripling something is a 200% increase, and there is no upper limit on how much a quantity can grow. For a share of a whole, no. If a proportion comes out above 100% the denominator is wrong, usually because the total was understated or something was counted twice.",
     ],
     [
-      "How do I find what percent one number is of another?",
-      "Divide the smaller number by the larger number, then multiply by 100. Example: what percent is 15 of 60? (15 ÷ 60) × 100 = 25%. Enter both values in our calculator for an instant answer.",
+      "Why is a 300% increase not always impressive?",
+      "Because a percentage with no base attached carries almost no information. Going from two incidents to eight is a 300% rise and also a change of six incidents. Small starting numbers produce dramatic-looking percentages, which is why any percentage change is worth reading alongside the absolute figures it came from.",
     ],
     [
-      "Is this percentage calculator free?",
-      "Yes — 100% free, no signup, no ads on the tool, works on any device. Enter your value and percentage to get instant results with a live breakdown chart.",
-    ],
-    [
-      "Can I use this for discount and tax calculations?",
-      "Yes. Enter the original price as the base value and the discount or tax rate as the percentage. The result shows the discount/tax amount and the remainder shows the final price.",
+      "How do I calculate what percentage one number is of another?",
+      "Divide the part by the whole and multiply by 100. So 36 out of 240 is 36 ÷ 240 × 100 = 15%. The most common mistake is dividing the wrong way round, which gives 666% here — a result far above 100 is usually a sign the two numbers were swapped.",
     ],
   ];
 
@@ -366,7 +362,7 @@ export default function PercentageCalculator() {
           }}
         />
 
-        <h1>Percentage Calculator</h1>
+        <h1>Percentage Calculator — Of, Change, and Reverse</h1>
 
         <p>
           Free <strong>percentage calculator online</strong> — find what X% of Y
@@ -411,692 +407,246 @@ export default function PercentageCalculator() {
           <PercentageResultPanel result={panelResult} />
         </div>
 
-        {/* ── SEO CONTENT — REWRITTEN ── */}
+        {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Percentage?</h2>
+        <h2>Four Questions, Four Different Formulas</h2>
         <p>
-          A <strong>percentage</strong> is a number expressed as a fraction of
-          100. The word literally comes from Latin — <em>per centum</em>, "out
-          of a hundred". A score of 85% means 85 out of every 100. It's the most
-          universal way to express proportions, comparisons, discounts, growth
-          rates, and test results because it works across any scale.
-        </p>
-        <p>
-          This <strong>free percentage calculator online</strong> handles the
-          most common calculations — finding what X% of Y is, calculating
-          percentage increase or decrease, working out what percent one number
-          is of another, and reverse percentages. No manual math, no formula
-          hunting.
+          Nearly every percentage problem is one of four, and picking the wrong
+          one is far more common than getting the arithmetic wrong. Identify the
+          question first and the calculation is trivial.
         </p>
 
-        <h2>How to Calculate Percentage — The Core Formulas</h2>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>The question</th>
+                <th>Formula</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>What is X% of Y?</td>
+                <td>Y × X ÷ 100</td>
+                <td>15% of 240 = 36</td>
+              </tr>
+              <tr>
+                <td>X is what percent of Y?</td>
+                <td>X ÷ Y × 100</td>
+                <td>36 out of 240 = 15%</td>
+              </tr>
+              <tr>
+                <td>What is the change from X to Y?</td>
+                <td>(Y − X) ÷ X × 100</td>
+                <td>240 to 300 = 25% increase</td>
+              </tr>
+              <tr>
+                <td>Y is X% of what number?</td>
+                <td>Y ÷ (X ÷ 100)</td>
+                <td>36 is 15% of 240</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <p>
-          There are four percentage calculations you'll actually use in real
-          life. Here's each one with the formula and a worked example:
-        </p>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                What You Want to Find
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Formula
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Example
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                X% of Y
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                (Y × X) ÷ 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                20% of 150 = (150 × 20) ÷ 100 = <strong>30</strong>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                What % is A of B
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                (A ÷ B) × 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                15 of 60 = (15 ÷ 60) × 100 = <strong>25%</strong>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage increase
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                ((New − Old) ÷ Old) × 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                80 → 100 = ((100 − 80) ÷ 80) × 100 ={" "}
-                <strong>25% increase</strong>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage decrease
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                ((Old − New) ÷ Old) × 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                100 → 80 = ((100 − 80) ÷ 100) × 100 ={" "}
-                <strong>20% decrease</strong>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p>
-          Notice something important: 80 → 100 is a{" "}
-          <strong>25% increase</strong>, but 100 → 80 is only a{" "}
-          <strong>20% decrease</strong>. Percentage changes are always relative
-          to the starting value.
+          The third row hides the detail that causes most errors: the divisor is
+          always the <em>original</em> value, not the new one and not the
+          average of the two. Change is always measured relative to where you
+          started.
         </p>
 
-        <h2>How to Use This Percentage Calculator</h2>
-        <ol className="custom-list">
-          <li>
-            Enter your <strong>base value</strong> in the first field (the
-            total, the original number, or the "whole").
-          </li>
-          <li>
-            Enter the <strong>percentage</strong> you want to apply in the
-            second field.
-          </li>
-          <li>
-            Click <strong>Calculate</strong> — or watch the result panel update
-            automatically.
-          </li>
-        </ol>
+        <h2>Percent and Percentage Points Are Different Units</h2>
         <p>
-          The result panel shows the calculated amount, the remainder (base
-          value minus the result), and a live breakdown chart so you can see the
-          proportion at a glance.
+          This is the distinction that turns correct numbers into wrong
+          statements, and it appears constantly in news reports, interest rates
+          and survey results.
+        </p>
+        <p>
+          Suppose an interest rate moves from 4% to 6%. Two true statements:
+        </p>
+        <pre>
+          The rise is 2 percentage points (6 − 4){"\n"}The rise is 50 percent
+          ((6 − 4) ÷ 4 × 100)
+        </pre>
+        <p>
+          Both describe the same event and they are wildly different numbers.
+          Saying &quot;rates rose 2%&quot; when they moved from 4% to 6% is
+          simply wrong — that would mean a rise to 4.08%.
+        </p>
+        <p>
+          The rule is straightforward once stated. When the underlying quantity
+          is itself a percentage, the difference between two values is measured
+          in <strong>percentage points</strong>. The relative change between them
+          is measured in <strong>percent</strong>. Any time you see a percentage
+          change applied to a percentage, check which one is meant, because the
+          difference is often a factor of ten or more.
         </p>
 
-        <h2>What Is X% of Y? — Quick Reference Chart</h2>
-        <p>
-          The most common everyday percentage question. Here are the most
-          searched X% of Y calculations pre-worked:
-        </p>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Calculation
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Result
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Common Use
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                5% of 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Sales tax
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                10% of 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>10</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Standard tip
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                15% of 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>15</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Restaurant tip
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                20% of 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>20</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Discount, tip
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                25% of 200
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>50</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Quarter off sale
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                30% of 500
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>150</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Clearance discount
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                50% of 80
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>40</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Half-off deal
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                75% of 200
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>150</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Progress tracking
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                90% of 1000
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>900</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Exam target
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Percentage points</th>
+                <th>Percent change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2%</td>
+                <td>3%</td>
+                <td>1 point</td>
+                <td>50%</td>
+              </tr>
+              <tr>
+                <td>4%</td>
+                <td>6%</td>
+                <td>2 points</td>
+                <td>50%</td>
+              </tr>
+              <tr>
+                <td>40%</td>
+                <td>42%</td>
+                <td>2 points</td>
+                <td>5%</td>
+              </tr>
+              <tr>
+                <td>50%</td>
+                <td>25%</td>
+                <td>−25 points</td>
+                <td>−50%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-        <h2>How to Calculate Percentage of Marks</h2>
         <p>
-          One of the most searched percentage calculations, especially for
-          school and university students. The formula is straightforward:
+          Rows two and three make the point sharply. The same two-point movement
+          is a 50% change at the bottom of the scale and a 5% change nearer the
+          middle, because percent change depends entirely on the starting value.
+        </p>
+
+        <h2>Working Backwards to the Original Number</h2>
+        <p>
+          Reverse percentage problems come up whenever you know a figure that
+          already includes something and need the amount before it.
+        </p>
+        <pre>
+          Original = Final ÷ (1 + increase ÷ 100){"\n"}Original = Final ÷ (1 −
+          decrease ÷ 100)
+        </pre>
+        <p>
+          A price of 90 after a 25% reduction was 90 ÷ 0.75 = 120. A total of 480
+          after a 20% increase started at 480 ÷ 1.2 = 400.
         </p>
         <p>
-          <strong>
-            Percentage of marks = (Marks obtained ÷ Total marks) × 100
-          </strong>
+          The error to avoid is applying the percentage to the final figure
+          instead of dividing. Adding 25% back to 90 gives 112.50, not 120,
+          because the 25% was calculated on the larger original number rather
+          than on the reduced one. Reversing a percentage is always a division,
+          never the opposite operation applied to the result.
+        </p>
+
+        <h2>Percentage of Marks, and Weighted Scores</h2>
+        <p>
+          Converting marks to a percentage is the first formula in the table:
+          marks obtained divided by marks available, multiplied by 100. So 68 out
+          of 80 is 85%.
         </p>
         <p>
-          <strong>Worked examples:</strong>
+          Where it gets misapplied is across several assessments of different
+          sizes. Averaging the percentages only works when every assessment
+          carried the same weight. A student scoring 90% on a paper worth 20
+          marks and 60% on one worth 80 marks has not averaged 75%.
         </p>
+        <pre>
+          Total obtained = 18 + 48 = 66{"\n"}Total available = 20 + 80 = 100
+          {"\n"}Overall = 66%
+        </pre>
+        <p>
+          Add the raw marks and divide once at the end. Averaging the two
+          percentages gives 75%, which is nine points too generous and would
+          change a grade.
+        </p>
+
+        <h2>Where Percentages Mislead</h2>
         <ul className="custom-list">
           <li>
-            Scored 450 out of 500 → (450 ÷ 500) × 100 = <strong>90%</strong>
+            <strong>A percentage with no base is meaningless.</strong> &quot;Up
+            300%&quot; from two incidents to eight is true and unremarkable.
+            Always ask what the starting number was.
           </li>
           <li>
-            Scored 68 out of 80 → (68 ÷ 80) × 100 = <strong>85%</strong>
+            <strong>Percentages of small samples are unstable.</strong> One
+            person changing their mind in a group of eight moves the result by
+            12.5 points. Report the count alongside the percentage.
           </li>
           <li>
-            Scored 340 out of 400 → (340 ÷ 400) × 100 = <strong>85%</strong>
+            <strong>Averaging percentages hides the weights.</strong> This is the
+            same trap as the marks example, and it appears in survey results,
+            regional figures and departmental performance.
+          </li>
+          <li>
+            <strong>Percentages above 100 are legitimate for growth</strong> —
+            tripling something is a 200% increase — but impossible for a share of
+            a whole. A figure above 100% in a proportion is a signal that the
+            denominator is wrong.
           </li>
         </ul>
         <p>
-          For calculating multi-subject percentages, add all the marks obtained
-          across every subject, divide by the sum of all total marks, then
-          multiply by 100. If you're working with GPA instead of marks, use our{" "}
-          <Link className="my-link" href="/gpa-percentage/">
-            <span className="hover-item">GPA to percentage calculator</span>
+          For percentage-off shopping calculations including stacked offers, the{" "}
+          <Link href="/discount-calculator/" className="my-link">
+            discount calculator
           </Link>{" "}
-          for direct conversion.
+          covers those specifically. For converting a grade point average into a
+          percentage, use the{" "}
+          <Link href="/gpa-percentage/" className="my-link">
+            GPA to percentage converter
+          </Link>
+          , which depends on the scale rather than on plain percentage
+          arithmetic.
         </p>
+        <h2>Percentage Questions</h2>
 
-        <h2>Percentage Increase From One Number to Another</h2>
-        <p>
-          Used in salaries, prices, populations, and any "what's the growth
-          rate" question. Formula:
-        </p>
-        <p>
-          <strong>Percentage increase = ((New − Old) ÷ Old) × 100</strong>
-        </p>
-        <p>
-          <strong>Examples:</strong>
-        </p>
-        <ul className="custom-list">
-          <li>
-            Salary rose from $50,000 to $55,000 → ((55,000 − 50,000) ÷ 50,000) ×
-            100 = <strong>10% increase</strong>
-          </li>
-          <li>
-            Price went from $80 to $92 → ((92 − 80) ÷ 80) × 100 ={" "}
-            <strong>15% increase</strong>
-          </li>
-          <li>
-            Followers grew from 1,200 to 1,500 → ((1,500 − 1,200) ÷ 1,200) × 100
-            = <strong>25% increase</strong>
-          </li>
-        </ul>
+        {faqs.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
 
-        <h2>Percentage Decrease Calculator</h2>
-        <p>
-          The mirror of percentage increase — used for sales, weight loss,
-          expense cuts, and stock drops. Formula:
-        </p>
-        <p>
-          <strong>Percentage decrease = ((Old − New) ÷ Old) × 100</strong>
-        </p>
-        <p>
-          <strong>Examples:</strong>
-        </p>
-        <ul className="custom-list">
-          <li>
-            Weight dropped from 90 kg to 81 kg → ((90 − 81) ÷ 90) × 100 ={" "}
-            <strong>10% decrease</strong>
-          </li>
-          <li>
-            Price fell from $200 to $150 → ((200 − 150) ÷ 200) × 100 ={" "}
-            <strong>25% decrease</strong>
-          </li>
-          <li>
-            Traffic went from 10,000 to 7,500 visits →{" "}
-            <strong>25% decrease</strong>
-          </li>
-        </ul>
-
-        <h2>Reverse Percentage Calculator (Finding the Original Value)</h2>
-        <p>
-          The trickiest percentage question — and the most misunderstood.{" "}
-          <strong>Reverse percentage</strong> works out the original value when
-          you only know the final value and the percentage that was applied.
-        </p>
-        <p>
-          <strong>Formulas:</strong>
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>After an increase:</strong> Original = Final ÷ (1 + rate ÷
-            100)
-          </li>
-          <li>
-            <strong>After a decrease:</strong> Original = Final ÷ (1 − rate ÷
-            100)
-          </li>
-        </ul>
-        <p>
-          <strong>Worked examples:</strong>
-        </p>
-        <ul className="custom-list">
-          <li>
-            A shirt costs $80 after a 20% discount. Original price = 80 ÷ (1 −
-            0.20) = 80 ÷ 0.80 = <strong>$100</strong>
-          </li>
-          <li>
-            Bill total is $110 with 10% VAT. Pre-tax = 110 ÷ 1.10 ={" "}
-            <strong>$100</strong>
-          </li>
-          <li>
-            Salary is $63,000 after a 5% raise. Old salary = 63,000 ÷ 1.05 ={" "}
-            <strong>$60,000</strong>
-          </li>
-        </ul>
-        <p>
-          Common mistake: don't just subtract 20% from the discounted price to
-          get the original. You have to divide, not subtract.
-        </p>
-
-        <h2>Decimal to Percentage Converter</h2>
-        <p>
-          Converting between decimals and percentages is simple once you learn
-          the trick:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Decimal to percentage:</strong> multiply by 100 (0.45 → 45%)
-          </li>
-          <li>
-            <strong>Percentage to decimal:</strong> divide by 100 (75% → 0.75)
-          </li>
-          <li>
-            <strong>Fraction to percentage:</strong> divide numerator by
-            denominator, then × 100 (3/4 → 0.75 → 75%)
-          </li>
-        </ul>
-        <p>
-          <strong>Quick reference chart:</strong>
-        </p>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Decimal
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Fraction
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.01
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>1%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                1/100
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.05
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>5%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                1/20
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.10
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>10%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                1/10
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.25
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>25%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>1/4</td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.33
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                33.33%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>1/3</td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.50
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>50%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>1/2</td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.66
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                66.67%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>2/3</td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.75
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>75%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>3/4</td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                0.80
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>80%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>4/5</td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                1.00
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                100%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>1/1</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>Percentage vs Percentile — What's the Difference?</h2>
-        <p>
-          These get mixed up constantly, especially around test scores. They
-          mean very different things:
-        </p>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Concept
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                What It Measures
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Example
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                <strong>Percentage</strong>
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Your score as a fraction of 100
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                85% = you got 85 out of 100 marks
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                <strong>Percentile</strong>
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Your rank relative to others
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                85th percentile = you scored higher than 85% of test-takers
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p>
-          Someone can score 60% on a hard exam and still be in the 95th
-          percentile if most people scored lower. Standardized tests like the
-          GRE, SAT, and GMAT report percentiles because they compare you to the
-          test-taker pool, not to a fixed 100-point scale.
-        </p>
-
-        <h2>Real-World Uses of Percentage Calculations</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Shopping</strong> — discounts, "buy one get one 50% off",
-            sales tax, VAT
-          </li>
-          <li>
-            <strong>Finance</strong> — interest rates, loan APR, investment
-            returns, inflation
-          </li>
-          <li>
-            <strong>Salary &amp; work</strong> — raises, bonuses, tax
-            deductions, tips
-          </li>
-          <li>
-            <strong>School &amp; exams</strong> — marks percentages, grade
-            thresholds, grade curves
-          </li>
-          <li>
-            <strong>Health &amp; fitness</strong> — body fat %, weight change %,
-            calorie targets
-          </li>
-          <li>
-            <strong>Business</strong> — profit margin, growth rate, conversion
-            rate, market share
-          </li>
-          <li>
-            <strong>Analytics</strong> — bounce rate, CTR, engagement rate
-          </li>
-          <li>
-            <strong>Cooking &amp; recipes</strong> — scaling ingredients, baking
-            ratios (baker's percentage)
-          </li>
-        </ul>
-
-        <h2>Common Percentage Calculation Mistakes to Avoid</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>
-              Adding then subtracting the same percentage doesn't return the
-              original.
-            </strong>{" "}
-            $100 → +10% = $110 → −10% = $99, not $100.
-          </li>
-          <li>
-            <strong>Percentage increase and decrease aren't symmetric.</strong>{" "}
-            Going from 100 to 150 is a 50% increase, but 150 to 100 is only a
-            33.33% decrease.
-          </li>
-          <li>
-            <strong>Don't confuse percentage with percentage points.</strong>{" "}
-            Interest rising from 5% to 7% is a 2 percentage point increase, but
-            a 40% relative increase.
-          </li>
-          <li>
-            <strong>Reverse percentages need division, not subtraction.</strong>{" "}
-            $80 after 20% off is not $80 + $20 = $100; it's $80 ÷ 0.80 = $100.
-          </li>
-        </ul>
-
-        <h2>Why Use This Free Percentage Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            ✅ <strong>100% free</strong> — no signup, no ads on the tool
-          </li>
-          <li>
-            ✅ <strong>Instant, live results</strong> as you type
-          </li>
-          <li>
-            ✅ Handles{" "}
-            <strong>
-              X% of Y, percentage increase, decrease, and reverse percentage
-            </strong>
-          </li>
-          <li>
-            ✅ <strong>Visual breakdown</strong> — see result vs remainder
-            proportion at a glance
-          </li>
-          <li>
-            ✅ Works for{" "}
-            <strong>discounts, tax, tips, marks, growth rates</strong> —
-            anything percentage-based
-          </li>
-          <li>
-            ✅ <strong>Mobile-friendly</strong> — phone, tablet, laptop, desktop
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {faqs.map(([q, a], i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              />
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          Percentages are one of the most useful pieces of math you'll ever
-          learn — whether you're checking a discount, tracking your exam scores,
-          or calculating a raise. Bookmark this{" "}
-          <strong>percentage calculator</strong> for the next time you need any
-          of these calculations, and use the reference tables above when you
-          don't have the calculator open.
-        </p>
-        <p>
-          For related calculations, try our{" "}
-          <Link className="my-link" href="/gpa-percentage/">
-            <span className="hover-item">GPA to percentage converter</span>
-          </Link>{" "}
-          if you're working with academic grades, or the{" "}
-          <Link className="my-link" href="/gpa-calculator/">
-            <span className="hover-item">GPA calculator</span>
-          </Link>{" "}
-          to compute GPA from credit hours and letter grades.
-        </p>
       </div>
 
       {/* ── SIDEBAR — FIXED broken link ── */}

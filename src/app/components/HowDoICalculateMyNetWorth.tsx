@@ -2,6 +2,42 @@
 import { useState } from "react";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import BlogSidebar from "./BlogSidebar";
+
+const FAQ_DATA: [string, string][] = [
+  [
+    "Is salary included in a net worth calculator?",
+    "No. Salary is an income stream, not an asset. It is what you use to buy assets or pay down liabilities. Only include the actual cash sitting in your bank accounts.",
+  ],
+  [
+    "Should I include my business in my net worth?",
+    "Yes, absolutely. If you own a business, it is an asset. However, valuing a private business can be tricky. A conservative approach is to estimate what someone would realistically pay to buy it from you today.",
+  ],
+  [
+    "Is it normal to have a negative net worth?",
+    "Yes, especially for people in their 20s and early 30s. Student loans and early auto loans often outweigh the small amount of cash or retirement savings young professionals have built up. The goal is to trend upwards over time.",
+  ],
+  [
+    "How do taxes (like VAT or income tax) affect net worth?",
+    "Taxes are an expense that reduces your cash flow, making it harder to build assets. If you owe back-taxes to the government, that is a liability. If you're managing a business and need to figure out your tax margins, try our VAT calculator.",
+  ],
+  [
+    "Do I count my 401(k) or pension even though I can't touch it yet?",
+    "Yes! Retirement accounts are major assets. Even though they are illiquid (you'd face penalties to withdraw them early), they still contribute to your overall wealth profile.",
+  ],
+  [
+    "What is considered a \"good\" net worth?",
+    "\"Good\" is highly subjective and depends on your age, location, and lifestyle goals. A common financial independence rule of thumb is aiming for a net worth equal to 25 times your annual living expenses.",
+  ],
+  [
+    "Should married couples calculate net worth together or separately?",
+    "If you share finances, bank accounts, and property, it is much easier and more accurate to calculate a combined household net worth. Just make sure to include both partners' debts as well.",
+  ],
+  [
+    "Why does my net worth drop when the stock market goes down?",
+    "Because the value of your assets (like index funds and retirement accounts) fluctuates daily based on market conditions. This is completely normal. Don't panic sell; keep focusing on long-term growth.",
+  ],
+];
 
 export default function NetWorthGuide() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -12,42 +48,22 @@ export default function NetWorthGuide() {
 
   return (
     <div className="blog-container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       {/* MAIN CONTENT (70%) */}
       <div className="blog-content">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "14px",
-            marginBottom: "10px",
-          }}
-        >
-          <Link
-            href="https://numbersonyourtip.com/"
-            style={{
-              textDecoration: "none",
-              color: "#000000",
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-            }}
-            className="my-link"
-          >
-            <i className="fa-solid fa-house"></i>
-            Home
-          </Link>
-
-          <i
-            className="fa-solid fa-angle-right"
-            style={{ fontSize: "12px" }}
-          ></i>
-
-          <span style={{ color: "#000000" }}>
-            How Do I Calculate My Net Worth?
-          </span>
-        </div>
-        <hr></hr>
         <img src="/blog5.1.webp" className="image-blog" alt="blog" />
         <div className="content-blog">
           <small
@@ -68,8 +84,10 @@ export default function NetWorthGuide() {
                 fontSize: "14px",
               }}
             >
+              <Link href="/author/ashar-pervaiz/" className="byline-author">
               <img className="founder-photo" src="/founder_photo.webp" alt="" />
               Ashar Pervaiz
+              </Link>
             </span>
             <span
               style={{
@@ -587,111 +605,113 @@ export default function NetWorthGuide() {
               her.
             </p>
 
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-                fontSize: "1.1rem",
-              }}
-            >
-              <thead>
-                <tr>
-                  <th
+            <div style={{ overflowX: "auto", margin: "20px 0" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  marginBottom: "20px",
+                  fontSize: "1.1rem",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style={{
+                        backgroundColor: "#1b3067",
+                        color: "#fff",
+                        padding: "15px",
+                        textAlign: "left",
+                        width: "50%",
+                        borderTopLeftRadius: "8px",
+                      }}
+                    >
+                      Sarah's Assets (What She Owns)
+                    </th>
+                    <th
+                      style={{
+                        backgroundColor: "#1B3066",
+                        color: "#fff",
+                        padding: "15px",
+                        textAlign: "left",
+                        width: "50%",
+                        borderTopRightRadius: "8px",
+                      }}
+                    >
+                      Sarah's Liabilities (What She Owes)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ borderBottom: "1px solid #ddd" }}>
+                    <td
+                      style={{ padding: "15px", borderRight: "1px solid #ddd" }}
+                    >
+                      Checking Account: $2,500
+                    </td>
+                    <td style={{ padding: "15px" }}>
+                      Mortgage Balance: $210,000
+                    </td>
+                  </tr>
+                  <tr
                     style={{
-                      backgroundColor: "#1b3067",
-                      color: "#fff",
-                      padding: "15px",
-                      textAlign: "left",
-                      width: "50%",
-                      borderTopLeftRadius: "8px",
+                      borderBottom: "1px solid #ddd",
+                      backgroundColor: "#f9f9f9",
                     }}
                   >
-                    Sarah's Assets (What She Owns)
-                  </th>
-                  <th
+                    <td
+                      style={{ padding: "15px", borderRight: "1px solid #ddd" }}
+                    >
+                      Emergency Savings: $5,000
+                    </td>
+                    <td style={{ padding: "15px" }}>Student Loans: $28,000</td>
+                  </tr>
+                  <tr style={{ borderBottom: "1px solid #ddd" }}>
+                    <td
+                      style={{ padding: "15px", borderRight: "1px solid #ddd" }}
+                    >
+                      401(k) Retirement: $35,000
+                    </td>
+                    <td style={{ padding: "15px" }}>Car Loan: $12,000</td>
+                  </tr>
+                  <tr
                     style={{
-                      backgroundColor: "#1B3066",
-                      color: "#fff",
-                      padding: "15px",
-                      textAlign: "left",
-                      width: "50%",
-                      borderTopRightRadius: "8px",
+                      borderBottom: "1px solid #ddd",
+                      backgroundColor: "#f9f9f9",
                     }}
                   >
-                    Sarah's Liabilities (What She Owes)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style={{ borderBottom: "1px solid #ddd" }}>
-                  <td
-                    style={{ padding: "15px", borderRight: "1px solid #ddd" }}
-                  >
-                    Checking Account: $2,500
-                  </td>
-                  <td style={{ padding: "15px" }}>
-                    Mortgage Balance: $210,000
-                  </td>
-                </tr>
-                <tr
-                  style={{
-                    borderBottom: "1px solid #ddd",
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <td
-                    style={{ padding: "15px", borderRight: "1px solid #ddd" }}
-                  >
-                    Emergency Savings: $5,000
-                  </td>
-                  <td style={{ padding: "15px" }}>Student Loans: $28,000</td>
-                </tr>
-                <tr style={{ borderBottom: "1px solid #ddd" }}>
-                  <td
-                    style={{ padding: "15px", borderRight: "1px solid #ddd" }}
-                  >
-                    401(k) Retirement: $35,000
-                  </td>
-                  <td style={{ padding: "15px" }}>Car Loan: $12,000</td>
-                </tr>
-                <tr
-                  style={{
-                    borderBottom: "1px solid #ddd",
-                    backgroundColor: "#f9f9f9",
-                  }}
-                >
-                  <td
-                    style={{ padding: "15px", borderRight: "1px solid #ddd" }}
-                  >
-                    Current Home Value: $275,000
-                  </td>
-                  <td style={{ padding: "15px" }}>Credit Card Debt: $4,500</td>
-                </tr>
-                <tr style={{ borderBottom: "2px solid #1b3067" }}>
-                  <td
-                    style={{ padding: "15px", borderRight: "1px solid #ddd" }}
-                  >
-                    Car Current Value: $14,000
-                  </td>
-                  <td style={{ padding: "15px" }}>Personal Loan: $0</td>
-                </tr>
-                <tr style={{ fontWeight: "bold", backgroundColor: "#e2e8f0" }}>
-                  <td
-                    style={{
-                      padding: "15px",
-                      borderRight: "1px solid #ddd",
-                      color: "#1b3067",
-                    }}
-                  >
-                    Total Assets: $331,500
-                  </td>
-                  <td style={{ padding: "15px", color: "#DC2626" }}>
-                    Total Liabilities: $254,500
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td
+                      style={{ padding: "15px", borderRight: "1px solid #ddd" }}
+                    >
+                      Current Home Value: $275,000
+                    </td>
+                    <td style={{ padding: "15px" }}>Credit Card Debt: $4,500</td>
+                  </tr>
+                  <tr style={{ borderBottom: "2px solid #1b3067" }}>
+                    <td
+                      style={{ padding: "15px", borderRight: "1px solid #ddd" }}
+                    >
+                      Car Current Value: $14,000
+                    </td>
+                    <td style={{ padding: "15px" }}>Personal Loan: $0</td>
+                  </tr>
+                  <tr style={{ fontWeight: "bold", backgroundColor: "#e2e8f0" }}>
+                    <td
+                      style={{
+                        padding: "15px",
+                        borderRight: "1px solid #ddd",
+                        color: "#1b3067",
+                      }}
+                    >
+                      Total Assets: $331,500
+                    </td>
+                    <td style={{ padding: "15px", color: "#DC2626" }}>
+                      Total Liabilities: $254,500
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
             <div
               style={{
@@ -870,98 +890,100 @@ export default function NetWorthGuide() {
               significantly, but this shows the natural progression of wealth
               over a lifetime).
             </p>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-                textAlign: "left",
-              }}
-            >
-              <thead>
-                <tr style={{ backgroundColor: "#1b3067", color: "#fff" }}>
-                  <th style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Age Bracket
-                  </th>
-                  <th style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Median Net Worth
-                  </th>
-                  <th style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Why?
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Under 35
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    $39,000
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    High student loan debt, lower starting salaries.
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    35 - 44
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    $135,600
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Buying first homes, building early equity, starting 401(k)s.
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    45 - 54
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    $247,200
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Peak earning years, compounding investments.
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    55 - 64
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    $320,700
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Home mortgages nearly paid off, maximum retirement savings.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div style={{ overflowX: "auto", margin: "20px 0" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  marginBottom: "20px",
+                  textAlign: "left",
+                }}
+              >
+                <thead>
+                  <tr style={{ backgroundColor: "#1b3067", color: "#fff" }}>
+                    <th style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Age Bracket
+                    </th>
+                    <th style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Median Net Worth
+                    </th>
+                    <th style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Why?
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Under 35
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      $39,000
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      High student loan debt, lower starting salaries.
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: "#f9f9f9" }}>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      35 - 44
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      $135,600
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Buying first homes, building early equity, starting 401(k)s.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      45 - 54
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      $247,200
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Peak earning years, compounding investments.
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: "#f9f9f9" }}>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      55 - 64
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      $320,700
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Home mortgages nearly paid off, maximum retirement savings.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <p
               style={{
                 fontSize: "0.95rem",
@@ -978,268 +1000,66 @@ export default function NetWorthGuide() {
             </p>
           </section>
 
-          {/* --- CTA / TOOL SECTION --- */}
-          <section
-            style={{
-              backgroundColor: "#1b3067",
-              padding: "40px",
-              borderRadius: "15px",
-              textAlign: "center",
-              color: "#fff",
-              marginBottom: "50px",
-              boxShadow: "0 10px 20px rgba(27,48,103,0.2)",
-            }}
-          >
-            <h2 style={{ color: "#ffffff" }}>
-              Stop Guessing. Start Calculating.
-            </h2>
-            <p
-              style={{
-                marginBottom: "30px",
-                maxWidth: "700px",
-                margin: "0 auto 30px auto",
-                color: "white",
-              }}
-            >
-              You know the formula. You know the steps. Now it's time to find
-              out your true financial standing. Use our free, interactive
-              calculator to do the heavy lifting for you in seconds.
-            </p>
-            <Link
-              href="/net-worth-calculator/"
-              style={{
-                display: "inline-block",
-                backgroundColor: "#ffffff",
-                color: "#302e64",
-                padding: "15px 35px",
-                fontSize: "1.2rem",
-                fontWeight: "bold",
-                textDecoration: "none",
-                borderRadius: "6px",
-                transition: "transform 0.2s",
-              }}
-            >
-              Launch Net Worth Calculator
-            </Link>
-          </section>
-
           {/* --- FAQ --- */}
           <section>
-            <h2>Frequently Asked Questions</h2>
+            <h2>Questions About Counting Assets and Debts</h2>
 
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(0)}>
-                Is salary included in a net worth calculator?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 0 && (
-                <p style={{ margin: "0" }}>
-                  No. Salary is an income stream, not an asset. It is what you
-                  use to <em>buy</em> assets or pay down liabilities. Only
-                  include the actual cash sitting in your bank accounts.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(1)}>
-                Should I include my business in my net worth?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 1 && (
-                <p style={{ margin: "0" }}>
-                  Yes, absolutely. If you own a business, it is an asset.
-                  However, valuing a private business can be tricky. A
-                  conservative approach is to estimate what someone would
-                  realistically pay to buy it from you today.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(2)}>
-                Is it normal to have a negative net worth?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 2 && (
-                <p style={{ margin: "0" }}>
-                  Yes, especially for people in their 20s and early 30s. Student
-                  loans and early auto loans often outweigh the small amount of
-                  cash or retirement savings young professionals have built up.
-                  The goal is to trend upwards over time.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(3)}>
-                How do taxes (like VAT or income tax) affect net worth?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 3 && (
-                <p style={{ margin: "0" }}>
-                  Taxes are an expense that reduces your cash flow, making it
-                  harder to build assets. If you owe back-taxes to the
-                  government, that is a liability. (If you're managing a
-                  business and need to figure out your tax margins, try our{" "}
-                  <Link href="/vat-calculator/" className="my-link">
-                    VAT Calculator
-                  </Link>
-                  ).
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(4)}>
-                Do I count my 401(k) or pension even though I can't touch it
-                yet?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 4 && (
-                <p style={{ margin: "0" }}>
-                  Yes! Retirement accounts are major assets. Even though they
-                  are illiquid (you'd face penalties to withdraw them early),
-                  they still contribute to your overall{" "}
-                  <Link
-                    href="https://www.nerdwallet.com/article/investing/net-worth-calculator"
-                    className="my-link"
+            {FAQ_DATA.map(([q, a], i) => {
+              const isOpen = openFAQ === i;
+              return (
+                <div className="faq-item" key={i}>
+                  <h3
+                    onClick={() => toggleFAQ(i)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleFAQ(i);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${i}`}
                   >
-                    wealth profile
-                  </Link>
-                  .
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(5)}>
-                What is considered a "good" net worth?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 5 && (
-                <p style={{ margin: "0" }}>
-                  "Good" is highly subjective and depends on your age, location,
-                  and lifestyle goals. A common financial independence rule of
-                  thumb is aiming for a net worth equal to 25 times your annual
-                  living expenses.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(6)}>
-                Should married couples calculate net worth together or
-                separately?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 6 && (
-                <p style={{ margin: "0" }}>
-                  If you share finances, bank accounts, and property, it is much
-                  easier and more accurate to calculate a combined household net
-                  worth. Just make sure to include <em>both</em> partners' debts
-                  as well.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(7)}>
-                Why does my net worth drop when the stock market goes down?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 7 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 7 && (
-                <p style={{ margin: "0" }}>
-                  Because the value of your assets (like index funds and
-                  retirement accounts) fluctuates daily based on market
-                  conditions. This is completely normal. Don't panic sell; keep
-                  focusing on long-term growth.
-                </p>
-              )}
-            </div>
+                    {q}
+                    <i
+                      className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                      aria-hidden="true"
+                    />
+                  </h3>
+                  <div
+                    id={`faq-answer-${i}`}
+                    className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="faq-answer-inner">
+                      <p style={{ margin: "0" }}>{a}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </section>
         </article>
       </div>
-      {/* SIDEBAR (30%) */}
-      <aside className="blog-sidebar">
-        <p>Recent Blogs</p>
-
-        <ul>
-          <li>
-            <Link href="/blog/what-is-vat/">
-              <span
-                style={{
-                  textDecoration: "none",
-
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px", // space between icon and text
-                }}
-              >
-                <i
-                  className="fa-solid fa-angle-right"
-                  style={{ color: "#D8A13A" }}
-                ></i>
-                What Is VAT?
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/blog/ultimate-iv-infusion-calculator-guide/">
-              <span
-                style={{
-                  textDecoration: "none",
-
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px", // space between icon and text
-                }}
-              >
-                <i
-                  className="fa-solid fa-angle-right"
-                  style={{ color: "#D8A13A" }}
-                ></i>
-                Ultimate IV Infusion Calculator Guide
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/blog/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/">
-              <span
-                style={{
-                  textDecoration: "none",
-
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px", // space between icon and text
-                }}
-              >
-                <i
-                  className="fa-solid fa-angle-right"
-                  style={{ color: "#D8A13A" }}
-                ></i>
-                Medication Dose Calculation
-              </span>
-            </Link>
-          </li>
-        </ul>
-      </aside>
+      <BlogSidebar
+        relatedTools={[
+          ["/net-worth-calculator/", "Net Worth Calculator"],
+          ["/home-mortgage-calculator/", "Home Mortgage Calculator"],
+          ["/vat-calculator/", "VAT Calculator"],
+        ]}
+        relatedPosts={[
+          [
+            "/blog/how-much-house-can-i-afford/",
+            "How Much House Can I Afford?",
+          ],
+          [
+            "/blog/best-free-financial-calculators-for-everyday-money-questions/",
+            "Best Free Financial Calculators",
+          ],
+          ["/blog/renting-vs-buying-a-home/", "Renting vs. Buying a Home: How to Decide With Numbers"],
+        ]}
+      />
     </div>
   );
 }

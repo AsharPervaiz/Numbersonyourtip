@@ -1,17 +1,27 @@
 import { Metadata } from "next";
-import LoremGenerator from "../components/LoremIpsumGenerator";
+import LoremIpsumGenerator from "../components/LoremIpsumGenerator";
 
 export const metadata: Metadata = {
-  title:
-    "Lorem Ipsum Generator | Free Placeholder Text Tool for Designers & Developers",
+  title: "Lorem Ipsum Generator",
   description:
-    "Generate Lorem Ipsum placeholder text instantly with exact word count control. Free online tool for UI/UX designers, web developers, and content testers. No sign-up required.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Generate lorem ipsum placeholder text, and understand what it shows you about a layout and the failure cases it quietly hides.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/lorem-ipsum-generator/",
+    canonical: "/lorem-ipsum-generator/",
+  },
+  openGraph: {
+    title: "Lorem Ipsum Generator",
+    description:
+      "Why designers use fake Latin, what it hides, and how to get it out before launch.",
+    url: "/lorem-ipsum-generator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Lorem Ipsum Generator",
+    description:
+      "Generate lorem ipsum placeholder text by paragraphs, words or sentences.",
   },
 };
 
 export default function Page() {
-  return <LoremGenerator />;
+  return <LoremIpsumGenerator />;
 }

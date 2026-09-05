@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import HomeMortgageCalculator from "../components/HomeMortgageCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Home Mortgage Calculator | Estimate Your Monthly House Payment Online",
+  title: "Mortgage Calculator — Payment and Total Cost",
   description:
-    "Use our free home mortgage calculator online to estimate monthly payments, total interest, and loan cost. Compare rates, terms, and down payments instantly.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Calculate a mortgage payment and total interest, see what ownership actually costs beyond principal and interest, and stress-test the term and rate.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/home-mortgage-calculator/",
+    canonical: "/home-mortgage-calculator/",
+  },
+  openGraph: {
+    title: "Mortgage Calculator — Payment and Total Cost",
+    description:
+      "Monthly payment, the costs the payment leaves out, and why ten years of payments clear so little of the balance.",
+    url: "/home-mortgage-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Mortgage Calculator — Payment and Total Cost",
+    description:
+      "Mortgage payment, total interest, term trade-offs and the costs beyond the payment.",
   },
 };
 

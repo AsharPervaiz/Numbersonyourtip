@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ReviewedBy from "./ReviewedBy";
 
 /* ─────────────────────────────────────────
    Types
@@ -178,44 +179,44 @@ function PDResultPanel({ result }: { result: PDResult | null }) {
 ───────────────────────────────────────── */
 const FAQ_DATA = [
   {
-    q: "What is the difference between pharmacokinetics and pharmacodynamics?",
-    a: "Pharmacokinetics (PK) describes what the body does to a drug — absorption, distribution, metabolism, and excretion. Pharmacodynamics (PD) describes what the drug does to the body — the relationship between drug concentration and effect. In practice, PK tells you what plasma levels a dose will produce; PD tells you what those plasma levels will actually do. Together they form PK/PD modeling, used to optimize dosing regimens.",
+    q: "What is the difference between potency and efficacy?",
+    a: "Potency is about how much drug is needed and is measured by EC50 or ED50 — a lower value means the curve sits further left and less drug achieves a given effect. Efficacy is about the ceiling and is measured by Emax — how large the maximum achievable effect is, however much you give. They are independent: a drug can be highly potent with low efficacy, meaning tiny doses do something that never amounts to much. Clinically, efficacy usually decides whether a drug is worth using; potency mostly decides the tablet size.",
   },
   {
-    q: "What is a good therapeutic index value?",
-    a: "There is no universal cutoff, but drugs with a TI above 10 are generally considered safe without intensive monitoring. Drugs with a TI below 2 (lithium, digoxin, warfarin, phenytoin, aminoglycosides) are classified as narrow therapeutic index drugs and require regular plasma level monitoring and careful dose individualization.",
+    q: "What does EC50 actually mean?",
+    a: "It is the concentration producing half the maximum effect, which places it at the midpoint of the rising part of the concentration-effect curve. Substituting C = EC50 into the Emax equation gives exactly Emax ÷ 2, which is the definition restated algebraically. A lower EC50 means a more potent drug, and comparisons are only meaningful between drugs producing the same effect by a comparable mechanism.",
   },
   {
-    q: "What does EC50 mean in the Emax model?",
-    a: "EC50 is the drug concentration that produces exactly 50% of the maximum possible effect (Emax). It is a measure of drug potency — a lower EC50 means the drug achieves significant effect at a lower concentration. Two drugs may have the same Emax but very different EC50 values, making one far more potent than the other.",
+    q: "Why does doubling the dose sometimes add no benefit?",
+    a: "Because of the shape of the curve. In the Emax model, once concentration is well above EC50 the denominator is dominated by concentration and effect approaches the plateau, so further increases achieve almost nothing. The mechanisms producing side effects have their own separate curves and may still be climbing steeply at that point, which is why pushing a dose past adequate response tends to buy toxicity rather than efficacy.",
   },
   {
-    q: "What is the difference between ED50, TD50, and LD50?",
-    a: "ED50 is the dose that produces the desired therapeutic effect in 50% of a population. TD50 is the dose that causes toxicity in 50% of a population. LD50 is the dose that is lethal to 50% of a test population — used primarily in preclinical animal studies, not in humans. The therapeutic index uses TD50/ED50 in clinical contexts, while LD50/ED50 is used in preclinical safety profiling.",
+    q: "What is the difference between ED50, TD50 and LD50?",
+    a: "They are the same measure applied to three different endpoints — therapeutic effect, defined toxicity, and lethality. The 50 refers to the proportion of the population, not the proportion of effect: an ED50 is the dose at which half the individuals respond, not the dose at which everyone gets half an effect. LD50 is a preclinical animal toxicology measure rather than a clinical figure.",
   },
   {
-    q: "Why is bioavailability important for oral drugs?",
-    a: "Bioavailability determines how much of an oral dose actually reaches the bloodstream to produce an effect. If a drug has 25% oral bioavailability, you need to give 4× the IV dose orally to achieve the same systemic exposure. Without accounting for bioavailability, patients may receive subtherapeutic doses or toxic doses if absorption changes unexpectedly.",
+    q: "What counts as a good therapeutic index?",
+    a: "A larger TD50 ÷ ED50 ratio means a wider gap between the dose that helps and the dose that harms, so a value around 100 offers considerable margin while one near 2 offers almost none. But the index compares two midpoints and ignores how steeply the curves rise, so two drugs with the same index are not necessarily equally forgiving, and a very steep toxicity curve can make a respectable-looking index misleading.",
   },
   {
-    q: "What causes low oral bioavailability?",
-    a: "Low oral bioavailability results from poor gastrointestinal absorption, chemical degradation in stomach acid, efflux transporters pumping drug out of gut cells, or extensive first-pass metabolism in the gut wall and liver. Drugs like nitroglycerin and lidocaine have such high first-pass metabolism that oral routes are clinically impractical at standard doses.",
+    q: "Does a high therapeutic index mean a drug is safe?",
+    a: "No. The index describes the relationship between dose and one defined toxic endpoint in a population. Allergic reactions, idiosyncratic responses and drug interactions are not dose-related in that sense and fall entirely outside what it measures. Both figures are also population averages, so an individual patient may sit far from either midpoint — which is why narrow-index drugs are managed with concentration monitoring rather than by trusting the ratio.",
   },
   {
-    q: "What is bioequivalence and how does it relate to relative bioavailability?",
-    a: "Bioequivalence means two formulations produce statistically equivalent drug exposure (AUC) and peak concentration (Cmax) within a regulatory acceptance window. Most agencies require 80–125% of the reference product. Relative bioavailability is the ratio used to assess this. Generic drugs must demonstrate bioequivalence before market authorization.",
+    q: "How does a partial agonist differ from a full agonist?",
+    a: "A partial agonist binds the same receptor but plateaus at a lower maximum effect no matter how much is present, so its ceiling is below the full agonist's regardless of potency. This produces a result students often find counter-intuitive: in the presence of a full agonist, a partial agonist can behave as an antagonist, because it occupies receptors while producing less effect than the drug it displaced.",
   },
   {
-    q: "What is the difference between efficacy and potency?",
-    a: "Efficacy is the maximum effect a drug can produce — represented by Emax. Potency is the concentration required to produce a given effect — represented by EC50. A drug can be highly potent (very low EC50) but have low efficacy (low Emax), or vice versa. For clinical dosing, both matter.",
+    q: "What does a competitive antagonist do to the curve?",
+    a: "It shifts the agonist's concentration-effect curve to the right without lowering the plateau. More agonist is needed to achieve any given effect, but the maximum achievable effect is unchanged because enough agonist can still outcompete the antagonist. That rightward shift with an intact ceiling is the signature of competitive antagonism.",
   },
   {
-    q: "Can this calculator be used for pharmacy board exam preparation?",
-    a: "Yes. This pharmacodynamics calculator covers the core PD formulas tested in NAPLEX, OSCE, and university pharmacology exams — therapeutic index, Emax model, and absolute and relative bioavailability. Use it to verify manual calculations and check your understanding during study sessions.",
+    q: "How is absolute bioavailability calculated?",
+    a: "Compare the area under the concentration-time curve for the route in question against the intravenous route, correcting for any difference in dose: F = (AUC oral ÷ AUC IV) × (Dose IV ÷ Dose oral). Intravenous is the reference because none of the dose is lost. Relative bioavailability compares two non-intravenous formulations instead and underpins bioequivalence testing for generic products.",
   },
   {
-    q: "Is this pharmacodynamics calculator free to use?",
-    a: "Yes, completely free with no registration required. Designed for pharmacy students, pharmacists, physicians, nurses, and clinical researchers. All calculations run locally in your browser. This tool is a reference aid — all clinical dosing decisions should be reviewed by a qualified healthcare professional.",
+    q: "Why is pharmacodynamics taught alongside pharmacokinetics?",
+    a: "Because each answers half the question. Pharmacokinetics describes what the body does to the drug and predicts what concentration a dose will produce. Pharmacodynamics describes what the drug does to the body and predicts what that concentration will achieve. A dosing regimen needs both: the right concentration is a pharmacokinetic result, and knowing which concentration is right is a pharmacodynamic one.",
   },
 ];
 
@@ -491,7 +492,9 @@ export default function PharmacodynamicsCalculator() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
 
-        <h1>Free Pharmacodynamics Calculator Online</h1>
+        <h1>Pharmacodynamics Calculator — EC50, Emax, Therapeutic Index</h1>
+
+
         <p>
           Calculate therapeutic index, drug effect using the Emax model, and
           absolute or relative bioavailability — the core pharmacodynamic
@@ -728,409 +731,276 @@ export default function PharmacodynamicsCalculator() {
 
         {/* ─────────── SEO CONTENT ─────────── */}
 
-        <h2>What Is Pharmacodynamics?</h2>
+        <h2>One Curve Underneath All of It</h2>
         <p>
-          Pharmacodynamics is the branch of pharmacology that studies what a
-          drug does to the body — specifically, the relationship between drug
-          concentration at the site of action and the resulting biological or
-          therapeutic effect. While pharmacokinetics answers "what the body does
-          to the drug," pharmacodynamics answers "what the drug does to the
-          body." Together, PK and PD form the complete picture of how a drug
-          behaves in a patient, and PK/PD modeling is the foundation of rational
-          dose optimization in modern clinical practice.
+          Almost every pharmacodynamic quantity is a description of the same
+          picture: a graph of drug concentration against the effect it produces.
+          Plotted against the logarithm of concentration, that relationship
+          takes an S shape — little effect at low concentrations, a steep middle
+          section where small increases produce large changes, and a plateau
+          where adding more drug achieves nothing further.
         </p>
         <p>
-          This free pharmacodynamics calculator online covers the three core PD
-          parameters used across clinical and academic settings: the therapeutic
-          index (a drug safety measure), the Emax model (a concentration-effect
-          relationship), and bioavailability (how much drug reaches the
-          bloodstream). It is one of the most complete pharmacy calculators for
-          students available free — covering all the pharmacodynamics formulas
-          you need for coursework, board prep, and clinical practice in a single
-          tool. For the PK side of the equation — half-life, clearance, volume
-          of distribution, and dosing intervals — see our{" "}
-          <Link href="/pharmacokinetics-calculator/" className="my-link">
-            pharmacokinetics calculator
-          </Link>
-          .
+          Once you can see that curve, the parameters stop being a list to
+          memorise and become features of it:
         </p>
 
-        <h2>PD Parameters at a Glance — Summary Table</h2>
-        <p>
-          The table below summarizes every pharmacodynamic parameter this
-          calculator covers, including the formulas, units, and what each one
-          tells you clinically:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Parameter
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Formula
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Unit
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Clinical Meaning
-                </th>
+              <tr>
+                <th>Parameter</th>
+                <th>Where it lives on the curve</th>
+                <th>What it tells you</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Therapeutic Index (TI)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  TD50 ÷ ED50
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Ratio
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Safety margin between effective and toxic dose
+                <td>EC50</td>
+                <td>The concentration at the midpoint of the rise</td>
+                <td>How much drug is needed — its potency</td>
+              </tr>
+              <tr>
+                <td>Emax</td>
+                <td>The height of the plateau</td>
+                <td>How much effect is achievable — its efficacy</td>
+              </tr>
+              <tr>
+                <td>Slope of the middle</td>
+                <td>Steepness of the rise</td>
+                <td>
+                  How sharply effect changes for a small concentration change
                 </td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Drug Effect (Emax model)
+                <td>ED50, TD50, LD50</td>
+                <td>
+                  Midpoints of three separate curves for three different effects
                 </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  (Emax × C) ÷ (EC50 + C)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Effect units
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Predicted effect at a given drug concentration
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Absolute Bioavailability (F)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  (AUCoral ÷ AUCIV) × (DoseIV ÷ Doseoral) × 100
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>%</td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Fraction of oral dose reaching systemic circulation vs IV
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Relative Bioavailability (Fr)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  (AUCtest ÷ AUCref) × (Doseref ÷ Dosetest) × 100
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>%</td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Drug exposure of one formulation compared to another
-                </td>
+                <td>Where benefit, toxicity and lethality each become likely</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Pharmacodynamic Formulas — Complete Reference with Examples</h2>
-
-        <h3>1. Therapeutic Index Calculator — TD50, ED50, and LD50</h3>
         <p>
-          The therapeutic index quantifies how safe a drug is by comparing the
-          dose that causes toxicity to the dose that produces the desired
-          therapeutic effect. A high TI means a wide margin of safety; a low TI
-          means the effective and toxic doses are dangerously close together,
-          requiring careful monitoring. This makes it the most fundamental
-          safety metric in pharmacodynamics.
-        </p>
-        <p>
-          <strong>Formula:</strong> TI = TD50 ÷ ED50
-        </p>
-        <p>
-          TD50 is the dose producing toxic effects in 50% of a population, and
-          ED50 is the dose producing the desired effect in 50% of a population.
-          In preclinical animal studies, the LD50 (lethal dose in 50% of
-          animals) is sometimes used instead of TD50, giving TI = LD50 ÷ ED50.
-          This LD50-based index provides an even starker safety picture but is
-          only used in laboratory settings, not human clinical practice. This
-          calculator uses the TD50/ED50 formulation appropriate for clinical
-          pharmacology.
-        </p>
-        <h4>Example — Wide Margin (Safe Drug)</h4>
-        <p>
-          ED50 = 20 mg, TD50 = 200 mg → TI = 200 ÷ 20 = <strong>10</strong>. The
-          toxic dose is 10 times the effective dose — a comfortable safety
-          margin. Most over-the-counter analgesics have therapeutic indices in
-          this range or higher.
-        </p>
-        <h4>Example — Narrow Margin (Dangerous Drug)</h4>
-        <p>
-          ED50 = 50 mg, TD50 = 60 mg → TI = 60 ÷ 50 = <strong>1.2</strong>. Very
-          little difference between the effective and toxic dose. Drugs like
-          warfarin, digoxin, lithium, and phenytoin fall in this category and
-          require therapeutic drug monitoring with regular blood level checks.
+          Two parameters therefore define a drug&apos;s basic pharmacodynamic
+          character: how far along the axis the curve sits, and how high it
+          rises. They are independent of one another, which is where most
+          confusion in this topic originates.
         </p>
 
-        <h3>2. Emax Model Calculator — Concentration-Effect Relationship</h3>
+        <h2>Potency and Efficacy Are Not the Same Question</h2>
         <p>
-          The Emax model describes how drug effect changes with concentration.
-          As you increase the concentration, the effect rises — but only up to a
-          ceiling called Emax. Beyond this point, adding more drug produces no
-          additional benefit, only more risk. This sigmoidal
-          concentration-effect relationship is the foundation of understanding
-          both drug potency and efficacy in pharmacodynamics.
+          These two are conflated constantly in ordinary speech and separated
+          rigorously in pharmacology, and the distinction is worth getting
+          exactly right because it appears in almost every exam on the subject.
         </p>
         <p>
-          <strong>Formula:</strong> E = (Emax × C) ÷ (EC50 + C)
+          <strong>Potency</strong> is about dose. A more potent drug achieves a
+          given effect at a lower concentration — its curve sits further left. It
+          is measured by EC50 or ED50, and a lower value means greater potency.
         </p>
         <p>
-          E is the predicted effect, Emax is the maximum possible effect, C is
-          the current drug concentration, and EC50 is the concentration that
-          produces 50% of Emax. A lower EC50 indicates a more potent drug — it
-          achieves the same effect at a lower concentration.
+          <strong>Efficacy</strong> is about ceiling. A drug with greater
+          efficacy produces a larger maximum effect, however much of it you give
+          — its curve plateaus higher. It is measured by Emax.
         </p>
-        <h4>Example</h4>
         <p>
-          Emax = 100, C = 20 mg/ml, EC50 = 10 mg/ml → E = (100 × 20) ÷ (10 + 20)
-          = 2000 ÷ 30 = <strong>66.7</strong>. The drug is producing 66.7% of
-          its maximum possible effect at this concentration. Doubling the
-          concentration to 40 mg/ml would give E = (100 × 40) ÷ (10 + 40) = 80 —
-          only 13.3 more units of effect for twice the drug, illustrating the
-          diminishing returns as you approach Emax.
+          A drug can be highly potent and have low efficacy: tiny doses do
+          something, but that something never amounts to much. Another can be
+          weakly potent yet highly efficacious: it takes a large dose, and at
+          that dose it does a great deal. Clinically, efficacy usually decides
+          whether a drug is worth using at all; potency mostly decides the size
+          of the tablet.
         </p>
-
-        <h3>3. Bioavailability Calculator — Absolute and Relative</h3>
         <p>
-          Bioavailability is the fraction of an administered dose that reaches
-          the systemic circulation unchanged. It determines how much of what you
-          give a patient actually gets to the bloodstream and ultimately to the
-          target site. This is why a bioavailability calculator is essential
-          when switching between IV and oral dosing or when comparing brand-name
-          and generic formulations.
+          Comparing potencies is only meaningful between drugs producing the
+          same effect through a comparable mechanism. Comparing the EC50 of a
+          painkiller with that of an antihypertensive is arithmetic without
+          meaning.
         </p>
 
-        <h4>Absolute Bioavailability</h4>
+        <h2>Reading the Emax Model</h2>
         <p>
-          Compares drug exposure from an oral (or other non-IV) route to IV
-          administration, which is the 100% reference because IV goes directly
-          into the bloodstream.
+          The Emax equation is the algebraic form of the curve:
+        </p>
+        <pre>Effect = (Emax × C) ÷ (EC50 + C)</pre>
+        <p>
+          Substituting C = EC50 gives Effect = Emax ÷ 2, which is the definition
+          of EC50 restated: the concentration producing half the maximum effect.
         </p>
         <p>
-          <strong>Formula:</strong> F = (AUCoral ÷ AUCIV) × (DoseIV ÷ Doseoral)
-          × 100
+          The equation carries a consequence with real clinical weight. Once
+          concentration is well above EC50, the denominator is dominated by C
+          and the fraction approaches one, so effect approaches Emax and stops
+          responding to further increases. Doubling the dose at that point adds
+          essentially no benefit — while the mechanisms producing side effects,
+          which have their own separate curves, may still be climbing steeply.
         </p>
         <p>
-          <strong>Example:</strong> AUCoral = 40, AUCIV = 80, DoseIV = 100 mg,
-          Doseoral = 200 mg → F = (40 ÷ 80) × (100 ÷ 200) × 100 = 0.5 × 0.5 ×
-          100 = <strong>25%</strong>. Only a quarter of the oral dose reached
-          systemic circulation. If you need to switch this patient from IV to
-          oral, you would need roughly 4× the IV dose to maintain the same drug
+          This is the pharmacological reason that pushing a dose past the point
+          of adequate response tends to buy toxicity rather than efficacy.
+        </p>
+
+        <h2>Three Doses, Three Different Populations</h2>
+        <p>
+          ED50, TD50 and LD50 are structurally identical measures applied to
+          different endpoints, and the shared &quot;50&quot; refers to the
+          proportion of a population, not to a proportion of effect.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>ED50</strong> — the dose producing the desired therapeutic
+            effect in half the population tested.
+          </li>
+          <li>
+            <strong>TD50</strong> — the dose producing a defined toxic effect in
+            half the population.
+          </li>
+          <li>
+            <strong>LD50</strong> — the dose that is lethal in half the animals
+            tested, a preclinical toxicology measure rather than a clinical one.
+          </li>
+        </ul>
+        <p>
+          The population framing matters. An ED50 does not mean each individual
+          gets half an effect; it means half the individuals respond. Everything
+          derived from these figures inherits that population basis, which is
+          precisely why they cannot be applied to a single patient in front of
+          you.
+        </p>
+
+        <h2>What a Therapeutic Index Actually Buys You</h2>
+        <pre>Therapeutic index = TD50 ÷ ED50</pre>
+        <p>
+          A larger ratio means a wider gap between the dose that helps and the
+          dose that harms. A drug with a TI of 100 has considerable margin; one
+          with a TI near 2 has almost none, and small errors in dose, absorption
+          or clearance can cross from therapy into toxicity.
+        </p>
+        <p>
+          Three qualifications keep the number in proportion.
+        </p>
+        <p>
+          First, the index compares two midpoints and says nothing about the
+          curves&apos; steepness. If the toxicity curve rises very sharply, a
+          respectable-looking index can still describe a drug where a small
+          overshoot produces sudden harm. Two drugs with the same TI are not
+          necessarily equally forgiving.
+        </p>
+        <p>
+          Second, both figures are population averages. Individual variation in
+          absorption, protein binding, clearance and receptor sensitivity means
+          a particular patient may sit far from either midpoint, which is why
+          narrow-index drugs are managed with concentration monitoring rather
+          than by trusting the ratio.
+        </p>
+        <p>
+          Third, a high therapeutic index is not a synonym for safety. It
+          addresses the relationship between dose and one defined toxic
+          endpoint. Allergic reactions, idiosyncratic responses and drug
+          interactions are not dose-related in this sense and sit entirely
+          outside what the index describes.
+        </p>
+
+        <h2>Agonists, Partial Agonists and Antagonists on the Same Axes</h2>
+        <p>
+          The curve also distinguishes the main receptor behaviours without
+          needing separate definitions.
+        </p>
+        <p>
+          A <strong>full agonist</strong> produces the maximum response the
+          system can generate — its curve plateaus at the top. A{" "}
+          <strong>partial agonist</strong> binds the same receptor but plateaus
+          lower no matter how much is present, so it has a ceiling below the
+          full agonist&apos;s regardless of potency. A{" "}
+          <strong>competitive antagonist</strong> produces no effect alone; its
+          presence shifts an agonist&apos;s curve to the right, meaning more
+          agonist is needed for the same effect, while the achievable maximum is
+          unchanged.
+        </p>
+        <p>
+          The partial agonist case has a consequence students often find
+          counter-intuitive: in the presence of a full agonist, a partial
+          agonist can behave as an antagonist, because it occupies receptors
+          while producing less effect than the drug it displaced.
+        </p>
+
+        <h2>Where Bioavailability Fits</h2>
+        <p>
+          Bioavailability is a pharmacokinetic quantity, but it is calculated
+          here because it sits directly between a dose and the concentration
+          that produces an effect.
+        </p>
+        <pre>
+          Absolute F = (AUC oral ÷ AUC intravenous) × (Dose IV ÷ Dose oral)
+        </pre>
+        <p>
+          Intravenous administration is the reference because none of the dose is
+          lost. Any other route loses some fraction to incomplete absorption and
+          to first-pass metabolism in gut wall and liver, so oral doses are
+          usually larger than their intravenous equivalents for the same
           exposure.
         </p>
-
-        <h4>Relative Bioavailability</h4>
         <p>
-          Compares drug exposure between two non-IV formulations — a brand name
-          versus a generic, a capsule versus a suspension, or two different
-          generic manufacturers. This is the basis of bioequivalence testing in
-          regulatory approvals.
+          Relative bioavailability compares two non-intravenous formulations
+          rather than against an intravenous standard, and is the basis of
+          bioequivalence testing for generics — the question there is not
+          whether a formulation is well absorbed in absolute terms, but whether
+          it behaves closely enough to the reference product.
         </p>
         <p>
-          <strong>Formula (different doses):</strong> Fr = (AUCtest ÷ AUCref) ×
-          (Doseref ÷ Dosetest) × 100
-        </p>
-        <p>
-          <strong>Formula (same doses):</strong> Fr = (AUCtest ÷ AUCref) × 100
-        </p>
-        <p>
-          <strong>Example:</strong> Brand A AUC = 60, Brand B AUC = 40 (equal
-          doses) → Fr = (60 ÷ 40) × 100 = <strong>150%</strong>. Brand A
-          delivers 50% more drug exposure than Brand B at the same dose — they
-          are not bioequivalent.
-        </p>
-
-        <h2>Clinical Importance of Pharmacodynamic Calculations</h2>
-        <p>
-          Pharmacodynamic calculations directly inform some of the most critical
-          decisions in drug development, prescribing, and patient monitoring:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Drug safety classification</strong> — the therapeutic index
-            determines how much dosing flexibility exists. Narrow TI drugs
-            (lithium, warfarin, digoxin, phenytoin, aminoglycosides) require
-            therapeutic drug monitoring; wide TI drugs can be dosed more
-            broadly.
-          </li>
-          <li>
-            <strong>Dose-response optimization</strong> — the Emax model helps
-            clinicians decide whether increasing a dose will yield meaningful
-            additional effect or just add toxicity risk without clinical
-            benefit.
-          </li>
-          <li>
-            <strong>IV-to-oral conversions</strong> — absolute bioavailability
-            calculations are essential when stepping a patient down from IV to
-            oral therapy, ensuring the oral dose produces equivalent drug
-            exposure. Our{" "}
-            <Link href="/dose-calculator/" className="my-link">
-              dose calculator
-            </Link>{" "}
-            can help with the resulting weight-based dose adjustments.
-          </li>
-          <li>
-            <strong>Generic substitution decisions</strong> — relative
-            bioavailability confirms whether two formulations deliver equivalent
-            exposure, underpinning the 80–125% regulatory bioequivalence
-            standard.
-          </li>
-          <li>
-            <strong>First-pass metabolism assessment</strong> — low absolute
-            bioavailability often signals heavy hepatic first-pass metabolism,
-            which matters when liver function is impaired.
-          </li>
-          <li>
-            <strong>Pediatric and geriatric dosing</strong> — altered body
-            composition, enzyme activity, and organ function affect both drug
-            effect and bioavailability differently from standard adult values.
-            See our{" "}
-            <Link href="/bmi-calculator/" className="my-link">
-              BMI calculator
-            </Link>{" "}
-            for patient weight classification and our{" "}
-            <Link href="/body-fat-calculator/" className="my-link">
-              body fat calculator
-            </Link>{" "}
-            for body composition context.
-          </li>
-        </ul>
-
-        <h2>How This PK/PD Calculator Fits With Other Clinical Tools</h2>
-        <p>
-          Pharmacodynamic parameters work hand-in-hand with the pharmacokinetic
-          parameters calculated by our other tools. Together they form a
-          complete PK/PD calculator suite:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>
-              <Link href="/pharmacokinetics-calculator/" className="my-link">
-                Pharmacokinetics Calculator
-              </Link>
-            </strong>{" "}
-            — calculates half-life, clearance, volume of distribution, and
-            dosing parameters. PK describes how the body processes the drug; PD
-            describes what the drug does once it arrives.
-          </li>
-          <li>
-            <strong>
-              <Link href="/dose-calculator/" className="my-link">
-                Dose Calculator
-              </Link>
-            </strong>{" "}
-            — calculates weight-based doses in mg. Bioavailability from this PD
-            calculator directly informs whether an oral dose needs adjustment
-            relative to an IV dose.
-          </li>
-          <li>
-            <strong>
-              <Link href="/dose-stock-calculator/" className="my-link">
-                Dose Stock Calculator
-              </Link>
-            </strong>{" "}
-            — converts a calculated dose into the volume to draw from a stock
-            solution.
-          </li>
-          <li>
-            <strong>
-              <Link href="/iv-calculator/" className="my-link">
-                IV Calculator
-              </Link>
-            </strong>{" "}
-            — calculates infusion rates for IV drug delivery, the route used as
-            the 100% reference in absolute bioavailability calculations.
-          </li>
-        </ul>
-
-        <h2>How to Use This Pharmacodynamics Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Step 1:</strong> Select the PD parameter you want to
-            calculate — Therapeutic Index, Emax Model, or Bioavailability.
-          </li>
-          <li>
-            <strong>Step 2:</strong> For Bioavailability, choose Absolute (vs IV
-            reference) or Relative (vs another formulation) from the dropdown.
-          </li>
-          <li>
-            <strong>Step 3:</strong> Enter the required input values. The
-            placeholder text in each field shows what unit is expected.
-          </li>
-          <li>
-            <strong>Step 4:</strong> Click Calculate. The result appears below
-            the inputs, and the visual gauge in the side panel shows where the
-            value falls on a general clinical scale.
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {FAQ_DATA.map(({ q, a }, i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          Pharmacodynamics is where drug dosing meets patient outcomes.
-          Understanding the therapeutic index tells you how safe a drug is. The
-          Emax model tells you how much effect you are getting at a given
-          concentration. And bioavailability tells you how much of what you
-          prescribe actually reaches the bloodstream. This pharmacodynamics
-          calculator puts all three formulas in one place — free, instant, and
-          built specifically for pharmacy students and clinical professionals.
-        </p>
-        <p>
-          For the complete PK/PD toolkit, pair this with our{" "}
+          For half-life, volume of distribution, clearance and the dose
+          calculations that use them, see the{" "}
           <Link href="/pharmacokinetics-calculator/" className="my-link">
             pharmacokinetics calculator
-          </Link>{" "}
-          for half-life and clearance, our{" "}
+          </Link>
+          . For converting a decided dose into an administered amount, the{" "}
           <Link href="/dose-calculator/" className="my-link">
-            dose calculator
+            dosage calculator
           </Link>{" "}
-          for weight-based dosing, our{" "}
-          <Link href="/iv-calculator/" className="my-link">
-            IV calculator
-          </Link>{" "}
-          for infusion rate planning, and our{" "}
-          <Link href="/calorie-calculator/" className="my-link">
-            calorie calculator
-          </Link>{" "}
-          for nutritional support in clinical settings.
+          handles weight-based orders.
         </p>
+        <h2>Pharmacodynamics Questions From the Exam Room</h2>
+
+        {FAQ_DATA.map(({ q, a }, i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        <ReviewedBy medical />
       </div>
 
       {/* ── SIDEBAR ── */}

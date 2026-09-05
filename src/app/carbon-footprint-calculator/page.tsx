@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import CarbonFootprintCalculator from "../components/CarbonFootprintCalculator";
 
 export const metadata: Metadata = {
-  title: "Carbon Footprint Calculator | Free CO₂ Impact Tool for Individuals",
+  title: "Carbon Footprint Calculator",
   description:
-    "Free personal carbon footprint calculator. Measure your CO₂ from flights, car, household energy & food using DEFRA factors — instant results, no signup.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Estimate your annual carbon footprint, and understand why two calculators can differ by a factor of two and which categories actually dominate.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/color-picker/",
+    canonical: "/carbon-footprint-calculator/",
+  },
+  openGraph: {
+    title: "Carbon Footprint Calculator",
+    description:
+      "Why footprint calculators disagree, where the large numbers really are, and what offsetting does.",
+    url: "/carbon-footprint-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Carbon Footprint Calculator",
+    description:
+      "Estimate a personal carbon footprint, with honest limits on what the number means.",
   },
 };
 

@@ -38,40 +38,40 @@ interface CheckResult {
 
 const FAQ_DATA = [
   {
-    q: "Is this domain checker free to use?",
-    a: "Yes, completely free with no sign-up, no purchase required, and no limits. Check as many domain names as you need. Results come from live RDAP and WHOIS registry data.",
+    q: "The domain shows as available but costs far more than expected. Why?",
+    a: "It is probably classified as premium. Registries price short names, common words and obviously commercial terms above the standard rate, and such domains still show as unregistered because nobody owns them. Check whether the elevated price applies only to the first year or to every renewal, since some premium names carry the higher rate permanently.",
   },
   {
-    q: "How do I check if a domain name is available?",
-    a: "Enter a name (just the word, without an extension) into the search field and press Enter or click Check. The tool queries live registration databases for all 8 extensions simultaneously and shows which are available and which are taken.",
+    q: "Does an available domain mean I am allowed to use it?",
+    a: "No. Registration and trademark are separate systems that do not consult each other. A registrar will sell you a name matching an existing brand without any check, and the trademark holder can later have it transferred away through a dispute — costing you the name, the fee and anything built on it. Search the relevant trademark registers and the name itself before committing anything commercial to it.",
   },
   {
-    q: "How accurate are the results?",
-    a: "Results come from live RDAP and WHOIS registry data — the same authoritative source that registrars use. Availability is accurate at the moment of the check, though a domain showing as available could be registered by someone else in the seconds between checking and your own registration.",
+    q: "Should I check a domain's history before registering it?",
+    a: "Yes, and it takes minutes. Names get abandoned, sometimes because they were used for spam, malware or link schemes, and registering one means inheriting that reputation. The symptoms appear later: mail landing in spam because the domain is on blocklists, or a site that will not rank because of a penalty predating you. Look the name up in a web archive and search for it before buying.",
   },
   {
-    q: "What does 'Unknown' mean for a result?",
-    a: "Some domain registries do not support RDAP or WHOIS lookups from public tools, or they rate-limit requests. Unknown means the check timed out or returned an unreadable response — it does not necessarily mean the domain is taken. Try again after a moment.",
+    q: "Why is the renewal price different from the first-year price?",
+    a: "Registrars compete on the first-year figure because it is what appears in advertising, and recover the difference at renewal. A domain is a recurring cost, so compare three numbers rather than one: first year, renewal, and any transfer-out fee. A heavily discounted first year against a high standard renewal often costs more over five years than a flat-rate registrar.",
   },
   {
-    q: "How do I find out who owns a domain?",
-    a: "For domains that show as taken, this tool displays the registrar name or primary nameserver when available. For full ownership details (registrant name, contact information), you would need to run a full WHOIS lookup — though many domain owners use privacy protection services that hide this information.",
+    q: "Does the extension affect search rankings?",
+    a: "Not directly — search engines do not rank a .com above a .net for being a .com. What the extension changes is human behaviour: how memorable the address is, whether people type the right one from memory, and how it reads when spoken. If your audience will assume .com and you own something else, expect to lose some traffic to the wrong address permanently.",
   },
   {
-    q: "Which is better — .com, .net, or .org?",
-    a: ".com is the most recognized and trusted extension globally and should be your first choice if available. .net was originally intended for network infrastructure companies but is now used as a general-purpose alternative. .org is traditionally associated with non-profits and open-source projects. For most businesses, .com is the strongest option.",
+    q: "Can I get a domain back after it expires?",
+    a: "Usually, but not cheaply and not immediately. An expired domain does not return to general availability straight away — there is a grace period, then a redemption window where recovery carries a substantial fee, before it is released. The reliable protection is auto-renew with a valid payment method and a contact address that is not on the domain itself.",
   },
   {
-    q: "Can I check a domain without being forced to buy it?",
-    a: "Yes. This is a free domain checker without buying — it only checks availability using public registry data. There is no registration, no shopping cart, and no affiliate links to registrars. You take the results and register wherever you choose.",
+    q: "Why can I not transfer my new domain to another registrar?",
+    a: "Newly registered domains generally cannot be transferred for a set initial period after registration. If you register somewhere for a cheap first year intending to move before renewal, check that the lock period has expired first — otherwise you may be renewing at the higher price whether you meant to or not.",
   },
   {
-    q: "Where can I register a domain once I find an available one?",
-    a: "Any ICANN-accredited registrar — Cloudflare, Namecheap, GoDaddy, Porkbun, Google Domains (now via Squarespace), and others. Prices vary by TLD and registrar, so compare before registering.",
+    q: "What does WHOIS show now that privacy is standard?",
+    a: "Much less than it used to. Privacy protection is enabled by default at most registrars, so personal contact details are typically replaced by a forwarding service. What generally remains visible is the registrar, the registration and expiry dates, and the nameservers — enough to see when a domain was created and where it is hosted, but not who owns it.",
   },
   {
-    q: "Does this tool store my searches?",
-    a: "No. Checks go directly from your browser to the RDAP/WHOIS API. Nothing is logged, stored, or shared on our end.",
+    q: "Should I register several extensions of the same name?",
+    a: "It depends on what you are protecting against. Registering the obvious alternatives prevents someone else trading on your name and catches people who type the wrong one, which matters most once a brand has recognition. Early on it is a recurring cost for names you will not use. A common middle path is to hold the primary plus your country code, and add others if the name gains value.",
   },
 ];
 
@@ -157,7 +157,7 @@ export default function DomainChecker() {
 
       <div>
         <h1>
-          Free Domain Name Checker – Check Availability Across All Extensions
+          Domain Name Checker — Availability, Price and History
         </h1>
         <p>
           Instantly check if a website name is taken across .com, .net, .org,
@@ -196,7 +196,7 @@ export default function DomainChecker() {
         {!loading && results.length === 0 && (
           <div className="empty-hint">
             <i className="fa-solid fa-circle-info"></i>Enter a domain name or
-            brand and we'll check availability across 8 popular extensions
+            brand and we&apos;ll check availability across 8 popular extensions
             instantly.
           </div>
         )}
@@ -266,358 +266,292 @@ export default function DomainChecker() {
         )}
       </div>
 
-      {/* ===== SEO CONTENT ===== */}
+        {/* ---- SEO CONTENT ---- */}
 
-      <h2>What Is a Domain Name Checker?</h2>
-      <p>
-        A domain name checker queries the live RDAP and WHOIS registration
-        databases to tell you instantly whether a domain is available to
-        register or already taken. This tool checks your domain name with all
-        extensions — .com, .net, .org, .io, .co, .dev, .app, and .ai — in a
-        single search rather than making you check one TLD at a time.
-      </p>
-      <p>
-        Unlike many domain checkers that redirect you to a registrar shopping
-        cart, this is a free domain checker without buying — no affiliate links,
-        no registration pressure, no upsells. You see the results and decide
-        independently where (and whether) to register. If you have already
-        registered a domain and want to verify its DNS is configured correctly,
-        our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>{" "}
-        lets you check A, MX, TXT, NS, and other records in real time.
-      </p>
+        <h2>&quot;Available&quot; Is the First Check, Not the Only One</h2>
+        <p>
+          A domain showing as unregistered means nobody currently holds it. That
+          is genuinely useful and it is a narrower statement than most people
+          read it as. Four separate things can stand between an available domain
+          and a domain you can actually use.
+        </p>
 
-      <h2>How to Check If a Domain Name Is Available</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Step 1:</strong> Enter a name — just the word or brand,
-          without an extension (e.g. "mybrand" not "mybrand.com"). The tool
-          strips any URL formatting automatically.
-        </li>
-        <li>
-          <strong>Step 2:</strong> Press Enter or click "Check." All 8
-          extensions are queried simultaneously using live RDAP/WHOIS data.
-        </li>
-        <li>
-          <strong>Step 3:</strong> Green rows with a checkmark are available to
-          register right now. Red rows with a lock icon are already taken — many
-          also show the registrar or nameserver so you can see who holds it.
-        </li>
-        <li>
-          <strong>Step 4:</strong> If your preferred .com is taken, check the
-          other extensions for alternatives — or modify the name and search
-          again.
-        </li>
-      </ul>
-
-      <h2>.com vs .net vs .org — Which Extension Is Better?</h2>
-      <p>
-        Choosing the right domain extension depends on your use case, audience,
-        and brand positioning. Here is a comparison of all 8 extensions this
-        tool checks:
-      </p>
-      <div style={{ overflowX: "auto" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #f5f5f5)",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Extension
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Best For
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Typical Price
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Trust Level
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              [
-                ".com",
-                "General websites, businesses, personal brands",
-                "$8–$15/yr",
-                "Highest — universally recognized",
-              ],
-              [
-                ".net",
-                "Tech companies, network-related services",
-                "$10–$15/yr",
-                "High — established since 1985",
-              ],
-              [
-                ".org",
-                "Non-profits, open-source projects, communities",
-                "$10–$15/yr",
-                "High — associated with credibility",
-              ],
-              [
-                ".io",
-                "Tech startups, SaaS products, developer tools",
-                "$25–$60/yr",
-                "Moderate — strong in tech circles",
-              ],
-              [
-                ".co",
-                "Startups, short brand URLs, .com alternatives",
-                "$20–$35/yr",
-                "Moderate — growing recognition",
-              ],
-              [
-                ".dev",
-                "Developer portfolios, software projects, APIs",
-                "$12–$20/yr",
-                "Moderate — requires HTTPS",
-              ],
-              [
-                ".app",
-                "Mobile apps, web apps, software products",
-                "$12–$20/yr",
-                "Moderate — requires HTTPS",
-              ],
-              [
-                ".ai",
-                "AI and machine learning companies, tech products",
-                "$50–$100/yr",
-                "Growing — strong in AI space",
-              ],
-            ].map(([ext, best, price, trust], i) => (
-              <tr key={i}>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>{ext}</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {best}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {price}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {trust}
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Check</th>
+                <th>What it establishes</th>
+                <th>Where it fails</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Registration</td>
+                <td>Nobody currently owns it</td>
+                <td>This tool answers it directly</td>
+              </tr>
+              <tr>
+                <td>Price</td>
+                <td>What it costs to register and to keep</td>
+                <td>
+                  Premium names and renewal pricing are set per domain
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p>
-        If .com is available for your brand, register it first — it carries the
-        highest trust and recognition globally. Then consider securing .net and
-        .org as brand protection. For tech and startup brands, .io, .dev, and
-        .ai are strong choices if the .com is taken or if the extension
-        reinforces your brand identity.
-      </p>
-
-      <h2>Why Check Multiple Extensions at Once?</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Brand protection</strong> — Registering your brand across the
-          most important TLDs prevents competitors or squatters from securing a
-          confusingly similar domain.
-        </li>
-        <li>
-          <strong>Fallback options</strong> — If your .com is taken, a .io, .co,
-          or .dev may be available and perfectly suitable for your audience.
-        </li>
-        <li>
-          <strong>SEO considerations</strong> — Different TLDs suit different
-          niches. .dev and .app are widely used by software products, .org by
-          non-profits, .ai by AI companies.
-        </li>
-        <li>
-          <strong>Future-proofing</strong> — Securing multiple extensions while
-          they are available is far cheaper than buying them later from a
-          reseller at a premium.
-        </li>
-      </ul>
-
-      <h2>How to Find Out Who Owns a Domain</h2>
-      <p>
-        When a domain shows as "Taken," this tool displays the registrar name or
-        primary nameserver when available from the RDAP/WHOIS response. This
-        tells you which company the domain is registered through (e.g. GoDaddy,
-        Namecheap, Cloudflare). For full ownership details, a complete WHOIS
-        lookup would show the registrant's name, organization, and contact
-        information — though most domain owners now use WHOIS privacy protection
-        services that replace their personal details with the registrar's proxy
-        information.
-      </p>
-      <p>
-        If you want to investigate a domain further — checking its DNS records,
-        mail server configuration, or whether it is actively hosting a website —
-        our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>{" "}
-        lets you query A, AAAA, MX, TXT, NS, CNAME, and SOA records for any
-        domain. And our{" "}
-        <Link href="/ip-detector/" className="my-link">
-          IP address detector
-        </Link>{" "}
-        can help you identify the IP address and hosting provider behind any
-        website.
-      </p>
-
-      <h2>Tips for Choosing a Great Domain Name</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Keep it short</strong> — shorter domains are easier to type,
-          remember, and share. Aim for 6 to 14 characters if possible.
-        </li>
-        <li>
-          <strong>Make it pronounceable</strong> — if you cannot easily say it
-          over the phone, it will be harder for people to remember and share.
-        </li>
-        <li>
-          <strong>Avoid hyphens and numbers</strong> — they are confusing
-          verbally ("is it dash or hyphen? the number 4 or the word four?") and
-          look less professional.
-        </li>
-        <li>
-          <strong>Check for trademark conflicts</strong> — before registering,
-          search your country's trademark database to make sure the name does
-          not infringe on an existing brand.
-        </li>
-        <li>
-          <strong>Prioritize .com</strong> — if the .com is available, secure it
-          even if you plan to use a different extension as your primary. People
-          will type .com by default.
-        </li>
-        <li>
-          <strong>Think about email</strong> — your domain will likely also be
-          your email domain (you@mybrand.com). Make sure it looks professional
-          in that context. If you plan to use email on your domain, our{" "}
-          <Link href="/email-validator/" className="my-link">
-            email validator
-          </Link>{" "}
-          can verify that your MX records are properly configured after setup.
-        </li>
-      </ul>
-
-      <h2>What Happens After You Find an Available Domain?</h2>
-      <p>
-        Once you have identified an available domain name, the next steps are
-        registration and configuration:
-      </p>
-      <ul className="custom-list">
-        <li>
-          <strong>Register with a registrar</strong> — popular options include
-          Cloudflare Registrar (at-cost pricing), Namecheap, Porkbun, and
-          GoDaddy. Compare renewal prices, not just first-year promotional
-          rates.
-        </li>
-        <li>
-          <strong>Set up DNS records</strong> — point your domain to your
-          hosting provider by configuring A records (for the website) and MX
-          records (for email). Our{" "}
-          <Link href="/dns-lookup/" className="my-link">
-            DNS lookup tool
-          </Link>{" "}
-          lets you verify these records are working correctly after you set them
-          up.
-        </li>
-        <li>
-          <strong>Enable WHOIS privacy</strong> — most registrars offer free
-          WHOIS privacy protection that hides your personal contact details from
-          public lookup databases.
-        </li>
-        <li>
-          <strong>Configure email</strong> — set up email hosting (Google
-          Workspace, Microsoft 365, Zoho, etc.) and publish SPF, DKIM, and DMARC
-          records to prevent your emails from landing in spam.
-        </li>
-        <li>
-          <strong>Secure with SSL</strong> — ensure your site uses HTTPS. Most
-          hosting providers include free SSL certificates via Let's Encrypt.
-          Note that .dev and .app extensions require HTTPS by design.
-        </li>
-      </ul>
-
-      <h2>Common Domain Registration Mistakes to Avoid</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Only registering one extension</strong> — if your brand is
-          "mybrand" and you only register mybrand.com, someone else can register
-          mybrand.net and potentially confuse your customers.
-        </li>
-        <li>
-          <strong>Falling for the first-year discount trap</strong> — some
-          registrars offer $1 domains the first year but charge $20+ on renewal.
-          Always check the renewal price.
-        </li>
-        <li>
-          <strong>Using the registrar's website builder unnecessarily</strong> —
-          registrar-provided website builders are often limited and lock you in.
-          Register the domain separately and use a proper hosting provider.
-        </li>
-        <li>
-          <strong>Forgetting to renew</strong> — set your domain to auto-renew.
-          Expired domains enter a redemption period and can be snapped up by
-          domain squatters within days.
-        </li>
-        <li>
-          <strong>Not setting up email authentication</strong> — without SPF,
-          DKIM, and DMARC records, emails from your domain may be rejected or
-          flagged as spam. Use our{" "}
-          <Link href="/dns-lookup/" className="my-link">
-            DNS lookup tool
-          </Link>{" "}
-          to check your TXT records after configuration.
-        </li>
-      </ul>
-
-      <h2>Frequently Asked Questions</h2>
-
-      {FAQ_DATA.map(({ q, a }, i) => (
-        <div className="faq-item" key={i}>
-          <h3 onClick={() => toggleFAQ(i)}>
-            {q}
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === i && <p>{a}</p>}
+              <tr>
+                <td>Trademark</td>
+                <td>Whether someone can force you off it</td>
+                <td>
+                  Availability says nothing about anyone&apos;s rights to the
+                  name
+                </td>
+              </tr>
+              <tr>
+                <td>History</td>
+                <td>What the name was used for previously</td>
+                <td>
+                  A dropped domain can carry penalties and blocklist entries
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      ))}
 
-      <h2>Final Thoughts</h2>
-      <p>
-        Your domain name is the foundation of your online identity — it is the
-        first thing people see, the address they type, and the brand they
-        remember. Use this free domain name checker to find the right name
-        across every major extension before someone else takes it.
-      </p>
-      <p>
-        After registration, verify your setup with our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>{" "}
-        to confirm DNS records are configured correctly, our{" "}
-        <Link href="/email-validator/" className="my-link">
-          email validator
-        </Link>{" "}
-        to check that MX records are active for email, and our{" "}
-        <Link href="/ip-detector/" className="my-link">
-          IP address detector
-        </Link>{" "}
-        to verify your site is resolving to the expected server.
-      </p>
+        <p>
+          The last two are the ones that cost people money after the purchase
+          rather than before it, and both are checkable in a few minutes.
+        </p>
+
+        <h2>The Four States a Domain Can Be In</h2>
+        <p>
+          Results are usually presented as available or taken. There are
+          effectively four situations, and the middle two are commonly mistaken
+          for one of the outer ones.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>Unregistered.</strong> Free to register at the standard
+            price for that extension, first come first served.
+          </li>
+          <li>
+            <strong>Registered and in use.</strong> Someone owns it and is using
+            it. Buying it means approaching the owner, and the price is whatever
+            they will accept.
+          </li>
+          <li>
+            <strong>Registered and parked.</strong> Owned but showing only ads
+            or a for-sale page. Frequently held by investors, and often
+            negotiable — though the asking price reflects that the holder is in
+            the business of selling names.
+          </li>
+          <li>
+            <strong>Premium or reserved.</strong> Unregistered but priced far
+            above the standard rate by the registry, or held back from general
+            registration entirely. It shows as available and costs a multiple of
+            what you expect.
+          </li>
+        </ul>
+        <p>
+          The premium case surprises people at checkout. Short names, common
+          words and obviously commercial terms are frequently classified this
+          way, and the elevated price sometimes applies to every year rather
+          than only the first.
+        </p>
+
+        <h2>Renewal Pricing Is Where the Cost Actually Lives</h2>
+        <p>
+          Registrars compete on first-year pricing because it is the number
+          shown in advertising. A domain is a recurring cost, so the renewal
+          price is the one that matters over any realistic period.
+        </p>
+        <p>
+          A first year discounted heavily against a standard renewal can look
+          cheap and cost several times more over five years than a registrar
+          charging a flat rate throughout. Before registering anywhere, check
+          three prices rather than one: the first year, the renewal, and the
+          transfer-out fee if there is one.
+        </p>
+        <p>
+          Two related details are worth knowing in advance. A newly registered
+          domain generally cannot be transferred to another registrar for a set
+          initial period, so switching because you found a cheaper renewal is
+          not immediate. And a lapsed domain does not become available the day
+          it expires — there is a grace period, then a redemption window with a
+          substantial recovery fee, before it returns to general availability.
+          Losing a domain by forgetting to renew is expensive to undo.
+        </p>
+
+        <h2>Availability Is Not Permission</h2>
+        <p>
+          Registration and trademark are separate systems that do not consult
+          each other. A registrar will sell you a domain matching an existing
+          brand without any check, and the trademark holder can subsequently
+          have it transferred away through a dispute process — losing you the
+          name, the registration fee, and whatever you built on it.
+        </p>
+        <p>
+          Before committing to a name for anything commercial, spend a few
+          minutes on the obvious checks: search your national and regional
+          trademark registers for the term, search the name plainly to see who
+          is already trading under it, and consider whether a reasonable person
+          could confuse your use with an established business. None of that is
+          legal advice, and it catches the clear-cut problems.
+        </p>
+        <p>
+          The rule of thumb worth applying is that the more distinctive and
+          invented your name, the safer it is. Descriptive names are harder to
+          protect and easier to collide with.
+        </p>
+
+        <h2>Check What the Name Was Before</h2>
+        <p>
+          An unregistered domain has not necessarily always been unregistered.
+          Names get abandoned, and some are abandoned because they were used for
+          spam, malware distribution or link schemes. Registering one means
+          inheriting whatever reputation it accumulated.
+        </p>
+        <p>
+          The symptoms are unpleasant and not obvious at purchase: mail from the
+          domain lands in spam because the name appears on blocklists, or the
+          site struggles to rank because of a search penalty that has nothing to
+          do with you. Two checks before buying are worth the time — look the
+          name up in a web archive to see what it hosted previously, and search
+          for it to see whether anything unwelcome surfaces. A name with a long
+          gap and no history is the clean case.
+        </p>
+
+        <h2>Extensions: What Matters and What Does Not</h2>
+        <p>
+          The extension carries less technical weight than people assume and
+          more social weight.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Extension</th>
+                <th>Reads as</th>
+                <th>Worth knowing</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>.com</td>
+                <td>The default for anything commercial</td>
+                <td>
+                  People type it by reflex, which is its real advantage
+                </td>
+              </tr>
+              <tr>
+                <td>.org</td>
+                <td>Non-profit, community, open project</td>
+                <td>Open to anyone, despite the association</td>
+              </tr>
+              <tr>
+                <td>.net</td>
+                <td>Technical, or a fallback when .com is gone</td>
+                <td>Neutral; rarely a first choice today</td>
+              </tr>
+              <tr>
+                <td>.io, .dev, .app, .ai</td>
+                <td>Technology and startups</td>
+                <td>
+                  Higher renewal prices; some enforce security requirements
+                </td>
+              </tr>
+              <tr>
+                <td>Country codes</td>
+                <td>A specific national market</td>
+                <td>
+                  Some require local presence; strong signal if you serve one
+                  country
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Search engines do not rank a .com above a .net for being a .com. What
+          the extension changes is human behaviour — how memorable the address
+          is, whether people type the right one from memory, and how the brand
+          reads when spoken aloud. If your audience will assume .com and you own
+          something else, expect to lose some traffic to the wrong address
+          permanently.
+        </p>
+
+        <h2>After You Register</h2>
+        <ul className="custom-list">
+          <li>
+            <strong>Turn on auto-renew and check the card on file.</strong> The
+            most common way to lose a domain is an expired payment method
+            attached to an address nobody reads.
+          </li>
+          <li>
+            <strong>Keep the contact email off the domain itself.</strong> If
+            the domain lapses, notices sent to an address on that domain will
+            not reach you.
+          </li>
+          <li>
+            <strong>Enable registrar lock and two-factor authentication.</strong>{" "}
+            Domain theft happens through registrar account access, not through
+            the DNS.
+          </li>
+          <li>
+            <strong>Leave privacy protection on</strong> unless you have a
+            reason to publish your details. It is standard now and keeps
+            personal information out of public records.
+          </li>
+          <li>
+            <strong>Point the records where they need to go.</strong> Our{" "}
+            <Link href="/dns-lookup/" className="my-link">
+              DNS lookup tool
+            </Link>{" "}
+            confirms what a domain is currently publishing, and the{" "}
+            <Link href="/email-validator/" className="my-link">
+              email validator
+            </Link>{" "}
+            checks whether a domain is configured to receive mail.
+          </li>
+        </ul>
+      <h2>Domain Registration Questions</h2>
+
+      {FAQ_DATA.map(({ q, a }, i) => {
+        const isOpen = openFAQ === i;
+        return (
+          <div className="faq-item" key={i}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
+              {q}
+              <i
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
+              />
+            </h3>
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
 
       <style jsx>{`
         .dc-hero {

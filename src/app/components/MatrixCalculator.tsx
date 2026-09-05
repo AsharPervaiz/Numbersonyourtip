@@ -184,6 +184,49 @@ const ALL_OPS: OpDef[] = [
   ...singleOpsFor("B"),
 ];
 
+const FAQS: [string, string][] = [
+  [
+    "Why does my matrix multiplication give a dimension error?",
+    "Because the inner dimensions do not meet. To multiply an m × n matrix by a p × q one, n must equal p, and the result is m × q. Each entry pairs a row of A against a column of B, which only works if they are the same length. If the error appears, either try the other order or check whether the matrix was entered transposed.",
+  ],
+  [
+    "Is matrix multiplication commutative?",
+    "No. AB and BA are usually different, and frequently not even the same size. Multiplying a 2 × 3 by a 3 × 2 gives a 2 × 2 result; reversing the order gives a 3 × 3 one from the same two matrices. Always multiply in the order the problem specifies. The order also reverses under transpose and inverse: (AB)ᵀ is BᵀAᵀ, and (AB)⁻¹ is B⁻¹A⁻¹.",
+  ],
+  [
+    "Why can I only take a determinant of a square matrix?",
+    "The determinant describes how a matrix scales space, which is only a meaningful question when the input and output have the same number of dimensions. A non-square matrix maps between spaces of different sizes, so there is nothing for the determinant to measure. The same restriction applies to inverse, trace and matrix powers.",
+  ],
+  [
+    "What does it mean when a matrix is singular?",
+    "Its determinant is zero, so it has no inverse. The 2 × 2 inverse formula divides by the determinant, and there is nothing to divide by. It is not a limitation of the calculator — a singular matrix has genuinely collapsed space rather than reshaping it, so the transformation cannot be undone. Any matrix with a repeated row, a zero row, or a row that is a combination of others is singular.",
+  ],
+  [
+    "How do I find the inverse of a 2 × 2 matrix by hand?",
+    "Compute the determinant as ad − bc, then swap the two diagonal entries, negate the other two, and divide everything by the determinant. For [3 8; 4 6] the determinant is 18 − 32 = −14, and the inverse is (1 ÷ −14) × [6 −8; −4 3], which gives [−3/7 4/7; 2/7 −3/14].",
+  ],
+  [
+    "What does the rank of a matrix tell me?",
+    "How many of its rows carry genuinely independent information. A square matrix is invertible exactly when its rank equals its size, so rank is a direct check on whether an inverse exists. Unlike the determinant it works on any shape, which makes it useful for non-square matrices where the determinant is not defined.",
+  ],
+  [
+    "How does solving AX = B work?",
+    "A holds the coefficients of a system of linear equations, B holds the right-hand sides, and X holds the unknowns. The system 2x + 3y = 8 and 5x + 4y = 13 becomes A = [2 3; 5 4] with B = [8; 13], giving x = 1 and y = 2. Algebraically X = A⁻¹B, though in practice it is solved by elimination directly, which is faster and numerically better behaved.",
+  ],
+  [
+    "Why does solving my system say there is no unique solution?",
+    "The coefficient matrix is singular, which means the equations do not pin down a single answer. Either they contradict each other and there is no solution, or one equation repeats information the others already contain and there are infinitely many. The message is telling you something about the equations rather than about the arithmetic.",
+  ],
+  [
+    "How can I check a matrix result quickly?",
+    "Check the shape before the numbers — if the result has the wrong dimensions, the wrong operation ran. Verify an inverse by multiplying it back: A × A⁻¹ should give the identity matrix, with tiny floating-point residues near zero being normal. For a product, hand-calculate just the top-left entry from the first row of A and first column of B.",
+  ],
+  [
+    "My inverse has huge numbers in it. Is that wrong?",
+    "Probably not wrong, but treat it carefully. A determinant very close to zero means the matrix is nearly singular, and the inverse formula divides by that small number, producing very large entries. Such matrices amplify small input errors enormously, so a result that looks precise may not be reliable.",
+  ],
+];
+
 export default function MatrixCalculator() {
   const [rowsA, setRowsA] = useState(2);
   const [colsA, setColsA] = useState(2);
@@ -351,9 +394,23 @@ export default function MatrixCalculator() {
 
   return (
     <div className="single-page-padding">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div>
         <h1>
-          Free Matrix Calculator – Add, Multiply, Invert &amp; Solve Matrices
+          Matrix Calculator — Multiply, Invert, Solve AX = B
         </h1>
         <p>
           A complete matrix calculator for students and professionals: addition,
@@ -517,382 +574,308 @@ export default function MatrixCalculator() {
         </div>
       </div>
 
-      {/* ===== SEO CONTENT ===== */}
+        {/* ===== SEO CONTENT ===== */}
 
-      <h2>What Is a Matrix Calculator?</h2>
-      <p>
-        A matrix calculator performs linear algebra operations on user-entered
-        matrices instantly — without needing a graphing calculator, MATLAB
-        license, or manual computation. This tool supports two matrices, A and
-        B, and covers the full range of operations typically taught in a linear
-        algebra or precalculus course: arithmetic between matrices,
-        single-matrix transformations, and the structural properties used to
-        analyze a matrix or solve a system of linear equations.
-      </p>
-      <p>
-        Everything runs directly in your browser using standard linear algebra
-        algorithms — cofactor expansion for determinants and adjoints, and
-        Gauss-Jordan elimination for row reduction — so results appear instantly
-        as you type, with no server round-trip and no data stored.
-      </p>
+        <h2>Every Operation Has a Shape Rule</h2>
+        <p>
+          Matrix arithmetic fails more often than it succeeds for people
+          learning it, and almost never because the numbers were wrong. It fails
+          because the two matrices were the wrong shapes for the operation
+          requested. Dimensions are not a formality here — they are the first
+          thing to check and the reason most error messages appear.
+        </p>
 
-      <h2>Supported Operations — Quick Reference</h2>
-      <p>
-        The table below summarizes every operation this calculator supports, the
-        dimensional requirements, and what each one returns:
-      </p>
-      <div style={{ overflowX: "auto" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #f5f5f5)",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Operation
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Requirement
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Returns
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              ["A + B / A − B", "Same dimensions", "Matrix (same size)"],
-              ["A × B", "Columns of A = Rows of B", "Matrix (rows A × cols B)"],
-              ["Scalar k·A", "Any matrix", "Matrix (same size)"],
-              ["Transpose Aᵀ", "Any matrix", "Matrix (rows ↔ cols swapped)"],
-              ["Determinant det(A)", "Square matrix only", "Single number"],
-              ["Inverse A⁻¹", "Square, det ≠ 0", "Matrix (same size)"],
-              ["Adjoint adj(A)", "Square matrix only", "Matrix (same size)"],
-              ["Rank", "Any matrix", "Single number"],
-              [
-                "Trace",
-                "Square matrix only",
-                "Single number (sum of diagonal)",
-              ],
-              ["RREF", "Any matrix", "Matrix (reduced row echelon form)"],
-              ["Power Aⁿ", "Square matrix only", "Matrix (same size)"],
-              ["Solve AX = B", "A square & invertible", "Matrix X = A⁻¹B"],
-            ].map(([op, req, ret], i) => (
-              <tr key={i}>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {op}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {req}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {ret}
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Requirement</th>
+                <th>Shape of the result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A + B, A − B</td>
+                <td>Identical dimensions</td>
+                <td>Same as the inputs</td>
+              </tr>
+              <tr>
+                <td>A × B</td>
+                <td>Columns of A must equal rows of B</td>
+                <td>Rows of A × columns of B</td>
+              </tr>
+              <tr>
+                <td>Determinant, Inverse, Adjoint, Trace, Power</td>
+                <td>Square only</td>
+                <td>A single number, or a square matrix</td>
+              </tr>
+              <tr>
+                <td>Transpose</td>
+                <td>None — works on any matrix</td>
+                <td>Dimensions swapped</td>
+              </tr>
+              <tr>
+                <td>Rank, Scalar multiplication</td>
+                <td>None</td>
+                <td>A number, or the same shape</td>
+              </tr>
+              <tr>
+                <td>RREF (row reduced echelon form)</td>
+                <td>None</td>
+                <td>Same shape as the input</td>
+              </tr>
+              <tr>
+                <td>Solve AX = B</td>
+                <td>A square and non-singular; rows of B must match A</td>
+                <td>Same rows as A, same columns as B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Two rows in that table cause nearly all the confusion, and both are
+          worth understanding rather than memorising.
+        </p>
+
+        <h2>Multiplication: the Inner Dimensions Must Meet</h2>
+        <p>
+          Addition works elementwise, which is why it demands identical shapes.
+          Multiplication does something quite different: each entry of the
+          result is a row of A paired against a column of B. That pairing only
+          works if the row and the column have the same length.
+        </p>
+        <pre>
+          A is m × n, B is n × p → AB is m × p{"\n"}The two inner numbers must
+          match; the outer two become the result
+        </pre>
+        <p>
+          Multiplying a 2 × 3 by a 3 × 2 works, because the inner pair is 3 and
+          3, and the answer is 2 × 2:
+        </p>
+        <pre>
+          A = [1 2 3; 4 5 6]{"\n"}B = [7 8; 9 10; 11 12]{"\n"}
+          {"\n"}AB[1][1] = 1×7 + 2×9 + 3×11 = 58{"\n"}AB[1][2] = 1×8 + 2×10 +
+          3×12 = 64{"\n"}AB[2][1] = 4×7 + 5×9 + 6×11 = 139{"\n"}AB[2][2] = 4×8 +
+          5×10 + 6×12 = 154{"\n"}
+          {"\n"}AB = [58 64; 139 154]
+        </pre>
+        <p>
+          Reverse the order and BA is also valid — the inner pair is 2 and 2 —
+          but the result is 3 × 3. Same two matrices, different operation, a
+          different-sized answer. This is the concrete version of the rule that
+          matrix multiplication is not commutative: AB and BA are usually
+          different, and are frequently not even the same shape.
+        </p>
+        <p>
+          One consequence worth carrying: order reverses when you transpose or
+          invert a product. (AB)ᵀ equals BᵀAᵀ, and (AB)⁻¹ equals B⁻¹A⁻¹. Writing
+          them in the original order is a common and silent error, because the
+          dimensions often still work out.
+        </p>
+
+        <h2>Determinant and Inverse: Square Only, and the Zero Wall</h2>
+        <p>
+          The determinant is defined only for square matrices, because it
+          describes how the matrix scales space — a question that has no meaning
+          when the input and output dimensions differ.
+        </p>
+        <pre>For a 2 × 2 [a b; c d]: det = ad − bc</pre>
+        <p>
+          For [3 8; 4 6] the determinant is (3 × 6) − (8 × 4) = 18 − 32 = −14.
+          Once you have it, the 2 × 2 inverse is mechanical: swap the diagonal
+          entries, negate the other two, and divide everything by the
+          determinant.
+        </p>
+        <pre>
+          A⁻¹ = (1 ÷ det) × [d −b; −c a]{"\n"}For [3 8; 4 6]: (1 ÷ −14) × [6 −8;
+          −4 3] = [−3/7 4/7; 2/7 −3/14]
+        </pre>
+        <p>
+          The division is where inverses fail. If the determinant is zero there
+          is nothing to divide by, and the matrix has no inverse — it is called
+          singular. This is not a computational limitation to work around; it
+          means the matrix genuinely cannot be undone, because it has collapsed
+          space rather than merely reshaping it.
+        </p>
+        <p>
+          You can often spot it before calculating. In [1 2; 2 4] the second row
+          is exactly twice the first, so the rows carry no independent
+          information and the determinant is 4 − 4 = 0. Any matrix with a
+          repeated row, a row of zeros, or one row that is a combination of
+          others is singular for the same reason.
+        </p>
+        <p>
+          Rank measures precisely this. It counts how many rows are genuinely
+          independent, so a square matrix is invertible exactly when its rank
+          equals its size. Rank works on any shape, which makes it a useful
+          check when the determinant is unavailable.
+        </p>
+
+        <h2>Solving AX = B Without Inverting Anything</h2>
+        <p>
+          A system of linear equations can be written as one matrix equation,
+          with A holding the coefficients, X the unknowns, and B the
+          right-hand sides.
+        </p>
+        <pre>
+          2x + 3y = 8{"\n"}5x + 4y = 13{"\n"}
+          {"\n"}becomes A = [2 3; 5 4], B = [8; 13], solve for X{"\n"}
+          {"\n"}Here the solution is x = 1, y = 2
+        </pre>
+        <p>
+          Algebraically the solution is X = A⁻¹B, and that is how it is usually
+          introduced. In practice it is solved directly by elimination rather
+          than by computing the inverse first — the answer is the same and the
+          direct route is faster and numerically better behaved. Either way the
+          condition is identical: A must be square and non-singular.
+        </p>
+        <p>
+          When A is singular, the system does not have one unique solution. It
+          either has none, because the equations contradict each other, or
+          infinitely many, because one equation adds nothing the others did not
+          already say. An error at this point is telling you something about the
+          equations rather than about the arithmetic.
+        </p>
+
+        <h2>What Each Error Message Is Telling You</h2>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>What happened</th>
+                <th>What it means</th>
+                <th>What to do</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Dimensions must match</td>
+                <td>You tried to add or subtract different shapes</td>
+                <td>Check both row and column counts</td>
+              </tr>
+              <tr>
+                <td>Columns of A must match rows of B</td>
+                <td>The inner dimensions do not meet</td>
+                <td>
+                  Try the other order, or check the matrix was entered
+                  transposed
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <h2>How to Use This Matrix Calculator</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Step 1:</strong> Set rows and columns for Matrix A (and B if
-          needed) using the + / − controls. Matrices can be up to 6×6.
-        </li>
-        <li>
-          <strong>Step 2:</strong> Type values directly into each cell. Decimals
-          and negative numbers are fully supported.
-        </li>
-        <li>
-          <strong>Step 3:</strong> Select an operation from the chip rows.
-          Results update instantly as you type or change the operation.
-        </li>
-        <li>
-          <strong>Step 4:</strong> Click the result to copy it — it copies in
-          tab-separated format ready to paste into Excel or Google Sheets.
-        </li>
-      </ul>
-
-      <h2>Key Formulas Behind Each Operation</h2>
-      <h3>Determinant (Cofactor Expansion)</h3>
-      <p>
-        For a 2×2 matrix [[a, b], [c, d]], the determinant is ad − bc. For
-        larger matrices, this calculator uses recursive cofactor expansion along
-        the first row. The determinant tells you whether a matrix is invertible
-        (non-zero det) or singular (det = 0), and its absolute value represents
-        the scaling factor the matrix applies to area or volume.
-      </p>
-      <h3>Inverse (via Adjugate)</h3>
-      <pre>A⁻¹ = (1 / det(A)) × adj(A)</pre>
-      <p>
-        The inverse exists only when the determinant is non-zero. This
-        calculator computes the cofactor matrix, transposes it to get the
-        adjugate, then scales by 1/det. The inverse is essential for solving
-        systems: if AX = B, then X = A⁻¹B.
-      </p>
-      <h3>RREF (Gauss-Jordan Elimination)</h3>
-      <p>
-        Reduced Row Echelon Form is the simplest equivalent form of a matrix,
-        produced by applying elementary row operations until every leading entry
-        is 1 and is the only non-zero entry in its column. RREF reveals rank,
-        solution existence, and free variables in underdetermined systems.
-      </p>
-
-      <h2>Worked Examples</h2>
-      <h3>Example 1: 2×2 Matrix Multiplication</h3>
-      <p>A = [[1, 2], [3, 4]] and B = [[5, 6], [7, 8]]</p>
-      <ul className="custom-list">
-        <li>
-          Row 1, Col 1: (1×5) + (2×7) = <strong>19</strong>
-        </li>
-        <li>
-          Row 1, Col 2: (1×6) + (2×8) = <strong>22</strong>
-        </li>
-        <li>
-          Row 2, Col 1: (3×5) + (4×7) = <strong>43</strong>
-        </li>
-        <li>
-          Row 2, Col 2: (3×6) + (4×8) = <strong>50</strong>
-        </li>
-      </ul>
-      <p>Result: [[19, 22], [43, 50]]</p>
-
-      <h3>Example 2: Determinant and Inverse</h3>
-      <p>A = [[4, 7], [2, 6]]</p>
-      <ul className="custom-list">
-        <li>
-          det(A) = (4×6) − (7×2) = <strong>10</strong>
-        </li>
-        <li>
-          A⁻¹ = (1/10) × [[6, −7], [−2, 4]] ={" "}
-          <strong>[[0.6, −0.7], [−0.2, 0.4]]</strong>
-        </li>
-      </ul>
-
-      <h3>Example 3: Solving a Linear System</h3>
-      <p>Solve: 2x + y = 5 and 4x + 3y = 11</p>
-      <ul className="custom-list">
-        <li>A = [[2, 1], [4, 3]], B = [[5], [11]]</li>
-        <li>det(A) = 2 (non-zero, solvable)</li>
-        <li>
-          X = A⁻¹B → x = <strong>2</strong>, y = <strong>1</strong>
-        </li>
-      </ul>
-
-      <h2>When and Why You Would Use Each Operation</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Determinant</strong> — Check if a system has a unique
-          solution, or calculate area/volume scaling in geometry and physics.
-        </li>
-        <li>
-          <strong>Inverse</strong> — Solve linear systems, decode Hill cipher
-          cryptography, or find transformation reversals in computer graphics.
-        </li>
-        <li>
-          <strong>RREF</strong> — Solve any system of equations including
-          underdetermined and overdetermined ones, find basis vectors, and
-          determine linear independence.
-        </li>
-        <li>
-          <strong>Rank</strong> — Determine column space dimension, check system
-          solvability, and identify redundant equations.
-        </li>
-        <li>
-          <strong>Transpose</strong> — Rotate data for statistical operations,
-          compute symmetric matrices (AᵀA), and prepare least-squares
-          regression.
-        </li>
-        <li>
-          <strong>Matrix Power</strong> — Model discrete time-step systems like
-          Markov chains, population models, and recurrence relations.
-        </li>
-      </ul>
-      <p>
-        If you need to work with the individual numbers in your results —
-        computing percentages, averages, or statistical measures — our{" "}
-        <Link href="/percentage-calculator/" className="my-link">
-          percentage calculator
-        </Link>{" "}
-        and{" "}
-        <Link href="/mean-median-mode-calculator/" className="my-link">
-          mean, median, mode calculator
-        </Link>{" "}
-        handle those computations.
-      </p>
-
-      <h2>Why Some Operations Show an Error</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Addition / Subtraction:</strong> Both matrices must have
-          exactly the same dimensions.
-        </li>
-        <li>
-          <strong>Multiplication:</strong> Columns of A must equal rows of B.
-        </li>
-        <li>
-          <strong>Determinant, Inverse, Adjoint, Trace, Power:</strong> All
-          require a square matrix.
-        </li>
-        <li>
-          <strong>Inverse:</strong> Also requires non-zero determinant. When det
-          = 0, the matrix is singular.
-        </li>
-        <li>
-          <strong>Solve AX = B:</strong> Requires A to be both square and
-          invertible, and B to have the same number of rows as A.
-        </li>
-      </ul>
-
-      <h2>Common Mistakes in Matrix Operations</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Assuming multiplication is commutative.</strong> A × B is
-          almost never the same as B × A. Order matters.
-        </li>
-        <li>
-          <strong>Confusing adjoint with adjugate.</strong> In some textbooks,
-          "adjoint" means conjugate transpose (for complex matrices). Here and
-          in most linear algebra courses, it means the transpose of the cofactor
-          matrix.
-        </li>
-        <li>
-          <strong>Forgetting det = 0 means no inverse.</strong> If you try to
-          solve AX = B and A has a zero determinant, use RREF instead to analyze
-          the solution space.
-        </li>
-        <li>
-          <strong>Mixing up rows and columns in multiplication.</strong> An m×n
-          matrix times an n×p matrix gives m×p. If it says "columns of A must
-          match rows of B," check that colsA = rowsB.
-        </li>
-        <li>
-          <strong>Entering values in the wrong matrix for Solve AX = B.</strong>{" "}
-          A is the coefficient matrix and B is the constant vector (column
-          matrix). Swapping them gives wrong results.
-        </li>
-      </ul>
-
-      <h2>Where Matrices Are Used in the Real World</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Computer graphics and gaming</strong> — Every 3D rotation,
-          scaling, and translation on screen is a matrix multiplication.
-        </li>
-        <li>
-          <strong>Machine learning</strong> — Neural networks are built entirely
-          on matrix multiplication and element-wise operations.
-        </li>
-        <li>
-          <strong>Economics and finance</strong> — Input-output models,
-          portfolio optimization, and Markov chains for market modeling. For
-          applied financial math, our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          and{" "}
-          <Link href="/loan-calculator/" className="my-link">
-            loan calculator
-          </Link>{" "}
-          handle practical loan computations.
-        </li>
-        <li>
-          <strong>Engineering</strong> — Structural analysis, circuit analysis,
-          and control systems rely on solving matrix equations.
-        </li>
-        <li>
-          <strong>Statistics</strong> — Regression analysis, covariance
-          matrices, and PCA are matrix operations. Our{" "}
-          <Link href="/mean-median-mode-calculator/" className="my-link">
-            statistics calculator
-          </Link>{" "}
-          covers descriptive statistics.
-        </li>
-        <li>
-          <strong>Cryptography</strong> — The Hill cipher uses matrix
-          multiplication and modular inverses to encrypt and decrypt messages.
-        </li>
-      </ul>
-
-      <h2>Frequently Asked Questions</h2>
-      {[
-        [
-          "Is this matrix calculator free to use?",
-          "Yes, completely free with no sign-up and no limits. Everything runs in your browser — no data is sent to any server.",
-        ],
-        [
-          "What is the largest matrix size supported?",
-          "Up to 6×6 for either matrix. This covers virtually all coursework and standard engineering applications while keeping determinant and adjoint calculations fast and instant.",
-        ],
-        [
-          "Why does my matrix have no inverse?",
-          "A matrix has no inverse when its determinant is zero — this is called a singular matrix. Geometrically, it means the matrix collapses space into a lower dimension, which cannot be undone.",
-        ],
-        [
-          "What does it mean if 'Solve AX = B' shows an error?",
-          "This means A is singular (det = 0), so the system either has no solution or infinitely many. Use the RREF operation instead to analyze the full solution space.",
-        ],
-        [
-          "What is the difference between rank and RREF?",
-          "RREF is the simplified matrix itself, produced by Gauss-Jordan elimination. Rank is a single number — the count of non-zero rows in the RREF, representing how many linearly independent rows or columns the original matrix has.",
-        ],
-        [
-          "Is matrix multiplication commutative?",
-          "No. A × B and B × A almost always give different results. In fact, one product may be defined while the other gives a different-sized result. Always multiply in the order specified.",
-        ],
-        [
-          "Can I use decimals or negative numbers?",
-          "Yes. Every cell accepts decimals and negative numbers — type them directly, e.g. -2.5 or 0.333. Results display to four decimal places where needed.",
-        ],
-        [
-          "Can I copy results to a spreadsheet?",
-          "Yes. Click the result area and it copies in tab-separated format, which pastes cleanly into Excel, Google Sheets, or any other spreadsheet.",
-        ],
-        [
-          "Does this tool store the matrices I enter?",
-          "No. All calculations happen entirely in your browser using JavaScript — nothing is sent to a server, logged, or stored.",
-        ],
-      ].map(([q, a], i) => (
-        <div className="faq-item" key={i}>
-          <h3 onClick={() => toggleFAQ(i)}>
-            {q}
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === i && <p>{a}</p>}
+              <tr>
+                <td>Matrix must be square</td>
+                <td>
+                  Determinant, inverse, trace and power need equal rows and
+                  columns
+                </td>
+                <td>Verify the size selector matches your data</td>
+              </tr>
+              <tr>
+                <td>Matrix is singular</td>
+                <td>The determinant is zero — no inverse exists</td>
+                <td>
+                  Look for a duplicated row, a zero row, or one row that is a
+                  multiple of another
+                </td>
+              </tr>
+              <tr>
+                <td>No unique solution</td>
+                <td>The coefficient matrix is singular</td>
+                <td>
+                  The system has no solution or infinitely many — re-read the
+                  equations
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      ))}
 
-      <h2>Final Thoughts</h2>
-      <p>
-        Matrices are the language of linear algebra, and linear algebra is the
-        mathematical backbone of everything from search algorithms to 3D video
-        games to medical imaging. This calculator gives you instant access to
-        every standard matrix operation — enter your values, pick an operation,
-        and see the result in real time. For related math tools, try our{" "}
-        <Link href="/percentage-calculator/" className="my-link">
-          percentage calculator
-        </Link>{" "}
-        for ratio-based computations, our{" "}
-        <Link href="/mean-median-mode-calculator/" className="my-link">
-          mean, median, mode calculator
-        </Link>{" "}
-        for descriptive statistics, or our{" "}
-        <Link href="/gpa-calculator/" className="my-link">
-          GPA calculator
-        </Link>{" "}
-        for weighted academic averages.
-      </p>
+        <p>
+          The second row is the one worth pausing on. A dimension error on
+          multiplication is often not a mistake in the operation but a matrix
+          entered the wrong way round, and transposing it makes the product
+          valid. Whether that is the product you actually wanted is a separate
+          question.
+        </p>
+
+        <h2>Checking a Result Without Redoing It</h2>
+        <p>
+          Machine output is worth spot-checking, and a few properties make that
+          quick.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>Verify an inverse by multiplying.</strong> A × A⁻¹ should
+            give the identity matrix — ones down the diagonal, zeros elsewhere.
+            Small floating-point residues near zero are normal.
+          </li>
+          <li>
+            <strong>Check one entry of a product by hand.</strong> The top-left
+            entry is the first row of A against the first column of B. If that
+            matches, the shape and method are almost certainly right.
+          </li>
+          <li>
+            <strong>Check the result shape first.</strong> Before reading any
+            numbers, confirm the answer has the dimensions the rule predicts. A
+            wrong shape means the wrong operation ran.
+          </li>
+          <li>
+            <strong>Watch for a determinant very close to zero.</strong> A
+            matrix that is nearly singular produces an inverse with very large
+            entries, and small input errors get amplified enormously. Treat such
+            results with suspicion rather than confidence.
+          </li>
+        </ul>
+        <p>
+          For statistics rather than linear algebra, our{" "}
+          <Link href="/mean-median-mode-calculator/" className="my-link">
+            mean, median and mode calculator
+          </Link>{" "}
+          handles descriptive measures, and the{" "}
+          <Link href="/blog/matrix-calculator-guide/" className="my-link">
+            matrix operations guide
+          </Link>{" "}
+          works through each operation step by step.
+        </p>
+      <h2>Matrix Operation Questions</h2>
+      {FAQS.map(([q, a], i) => {
+        const isOpen = openFAQ === i;
+        return (
+          <div className="faq-item" key={i}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
+              {q}
+              <i
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
+              />
+            </h3>
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
     </div>
   );
 }

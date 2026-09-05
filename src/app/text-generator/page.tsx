@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import TextGenerator from "../components/TextGenerator";
 
 export const metadata: Metadata = {
-  title:
-    "Random Text Generator | Free Online English Placeholder Text by Word Count",
+  title: "Random Text Generator",
   description:
-    "Free random text generator online. Generate exact word count English placeholder text for UI mockups, testing & content prototyping — better than Lorem Ipsum.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Generate random placeholder text by word count, and see which values actually break an input field — empty strings, emoji, accents and over-length entries.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/text-generator/",
+    canonical: "/text-generator/",
+  },
+  openGraph: {
+    title: "Random Text Generator",
+    description:
+      "Placeholder text and test data are different jobs. Here is what each one needs to be.",
+    url: "/text-generator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Random Text Generator",
+    description:
+      "Random placeholder text by word count, plus test values that find real bugs.",
   },
 };
 

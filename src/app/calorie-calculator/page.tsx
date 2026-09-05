@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import CalorieCalculator from "../components/CalorieCalculator";
 
 export const metadata: Metadata = {
-  title: "Calorie Calculator | Find Your Daily Calorie Needs for Free",
+  title: "Calorie Calculator — BMR and Daily Needs",
   description:
-    "Use our free calorie calculator to find your BMR, TDEE, and daily calorie needs for weight loss, maintenance, or muscle gain based on the Mifflin-St Jeor formula.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Estimate daily calorie needs from BMR and activity level, find out which part of the estimate is unreliable, and test the number against two weeks of data.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/calorie-calculator/",
+    canonical: "/calorie-calculator/",
+  },
+  openGraph: {
+    title: "Calorie Calculator — BMR and Daily Needs",
+    description:
+      "Daily calorie needs, why the activity multiplier carries most of the error, and how to find your real maintenance figure.",
+    url: "/calorie-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Calorie Calculator — BMR and Daily Needs",
+    description:
+      "BMR, daily energy needs, and how to test the estimate against real data.",
   },
 };
 

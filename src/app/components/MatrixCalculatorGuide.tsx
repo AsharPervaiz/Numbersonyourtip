@@ -2,6 +2,42 @@
 import { useState } from "react";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import BlogSidebar from "./BlogSidebar";
+
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do I calculate a 3x3 matrix determinant?",
+    "Use cofactor expansion along the row or column that contains the most zeros to minimize your work. For a 3×3 matrix, expand along any row by multiplying each entry by its cofactor (the determinant of the 2×2 submatrix left when you delete that entry's row and column, times the sign (−1)^(i+j)). Expanding along Row 1 gives: det(A) = a(ei−fh) − b(di−fg) + c(dh−eg). Our 3×3 matrix calculator does this instantly — use it to verify your manual answer.",
+  ],
+  [
+    "What is the difference between a cofactor matrix and an adjoint matrix?",
+    "The cofactor matrix is the matrix formed by replacing every entry aᵢⱼ in the original matrix with its cofactor Cᵢⱼ = (−1)^(i+j) × det(Mᵢⱼ). The adjoint matrix (also called the adjugate) is simply the transpose of the cofactor matrix — you flip it across the main diagonal. Both the cofactor matrix calculator and adjoint matrix calculator results are used together to compute the matrix inverse: A⁻¹ = (1/det(A)) × adj(A).",
+  ],
+  [
+    "When does a matrix have no inverse?",
+    "A matrix has no inverse (it is called singular) when its determinant equals zero. Geometrically, a singular matrix collapses the space it acts on — it reduces the dimensions, so the transformation cannot be undone. Practically, this means the system Ax = b either has no solution or infinitely many solutions. Always check the determinant before attempting an inverse calculation.",
+  ],
+  [
+    "How do I find the rank of a matrix?",
+    "Apply row reduction (Gaussian elimination) to bring the matrix to Row Echelon Form. The rank equals the number of non-zero rows remaining after row reduction. For a square matrix, if the rank equals the number of rows, the determinant is non-zero and the matrix is invertible. A rank less than the number of rows means the matrix is singular. Our matrix rank calculator performs this reduction automatically.",
+  ],
+  [
+    "What does it mean to diagonalize a matrix?",
+    "Diagonalizing a matrix A means finding matrices P and D such that A = PDP⁻¹, where D is diagonal (non-zero entries only on the main diagonal). P is the matrix of eigenvectors, and the diagonal entries of D are the eigenvalues. Not every matrix is diagonalizable — a square n×n matrix is diagonalizable only if it has n linearly independent eigenvectors. The diagonalization calculator checks this condition and returns P and D when the diagonalization exists.",
+  ],
+  [
+    "Can I use a matrix calculator for the equation Ax=b?",
+    "Yes. Our matrix equation solver Ax=b takes the coefficient matrix A and the right-hand side vector b as inputs and returns the solution vector x. The method used internally is the inverse method (x = A⁻¹b) for small invertible systems, which is exact and efficient. For the equation to have a unique solution, det(A) must be non-zero. If det(A) = 0, the system has no unique solution and the solver will indicate this.",
+  ],
+  [
+    "What is the largest matrix size your calculator handles?",
+    "Our free matrix calculator handles matrices from 2×2 up through 5×5 for operations including determinant (5×5 matrix calculator), inverse, cofactor, adjoint, rank, and linear system solving. For a 4×4 determinant calculator or 5×5 determinant problem in particular, the calculator saves a significant amount of manual work — a 5×5 cofactor expansion done by hand involves hundreds of arithmetic steps.",
+  ],
+  [
+    "Is there a formula for the 2x2 matrix inverse that I can memorize?",
+    "Yes, and it is one of the most useful things to memorize in elementary linear algebra. For A = [[a,b],[c,d]], the inverse is A⁻¹ = (1/(ad−bc)) × [[d,−b],[−c,a]]. In words: swap the main diagonal entries (a and d), negate the off-diagonal entries (b becomes −b, c becomes −c), and divide everything by the determinant (ad−bc). If the determinant is zero, no inverse exists. The 2×2 matrix inverse calculator confirms your result automatically.",
+  ],
+];
 
 export default function MatrixCalculatorGuide() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -9,38 +45,21 @@ export default function MatrixCalculatorGuide() {
 
   return (
     <div className="blog-container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="blog-content">
-        {/* BREADCRUMB */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "14px",
-            marginBottom: "10px",
-          }}
-        >
-          <Link
-            href="https://numbersonyourtip.com/"
-            className="my-link"
-            style={{
-              textDecoration: "none",
-              color: "#000",
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-            }}
-          >
-            <i className="fa-solid fa-house" />
-            Home
-          </Link>
-          <i className="fa-solid fa-angle-right" style={{ fontSize: "12px" }} />
-          <span style={{ color: "#000" }}>
-            Matrix Calculator: Complete Guide to Every Operation
-          </span>
-        </div>
-        <hr />
-
         <img
           src="/blog11.1.webp"
           className="image-blog"
@@ -63,12 +82,14 @@ export default function MatrixCalculatorGuide() {
                 fontSize: "14px",
               }}
             >
+              <Link href="/author/ashar-pervaiz/" className="byline-author">
               <img
                 className="founder-photo"
                 src="/founder_photo.webp"
                 alt="Ashar Pervaiz"
               />
               Ashar Pervaiz
+              </Link>
             </span>
             <span
               style={{
@@ -89,10 +110,7 @@ export default function MatrixCalculatorGuide() {
         <article>
           {/* HEADER */}
           <header>
-            <h1>
-              Matrix Calculator: The Complete Guide to Every Matrix Operation
-              (With Formulas and Examples)
-            </h1>
+            <h1>Every Matrix Operation, Worked by Hand</h1>
             <p>
               Matrices are used in areas like mathematics, engineering, computer
               science, economics and data science.. Doing matrix calculations by
@@ -1503,147 +1521,70 @@ In matrix form:  A × x = b`}
             </div>
           </section>
 
-          {/* CTA */}
-          <section
-            style={{
-              backgroundColor: "#1B3066",
-              padding: "36px",
-              borderRadius: "12px",
-              textAlign: "center",
-              color: "#fff",
-              marginBottom: "48px",
-              boxShadow: "0 10px 20px rgba(27,48,103,0.2)",
-            }}
-          >
-            <h2 style={{ color: "#ffffff" }}>
-              Free Matrix Calculator — No Sign-Up, No Account
-            </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.85)",
-                maxWidth: "620px",
-                margin: "0 auto 24px auto",
-                lineHeight: 1.7,
-              }}
-            >
-              Every operation covered in this guide — from 2×2 inverse to 5×5
-              determinant to Ax=b solving — is available free in our matrix
-              calculator. Open it in your browser, enter your matrix, and get
-              your answer instantly.
-            </p>
-            <Link
-              href="/matrix-calculator/"
-              style={{
-                display: "inline-block",
-                backgroundColor: "#1F9FB8",
-                color: "#fff",
-                padding: "14px 36px",
-                fontSize: "1.1rem",
-                fontWeight: 700,
-                textDecoration: "none",
-                borderRadius: "6px",
-              }}
-            >
-              Open the Free Matrix Calculator →
-            </Link>
-          </section>
-
           {/* FAQ */}
           <section>
-            <h2>Frequently Asked Questions</h2>
+            <h2>Questions That Come Up Doing Matrices by Hand</h2>
 
-            {[
-              [
-                "How do I calculate a 3x3 matrix determinant?",
-                "Use cofactor expansion along the row or column that contains the most zeros to minimize your work. For a 3×3 matrix, expand along any row by multiplying each entry by its cofactor (the determinant of the 2×2 submatrix left when you delete that entry's row and column, times the sign (−1)^(i+j)). Expanding along Row 1 gives: det(A) = a(ei−fh) − b(di−fg) + c(dh−eg). Our 3×3 matrix calculator does this instantly — use it to verify your manual answer.",
-              ],
-              [
-                "What is the difference between a cofactor matrix and an adjoint matrix?",
-                "The cofactor matrix is the matrix formed by replacing every entry aᵢⱼ in the original matrix with its cofactor Cᵢⱼ = (−1)^(i+j) × det(Mᵢⱼ). The adjoint matrix (also called the adjugate) is simply the transpose of the cofactor matrix — you flip it across the main diagonal. Both the cofactor matrix calculator and adjoint matrix calculator results are used together to compute the matrix inverse: A⁻¹ = (1/det(A)) × adj(A).",
-              ],
-              [
-                "When does a matrix have no inverse?",
-                "A matrix has no inverse (it is called singular) when its determinant equals zero. Geometrically, a singular matrix collapses the space it acts on — it reduces the dimensions, so the transformation cannot be undone. Practically, this means the system Ax = b either has no solution or infinitely many solutions. Always check the determinant before attempting an inverse calculation.",
-              ],
-              [
-                "How do I find the rank of a matrix?",
-                "Apply row reduction (Gaussian elimination) to bring the matrix to Row Echelon Form. The rank equals the number of non-zero rows remaining after row reduction. For a square matrix, if the rank equals the number of rows, the determinant is non-zero and the matrix is invertible. A rank less than the number of rows means the matrix is singular. Our matrix rank calculator performs this reduction automatically.",
-              ],
-              [
-                "What does it mean to diagonalize a matrix?",
-                "Diagonalizing a matrix A means finding matrices P and D such that A = PDP⁻¹, where D is diagonal (non-zero entries only on the main diagonal). P is the matrix of eigenvectors, and the diagonal entries of D are the eigenvalues. Not every matrix is diagonalizable — a square n×n matrix is diagonalizable only if it has n linearly independent eigenvectors. The diagonalization calculator checks this condition and returns P and D when the diagonalization exists.",
-              ],
-              [
-                "Can I use a matrix calculator for the equation Ax=b?",
-                "Yes. Our matrix equation solver Ax=b takes the coefficient matrix A and the right-hand side vector b as inputs and returns the solution vector x. The method used internally is the inverse method (x = A⁻¹b) for small invertible systems, which is exact and efficient. For the equation to have a unique solution, det(A) must be non-zero. If det(A) = 0, the system has no unique solution and the solver will indicate this.",
-              ],
-              [
-                "What is the largest matrix size your calculator handles?",
-                "Our free matrix calculator handles matrices from 2×2 up through 5×5 for operations including determinant (5×5 matrix calculator), inverse, cofactor, adjoint, rank, and linear system solving. For a 4×4 determinant calculator or 5×5 determinant problem in particular, the calculator saves a significant amount of manual work — a 5×5 cofactor expansion done by hand involves hundreds of arithmetic steps.",
-              ],
-              [
-                "Is there a formula for the 2x2 matrix inverse that I can memorize?",
-                "Yes, and it is one of the most useful things to memorize in elementary linear algebra. For A = [[a,b],[c,d]], the inverse is A⁻¹ = (1/(ad−bc)) × [[d,−b],[−c,a]]. In words: swap the main diagonal entries (a and d), negate the off-diagonal entries (b becomes −b, c becomes −c), and divide everything by the determinant (ad−bc). If the determinant is zero, no inverse exists. The 2×2 matrix inverse calculator confirms your result automatically.",
-              ],
-            ].map(([q, a], i) => (
-              <div className="faq-item" key={i}>
-                <h3 onClick={() => toggleFAQ(i)}>
-                  {q}
-                  <i
-                    className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-                  />
-                </h3>
-                {openFAQ === i && <p style={{ margin: 0 }}>{a}</p>}
-              </div>
-            ))}
+            {FAQ_DATA.map(([q, a], i) => {
+              const isOpen = openFAQ === i;
+              return (
+                <div className="faq-item" key={i}>
+                  <h3
+                    onClick={() => toggleFAQ(i)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleFAQ(i);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${i}`}
+                  >
+                    {q}
+                    <i
+                      className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                      aria-hidden="true"
+                    />
+                  </h3>
+                  <div
+                    id={`faq-answer-${i}`}
+                    className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="faq-answer-inner">
+                      <p style={{ margin: 0 }}>{a}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </section>
         </article>
       </div>
 
-      {/* SIDEBAR */}
-      <aside className="blog-sidebar">
-        <p>Recent Blogs</p>
-        <ul>
-          {[
-            [
-              "/blog/what-is-numbers-on-your-tip/",
-              "What Is Numbers on Your Tip?",
-            ],
-            [
-              "/blog/healthy-bodyfat-percentage-by-age-and-gender/",
-              "Healthy Body Fat % by Age & Gender",
-            ],
-            ["/blog/renting-vs-buying-a-home/", "Renting vs. Buying a Home"],
-            [
-              "/blog/can-ai-replace-financial-calculators/",
-              "Can AI Replace Financial Calculators?",
-            ],
-            [
-              "/blog/best-free-financial-calculators-for-everyday-money-questions/",
-              "Best Free Financial Calculators",
-            ],
-          ].map(([href, label]) => (
-            <li key={href as string}>
-              <Link href={href as string}>
-                <span
-                  style={{
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                  }}
-                >
-                  <i
-                    className="fa-solid fa-angle-right"
-                    style={{ color: "#D8A13A" }}
-                  />
-                  {label}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </aside>
+      <BlogSidebar
+        relatedTools={[
+          ["/matrix-calculator/", "Matrix Calculator"],
+          ["/mean-median-mode-calculator/", "Mean, Median, Mode Calculator"],
+          ["/percentage-calculator/", "Percentage Calculator"],
+        ]}
+        relatedPosts={[
+          [
+            "/blog/what-is-numbers-on-your-tip/",
+            "What Is Numbers on Your Tip?",
+          ],
+          [
+            "/blog/can-ai-replace-financial-calculators/",
+            "Can AI Replace Financial Calculators?",
+          ],
+          [
+            "/blog/best-free-financial-calculators-for-everyday-money-questions/",
+            "Best Free Financial Calculators",
+          ],
+        ]}
+      />
     </div>
   );
 }

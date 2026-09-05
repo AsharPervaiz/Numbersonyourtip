@@ -2,6 +2,45 @@
 import { useState } from "react";
 import Link from "next/link";
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do I calculate a salary hike percentage?",
+    "Subtract the old salary from the new one, divide by the old salary, and multiply by 100. Going from 60,000 to 66,000 is 6,000 ÷ 60,000 × 100 = 10%. To go the other way, multiply the old salary by 1 plus the percentage divided by 100. The arithmetic is never the difficult part — agreeing which pair of numbers goes into it is.",
+  ],
+  [
+    "Should I calculate the hike on my package or my basic salary?",
+    "Whichever you use, use the same basis on both sides. A total package includes employer contributions, allowances and sometimes a notional bonus, so a raise applied only to the fixed component produces a smaller percentage on basic salary than on the headline figure. Employers tend to quote the largest available base, so establish which one is being used before agreeing a number.",
+  ],
+  [
+    "Why is my take-home increase smaller than my raise percentage?",
+    "Because tax is applied in bands. If part of the increase falls into a higher band, that portion is taxed at the higher rate, so the proportional rise in what reaches your account is smaller than the proportional rise in gross pay. Deductions that scale with salary, such as pension contributions, have the same effect on the visible amount.",
+  ],
+  [
+    "Is a raise below inflation actually a pay cut?",
+    "Yes, in real terms. A 3% raise against 5% inflation is a real decrease of about 1.9% — the contract says you earn more and the money buys less. The precise calculation divides one plus the nominal rate by one plus inflation, since the two compound rather than subtract, though subtracting is a close enough shortcut that always slightly overstates the gain.",
+  ],
+  [
+    "Does a 20% pay cut reverse with a 20% raise?",
+    "No. A 20% cut on 60,000 leaves 48,000, and a 20% rise on 48,000 gives 57,600 — a permanent 4% gap, because the cut came off a larger base than the rise went back onto. Restoring 48,000 to 60,000 needs a 25% increase. The same asymmetry applies to any pair of equal percentage moves in opposite directions.",
+  ],
+  [
+    "How much difference do a couple of percentage points make?",
+    "More than most people expect, because each raise is applied to the salary the last one produced. Starting from 50,000, ten years at 3% reaches about 67,196 while ten years at 5% reaches about 81,445 — over 14,000 apart in annual salary, and considerably more in cumulative earnings. It is also why a low starting salary is expensive in a way that is invisible at the time.",
+  ],
+  [
+    "Is a bigger percentage from a new job always better?",
+    "Not necessarily. Compare pension and benefit contributions in cash terms, any unvested equity or bonus you would forfeit, the change in commuting cost and time, and how long until the new role is secure. A 25% offer that removes a strong pension contribution and adds an hour of daily travel can be worth less than a 10% internal raise.",
+  ],
+  [
+    "What counts as a good salary hike?",
+    "There is no universal figure, because it depends on inflation, your market, and whether the role has changed. A more useful test than any benchmark is the real-terms calculation: does the increase beat inflation, and does it move you closer to what the role pays elsewhere? An increase that does neither is a hold rather than a raise, whatever the percentage says.",
+  ],
+  [
+    "What should I ask for if the salary budget will not move?",
+    "Ask what will. The timing of the next review, a title change, a training or conference budget, additional pension contribution, or flexible working are often funded from different budget lines and are genuinely available when base pay is not. Also get the effective date in writing — a raise agreed in March and applied in July is materially smaller that year than it appears.",
+  ],
+];
+
 export default function SalaryHikeCalculator() {
   /* ---- STATE ---- */
   const [currentSalary, setCurrentSalary] = useState("");
@@ -77,11 +116,23 @@ export default function SalaryHikeCalculator() {
     });
 
   return (
-    <>
-      {/* ---- PAGE LAYOUT WRAPPER ---- */}
-      <div className="page-layout single-page-padding">
-        <div className="single-page-padding">
-          <h1>Salary Hike Calculator</h1>
+    <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+      <div className="single-page-padding">
+        <h1>Salary Hike Calculator — Percentage, Real Terms and Offers</h1>
           <p>
             Calculate Your New Salary After Appraisal — Instantly &amp; Free
           </p>
@@ -214,262 +265,277 @@ export default function SalaryHikeCalculator() {
             )}
           </div>
 
-          {/* ---- SEO CONTENT ---- */}
-          <h2>What is a Salary Hike?</h2>
-          <p>
-            A salary hike is the percentage increase in your salary, usually
-            offered during an annual appraisal, performance review, or when
-            switching jobs. It is one of the most talked-about topics during
-            appraisal season — and for good reason. Even a 5% difference in hike
-            percentage can mean a significant change in your take-home pay over
-            a year. This calculator helps you find out exactly how much you will
-            earn after your hike, both annually and monthly.
-          </p>
+        {/* ---- SEO CONTENT ---- */}
 
-          <h2>How to Calculate Salary Hike</h2>
-          <p>
-            Calculating a salary hike is straightforward once you know the
-            formula. Enter your current salary and the hike percentage you
-            received or are expecting. The calculator will instantly show you
-            the hike amount, your new annual salary, and how your monthly salary
-            changes — all in one place.
-          </p>
+        <h2>The Percentage Is Easy. The Base Is the Argument.</h2>
+        <pre>
+          Hike % = (New salary − Old salary) ÷ Old salary × 100{"\n"}New salary =
+          Old salary × (1 + Hike % ÷ 100)
+        </pre>
+        <p>
+          Going from 60,000 to 66,000 is (66,000 − 60,000) ÷ 60,000 × 100 = 10%.
+          Nobody disputes that arithmetic. What people dispute is which pair of
+          numbers goes into it, because a single raise can honestly be described
+          as several different percentages depending on the base chosen.
+        </p>
 
-          <h2>Salary Hike Formula</h2>
-          <p>Here are the two key formulas used in this calculator:</p>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Base</th>
+                <th>What it includes</th>
+                <th>Who prefers quoting it</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total package or CTC</td>
+                <td>
+                  Salary plus employer contributions, allowances, insurance,
+                  sometimes a notional bonus
+                </td>
+                <td>The employer — it is the largest number</td>
+              </tr>
+              <tr>
+                <td>Gross salary</td>
+                <td>Contractual pay before tax and deductions</td>
+                <td>Recruiters and most published benchmarks</td>
+              </tr>
+              <tr>
+                <td>Take-home pay</td>
+                <td>What actually reaches your account</td>
+                <td>You, when budgeting</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-          <pre>
-            Hike Amount = (Current Salary × Hike%) ÷ 100{"\n"}
-            New Salary = Current Salary + Hike Amount
-          </pre>
+        <p>
+          A raise applied only to the fixed component of a package produces a
+          smaller percentage on gross salary than on the headline total. And a
+          gross increase does not translate into the same percentage in your
+          account: if the raise pushes part of your income into a higher tax
+          band, the take-home increase is a smaller proportion than the gross
+          one.
+        </p>
+        <p>
+          The practical rule is to compare like with like. When someone quotes a
+          percentage, establish the base before agreeing or being impressed by
+          it. Our{" "}
+          <Link href="/income-tax-calculator/" className="my-link">
+            income tax calculator
+          </Link>{" "}
+          converts a gross increase into a take-home one.
+        </p>
 
-          <p>
-            For example, if your current annual salary is 600,000 and you
-            receive a 15% hike:
-          </p>
-          <pre>
-            Hike Amount = (600,000 × 15) ÷ 100 = 90,000{"\n"}
-            New Salary = 600,000 + 90,000 = 690,000
-          </pre>
+        <h2>A Raise Below Inflation Is a Pay Cut</h2>
+        <p>
+          A nominal increase says what happened to the number on your contract.
+          A real increase says what happened to what it buys, and only the
+          second is a raise in any sense that matters.
+        </p>
+        <pre>
+          Real increase % = ((1 + nominal ÷ 100) ÷ (1 + inflation ÷ 100) − 1) ×
+          100
+        </pre>
+        <p>
+          An 8% raise in a year of 6% inflation is not a 2% real increase; it is
+          about 1.9%, because the two percentages compound rather than subtract.
+          Close enough that subtracting is a reasonable mental shortcut, and
+          worth knowing that the shortcut always slightly overstates the gain.
+        </p>
+        <p>
+          The uncomfortable version of the same arithmetic: a 3% raise against
+          5% inflation is a real decrease of about 1.9%. The contract says you
+          earn more and you can buy less. This is the calculation to run before
+          deciding whether an offer is acceptable, and it is the one most people
+          skip.
+        </p>
 
-          <h2>How to Calculate Hike Percentage from Two Salaries</h2>
-          <p>
-            If you already know your old and new salary and want to find the
-            hike percentage, use this formula:
-          </p>
-          <pre>Hike % = [(New Salary − Old Salary) ÷ Old Salary] × 100</pre>
-          <p>
-            For example, if your salary went from 500,000 to 575,000, your hike
-            percentage is (75,000 ÷ 500,000) × 100 = 15%.
-          </p>
+        <h2>Percentages Do Not Reverse</h2>
+        <p>
+          A detail that catches people out in restructurings and in negotiations
+          about deferred increases. A 20% cut followed by a 20% rise does not
+          restore the original salary.
+        </p>
+        <pre>
+          60,000 × 0.80 = 48,000{"\n"}48,000 × 1.20 = 57,600
+        </pre>
+        <p>
+          The 20% came off a larger base than it went back on to, leaving a
+          permanent 4% gap. Restoring 48,000 to 60,000 requires a 25% rise, not
+          a 20% one. The same asymmetry applies to any pair of equal-sized
+          percentage moves in opposite directions.
+        </p>
 
-          <h2>What is Considered a Good Salary Hike?</h2>
-          <p>
-            A good salary hike depends on your industry, experience level, and
-            the economy. In general, anything above 10% is considered a solid
-            hike in most industries. A hike between 15% and 25% is excellent and
-            typically seen when switching companies or after a strong
-            performance year. Annual increments below 8% often just keep up with
-            inflation rather than genuinely increasing your purchasing power. If
-            you are switching jobs, a hike of 20% to 40% over your current
-            salary is common and acceptable to negotiate for.
-          </p>
+        <h2>Small Differences Compound Into Large Ones</h2>
+        <p>
+          Each raise is calculated on the salary the previous one produced,
+          which makes early increases disproportionately valuable.
+        </p>
 
-          <h2>Salary Hike vs Job Switch — Which Pays More?</h2>
-          <p>
-            In most cases, switching jobs gives you a significantly higher hike
-            than staying at the same company. Internal appraisal hikes typically
-            range from 8% to 15%, while job switches can get you anywhere from
-            20% to 50% depending on your skills and market demand. Many
-            professionals use this calculator to compare what they would earn if
-            they stayed versus if they switched, helping them make a more
-            informed career decision.
-          </p>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Starting at 50,000</th>
+                <th>After 5 years</th>
+                <th>After 10 years</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>3% annually</td>
+                <td>about 57,964</td>
+                <td>about 67,196</td>
+              </tr>
+              <tr>
+                <td>5% annually</td>
+                <td>about 63,814</td>
+                <td>about 81,445</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-          <h2>Key Factors That Influence Your Salary Hike</h2>
+        <p>
+          Two percentage points a year separates those two people by more than
+          14,000 in annual salary after a decade, and by considerably more in
+          total earnings across it. It is also why accepting a low starting
+          salary is expensive in a way that is invisible at the time: every
+          subsequent percentage is applied to a smaller number.
+        </p>
 
-          <h3>1. Performance Rating</h3>
-          <p>
-            Most companies tie salary hikes directly to performance ratings. A
-            top performer typically gets 2x to 3x the hike of an average
-            performer. Knowing your rating before appraisal season helps you
-            estimate your expected increment.
-          </p>
+        <h2>Comparing a Raise Against Changing Jobs</h2>
+        <p>
+          A external offer is usually quoted as a larger percentage than an
+          internal raise, and comparing the two on the headline figure alone is
+          how people end up worse off.
+        </p>
 
-          <h3>2. Industry and Company Budget</h3>
-          <p>
-            The IT, finance, and consulting sectors tend to offer higher hikes
-            than manufacturing or government sectors. Company profitability also
-            plays a big role — a company that had a strong year is more likely
-            to give generous increments.
-          </p>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Factor</th>
+                <th>Question to answer before deciding</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Base versus package</td>
+                <td>
+                  Is the new figure on the same basis as your current one?
+                </td>
+              </tr>
+              <tr>
+                <td>Pension and benefits</td>
+                <td>
+                  Does the employer contribution differ, and by how much in cash
+                  terms?
+                </td>
+              </tr>
+              <tr>
+                <td>Unvested equity or bonus</td>
+                <td>
+                  What are you forfeiting by leaving before it lands?
+                </td>
+              </tr>
+              <tr>
+                <td>Commute and location</td>
+                <td>
+                  What does the change cost in fare, fuel and hours per week?
+                </td>
+              </tr>
+              <tr>
+                <td>Notice and probation</td>
+                <td>
+                  How long until the new role is secure, and what happens if it
+                  is not?
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-          <h3>3. Years of Experience</h3>
-          <p>
-            Early-career professionals often see larger percentage hikes as they
-            grow quickly. Senior professionals may get smaller percentages but
-            on a higher base, which still translates to significant absolute
-            increases.
-          </p>
+        <p>
+          None of these argues against moving. They argue for pricing the whole
+          package rather than one percentage, because a 25% offer that removes a
+          strong pension contribution and adds an hour of daily commuting can be
+          worth less than a 10% internal raise.
+        </p>
+        <p>
+          For the travel line specifically, our{" "}
+          <Link href="/fuel-cost-calculator/" className="my-link">
+            fuel cost calculator
+          </Link>{" "}
+          turns a longer commute into an annual figure you can subtract from the
+          offer.
+        </p>
 
-          <h3>4. Market Salary Benchmarks</h3>
-          <p>
-            If your current salary is below the market rate for your role, you
-            have stronger grounds to negotiate a higher hike or a counter-offer
-            when switching. Researching industry benchmarks before appraisal
-            discussions is always a good idea.
-          </p>
+        <h2>Using the Number in a Conversation</h2>
+        <p>
+          Knowing the arithmetic changes how the discussion goes, mostly by
+          making it specific.
+        </p>
+        <ul className="custom-list">
+          <li>
+            Ask for a figure rather than a percentage. Percentages invite
+            ambiguity about the base; an amount does not.
+          </li>
+          <li>
+            Bring the real-terms calculation. &quot;That is a 1.9% increase
+            after inflation&quot; is a factual statement, not a complaint, and it
+            reframes an offer that sounded reasonable.
+          </li>
+          <li>
+            Where the budget genuinely will not move, ask what will — timing of
+            the next review, title, a training budget, or additional pension
+            contribution, which is often funded from a different line.
+          </li>
+          <li>
+            Get the effective date in writing. A raise agreed in March and
+            applied in July is materially smaller in that year than it appears.
+          </li>
+        </ul>
+        <h2>Salary Increase Questions</h2>
 
-          <h2>Tips to Negotiate a Higher Salary Hike</h2>
-          <ul className="custom-list">
-            <li>
-              Document your achievements and contributions throughout the year
-              before appraisal
-            </li>
-            <li>
-              Research market salary data for your role, experience, and
-              location
-            </li>
-            <li>
-              Ask for a specific number rather than leaving it open — it shows
-              confidence
-            </li>
-            <li>
-              Time your negotiation right — after a project success or positive
-              review
-            </li>
-            <li>
-              Consider the full package — bonuses, remote work, and benefits
-              have monetary value too
-            </li>
-            <li>
-              Be ready to walk away — having another offer in hand gives you
-              real leverage
-            </li>
-            <li>
-              Practice the conversation beforehand so you are comfortable and
-              clear
-            </li>
-          </ul>
-
-          <h2>Benefits of Using Our Salary Hike Calculator</h2>
-          <ul className="custom-list">
-            <li>Instantly shows annual and monthly salary after hike</li>
-            <li>Shows exact hike amount in rupees or any currency</li>
-            <li>Helps compare multiple hike scenarios side by side</li>
-            <li>Free, online, no login or registration needed</li>
-            <li>Works for any currency and any salary range</li>
-            <li>Clear breakdown of monthly and annual changes</li>
-          </ul>
-
-          <h2>Frequently Asked Questions</h2>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(0)}>
-              How do I calculate my salary after a hike?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 0 && (
-              <p>
-                Multiply your current salary by the hike percentage, divide by
-                100 to get the hike amount, then add it to your current salary.
-                For example, a 20% hike on 500,000 gives a hike of 100,000,
-                making the new salary 600,000. Or simply use our calculator
-                above for instant results.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(1)}>
-              What is a good salary hike percentage?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 1 && (
-              <p>
-                A hike of 10% or above is generally considered good for an
-                internal appraisal. Anything above 15% is excellent within the
-                same company. When switching jobs, a 25% to 40% hike is common
-                and reasonable to expect based on your skills and market demand.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(2)}>
-              How do I calculate hike percentage between two salaries?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 2 && (
-              <p>
-                Use this formula: Hike % = [(New Salary − Old Salary) ÷ Old
-                Salary] × 100. For example, going from 400,000 to 480,000 means
-                a hike of (80,000 ÷ 400,000) × 100 = 20%.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(3)}>
-              Should I switch jobs for a higher salary hike?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 3 && (
-              <p>
-                Switching jobs is one of the fastest ways to get a significant
-                salary increase. Many professionals get 30% to 50% more by
-                switching compared to the 10% to 12% internal hike. However,
-                also consider job stability, growth opportunities, culture, and
-                benefits before making a decision purely based on salary.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(4)}>
-              Is a 10% salary hike good in 2025?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 4 && (
-              <p>
-                In 2025, with inflation rates in many countries hovering between
-                4% and 7%, a 10% hike gives you a real increase in purchasing
-                power of about 3% to 6%. It is a decent hike but not
-                exceptional. High performers in competitive industries should
-                aim for 15% or more to stay ahead of inflation and growing
-                market salaries.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(5)}>
-              How much salary hike should I ask for when switching jobs?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 5 && (
-              <p>
-                When switching jobs, asking for 25% to 40% above your current
-                salary is common and widely accepted in most industries. If you
-                have a rare skill set or multiple competing offers, you can
-                negotiate even higher. Always research the market rate for your
-                role first, and never disclose your current salary unless
-                required.
-              </p>
-            )}
-          </div>
+          {FAQ_DATA.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleFAQ(i);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* ---- SIDEBAR ---- */}
@@ -539,6 +605,5 @@ export default function SalaryHikeCalculator() {
           </div>
         </aside>
       </div>
-    </>
   );
 }

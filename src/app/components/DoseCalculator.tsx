@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ReviewedBy from "./ReviewedBy";
 
 /* ─────────────────────────────────────────
    Types
@@ -213,12 +214,56 @@ function DoseResultPanel({ result }: { result: DoseResult | null }) {
         />
         The intensity meter is a general reference only, not drug-specific. This
         is a calculated estimate — always verify against the prescribing
-        physician's instructions and current drug references before
+        physician&apos;s instructions and current drug references before
         administration.
       </div>
     </div>
   );
 }
+
+/* ─────────────────────────────────────────
+   FAQ data (also used to build the FAQPage
+   JSON-LD schema, so schema and on-page copy
+   always match exactly)
+───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do I calculate a dose for a medicine taken three times a day?",
+    "Work out the daily total first, then divide. Multiply the weight by the mg/kg/day rate to get the total for 24 hours, then divide that by the number of doses. An 18 kg child on 40 mg/kg/day in three divided doses needs 720 mg per day and 240 mg per dose. The most common error here is administering the daily total at each dose, which triples the intended amount.",
+  ],
+  [
+    "Which weight should I use — actual, ideal, or adjusted body weight?",
+    "Actual measured weight is the default and is correct for most drugs and most patients. Some drugs distribute poorly into fat and are dosed on ideal body weight, calculated from height using the Devine equations; others use an adjusted weight that sits between the two. Which basis applies is a property of the drug, so it comes from the prescribing reference rather than from the calculator. Children are dosed on actual weight, measured on the day.",
+  ],
+  [
+    "How do I convert mg to mL for a liquid medicine?",
+    "Divide the dose in milligrams by the concentration in mg per mL. The trap is that suspensions are labelled per 5 mL, so a bottle marked 250 mg/5 mL is 50 mg/mL, not 250 mg/mL. A 360 mg dose from that bottle is 7.2 mL. Using the labelled number without dividing by five gives a fifth of the intended dose.",
+  ],
+  [
+    "What is a dosing weight calculator actually calculating?",
+    "It converts height and measured weight into the reference weight a particular drug is dosed against. Ideal body weight for a woman is 45.5 kg plus 2.3 kg for each inch over five feet; adjusted body weight adds a fraction of the difference between actual and ideal. For a 95 kg woman of 5 feet 6 inches, actual, adjusted and ideal weights are 95, 73.6 and 59.3 kg, which produce doses more than 60% apart from the same order.",
+  ],
+  [
+    "Does a heavier child get an adult dose?",
+    "Never more than one. Many paediatric drugs carry a maximum single dose and a maximum daily dose pegged to the standard adult dose, and those ceilings override the weight-based multiplication. Once a child is heavy enough that the calculation exceeds the adult maximum, the adult maximum is the dose. Always compare a weight-based result against the reference maximum before administering it.",
+  ],
+  [
+    "What is the difference between mg/kg and mg/kg/day?",
+    "A rate in mg/kg is a single dose. A rate in mg/kg/day is a total for 24 hours that then has to be divided by the frequency. The two look nearly identical on a prescription and produce answers that differ by a factor equal to the number of doses per day, so read to the end of the unit before multiplying.",
+  ],
+  [
+    "How do I handle an order written in mg per pound?",
+    "Keep the units of the order and the units of the weight aligned rather than converting halfway. If the order is mg/lb, use the weight in pounds. If you convert the weight to kilograms, you must also convert the rate. One pound is 0.45359237 kg, so applying a mg/lb rate to a kilogram weight produces a dose roughly 2.2 times too low.",
+  ],
+  [
+    "Can I use this for veterinary dosing?",
+    "The arithmetic is identical and the calculator supports both mg/kg and mg/lb, which is the unit most veterinary references use. What does not transfer is the dose rate itself — species differ sharply in how they handle drugs, and several medicines that are routine in humans are toxic to cats or dogs. Take the rate from a species-specific reference every time.",
+  ],
+  [
+    "Is a calculated dose safe to give without checking?",
+    "No. A calculator confirms the arithmetic, not the prescription. It cannot know the drug, the indication, the patient's renal function, what else they are taking, or whether the rate you entered was the right one. Treat the result as a figure to be verified against the prescribing reference and, for high-risk medicines, independently recalculated by a second clinician.",
+  ],
+];
 
 /* ─────────────────────────────────────────
    Main Calculator Page
@@ -232,6 +277,12 @@ export default function DoseCalculator() {
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index);
+  };
+  const handleFAQKey = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleFAQ(index);
+    }
   };
 
   const [unitOpen, setUnitOpen] = useState(false);
@@ -289,12 +340,29 @@ export default function DoseCalculator() {
 
   return (
     <div className="page-layout">
+      {/* FAQ JSON-LD schema for rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+
       {/* ---- MAIN CONTENT ---- */}
       <div className="single-page-padding">
-        <h1>Dose Calculator — Weight-Based Medication Dosing</h1>
+        <h1>Dosage Calculator — Dose by Weight in mg/kg or mg/lb</h1>
+
 
         <p>
-          Enter the patient's body weight and the prescribed dose rate to
+          Enter the patient&apos;s body weight and the prescribed dose rate to
           calculate the exact medication dose in milligrams instantly. This
           weight-based dosing calculator supports both mg/kg and mg/lb units,
           making it suitable for pediatric, adult, and veterinary dose
@@ -390,695 +458,345 @@ export default function DoseCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Dose Calculator?</h2>
+        <h2>One Prescription, Three Different Numbers</h2>
         <p>
-          A dose calculator is a clinical tool that computes the correct amount
-          of medication a patient should receive based on their body weight. It
-          applies the standard weight-based dosing formula used by doctors,
-          nurses, pharmacists, and veterinarians to determine safe and accurate
-          drug doses for adults, children, and animals.
+          A weight-based prescription contains more numbers than it appears to.
+          Read the line &quot;amoxicillin 40 mg/kg/day in three divided doses&quot;
+          and there are three separate quantities in play: the rate (40
+          mg/kg/day), the total daily dose in milligrams, and the amount that
+          actually goes into the spoon or syringe each time. Confusing the
+          second for the third gives a patient three times their intended dose
+          and is one of the most reproducible errors in medication maths.
         </p>
         <p>
-          Rather than performing manual arithmetic — which carries a real risk
-          of human error, especially in high-pressure clinical settings — a
-          medication dose calculator provides instant, precise results in
-          milligrams (mg). This matters most in pediatric dosing, where even a
-          small miscalculation relative to a child's body weight can lead to
-          significant under-dosing or dangerous over-dosing.
+          This page works through the three questions that sit between a
+          prescription and an administered dose, in the order they have to be
+          answered: which weight to use, what the total comes to, and how to
+          split and measure it.
         </p>
 
-        <h2>The Weight-Based Dosing Formula</h2>
+        <h2>Which Weight Do You Dose On?</h2>
         <p>
-          This calculator applies the universally accepted weight-based dosing
-          formula used in hospitals, pharmacies, and veterinary clinics
-          worldwide:
+          The instinctive answer is &quot;the one on the scale&quot;, and for
+          most patients it is right. But actual body weight is not the dosing
+          weight for every drug or every patient, and a calculator will happily
+          multiply whatever you type in. The distinction matters most at the
+          extremes of body composition.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Weight basis</th>
+                <th>What it is</th>
+                <th>Typically used when</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Actual body weight (ABW)</td>
+                <td>The measured weight</td>
+                <td>
+                  Most drugs, most patients; the default unless a reference says
+                  otherwise
+                </td>
+              </tr>
+              <tr>
+                <td>Ideal body weight (IBW)</td>
+                <td>A height-derived reference weight</td>
+                <td>
+                  Drugs that distribute poorly into fat, where dosing on ABW
+                  would overshoot
+                </td>
+              </tr>
+              <tr>
+                <td>Adjusted body weight (AdjBW)</td>
+                <td>IBW plus a fraction of the excess over IBW</td>
+                <td>
+                  A middle course for some drugs in obesity, where neither ABW
+                  nor IBW fits
+                </td>
+              </tr>
+              <tr>
+                <td>Lean body weight</td>
+                <td>Total weight minus fat mass</td>
+                <td>
+                  Certain anaesthetic and induction agents, per specialist
+                  protocol
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Ideal body weight is calculated from height using the Devine
+          equations, which take a baseline at 5 feet and add a fixed increment
+          per additional inch:
         </p>
         <pre>
-          Medication Dose (mg) = Patient Weight × Dose Rate (mg/kg or mg/lb)
+          Men: IBW (kg) = 50 + 2.3 × (height in inches over 60){"\n"}Women: IBW
+          (kg) = 45.5 + 2.3 × (height in inches over 60)
         </pre>
         <p>
-          For liquid medications, the total milligram dose is converted to
-          milliliters using the drug's concentration:
+          A woman of 5 feet 6 inches has an IBW of 45.5 + (2.3 × 6) = 59.3 kg.
+          If she weighs 95 kg, adjusted body weight at the commonly used 0.4
+          factor is 59.3 + 0.4 × (95 − 59.3) = 73.6 kg. Dosing the same 5 mg/kg
+          order on those three weights gives 475 mg, 297 mg, or 368 mg — a
+          spread of more than 60% from a single prescription. Which one is
+          correct is a drug-specific question answered by the prescribing
+          reference, not by the calculator.
         </p>
-        <pre>Volume (mL) = Total Dose (mg) ÷ Concentration (mg/mL)</pre>
         <p>
-          Both calculations are standard practice in clinical pharmacy,
-          pediatric care, and veterinary medicine. For more advanced drug
-          modeling — including half-life, clearance, and volume of distribution
-          — see our{" "}
+          For children the question is usually settled the other way: paediatric
+          dosing is on actual weight, measured today, in kilograms, because
+          growth makes any recorded weight stale quickly.
+        </p>
+
+        <h2>From mg/kg to the Amount in the Syringe</h2>
+        <p>
+          Once the weight is settled, the total dose is a multiplication:
+        </p>
+        <pre>Dose (mg) = Weight (kg) × Prescribed rate (mg/kg)</pre>
+        <p>
+          A 24 kg child prescribed 15 mg/kg of paracetamol needs 360 mg. That is
+          the answer to the arithmetic, but nobody administers milligrams. The
+          second step converts it into a measurable volume using the strength on
+          the bottle:
+        </p>
+        <pre>Volume (mL) = Dose (mg) ÷ Concentration (mg/mL)</pre>
+        <p>
+          Paediatric suspensions are labelled per 5 mL rather than per mL, which
+          is where the conversion trips. A bottle marked 250 mg/5 mL is 50
+          mg/mL, so 360 mg is 360 ÷ 50 = 7.2 mL. Reading the label as 250 mg/mL
+          and dividing gives 1.44 mL — a fifth of the intended dose, and an
+          error that looks entirely reasonable in a syringe.
+        </p>
+        <p>
+          Always divide the labelled strength by 5 before using it. The{" "}
+          <Link href="/dose-stock-calculator/" className="my-link">
+            dose stock calculator
+          </Link>{" "}
+          handles the per-5-mL form directly if you would rather not convert by
+          hand.
+        </p>
+
+        <h2>&quot;Three Times a Day&quot;: Splitting a Daily Dose</h2>
+        <p>
+          A large share of dosing errors live in this one step. Prescriptions
+          are frequently written as a daily total to be divided, and the number
+          that gets calculated is the daily total, not the individual dose.
+        </p>
+        <pre>
+          Single dose = (Weight × Daily rate in mg/kg/day) ÷ Number of doses per
+          day
+        </pre>
+        <p>
+          An 18 kg child on 40 mg/kg/day of amoxicillin in three divided doses:
+          18 × 40 = 720 mg per day, divided by 3 = 240 mg per dose. At 250 mg/5
+          mL that is 240 ÷ 50 = 4.8 mL, three times daily. Giving 720 mg at each
+          administration would deliver 2,160 mg in a day against an intended
+          720.
+        </p>
+        <p>
+          Prescription abbreviations carry the frequency, and they are worth
+          reading precisely because several look alike:
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Abbreviation</th>
+                <th>Means</th>
+                <th>Doses per day</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>OD / daily</td>
+                <td>Once daily</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>BD / BID</td>
+                <td>Twice daily</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>TDS / TID</td>
+                <td>Three times daily</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>QDS / QID</td>
+                <td>Four times daily</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>Q6H</td>
+                <td>Every six hours</td>
+                <td>4, but on a clock rather than waking hours</td>
+              </tr>
+              <tr>
+                <td>Q8H</td>
+                <td>Every eight hours</td>
+                <td>3, evenly spaced day and night</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The last two rows are not interchangeable with the rows above them
+          even though the dose count matches. &quot;Three times daily&quot; is
+          usually taken with meals across waking hours; &quot;every eight
+          hours&quot; means a dose overnight. For antibiotics where the time
+          spent above a minimum concentration drives the effect, that difference
+          is clinically real rather than pedantic.
+        </p>
+
+        <h2>When the Weight-Based Answer Is Too High</h2>
+        <p>
+          Weight-based dosing assumes a linear relationship between size and
+          dose, and that assumption fails at the top end. Many paediatric drugs
+          carry a maximum single dose or a maximum daily dose that applies
+          regardless of what the multiplication produces, usually pegged to the
+          standard adult dose.
+        </p>
+        <p>
+          A 60 kg adolescent on a 15 mg/kg paracetamol order calculates to 900
+          mg, above the usual 1 g single dose only marginally — but the same
+          child on a drug capped at 500 mg would calculate to 900 mg and need
+          capping. Any weight-based result should be compared against the
+          reference maximum before it is given, and a heavier child should never
+          receive more than an adult would.
+        </p>
+        <p>
+          The same ceiling logic applies in reverse for renal or hepatic
+          impairment, where the correct dose can be lower than weight alone
+          suggests. That adjustment is driven by clearance rather than mass —
+          our{" "}
           <Link href="/pharmacokinetics-calculator/" className="my-link">
             pharmacokinetics calculator
+          </Link>{" "}
+          covers the relationship between clearance, half-life and maintenance
+          dosing.
+        </p>
+
+        <h2>Pounds, and Veterinary Orders</h2>
+        <p>
+          Orders written in mg/lb appear in veterinary practice and in some
+          consumer product labelling. The conversion is exact: 1 lb = 0.45359237
+          kg, so a rate in mg/lb is roughly 2.2 times smaller in magnitude than
+          the same clinical intent expressed in mg/kg.
+        </p>
+        <pre>Weight in kg = Weight in lb × 0.4536</pre>
+        <p>
+          A 44 lb dog is 19.96 kg. Prescribed at 2 mg/lb, the dose is 88 mg;
+          converting the rate instead and applying 2 mg/kg to 19.96 kg gives
+          39.9 mg. Both calculations are internally consistent and one of them
+          is half the intended dose, so keep the units of the order and the
+          units of the weight aligned rather than converting mid-problem.
+          Species-specific references matter here too: doses for cats, dogs and
+          horses diverge sharply, and human references do not transfer.
+        </p>
+
+        <h2>One Prescription, Start to Finish</h2>
+        <p>
+          Putting the steps together on a single realistic order. A 27 kg child
+          is prescribed cefalexin 25 mg/kg/day in two divided doses; stock is
+          125 mg/5 mL.
+        </p>
+        <pre>
+          Daily dose = 27 × 25 = 675 mg{"\n"}Per dose = 675 ÷ 2 = 337.5 mg{"\n"}
+          Concentration = 125 ÷ 5 = 25 mg/mL{"\n"}Volume per dose = 337.5 ÷ 25 =
+          13.5 mL, twice daily
+        </pre>
+        <p>
+          Four operations, each one a place an error can enter: the wrong
+          weight, the wrong divisor, an unconverted per-5-mL strength, or a
+          decimal slip in the final division. Working them in a fixed order and
+          writing each intermediate result down is what makes the check
+          possible; a single answer with no working cannot be verified by anyone
+          else.
+        </p>
+
+        <h2>Sense-Checking the Result</h2>
+        <ul className="custom-list">
+          <li>
+            Is the volume measurable? Oral syringes read to 0.1 or 0.2 mL. A
+            result of 0.03 mL cannot be given accurately and usually signals a
+            concentration error.
+          </li>
+          <li>
+            Is the volume plausible for the patient? More than about 10 mL in a
+            single dose for an infant, or a tablet count above two, is worth
+            re-deriving before it is given.
+          </li>
+          <li>
+            Does the daily total stay under the reference maximum once every
+            dose is added up, including any of the same drug in a combination
+            product?
+          </li>
+          <li>
+            Was the weight measured, in kilograms, and recorded today for a
+            child?
+          </li>
+          <li>
+            Does the frequency in your calculation match the frequency written
+            on the prescription, not the one you expected to see?
+          </li>
+        </ul>
+        <p>
+          For intravenous orders, where a rate and a duration join the
+          arithmetic, continue with the{" "}
+          <Link href="/iv-calculator/" className="my-link">
+            IV calculator
+          </Link>
+          . For a longer walkthrough with additional examples, see our{" "}
+          <Link
+            href="/blog/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/"
+            className="my-link"
+          >
+            guide to medication dose calculation
           </Link>
           .
         </p>
+        <h2>Dosing Questions People Actually Get Wrong</h2>
 
-        <h2>What You Need for an Accurate Dose Calculation</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Patient Weight:</strong> The exact body weight in kilograms
-            (kg) or pounds (lb). Accurate weight is the foundation of
-            weight-based dosing — even a 1 to 2 kg error in a pediatric patient
-            can shift the dose by 10% or more, potentially crossing the line
-            between therapeutic and toxic.
-          </li>
-          <li>
-            <strong>Dose Rate (mg/kg or mg/lb):</strong> The prescribed
-            medication requirement per unit of body weight, as specified by the
-            healthcare provider, drug monograph, or reference guide like the BNF
-            or Micromedex.
-          </li>
-          <li>
-            <strong>Concentration (for liquid/injectable medications):</strong>{" "}
-            If you need to convert the total mg dose to mL for an oral
-            suspension, injection, or infusion, you will also need the drug's
-            concentration in mg/mL. For intravenous delivery specifically, pair
-            this tool with our{" "}
-            <Link href="/iv-calculator/" className="my-link">
-              IV calculator
-            </Link>{" "}
-            to determine drip rates and infusion volumes.
-          </li>
-        </ul>
-
-        <h2>Step-by-Step Dose Calculation Examples</h2>
-
-        <h3>Example 1: Pediatric Oral Suspension</h3>
-        <p>
-          A 20 kg child is prescribed amoxicillin at 10 mg/kg. The available
-          suspension is 50 mg/mL.
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Step 1 — Calculate total dose:</strong> 20 kg × 10 mg/kg ={" "}
-            <strong>200 mg</strong>
-          </li>
-          <li>
-            <strong>Step 2 — Convert to mL:</strong> 200 mg ÷ 50 mg/mL ={" "}
-            <strong>4 mL</strong>
-          </li>
-        </ul>
-        <p>
-          The child should receive 200 mg (4 mL) of the amoxicillin suspension
-          per dose.
-        </p>
-
-        <h3>Example 2: Adult Dose in mg/kg</h3>
-        <p>A 75 kg adult is prescribed a medication at 5 mg/kg.</p>
-        <ul className="custom-list">
-          <li>
-            75 kg × 5 mg/kg = <strong>375 mg</strong>
-          </li>
-        </ul>
-        <p>
-          If the medication comes in 250 mg tablets, the patient needs 1.5
-          tablets — a situation where a{" "}
-          <Link href="/dose-stock-calculator/" className="my-link">
-            dose stock calculator
-          </Link>{" "}
-          helps determine whether to round to the nearest available tablet
-          strength or use a liquid formulation instead.
-        </p>
-
-        <h3>Example 3: Veterinary Dose in mg/lb</h3>
-        <p>A 44 lb dog is prescribed a medication at 2.5 mg/lb.</p>
-        <ul className="custom-list">
-          <li>
-            44 lb × 2.5 mg/lb = <strong>110 mg</strong>
-          </li>
-        </ul>
-        <p>
-          Many veterinary drug references list dose rates in mg/lb rather than
-          mg/kg. This calculator supports both units — select the correct one
-          from the dropdown before entering the dose rate.
-        </p>
-
-        <h2>Common Dose Rates — Quick Reference Table</h2>
-        <p>
-          The table below lists typical adult and pediatric dose ranges for
-          commonly prescribed medications. These are general ranges for
-          reference only — always confirm with the current prescribing
-          information or a clinical pharmacist.
-        </p>
-
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => handleFAQKey(e, i)}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
               >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Medication
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Common Dose Rate
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Typical Use
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Amoxicillin
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  25–50 mg/kg/day (divided doses)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Bacterial infections (pediatric)
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Ibuprofen
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  5–10 mg/kg per dose
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Pain relief, fever (pediatric)
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Paracetamol (Acetaminophen)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  10–15 mg/kg per dose
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Pain relief, fever (pediatric/adult)
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Gentamicin
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  3–7 mg/kg/day
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Serious gram-negative infections
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Metronidazole
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  7.5 mg/kg per dose
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Anaerobic infections
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Vancomycin
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  15–20 mg/kg per dose
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  MRSA and serious gram-positive infections
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>
-          <em>
-            These dose rates are general references and may vary by indication,
-            patient population, renal function, and institutional protocol.
-            Always verify against current drug references before administering.
-          </em>
-        </p>
-
-        <h2>Where Weight-Based Dose Calculators Are Used</h2>
-        <p>
-          This dosage calculator serves clinicians and caregivers across a wide
-          range of settings:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Pediatric wards and clinics</strong> — calculating safe
-            doses for neonates, infants, and children where weight-based
-            accuracy is non-negotiable
-          </li>
-          <li>
-            <strong>Veterinary practice</strong> — computing drug doses for
-            dogs, cats, horses, and livestock using mg/kg or mg/lb
-          </li>
-          <li>
-            <strong>Hospital pharmacies</strong> — verifying prescribed doses
-            against standard mg/kg references before dispensing
-          </li>
-          <li>
-            <strong>Emergency departments and ICUs</strong> — rapid calculation
-            when time-critical decisions must be made, such as in resuscitation
-            or trauma
-          </li>
-          <li>
-            <strong>Home care and parent guidance</strong> — helping parents
-            calculate the correct dose of over-the-counter medications like
-            paracetamol or ibuprofen for their child's weight
-          </li>
-          <li>
-            <strong>Nursing and pharmacy education</strong> — practicing dosage
-            calculations for clinical exams and board preparation
-          </li>
-          <li>
-            <strong>mg to mL conversion</strong> — converting milligram doses to
-            milliliter volumes for oral liquids, injections, and IV infusions.
-            For IV-specific calculations, use our{" "}
-            <Link href="/iv-calculator/" className="my-link">
-              IV drip rate calculator
-            </Link>
-          </li>
-        </ul>
-
-        <h2>Why Patient Weight Matters So Much in Dosing</h2>
-        <p>
-          Weight-based dosing is the clinical standard for most medications
-          because a patient's body weight directly affects how a drug is
-          absorbed, distributed, metabolized, and excreted — the four processes
-          studied in{" "}
-          <Link href="/pharmacokinetics-calculator/" className="my-link">
-            pharmacokinetics
-          </Link>
-          . Administering a fixed dose regardless of weight risks toxicity in
-          smaller patients or sub-therapeutic drug levels in larger ones.
-        </p>
-        <p>This is especially critical in certain patient populations:</p>
-        <ul className="custom-list">
-          <li>
-            <strong>Pediatric patients</strong> — a child's smaller body mass
-            means the therapeutic window is narrower, and even small dosing
-            errors can cause serious harm
-          </li>
-          <li>
-            <strong>Chemotherapy</strong> — oncology drugs are often dosed per
-            kg or per body surface area (BSA), where precision is literally a
-            matter of life and death
-          </li>
-          <li>
-            <strong>Antibiotics like gentamicin</strong> — effective treatment
-            depends on maintaining correct peak and trough blood levels, which
-            are directly tied to the mg/kg dose administered
-          </li>
-          <li>
-            <strong>Anesthetics and sedatives</strong> — dosing must be tightly
-            matched to body weight to avoid respiratory depression or inadequate
-            sedation
-          </li>
-          <li>
-            <strong>Obese patients</strong> — some drugs are dosed on actual
-            body weight, others on ideal or adjusted body weight. Knowing which
-            method applies to a specific drug is essential. Our{" "}
-            <Link href="/bmi-calculator/" className="my-link">
-              BMI calculator
-            </Link>{" "}
-            can help assess the patient's weight category as part of the
-            clinical picture
-          </li>
-        </ul>
-
-        <h2>
-          Dose Calculator vs. Dose Stock Calculator — What Is the Difference?
-        </h2>
-        <p>
-          These two tools serve different steps in the same clinical workflow,
-          and understanding the distinction prevents confusion:
-        </p>
-
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
               >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Feature
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Dose Calculator
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Dose Stock Calculator
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Purpose
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Calculate total dose in mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Calculate volume/tablets to administer
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Inputs
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Patient weight + dose rate (mg/kg)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total dose (mg) + stock concentration
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Output
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total mg to give
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  mL to draw up or tablets to give
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  When to use
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Step 1 — determine the dose
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Step 2 — determine the volume
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>
-          In clinical practice, both steps are performed together: first
-          calculate the dose in mg using this tool, then use the{" "}
-          <Link href="/dose-stock-calculator/" className="my-link">
-            dose stock calculator
-          </Link>{" "}
-          to determine the exact volume or number of tablets to administer from
-          the available stock.
-        </p>
-
-        <h2>Common Dosing Errors and How to Avoid Them</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Using an outdated weight.</strong> Patient weight can change
-            significantly over days in a hospital setting, especially in
-            pediatric and ICU patients. Always use the most recent weight
-            recorded in the patient's chart.
-          </li>
-          <li>
-            <strong>Confusing mg/kg with mg/lb.</strong> A dose rate of 10 mg/kg
-            is very different from 10 mg/lb — the mg/lb dose is less than half
-            the mg/kg dose for the same patient. Double-check which unit the
-            prescriber intended.
-          </li>
-          <li>
-            <strong>Mixing up total daily dose with single dose.</strong> Some
-            references list the daily dose (e.g., "50 mg/kg/day divided q8h"),
-            while others list the per-dose amount. Dividing incorrectly can
-            result in triple dosing or one-third dosing.
-          </li>
-          <li>
-            <strong>Decimal point errors.</strong> Misplacing a decimal turns a
-            1.5 mg dose into 15 mg — a 10x overdose. Calculators like this one
-            eliminate manual decimal math entirely.
-          </li>
-          <li>
-            <strong>Not accounting for dose adjustments.</strong> Patients with
-            renal or hepatic impairment often require reduced doses. Calculator
-            output should always be cross-referenced with the patient's clinical
-            status.
-          </li>
-        </ul>
-
-        <h2>Important Safety Notes</h2>
-        <ul className="custom-list">
-          <li>
-            This medication dose calculator provides a calculated estimate based
-            on the values entered — always verify against the prescribing
-            physician's instructions and current drug references (BNF,
-            Micromedex, Lexicomp, or equivalent).
-          </li>
-          <li>
-            Consult a licensed healthcare professional before administering any
-            medication, especially for pediatric, neonatal, geriatric, or
-            renally-impaired patients whose dosing requirements may differ from
-            standard rates.
-          </li>
-          <li>
-            Use the patient's most recent and accurately measured body weight.
-            Estimated or self-reported weights can introduce clinically
-            significant dosing errors, particularly in weight-based regimens.
-          </li>
-          <li>
-            For intravenous medications, always confirm infusion rates using a
-            dedicated{" "}
-            <Link href="/iv-calculator/" className="my-link">
-              IV calculator
-            </Link>{" "}
-            in addition to the total dose calculation.
-          </li>
-          <li>
-            This tool is designed to support — not replace — professional
-            clinical judgment. All results should be independently verified
-            before administration.
-          </li>
-        </ul>
-
-        <h2>Benefits of Using This Dose Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Instant mg results</strong> — no manual math, formula
-            lookup, or mental arithmetic required
-          </li>
-          <li>
-            <strong>Supports mg/kg and mg/lb</strong> — handles both metric and
-            imperial weight inputs with automatic conversion
-          </li>
-          <li>
-            <strong>Works for humans and animals</strong> — pediatric, adult,
-            and veterinary dosing in a single tool
-          </li>
-          <li>
-            <strong>Reduces dosing errors</strong> — eliminates arithmetic
-            mistakes that are especially dangerous in high-stakes clinical
-            environments
-          </li>
-          <li>
-            <strong>Visual dose-rate indicator</strong> — the intensity gauge
-            provides an at-a-glance sense of where the entered dose rate falls
-            on a general low-to-high scale
-          </li>
-          <li>
-            <strong>Free and mobile-friendly</strong> — accessible from any
-            device at the bedside, in the pharmacy, or in the field
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions About Medication Dose Calculation</h2>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(0)}>
-            How do I calculate a medication dose by weight?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 0 && (
-            <p>
-              Multiply the patient's body weight (in kg or lb) by the prescribed
-              dose rate (in mg/kg or mg/lb). For example, a 30 kg child
-              prescribed 5 mg/kg should receive 30 × 5 = 150 mg. Enter these
-              values into the calculator above for an instant result. For liquid
-              medications, also divide by the concentration in mg/mL to get the
-              volume.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(1)}>
-            Can this dosing calculator be used for children?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 1 && (
-            <p>
-              Yes. Pediatric medication dosing is almost always weight-based,
-              making a dose calculator essential for safe pediatric care. Enter
-              the child's weight in kg and the prescribed mg/kg dose to get the
-              correct total dose. Always confirm the result with the prescribing
-              physician or pharmacist, and never exceed the maximum recommended
-              adult dose for that drug.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(2)}>
-            Can I use this for veterinary dose calculations?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 2 && (
-            <p>
-              Yes. Veterinarians and vet technicians regularly use mg/kg or
-              mg/lb dosing to calculate drug doses for dogs, cats, horses, and
-              livestock. This calculator supports both weight units. Always use
-              a species-specific drug reference to confirm the correct dose rate
-              — human and animal dose ranges can differ dramatically for the
-              same drug.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(3)}>
-            How do I convert mg to mL for a liquid medication?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 3 && (
-            <p>
-              Divide the total dose in milligrams by the drug's concentration in
-              mg/mL. For example, if the total dose is 200 mg and the suspension
-              is 50 mg/mL, then 200 ÷ 50 = 4 mL. For intravenous medications,
-              use our{" "}
-              <Link href="/iv-calculator/" className="my-link">
-                IV calculator
-              </Link>{" "}
-              to determine the correct infusion rate and volume.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(4)}>
-            What is the difference between a dose calculator and a dose stock
-            calculator?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 4 && (
-            <p>
-              A dose calculator tells you the total amount of drug needed in mg.
-              A{" "}
-              <Link href="/dose-stock-calculator/" className="my-link">
-                dose stock calculator
-              </Link>{" "}
-              then tells you how much of the available stock solution or tablet
-              strength to draw up or administer to deliver that dose. Both steps
-              are performed together in clinical practice.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(5)}>
-            What if I only know the total mg dose, not the mg/kg rate?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 5 && (
-            <p>
-              Divide the total dose by the patient's weight to find the rate.
-              For example, if a 25 kg patient is prescribed 500 mg, the dose
-              rate is 500 ÷ 25 = 20 mg/kg. You can then verify this rate against
-              the recommended therapeutic range in a current clinical drug
-              reference.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(6)}>
-            Is this dose calculator suitable for professional medical use?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 6 && (
-            <p>
-              This tool is designed to support — not replace — professional
-              clinical judgment. It is suitable for use by doctors, nurses,
-              pharmacists, paramedics, and veterinary professionals as a quick
-              calculation aid. All results should be verified against current
-              prescribing guidelines, the patient's clinical status, and
-              institutional protocols before administering any medication.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(7)}>
-            What is the difference between mg/kg and mg/lb?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 7 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 7 && (
-            <p>
-              mg/kg is milligrams of drug per kilogram of body weight. mg/lb is
-              milligrams per pound. Since 1 kg equals approximately 2.2 lb, a
-              dose rate in mg/kg is roughly 2.2 times higher than the equivalent
-              mg/lb rate. For example, 10 mg/kg is approximately equal to 4.5
-              mg/lb. Always confirm which unit the prescriber intended, as using
-              the wrong one results in a dose that is either double or half the
-              correct amount.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(8)}>
-            Should obese patients be dosed on actual or ideal body weight?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 8 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 8 && (
-            <p>
-              It depends on the drug. Some medications — particularly lipophilic
-              drugs — are dosed on actual body weight. Others, especially
-              certain antibiotics and anesthetics, use ideal body weight or
-              adjusted body weight to avoid overdosing. There is no universal
-              rule; each drug's prescribing information specifies which weight
-              metric to use. When in doubt, consult a clinical pharmacist.
-            </p>
-          )}
-        </div>
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        <ReviewedBy medical />
       </div>
 
       {/* ---- SIDEBAR ---- */}

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import BlogSidebar from "./BlogSidebar";
 
 export default function BestFreeFinancialCalculators() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -10,44 +11,62 @@ export default function BestFreeFinancialCalculators() {
     setOpenFAQ(openFAQ === index ? null : index);
   };
 
+  /* ── FAQ data (also used for JSON-LD schema) ── */
+  const faqs: [string, string][] = [
+    [
+      "Are all of these financial calculators really free?",
+      "Yes, 100%. Every calculator on this page is completely free to use with no account required, no subscription fees, and no hidden charges. You simply open the tool and start calculating.",
+    ],
+    [
+      "How accurate are online financial calculators?",
+      "Our calculators use standard financial formulas and are highly accurate for planning and estimation purposes. However, for major decisions like a home purchase or complex tax filings, always cross-reference with a qualified financial advisor or accountant who can account for jurisdiction-specific rules and your unique circumstances.",
+    ],
+    [
+      "Which financial calculator should I start with if I'm new to personal finance?",
+      "Start with the Net Worth Calculator. It gives you an honest baseline of where you stand financially right now. Once you know your starting number, you can use the other calculators to make targeted decisions — whether that's paying down debt, increasing your income, or planning a major purchase.",
+    ],
+    [
+      "Can I use these calculators for any country's currency?",
+      "Yes. Most of our calculators work with any currency since the underlying math (percentages, interest rates, and totals) is universal. For tax-specific calculators like the Income Tax Calculator and VAT Calculator, make sure you input the tax rates applicable to your country or region.",
+    ],
+    [
+      "What is the difference between the EMI Calculator and the Loan Calculator?",
+      "The EMI Calculator is streamlined specifically for calculating your fixed monthly installment quickly. The Loan Calculator is more comprehensive, offering a full amortization schedule, extra payment modeling, and scenario comparison features. For a quick number, use the EMI calculator. For in-depth analysis, use the Loan Calculator.",
+    ],
+    [
+      "How often should I use the Net Worth Calculator?",
+      "For most people, once a quarter (every three months) is the ideal frequency. This is often enough to show meaningful progress without obsessing over daily market fluctuations. If you are actively paying down debt, monthly check-ins can be very motivating as you watch your net worth climb.",
+    ],
+    [
+      "Do I need to create an account to save my calculator results?",
+      "No account is needed to use any of the calculators. For saving results across sessions, we recommend taking a screenshot of your final numbers or copying the figures into a simple spreadsheet for your own tracking and records.",
+    ],
+    [
+      "Can the Freelancer Tax Calculator handle multiple income streams?",
+      "Yes. You can enter your combined freelance income from all clients and projects as a single annual or monthly figure. The calculator then estimates your total tax liability on that combined income, helping you set aside the right amount regardless of how many income streams you have.",
+    ],
+  ];
+
   return (
     <div className="blog-container">
+      {/* FAQ JSON-LD schema for rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+
       {/* MAIN CONTENT (70%) */}
       <div className="blog-content">
-        {/* BREADCRUMB */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "14px",
-            marginBottom: "10px",
-          }}
-        >
-          <Link
-            href="https://numbersonyourtip.com/"
-            style={{
-              textDecoration: "none",
-              color: "#000000",
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-            }}
-            className="my-link"
-          >
-            <i className="fa-solid fa-house"></i>
-            Home
-          </Link>
-          <i
-            className="fa-solid fa-angle-right"
-            style={{ fontSize: "12px" }}
-          ></i>
-          <span style={{ color: "#000000" }}>
-            Best Free Financial Calculators for Everyday Money Questions
-          </span>
-        </div>
-        <hr />
-
         {/* HERO IMAGE */}
         <img
           src="/blog6.1.webp"
@@ -75,8 +94,14 @@ export default function BestFreeFinancialCalculators() {
                 fontSize: "14px",
               }}
             >
-              <img className="founder-photo" src="/founder_photo.webp" alt="" />
+              <Link href="/author/ashar-pervaiz/" className="byline-author">
+              <img
+                className="founder-photo"
+                src="/founder_photo.webp"
+                alt="Ashar Pervaiz, founder of Numbers On Your Tip"
+              />
               Ashar Pervaiz
+              </Link>
             </span>
             <span
               style={{
@@ -487,156 +512,158 @@ export default function BestFreeFinancialCalculators() {
               immediately visible.
             </p>
 
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-                fontSize: "1rem",
-              }}
-            >
-              <thead>
-                <tr style={{ backgroundColor: "#1b3067", color: "#fff" }}>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Scenario
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Home Price
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Term
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Monthly Payment
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Total Interest Paid
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    10% Down, 30-Year
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    $350,000
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    30 Years
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    ~$1,892
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      color: "#DC2626",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    ~$186,000
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    20% Down, 30-Year
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    $350,000
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    30 Years
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    ~$1,678
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      color: "#DC2626",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    ~$164,000
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    20% Down, 15-Year
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    $350,000
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    15 Years
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    ~$2,251
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      color: "#1b3067",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    ~$85,000
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div style={{ overflowX: "auto", margin: "20px 0" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  marginBottom: "20px",
+                  fontSize: "1rem",
+                }}
+              >
+                <thead>
+                  <tr style={{ backgroundColor: "#1b3067", color: "#fff" }}>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Scenario
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Home Price
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Term
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Monthly Payment
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Total Interest Paid
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      10% Down, 30-Year
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      $350,000
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      30 Years
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ~$1,892
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        color: "#DC2626",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ~$186,000
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: "#f9f9f9" }}>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      20% Down, 30-Year
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      $350,000
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      30 Years
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ~$1,678
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        color: "#DC2626",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ~$164,000
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      20% Down, 15-Year
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      $350,000
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      15 Years
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ~$2,251
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        color: "#1b3067",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ~$85,000
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <p
               style={{ fontSize: "0.9rem", color: "#666", fontStyle: "italic" }}
             >
@@ -878,128 +905,142 @@ export default function BestFreeFinancialCalculators() {
               brackets actually work. In most countries, only the income earned
               within each bracket is taxed at that bracket's rate. Your income
               tax calculator will show you both your marginal rate and your
-              effective rate, making this concept crystal clear.
+              effective rate, making this concept crystal clear. For a deeper
+              dive, read our guide on{" "}
+              <Link
+                href="/blog/marginal-vs-effective-tax-rate/"
+                className="my-link"
+              >
+                marginal vs effective tax rate
+              </Link>
+              .
             </p>
 
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-                fontSize: "1rem",
-              }}
-            >
-              <thead>
-                <tr style={{ backgroundColor: "#1b3067", color: "#fff" }}>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Gross Income
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Marginal Rate
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Effective Rate
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Tax Owed (Approx.)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    $40,000
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    22%
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      color: "#16a34a",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    12.1%
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    ~$4,840
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    $80,000
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    22%
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      color: "#16a34a",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    16.1%
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    ~$12,880
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    $150,000
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    32%
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      color: "#D97706",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    22.4%
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    ~$33,600
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div style={{ overflowX: "auto", margin: "20px 0" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  marginBottom: "20px",
+                  fontSize: "1rem",
+                }}
+              >
+                <thead>
+                  <tr style={{ backgroundColor: "#1b3067", color: "#fff" }}>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Gross Income
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Marginal Rate
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Effective Rate
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Tax Owed (Approx.)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      $40,000
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      12%
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        color: "#16a34a",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      10.5%
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      ~$4,200
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: "#f9f9f9" }}>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      $80,000
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      22%
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        color: "#16a34a",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      15.6%
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      ~$12,480
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      $150,000
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      24%
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        color: "#D97706",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      19.8%
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      ~$29,700
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <p
               style={{ fontSize: "0.9rem", color: "#666", fontStyle: "italic" }}
             >
-              *Based on 2025 US federal tax brackets for single filers. State
-              tax not included. Use the calculator for precise figures.
+              *Illustrative estimates for US single filers. Actual figures
+              depend on the tax year, deductions, and state tax. Use our{" "}
+              <Link href="/income-tax-calculator/" className="my-link">
+                income tax calculator
+              </Link>{" "}
+              for precise figures.
             </p>
           </section>
 
@@ -1127,448 +1168,226 @@ export default function BestFreeFinancialCalculators() {
           {/* --- ALL CALCULATORS QUICK REFERENCE --- */}
           <section id="quick-reference" style={{ marginBottom: "50px" }}>
             <h2>Quick Reference: All 9 Free Financial Calculators</h2>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-                fontSize: "1rem",
-              }}
-            >
-              <thead>
-                <tr style={{ backgroundColor: "#1b3067", color: "#fff" }}>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Calculator
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Best For
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "left",
-                    }}
-                  >
-                    Key Output
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link href="/vat-calculator/" className="my-link">
-                      <strong>VAT Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Business owners, freelancers, shoppers
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Tax amount, gross/net price
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link href="/emi-calculator/" className="my-link">
-                      <strong>EMI Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Anyone taking out a loan
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Monthly payment, total interest
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link href="/loan-calculator/" className="my-link">
-                      <strong>Loan Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Comparing loan options
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Full amortization breakdown
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link href="/rent-calculator/" className="my-link">
-                      <strong>Rent Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Renters, relocators
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Affordable rent range
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link href="/home-mortgage-calculator/" className="my-link">
-                      <strong>Home Mortgage Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Home buyers, refinancers
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Monthly payment, total cost
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link href="/net-worth-calculator/" className="my-link">
-                      <strong>Net Worth Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Everyone, quarterly tracking
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Total net worth figure
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link href="/salary-hike-calculator/" className="my-link">
-                      <strong>Salary Hike Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Job seekers, negotiators
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    New salary, raise percentage
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link
-                      href="/freelancer-tax-calculator/"
-                      className="my-link"
+            <div style={{ overflowX: "auto", margin: "20px 0" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  marginBottom: "20px",
+                  fontSize: "1rem",
+                }}
+              >
+                <thead>
+                  <tr style={{ backgroundColor: "#1b3067", color: "#fff" }}>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
                     >
-                      <strong>Freelancer Tax Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Freelancers, self-employed
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Tax owed, quarterly estimates
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <Link href="/income-tax-calculator/" className="my-link">
-                      <strong>Income Tax Calculator</strong>
-                    </Link>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Employees, planners
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Tax liability, effective rate
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          {/* --- CTA --- */}
-          <section
-            style={{
-              backgroundColor: "#1b3067",
-              padding: "40px",
-              borderRadius: "15px",
-              textAlign: "center",
-              color: "#fff",
-              marginBottom: "50px",
-              boxShadow: "0 10px 20px rgba(27,48,103,0.2)",
-            }}
-          >
-            <h2 style={{ color: "#ffffff" }}>
-              All 9 Calculators. Completely Free. No Sign-Up Required.
-            </h2>
-            <p
-              style={{
-                marginBottom: "30px",
-                maxWidth: "700px",
-                margin: "0 auto 30px auto",
-                color: "white",
-              }}
-            >
-              Stop making financial decisions in the dark. Every tool listed in
-              this guide is free, instant, and built for real people — not just
-              accountants. Pick the calculator that matches your next money
-              decision and get a precise answer in under a minute.
-            </p>
-            <Link
-              href="/"
-              style={{
-                display: "inline-block",
-                backgroundColor: "#ffffff",
-                color: "#302e64",
-                padding: "15px 35px",
-                fontSize: "1.2rem",
-                fontWeight: "bold",
-                textDecoration: "none",
-                borderRadius: "6px",
-                transition: "transform 0.2s",
-              }}
-            >
-              Browse All Free Calculators
-            </Link>
+                      Calculator
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Best For
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        textAlign: "left",
+                      }}
+                    >
+                      Key Output
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link href="/vat-calculator/" className="my-link">
+                        <strong>VAT Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Business owners, freelancers, shoppers
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Tax amount, gross/net price
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: "#f9f9f9" }}>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link href="/emi-calculator/" className="my-link">
+                        <strong>EMI Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Anyone taking out a loan
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Monthly payment, total interest
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link href="/loan-calculator/" className="my-link">
+                        <strong>Loan Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Comparing loan options
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Full amortization breakdown
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: "#f9f9f9" }}>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link href="/rent-calculator/" className="my-link">
+                        <strong>Rent Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Renters, relocators
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Affordable rent range
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link href="/home-mortgage-calculator/" className="my-link">
+                        <strong>Home Mortgage Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Home buyers, refinancers
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Monthly payment, total cost
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: "#f9f9f9" }}>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link href="/net-worth-calculator/" className="my-link">
+                        <strong>Net Worth Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Everyone, quarterly tracking
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Total net worth figure
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link href="/salary-hike-calculator/" className="my-link">
+                        <strong>Salary Hike Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Job seekers, negotiators
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      New salary, raise percentage
+                    </td>
+                  </tr>
+                  <tr style={{ backgroundColor: "#f9f9f9" }}>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link
+                        href="/freelancer-tax-calculator/"
+                        className="my-link"
+                      >
+                        <strong>Freelancer Tax Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Freelancers, self-employed
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Tax owed, quarterly estimates
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      <Link href="/income-tax-calculator/" className="my-link">
+                        <strong>Income Tax Calculator</strong>
+                      </Link>
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Employees, planners
+                    </td>
+                    <td style={{ padding: "12px", border: "1px solid #ddd" }}>
+                      Tax liability, effective rate
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </section>
 
           {/* --- FAQ --- */}
           <section>
-            <h2>Frequently Asked Questions</h2>
+            <h2>Questions About Choosing a Calculator</h2>
 
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(0)}>
-                Are all of these financial calculators really free?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 0 && (
-                <p style={{ margin: "0" }}>
-                  Yes, 100%. Every calculator on this page is completely free to
-                  use with no account required, no subscription fees, and no
-                  hidden charges. You simply open the tool and start
-                  calculating.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(1)}>
-                How accurate are online financial calculators?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 1 && (
-                <p style={{ margin: "0" }}>
-                  Our calculators use standard financial formulas and are highly
-                  accurate for planning and estimation purposes. However, for
-                  major decisions like a home purchase or complex tax filings,
-                  always cross-reference with a qualified financial advisor or
-                  accountant who can account for jurisdiction-specific rules and
-                  your unique circumstances.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(2)}>
-                Which financial calculator should I start with if I'm new to
-                personal finance?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 2 && (
-                <p style={{ margin: "0" }}>
-                  Start with the Net Worth Calculator. It gives you an honest
-                  baseline of where you stand financially right now. Once you
-                  know your starting number, you can use the other calculators
-                  to make targeted decisions — whether that's paying down debt,
-                  increasing your income, or planning a major purchase.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(3)}>
-                Can I use these calculators for any country's currency?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 3 && (
-                <p style={{ margin: "0" }}>
-                  Yes. Most of our calculators work with any currency since the
-                  underlying math (percentages, interest rates, and totals) is
-                  universal. For tax-specific calculators like the Income Tax
-                  Calculator and VAT Calculator, make sure you input the tax
-                  rates applicable to your country or region.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(4)}>
-                What is the difference between the EMI Calculator and the Loan
-                Calculator?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 4 && (
-                <p style={{ margin: "0" }}>
-                  The EMI Calculator is streamlined specifically for calculating
-                  your fixed monthly installment quickly. The Loan Calculator is
-                  more comprehensive, offering a full amortization schedule,
-                  extra payment modeling, and scenario comparison features. For
-                  a quick number, use the EMI calculator. For in-depth analysis,
-                  use the Loan Calculator.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(5)}>
-                How often should I use the Net Worth Calculator?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 5 && (
-                <p style={{ margin: "0" }}>
-                  For most people, once a quarter (every three months) is the
-                  ideal frequency. This is often enough to show meaningful
-                  progress without obsessing over daily market fluctuations. If
-                  you are actively paying down debt, monthly check-ins can be
-                  very motivating as you watch your net worth climb.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(6)}>
-                Do I need to create an account to save my calculator results?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 6 && (
-                <p style={{ margin: "0" }}>
-                  No account is needed to use any of the calculators. For saving
-                  results across sessions, we recommend taking a screenshot of
-                  your final numbers or copying the figures into a simple
-                  spreadsheet for your own tracking and records.
-                </p>
-              )}
-            </div>
-
-            <div className="faq-item">
-              <h3 onClick={() => toggleFAQ(7)}>
-                Can the Freelancer Tax Calculator handle multiple income
-                streams?
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === 7 ? "rotate" : ""}`}
-                ></i>
-              </h3>
-              {openFAQ === 7 && (
-                <p style={{ margin: "0" }}>
-                  Yes. You can enter your combined freelance income from all
-                  clients and projects as a single annual or monthly figure. The
-                  calculator then estimates your total tax liability on that
-                  combined income, helping you set aside the right amount
-                  regardless of how many income streams you have.
-                </p>
-              )}
-            </div>
+            {faqs.map(([q, a], i) => {
+              const isOpen = openFAQ === i;
+              return (
+                <div className="faq-item" key={i}>
+                  <h3
+                    onClick={() => toggleFAQ(i)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${i}`}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    {q}
+                    <i
+                      className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    ></i>
+                  </h3>
+                  <div
+                    id={`faq-answer-${i}`}
+                    className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="faq-answer-inner">
+                      <p style={{ margin: "0" }}>{a}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </section>
         </article>
       </div>
 
-      {/* SIDEBAR (30%) */}
-      <aside className="blog-sidebar">
-        <p>Recent Blogs</p>
-        <ul>
-          <li>
-            <Link href="/blog/what-is-vat/">
-              <span
-                style={{
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                }}
-              >
-                <i
-                  className="fa-solid fa-angle-right"
-                  style={{ color: "#D8A13A" }}
-                ></i>
-                What Is VAT?
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/blog/how-do-i-calculate-my-net-worth/">
-              <span
-                style={{
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                }}
-              >
-                <i
-                  className="fa-solid fa-angle-right"
-                  style={{ color: "#D8A13A" }}
-                ></i>
-                How Do I Calculate My Net Worth?
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/blog/ultimate-iv-infusion-calculator-guide/">
-              <span
-                style={{
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                }}
-              >
-                <i
-                  className="fa-solid fa-angle-right"
-                  style={{ color: "#D8A13A" }}
-                ></i>
-                Ultimate IV Infusion Calculator Guide
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/blog/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/">
-              <span
-                style={{
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                }}
-              >
-                <i
-                  className="fa-solid fa-angle-right"
-                  style={{ color: "#D8A13A" }}
-                ></i>
-                Medication Dose Calculation
-              </span>
-            </Link>
-          </li>
-        </ul>
-      </aside>
+      <BlogSidebar
+        relatedTools={[
+          ["/vat-calculator/", "VAT Calculator"],
+          ["/emi-calculator/", "EMI Calculator"],
+          ["/net-worth-calculator/", "Net Worth Calculator"],
+        ]}
+        relatedPosts={[
+          ["/blog/what-is-vat/", "What Is VAT? The Chain, the Reclaim and the Threshold"],
+          [
+            "/blog/how-do-i-calculate-my-net-worth/",
+            "How Do I Calculate My Net Worth?",
+          ],
+          [
+            "/blog/can-ai-replace-financial-calculators/",
+            "Can AI Replace Financial Calculators?",
+          ],
+        ]}
+      />
     </div>
   );
 }

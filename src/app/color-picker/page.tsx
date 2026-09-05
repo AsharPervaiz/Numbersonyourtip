@@ -1,17 +1,27 @@
 import { Metadata } from "next";
-import ColorPickerTool from "../components/ColorPicker";
+import ColorPicker from "../components/ColorPicker";
 
 export const metadata: Metadata = {
-  title:
-    "Free Color Picker & Palette Generator | HEX, RGB, HSL, CMYK Codes Online",
+  title: "Colour Picker & Palette Generator",
   description:
-    "Free color code picker online with HEX, RGB, HSL, CMYK, LAB, and XYZ conversion. Generate harmonious palettes, check contrast, find complementary colors, and export CSS.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Pick colours and generate palettes in HEX, RGB and HSL, with contrast ratios that decide readability rather than leaving it to taste.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/color-picker/",
+    canonical: "/color-picker/",
+  },
+  openGraph: {
+    title: "Colour Picker & Palette Generator",
+    description:
+      "Three notations for the same colour, why HSL is the one for designing, and measurable contrast.",
+    url: "/color-picker/",
+    type: "article",
+  },
+  twitter: {
+    title: "Colour Picker & Palette Generator",
+    description:
+      "HEX, RGB and HSL values, palette harmonies and contrast checking.",
   },
 };
 
 export default function Page() {
-  return <ColorPickerTool />;
+  return <ColorPicker />;
 }

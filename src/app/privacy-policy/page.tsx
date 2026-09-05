@@ -3,9 +3,24 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Numbers On Your Tip",
+  title: "Privacy Policy",
   description:
     "Read the Privacy Policy of Numbers On Your Tip. Learn how we collect, use, and protect your personal information when you use our online calculators and tools.",
+  alternates: {
+    canonical: "/privacy-policy/",
+  },
+  openGraph: {
+    title: "Privacy Policy | Numbers On Your Tip",
+    description:
+      "How we collect, use, and protect your personal information when you use our calculators and tools.",
+    url: "/privacy-policy/",
+    type: "website",
+  },
+  twitter: {
+    title: "Privacy Policy | Numbers On Your Tip",
+    description:
+      "How we handle and protect your data across our calculators and tools.",
+  },
 };
 
 export default function PrivacyPolicy() {

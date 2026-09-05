@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ReviewedBy from "./ReviewedBy";
 
 /* ─────────────────────────────────────────
    Types
@@ -502,10 +503,67 @@ export default function BodyFatCalculator() {
   const weightLabel = weightUnit === "cm" ? "kg" : "lbs";
   const measureLabel = measureUnit === "cm" ? "cm" : "in";
 
+  /* ── FAQ data (also used for JSON-LD schema) ── */
+  const faqs: [string, string][] = [
+    [
+      "Can I calculate body fat percentage from height and weight alone?",
+      "Not meaningfully. Height and weight tell you how heavy you are for your size but nothing about what that mass consists of, so any estimate built from them alone is BMI with a population average layered on top. It will give a lean, muscular person and a sedentary person of the same height and weight an identical result. Adding a waist and neck measurement is what lets the calculation tell them apart.",
+    ],
+    [
+      "How accurate is a tape measure method compared with a DEXA scan?",
+      "For most adults measuring carefully, a circumference method lands within a few percentage points of a laboratory measurement. That is accurate enough to distinguish an athletic body composition from an average one, and not accurate enough to justify caring about a single percentage point. DEXA is more precise, but scanners at different sites are not perfectly interchangeable either.",
+    ],
+    [
+      "Why does the waist get measured in a different place for men and women?",
+      "The male and female equations were derived against different anatomical landmarks — the navel for men, the narrowest point of the torso for women. It is not an inconsistency to be corrected. Using the other sex's landmark shifts the result by several percentage points, so follow the one that matches the formula being applied.",
+    ],
+    [
+      "Why does the calculation subtract my neck measurement?",
+      "Waist circumference grows with fat; neck circumference is governed mostly by skeletal structure and muscle and changes comparatively little. The gap between them therefore carries a signal about fat mass that neither measurement provides alone. This is also the method's main limitation: a neck that is unusually thick or slight for the frame will bias the result low or high.",
+    ],
+    [
+      "Why does my bathroom scale give a different body fat number?",
+      "Impedance scales infer composition from how easily a small current passes through the body, and that depends heavily on hydration. Drinking a glass of water, exercising, or measuring at a different time of day can move the reading without anything about your body having changed. A tape measurement has no such sensitivity, which is why it holds up well against more expensive equipment.",
+    ],
+    [
+      "What is a healthy body fat percentage?",
+      "Broadly, 14 to 24% for men and 21 to 31% for women covers the fitness and acceptable bands, with athletic ranges below that and elevated metabolic risk above. Women carry more essential fat as a matter of physiology, so the two scales are not comparable. Ranges also drift upward with age, and a figure that reads high at twenty can be unremarkable at sixty.",
+    ],
+    [
+      "Does a body fat percentage tell me about visceral fat?",
+      "No. The total says nothing about where fat is stored, and visceral fat around the organs carries more metabolic risk than the subcutaneous fat under the skin. No tape method separates them. A useful companion check is waist divided by height, using measurements you have already taken, with under half your height as a common rule of thumb.",
+    ],
+    [
+      "How often should I measure?",
+      "Every two to four weeks. Real composition change is slower than measurement noise, so daily readings mostly record tape placement and hydration. Measure at the same time of day with the same tape, take each circumference twice and average, and record the raw measurements as well as the percentage so you can see which one actually moved.",
+    ],
+    [
+      "The result seems too high for how lean I look. Why?",
+      "The most likely explanation is a heavier neck relative to your frame, which partly cancels the fat signal the formula relies on — common with developed trapezius and neck musculature. Tape placement is the other candidate: measuring the waist at the narrowest point when the formula expects the navel, or vice versa, moves the answer noticeably. Re-measure carefully before concluding the number is real.",
+    ],
+  ];
+
   return (
     <div className="page-layout">
+      {/* FAQ JSON-LD schema for rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+
       <div className="single-page-padding">
-        <h1>Body Fat Calculator — Estimate Your Body Fat Percentage</h1>
+        <h1>Body Fat Percentage Calculator — Tape Measure Method</h1>
+
         <p>
           Enter your weight, neck, waist, and height measurements to calculate
           your body fat percentage using the validated U.S. Navy formula. See
@@ -755,518 +813,389 @@ export default function BodyFatCalculator() {
         {/* ---- SEO CONTENT ---- */}
 
         <section>
-          <h2>What Is Body Fat Percentage?</h2>
+          <h2>Why This Needs a Tape Measure and Not Just Height and Weight</h2>
           <p>
-            Body fat percentage is the proportion of your total body weight that
-            is made up of fat tissue. Unlike the number on a bathroom scale —
-            which lumps muscle, bone, water, and fat into a single figure — body
-            fat percentage tells you something meaningful about your actual body
-            composition and health risk.
+            A large share of people looking for a body fat calculator want one
+            that works from height and weight alone, because that is what they
+            already know. It is worth being straight about what such a
+            calculator can and cannot do.
           </p>
           <p>
-            Body fat includes two types: essential fat, which your body needs
-            for basic physiological functions like hormone production, organ
-            insulation, and nerve protection, and storage fat, which accumulates
-            from excess caloric intake and serves as an energy reserve. Tracking
-            your body fat percentage alongside our{" "}
+            Height and weight describe how heavy you are for your size. They
+            contain no information about where that mass sits or what it is made
+            of. Any estimate built from those two numbers alone is a
+            re-expression of{" "}
             <Link href="/bmi-calculator/" className="my-link">
-              BMI calculator
+              BMI
             </Link>{" "}
-            gives a far more complete health picture than either measurement
-            alone, because BMI cannot distinguish between fat and muscle.
+            with a population average applied on top — it will place a lean
+            sprinter and a sedentary person of identical height and weight in
+            exactly the same bracket, because to the formula they are identical.
+          </p>
+          <p>
+            A tape adds the missing dimension: shape. Two people at 80 kg and
+            180 cm can have waist measurements 20 cm apart, and that difference
+            is almost entirely fat. This is why the method used here asks for
+            circumferences rather than working from the scale, and why it can
+            distinguish between the two people that a height-and-weight estimate
+            cannot.
+          </p>
+          <p>
+            A soft fabric or fibreglass tailor tape is all that is required. A
+            steel builder tape will not follow the body contour and a piece of
+            string measured afterwards against a ruler introduces more error
+            than the method can absorb.
           </p>
         </section>
 
         <section>
-          <h2>How the U.S. Navy Body Fat Formula Works</h2>
+          <h2>Where the Tape Goes</h2>
           <p>
-            This calculator uses the U.S. Navy body fat formula, developed by
-            researchers Hodgdon and Beckett in 1984. It estimates body fat
-            percentage from simple circumference measurements — accurate to
-            within 3 to 4% for most adults when measured correctly. The only
-            equipment needed is a flexible measuring tape.
+            The circumference method is only as good as the placement. Most of
+            the variation people see between attempts comes from measuring in
+            slightly different places rather than from any real change in body
+            composition.
           </p>
 
-          <h3>Formula for Men</h3>
-          <pre>
-            BF% = 495 ÷ (1.0324 − 0.19077 × log₁₀(waist − neck) + 0.15456 ×
-            log₁₀(height)) − 450
-          </pre>
-
-          <h3>Formula for Women</h3>
-          <pre>
-            BF% = 495 ÷ (1.29579 − 0.35004 × log₁₀(waist + hip − neck) + 0.221 ×
-            log₁₀(height)) − 450
-          </pre>
-          <p>
-            The formula requires waist and neck measurements for men, and waist,
-            hip, and neck for women. All measurements must be in centimeters for
-            the formula — this calculator converts inches automatically if you
-            select that unit.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Measure Correctly for Accurate Results</h2>
-          <p>
-            The accuracy of the Navy formula depends entirely on how precisely
-            you take your measurements. Small errors —even 1 to 2 cm — can shift
-            the result by a full percentage point. Follow these guidelines:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <strong>Waist:</strong> Measure at the narrowest point of your
-              midsection, typically just above the navel. Stand relaxed, measure
-              at the end of a normal exhale. Do not suck in your stomach.
-            </li>
-            <li>
-              <strong>Neck:</strong> Measure just below the larynx (Adam's
-              apple), with the tape sloping slightly downward to the front. Do
-              not flare your neck muscles.
-            </li>
-            <li>
-              <strong>Hip (women only):</strong> Measure around the widest part
-              of the hips and buttocks, keeping the tape parallel to the floor.
-            </li>
-            <li>
-              <strong>Height:</strong> Without shoes, standing straight against
-              a wall. Enter in cm or ft/in — the calculator converts
-              automatically.
-            </li>
-            <li>
-              <strong>Weight:</strong> Weigh yourself in the morning before
-              eating, wearing minimal clothing, for the most consistent result.
-            </li>
-            <li>
-              <strong>General tip:</strong> Take each measurement twice and use
-              the average. This eliminates the single biggest source of error in
-              tape-based body fat estimation.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Body Fat Percentage Chart — Healthy Ranges by Gender</h2>
-          <p>
-            The following table shows the standard body fat categories for adult
-            men and women. These ranges are used by fitness professionals, the
-            American Council on Exercise, and military fitness standards
-            worldwide.
-          </p>
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-              }}
-            >
+          <div className="table-wrap">
+            <table>
               <thead>
-                <tr
-                  style={{
-                    backgroundColor: "var(--card-bg, #f5f5f5)",
-                    textAlign: "left",
-                  }}
-                >
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Category
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Men
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Women
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    What It Means
-                  </th>
+                <tr>
+                  <th>Measurement</th>
+                  <th>Where exactly</th>
+                  <th>Most common mistake</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Essential Fat
+                  <td>Neck</td>
+                  <td>
+                    Just below the larynx, tape sloping slightly downward at the
+                    front
                   </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    2–5%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    10–13%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Minimum for survival; dangerously low to maintain
+                  <td>
+                    Measuring over the widest part of the throat, or pulling
+                    tight enough to compress
                   </td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Athlete
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    6–13%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    14–20%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Competitive athletes and very lean individuals
+                  <td>Waist (men)</td>
+                  <td>At the navel, tape horizontal all the way round</td>
+                  <td>
+                    Measuring at the narrowest point instead, which is usually
+                    higher
                   </td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Fitness
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    14–17%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    21–24%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Visibly fit; sustainable for regular exercisers
+                  <td>Waist (women)</td>
+                  <td>At the narrowest point of the torso</td>
+                  <td>
+                    Using the navel line, which is the men&apos;s landmark and
+                    reads differently
                   </td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Acceptable
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    18–24%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    25–31%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Average; moderate health risk
+                  <td>Hips (women)</td>
+                  <td>At the widest point of the buttocks</td>
+                  <td>Measuring at the hip bones, which sit higher and narrower</td>
+                </tr>
+                <tr>
+                  <td>Height</td>
+                  <td>Without shoes, heels together, looking straight ahead</td>
+                  <td>Using a remembered figure from a driving licence</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            The waist landmark genuinely differs between the male and female
+            formulas, which surprises people who assume it is an oversight. It
+            is not — the two equations were derived against different landmarks
+            and swapping them shifts the result by several percentage points.
+          </p>
+          <p>
+            Breathe out normally and measure at the end of the exhale, without
+            forcing the stomach in. Keep the tape snug enough to stay in place
+            but not tight enough to indent the skin. If you can see the tape
+            biting, it is too tight and the result will read low.
+          </p>
+        </section>
+
+        <section>
+          <h2>Why Subtracting the Neck Works</h2>
+          <p>
+            The equation is essentially a comparison between a circumference
+            that grows with fat and one that does not. Waist circumference
+            responds strongly to fat gain. Neck circumference is dominated by
+            skeletal structure and muscle and moves comparatively little. The
+            difference between them therefore carries a signal about fat mass
+            that either measurement alone does not.
+          </p>
+          <p>
+            Height enters as a scaling term, because the same waist-minus-neck
+            difference means something different on a person of 155 cm than on
+            one of 195 cm.
+          </p>
+          <p>
+            Understanding that structure explains the method&apos;s main
+            weakness. Anyone whose neck is unusually thick for reasons unrelated
+            to fat — heavy trap and neck development from training, or simply
+            individual build — will have the fat signal partly cancelled and get
+            a reading that is too low. Anyone with a slight neck relative to
+            their frame gets the opposite.
+          </p>
+        </section>
+
+        <section>
+          <h2>How Accurate Is This Number, Honestly</h2>
+          <p>
+            Every body fat method is an estimate, including the expensive ones.
+            The practical question is not which is perfect but which is accurate
+            enough for the decision you are making.
+          </p>
+
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>What it costs you</th>
+                  <th>Main source of error</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tape circumference (this tool)</td>
+                  <td>A tape measure and two minutes</td>
+                  <td>Tape placement; unusual neck-to-frame proportions</td>
+                </tr>
+                <tr>
+                  <td>Skinfold calipers</td>
+                  <td>Cheap tool, considerable practice</td>
+                  <td>
+                    Operator technique; results vary between two people
+                    measuring the same person
                   </td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Obese
+                  <td>Bioelectrical impedance scale</td>
+                  <td>A bathroom scale</td>
+                  <td>
+                    Hydration status, recent food, recent exercise, time of day
                   </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    25%+
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    32%+
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Elevated risk of metabolic disease
+                </tr>
+                <tr>
+                  <td>DEXA scan</td>
+                  <td>A clinic appointment and a fee</td>
+                  <td>
+                    Small, but scanners are not perfectly interchangeable
+                    between sites
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </section>
 
-        <section>
-          <h2>Body Fat Calculation Examples</h2>
-
-          <h3>Example 1: Male — Fitness Range</h3>
           <p>
-            A 30-year-old man: 80 kg, waist 84 cm, neck 38 cm, height 178 cm.
+            For most adults measured carefully, the tape method lands within a
+            few percentage points of a laboratory measurement — close enough to
+            tell an athletic body composition from an average one, and nowhere
+            near precise enough to justify caring about a single point of
+            difference.
           </p>
-          <ul className="custom-list">
-            <li>waist − neck = 84 − 38 = 46 cm</li>
-            <li>
-              BF% = 495 ÷ (1.0324 − 0.19077 × log₁₀(46) + 0.15456 × log₁₀(178))
-              − 450
-            </li>
-            <li>
-              Result: approximately <strong>16.5%</strong> — Fitness range
-            </li>
-            <li>Fat mass: 80 × 0.165 = 13.2 kg</li>
-            <li>Lean mass: 80 − 13.2 = 66.8 kg</li>
-          </ul>
-
-          <h3>Example 2: Female — Acceptable Range</h3>
           <p>
-            A 28-year-old woman: 65 kg, waist 76 cm, hip 100 cm, neck 33 cm,
-            height 165 cm.
-          </p>
-          <ul className="custom-list">
-            <li>waist + hip − neck = 76 + 100 − 33 = 143 cm</li>
-            <li>
-              BF% = 495 ÷ (1.29579 − 0.35004 × log₁₀(143) + 0.221 × log₁₀(165))
-              − 450
-            </li>
-            <li>
-              Result: approximately <strong>28.5%</strong> — Acceptable range
-            </li>
-            <li>Fat mass: 65 × 0.285 = 18.5 kg</li>
-            <li>Lean mass: 65 − 18.5 = 46.5 kg</li>
-          </ul>
-          <p>
-            To bring her body fat into the fitness range (21–24%), she would
-            need to lose roughly 3 to 5 kg of fat while preserving lean mass.
-            Our{" "}
-            <Link href="/calorie-calculator/" className="my-link">
-              calorie calculator
-            </Link>{" "}
-            can help set a moderate deficit for this goal.
+            The comparison people find most surprising is with impedance scales.
+            A scale infers composition from how easily a small current passes
+            through the body, which depends heavily on how hydrated you are.
+            Weigh yourself before and after a glass of water and the reported
+            body fat will change, though nothing about your body has. A tape has
+            no such sensitivity, which is one reason it holds up well against
+            equipment costing a great deal more.
           </p>
         </section>
 
         <section>
-          <h2>Body Fat Measurement Methods — How They Compare</h2>
+          <h2>Reading the Result</h2>
           <p>
-            The U.S. Navy tape method used by this calculator is one of several
-            ways to estimate body fat. Here is how the most common methods
-            compare:
+            Body fat is not a score to be minimised. Some fat is structural — it
+            cushions organs, insulates nerves, and in women supports hormonal and
+            reproductive function. Below that floor, health deteriorates rather
+            than improves.
           </p>
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-              }}
-            >
+
+          <div className="table-wrap">
+            <table>
               <thead>
-                <tr
-                  style={{
-                    backgroundColor: "var(--card-bg, #f5f5f5)",
-                    textAlign: "left",
-                  }}
-                >
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Method
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Accuracy
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Cost
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Equipment
-                  </th>
+                <tr>
+                  <th>Band</th>
+                  <th>Men</th>
+                  <th>Women</th>
+                  <th>What it generally reflects</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    DEXA Scan
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    ±1–2%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    High
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Clinical X-ray machine
+                  <td>Essential</td>
+                  <td>2–5%</td>
+                  <td>10–13%</td>
+                  <td>
+                    The structural minimum; not a target and not sustainable
                   </td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Hydrostatic Weighing
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    ±2–3%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Moderate–High
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Underwater tank
-                  </td>
+                  <td>Athletic</td>
+                  <td>6–13%</td>
+                  <td>14–20%</td>
+                  <td>Consistent training and deliberate nutrition</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Skinfold Calipers
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    ±3–4%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Low
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Calipers + trained tester
-                  </td>
+                  <td>Fitness</td>
+                  <td>14–17%</td>
+                  <td>21–24%</td>
+                  <td>Regular activity, visible definition</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    U.S. Navy Tape (this tool)
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    ±3–4%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Free
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Measuring tape only
-                  </td>
+                  <td>Acceptable</td>
+                  <td>18–24%</td>
+                  <td>25–31%</td>
+                  <td>Typical healthy adult range</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    BIA Smart Scale
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    ±4–8%
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Low–Moderate
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Bioimpedance scale
-                  </td>
+                  <td>High</td>
+                  <td>25% and above</td>
+                  <td>32% and above</td>
+                  <td>Associated with elevated metabolic risk</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p>
-            The Navy tape method offers accuracy comparable to skinfold calipers
-            and significantly better than most consumer BIA scales — at zero
-            cost. For tracking progress over time, consistency of method matters
-            more than absolute precision.
-          </p>
-        </section>
 
-        <section>
-          <h2>Body Fat Percentage vs. BMI — Why You Need Both</h2>
           <p>
-            BMI only considers weight relative to height. It cannot tell whether
-            your weight comes from muscle, fat, water, or bone. Body fat
-            percentage directly measures the fat component, making it a far
-            better indicator of metabolic health, cardiovascular risk, and
-            fitness level.
+            The gap between the male and female columns is not a scoring
+            adjustment. Women carry more essential fat as a matter of
+            physiology, and a woman at 12% is in a materially different
+            situation from a man at 12%.
           </p>
           <p>
-            Consider two men who both weigh 90 kg at 180 cm. Their BMI is
-            identical at 27.8 — technically "overweight." But if one has 12%
-            body fat (lean and muscular) and the other has 30% (mostly fat),
-            their health profiles are worlds apart. Only body fat percentage
-            reveals the difference.
-          </p>
-          <p>
-            Use our{" "}
-            <Link href="/bmi-calculator/" className="my-link">
-              BMI calculator
+            These bands also shift with age. A percentage that reads as high for
+            a twenty-year-old is unremarkable at sixty, since fat mass tends to
+            rise and muscle mass to fall across adulthood even when weight on the
+            scale does not move. Our guide to{" "}
+            <Link
+              href="/blog/healthy-bodyfat-percentage-by-age-and-gender/"
+              className="my-link"
+            >
+              healthy body fat percentage by age and gender
             </Link>{" "}
-            alongside this tool. When both BMI and body fat percentage fall in
-            healthy ranges, your confidence in your overall health status is
-            much higher than relying on either one alone.
+            sets out the age-adjusted ranges.
           </p>
         </section>
 
         <section>
-          <h2>How to Reduce Body Fat — Evidence-Based Strategies</h2>
+          <h2>What a Percentage Cannot Tell You</h2>
+          <p>
+            Two people can share a body fat percentage and carry very different
+            risk, because the total says nothing about location. Subcutaneous fat
+            sits under the skin. Visceral fat sits around the organs inside the
+            abdominal wall, and it is the fraction most strongly linked to
+            metabolic and cardiovascular problems.
+          </p>
+          <p>
+            No tape-based method separates the two. What the tape does capture,
+            almost incidentally, is the measurement most closely associated with
+            visceral fat — waist circumference. A simple companion check is waist
+            divided by height, where staying under roughly half your height is a
+            widely used rule of thumb. It takes no extra measuring, since you
+            already have both numbers.
+          </p>
+        </section>
+
+        <section>
+          <h2>Measure for the Trend, Not the Verdict</h2>
+          <p>
+            A single reading is a noisy snapshot. A series of readings taken the
+            same way is a useful signal, and the difference between the two is
+            entirely down to protocol.
+          </p>
           <ul className="custom-list">
             <li>
-              <strong>Create a moderate calorie deficit.</strong> Subtract 300
-              to 500 calories from your TDEE for steady fat loss of about 0.3 to
-              0.5 kg per week. Use our{" "}
-              <Link href="/calorie-calculator/" className="my-link">
-                calorie calculator
-              </Link>{" "}
-              to find your maintenance calories first.
+              Measure at the same time of day, ideally in the morning before
+              eating or drinking.
             </li>
             <li>
-              <strong>Prioritize protein intake.</strong> Aim for 1.6 to 2.2 g
-              per kg of body weight daily. Protein preserves lean muscle during
-              a deficit, maintains metabolic rate, and increases satiety.
+              Use the same tape every time. Tapes stretch with age and no two are
+              identical.
             </li>
             <li>
-              <strong>Resistance train consistently.</strong> Lifting weights or
-              bodyweight training prevents the muscle loss that accompanies
-              calorie restriction. More muscle means a higher resting metabolic
-              rate and a lower body fat percentage even before you lose a single
-              gram of fat.
+              Take each circumference twice and average them. If the two differ
+              by more than about half a centimetre, take a third.
             </li>
             <li>
-              <strong>Add cardiovascular exercise.</strong> Both steady-state
-              cardio (walking, cycling, swimming) and HIIT accelerate fat loss
-              and deliver cardiovascular benefits independent of weight change.
+              Measure every two to four weeks rather than daily. Real
+              composition change is slower than measurement noise.
             </li>
             <li>
-              <strong>Protect your sleep.</strong> Chronic sleep deprivation
-              elevates cortisol, increases appetite, and promotes visceral fat
-              storage — the most metabolically dangerous type. Aim for 7 to 9
-              hours consistently.
-            </li>
-            <li>
-              <strong>Track monthly, not daily.</strong> Body fat changes slowly
-              — typically 0.5 to 1 percentage point per month with consistent
-              effort. Monthly measurements show real trends without the noise of
-              daily fluctuations.
+              Record the raw circumferences alongside the percentage, so you can
+              see which measurement moved when the number changes.
             </li>
           </ul>
-        </section>
-
-        <section>
-          <h2>Frequently Asked Questions</h2>
-          {[
-            [
-              "How accurate is the U.S. Navy body fat calculator?",
-              "The U.S. Navy formula is accurate to within approximately 3 to 4% for most adults when measurements are taken correctly. It performs comparably to skinfold calipers and significantly better than most consumer BIA scales. DEXA scans remain the clinical gold standard, but the Navy method is highly reliable and requires nothing beyond a flexible measuring tape.",
-            ],
-            [
-              "What is a healthy body fat percentage?",
-              "For men, the generally accepted healthy range is 14 to 24%. For women, it is 21 to 31%. Athletes typically fall lower — 6 to 13% for men and 14 to 20% for women. Going below essential fat levels (under 5% for men, under 13% for women) is medically dangerous and unsustainable.",
-            ],
-            [
-              "Why is body fat percentage a better measure than BMI?",
-              "BMI cannot distinguish between fat mass and muscle mass. A muscular athlete may be classified as overweight by BMI despite having very low body fat. Body fat percentage directly measures the fat component, making it far more informative for assessing metabolic health, insulin sensitivity, and cardiovascular risk.",
-            ],
-            [
-              "Why do men and women have different healthy body fat ranges?",
-              "Women naturally require a higher percentage of essential body fat — typically 10 to 13% vs 2 to 5% for men — for hormonal regulation, reproductive health, and pregnancy. This means healthy ranges for women are 8 to 10 percentage points higher than for men at every fitness category.",
-            ],
-            [
-              "How often should I calculate my body fat percentage?",
-              "Once per month is ideal. Body fat changes slowly — typically 0.5 to 1% per month with consistent training and diet. Measuring more frequently often captures daily hydration fluctuations rather than real fat loss. Always measure at the same time of day, in the same conditions, for meaningful comparisons.",
-            ],
-            [
-              "Can I lose body fat without losing weight on the scale?",
-              "Yes — this is called body recomposition. It is most common in beginners and people eating at maintenance calories while doing resistance training. As you gain muscle and lose fat simultaneously, the scale may not change but your body fat percentage drops, your measurements change, and your composition improves measurably.",
-            ],
-            [
-              "What is the difference between visceral fat and subcutaneous fat?",
-              "Subcutaneous fat sits just under the skin — it is the fat you can pinch. Visceral fat surrounds internal organs deep in the abdomen. Visceral fat is far more metabolically dangerous: it increases insulin resistance, inflammation, and cardiovascular risk even when total body fat appears moderate. Waist circumference is the strongest tape-based indicator of visceral fat levels.",
-            ],
-            [
-              "Does age affect body fat percentage?",
-              "Yes. Body fat tends to increase gradually with age, even at stable weight, because muscle mass naturally declines after about age 30. This is partly why a 50-year-old and a 25-year-old at the same weight and height can have very different body fat percentages. Resistance training is the most effective way to slow age-related muscle loss and maintain a healthier body composition.",
-            ],
-            [
-              "Can I use this calculator if I am very muscular?",
-              "The Navy formula can slightly overestimate body fat in very muscular individuals because a large neck circumference (common in bodybuilders) affects the calculation. If your result seems inconsistent with your visible leanness, consider a DEXA scan or hydrostatic weighing for a more precise measurement. For most non-bodybuilder populations, the Navy formula is reliable.",
-            ],
-          ].map(([q, a], i) => (
-            <div className="faq-item" key={i}>
-              <h3 onClick={() => toggleFAQ(i)}>
-                {q}
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-                />
-              </h3>
-              {openFAQ === i && <p>{a}</p>}
-            </div>
-          ))}
-        </section>
-
-        <section>
-          <h2>Final Thoughts</h2>
           <p>
-            Body fat percentage is one of the most useful health metrics you can
-            track — more informative than the scale, more specific than BMI, and
-            actionable for anyone trying to lose fat, build muscle, or simply
-            understand their body better. Use this calculator monthly to monitor
-            your progress, pair it with our{" "}
-            <Link href="/bmi-calculator/" className="my-link">
-              BMI calculator
-            </Link>{" "}
-            for the weight-to-height perspective, and set your calorie targets
-            with our{" "}
+            The last point matters more than it looks. If your calculated body
+            fat drops and the waist measurement is what fell, that is a real
+            change. If it drops because the neck measurement grew, the tape
+            placement probably moved.
+          </p>
+          <p>
+            Body composition changes follow energy balance over time, so a
+            realistic calorie target is the practical next step — the{" "}
             <Link href="/calorie-calculator/" className="my-link">
               calorie calculator
-            </Link>
-            . Together, these three tools give you a practical, data-driven
-            foundation for any fitness or health goal.
+            </Link>{" "}
+            estimates daily needs, and our guide on{" "}
+            <Link
+              href="/blog/how-many-calories-to-lose-weight/"
+              className="my-link"
+            >
+              calories to lose weight
+            </Link>{" "}
+            covers setting a deficit that preserves muscle.
           </p>
         </section>
+        <section>
+          <h2>Body Fat Measurement Questions</h2>
+
+          {faqs.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                  role="button"
+                  tabIndex={0}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </section>
+
+        <ReviewedBy medical />
       </div>
 
       {/* ════ RIGHT — sticky sidebar ════ */}
@@ -1282,7 +1211,6 @@ export default function BodyFatCalculator() {
             {[
               ["/bmi-calculator/", "BMI Calculator"],
               ["/calorie-calculator/", "Calorie Calculator"],
-
               ["/dose-calculator/", "Dose Calculator"],
               ["/iv-calculator/", "IV Calculator"],
             ].map(([href, label]) => (

@@ -76,40 +76,40 @@ function secondsToResult(totalSec: number, mode: TimeMode): TimeResult {
 ───────────────────────────────────────── */
 const FAQS: { q: string; a: string }[] = [
   {
-    q: "How do I add hours and minutes?",
-    a: "Enter the hours, minutes, and seconds in the separate fields for each time, select Add Times mode, and click Calculate. The calculator carries over minutes into hours and seconds into minutes automatically, so you never have to do the base-60 math by hand.",
+    q: "Why is my time answer showing more than 60 minutes?",
+    a: "The addition worked but the carry did not. Time runs in base 60, so any minute figure of 60 or above needs converting into hours: 3 hours 75 minutes is 4 hours 15 minutes. Do the minutes column first, subtract 60 and add an hour whenever it overflows, then finish the hours.",
   },
   {
-    q: "Can I subtract a larger time from a smaller time?",
-    a: "Yes. If the result would be negative — for example 1:00 minus 3:00 — the calculator shows a negative result with a minus sign. This is useful when you need to know how far behind or over a time target you are, such as tracking a budget overrun on a task.",
+    q: "Is 7.5 hours the same as 7 hours 50 minutes?",
+    a: "No — it is 7 hours 30 minutes. The decimal part is a fraction of an hour, so you multiply it by 60 rather than reading it as minutes. Half an hour is 0.5 and thirty minutes. This is the most expensive confusion in timesheets, because decimal payroll systems and human minutes look identical on the page.",
   },
   {
-    q: "What is the difference between Add Times and Duration?",
-    a: "Add Times combines two time values arithmetically, which is useful for totaling hours worked or adding task lengths together. Duration finds the absolute gap between two clock times, which is useful for measuring how long something actually took from a start to an end point.",
+    q: "How do I convert minutes into decimal hours?",
+    a: "Divide the minutes by 60. Ten minutes is 0.17 of an hour, fifteen is 0.25, and forty-five is 0.75. Entering 8 hours 10 minutes into a decimal timesheet as 8.10 rather than 8.17 understates the shift by four minutes, which compounds into most of an hour over a month.",
   },
   {
-    q: "Can I enter hours greater than 24?",
-    a: "Yes. This calculator isn't restricted to a 24-hour clock, so you can enter values like 36:00 to represent time spans that stretch across multiple days — handy for multi-day project totals or long-haul travel time.",
+    q: "How do I calculate hours for a shift that crosses midnight?",
+    a: "Add 24 hours to the finish time before subtracting. A shift from 22:00 to 06:00 gives a nonsensical negative if you subtract directly, but 30:00 minus 22:00 gives the correct 8 hours. A negative time result is nearly always a missing day boundary rather than an arithmetic mistake.",
   },
   {
-    q: "How do I convert minutes to hours and minutes?",
-    a: "Divide the total minutes by 60. The whole number is the hours and the remainder is the minutes — for example, 145 minutes divided by 60 is 2 remainder 25, so that's 2 hours 25 minutes. The calculator does this conversion automatically in the results panel.",
+    q: "Is 12:00 AM midnight or midday?",
+    a: "Midnight, and it is the start of the day rather than the end. Midday is 12:00 PM, which reads oddly since AM means before noon. Because people genuinely read these both ways, a deadline of midnight on the 15th is ambiguous. Writing 23:59 on the 15th, or using 24-hour notation throughout, removes the problem.",
   },
   {
-    q: "How do I convert decimal hours to hours and minutes?",
-    a: "Multiply the decimal portion by 60. For 7.5 hours, the 0.5 becomes 0.5 × 60 = 30 minutes, so 7.5 hours equals 7 hours 30 minutes. This is the conversion payroll systems use when timesheets are recorded in decimal format instead of HH:MM.",
+    q: "How do I add up a whole week of shifts without errors?",
+    a: "Convert every entry to minutes, add them all in minutes, then convert once at the end. A week of 7h45, 8h15, 6h30, 8h00 and 7h20 becomes 2,270 minutes, which is 37 hours 50 minutes. Doing one conversion at the end replaces four separate chances to carry incorrectly.",
   },
   {
-    q: "How many hours are between two times?",
-    a: "Switch to Duration mode, enter the start time as your first time and the end time as your second time, and the calculator returns the absolute gap between them in hours, minutes, and seconds — no need to work out AM/PM crossovers yourself.",
+    q: "Why does my employer round my clock-in times?",
+    a: "Rounding to a fixed interval, often six or fifteen minutes, simplifies payroll. It is neutral only when it rounds in both directions — within seven minutes of a quarter hour rounds down, beyond that rounds up, and over many shifts the differences cancel. Rounding that always moves the same way is a systematic deduction rather than rounding.",
   },
   {
-    q: "Does this calculator work across two different dates?",
-    a: "For time-of-day math within a single day, use Add, Subtract, or Duration mode. If your two points span different calendar dates — say, a shift that starts one evening and ends the next morning — use Between Dates mode, which accounts for the full day boundary.",
+    q: "Why do professional timesheets use six-minute blocks?",
+    a: "Because six minutes is exactly a tenth of an hour, which makes decimal billing trivial. Twelve minutes is 0.2, eighteen is 0.3, thirty is 0.5. Any interval that divides cleanly into 60 avoids the recurring decimals that make other rounding units awkward to total.",
   },
   {
-    q: "What format should I use for seconds?",
-    a: "Use the dedicated Seconds field and enter the number directly. Leave it empty or at 0 if you only need to work with hours and minutes.",
+    q: "Why did subtracting one time from another give a negative number?",
+    a: "Either the span crosses midnight, in which case add 24 hours to the end time, or the times were entered in the wrong order. In the second case the magnitude is correct and only the sign is wrong, so reversing the inputs gives the answer you wanted.",
   },
 ];
 
@@ -534,7 +534,7 @@ export default function TimeCalculator() {
       />
 
       <div className="single-page-padding">
-        <h1>Time Calculator</h1>
+        <h1>Time Calculator — Add, Subtract and Convert Hours</h1>
         <p>
           This free online time calculator adds, subtracts, and finds the
           duration between two times or dates in seconds. Whether you need a
@@ -671,312 +671,256 @@ export default function TimeCalculator() {
           <TimeResultPanel result={panelResult} />
         </div>
 
-        {/* ── SEO CONTENT ── */}
+        {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Time Calculator?</h2>
+        <h2>Time Arithmetic Is Base 60, and That Is the Whole Problem</h2>
         <p>
-          A time calculator is a tool that performs arithmetic on time values —
-          adding, subtracting, or finding the duration between two specific
-          times or dates. Unlike a standard calculator that works in base 10, a
-          time calculator has to handle the base-60 nature of minutes and
-          seconds and the base-24 nature of hours, so you get an accurate
-          HH:MM:SS result without doing the carrying and borrowing by hand.
+          Everything else you add and subtract runs in tens. Time does not.
+          Sixty minutes make an hour, sixty seconds make a minute, and the
+          carrying and borrowing rules change accordingly. Almost every mistake
+          people make with time comes from applying decimal habits to a
+          sexagesimal system.
         </p>
         <p>
-          People use time calculators for scheduling, payroll, project planning,
-          sports timing, cooking, travel planning, video editing, and any
-          situation where hours, minutes, and seconds need to be combined or
-          compared.
+          The clearest symptom is an answer containing a number of minutes above
+          59. If a result reads 3 hours 75 minutes, the addition was done but the
+          carry was not: 75 minutes is 1 hour 15 minutes, so the answer is 4
+          hours 15 minutes.
         </p>
 
-        <h2>How to Add Times</h2>
+        <h2>Adding and Subtracting: the Carry and the Borrow</h2>
         <p>
-          Adding two time values means combining their hours, minutes, and
-          seconds. The rule to remember: carry a minute over to the hours column
-          once minutes reach 60, and carry a second over to the minutes column
-          once seconds reach 60.
+          Work the minutes first, then resolve any overflow into the hours
+          column.
         </p>
         <pre>
-          2:45:30{"\n"}+ 1:30:45{"\n"}
-          ─────────{"\n"}
-          4:16:15
+          2h 45m + 1h 40m{"\n"}Minutes: 45 + 40 = 85{"\n"}85 ≥ 60, so carry: 85 −
+          60 = 25 minutes, and hours gain 1{"\n"}Hours: 2 + 1 + 1 = 4{"\n"}Result:
+          4h 25m
+        </pre>
+        <p>Subtraction borrows in the opposite direction.</p>
+        <pre>
+          5h 10m − 2h 35m{"\n"}Minutes: 10 − 35 is negative, so borrow an hour
+          {"\n"}Minutes: 70 − 35 = 35{"\n"}Hours: 4 − 2 = 2{"\n"}Result: 2h 35m
         </pre>
         <p>
-          Step by step: 30 + 45 = 75 seconds, which is 1 minute 15 seconds. 45 +
-          30 + the 1 carried minute = 76 minutes, which is 1 hour 16 minutes. 2
-          + 1 + the 1 carried hour = 4 hours. Result: <strong>4:16:15</strong>.
+          Borrowing an hour adds 60 to the minutes, not 100. Writing 110 instead
+          of 70 is the single most common slip in manual time subtraction, and
+          it inflates the answer by forty minutes.
         </p>
 
-        <h2>How to Subtract Times</h2>
+        <h2>Decimal Hours Are Not Hours and Minutes</h2>
         <p>
-          Subtracting times works the same way in reverse, with borrowing
-          whenever the top value is smaller than the bottom one:
+          This is where real money is lost, because payroll systems and
+          timesheets often work in decimal hours while people think in minutes.
+        </p>
+        <p>
+          A shift of 7.5 hours is 7 hours 30 minutes, because 0.5 of an hour is
+          half of 60. It is not 7 hours 50 minutes. The decimal part is a
+          fraction of an hour, so it must be multiplied by 60 rather than read as
+          minutes.
         </p>
         <pre>
-          5:10:00{"\n"}− 2:45:30{"\n"}
-          ─────────{"\n"}
-          2:24:30
-        </pre>
-        <p>
-          Step by step: 0 − 30 seconds needs a borrow, so it becomes 60 − 30 =
-          30 seconds (and the minutes column drops by 1). 10 − 1 − 45 minutes
-          also needs a borrow: 69 − 45 = 24 minutes (and the hours column drops
-          by 1). 5 − 1 − 2 = 2 hours. Result: <strong>2:24:30</strong>. If the
-          second time is larger than the first, the calculator above will return
-          a negative result rather than an error — see the FAQ on negative
-          results below.
-        </p>
-
-        <h2>How to Find Duration Between Two Times</h2>
-        <p>
-          Duration is the absolute difference between a start time and an end
-          time, regardless of which one is larger. It answers "how long did this
-          actually take":
-        </p>
-        <pre>
-          Start Time: 09:30:00{"\n"}
-          End Time: 17:45:00{"\n"}
-          Duration: 8:15:00 (8 hours 15 minutes)
+          Decimal → minutes: multiply the fraction by 60{"\n"}Minutes → decimal:
+          divide the minutes by 60
         </pre>
 
-        <h2>Calculating Duration Between Two Dates</h2>
-        <p>
-          Sometimes the two points you're comparing don't fall on the same
-          calendar day — an overnight shift, a multi-day event, or a flight that
-          crosses midnight. For those, switch to Between Dates mode instead of
-          Duration mode. It takes a full start date-and-time and end
-          date-and-time, so the day boundary is handled automatically instead of
-          producing a confusing negative number. If you only need the number of
-          calendar days rather than an exact elapsed time, the{" "}
-          <Link className="my-link" href="/days-between-calculator/">
-            Days Between Dates Calculator
-          </Link>{" "}
-          is the more direct tool for that specific question.
-        </p>
-
-        <h2>Military Time vs. 12-Hour Time</h2>
-        <p>
-          The 24-hour clock, often called military time, numbers the hours from
-          00 to 23 instead of splitting the day into two 12-hour AM/PM blocks.
-          13:00 is 1:00 PM, 18:30 is 6:30 PM, and midnight is written as 00:00.
-          This calculator accepts hour values above 23 as well, which isn't
-          standard 24-hour time — it's a running total, useful for expressing
-          durations that stretch across more than one day, such as "the project
-          took 36 hours" instead of "1 day 12 hours."
-        </p>
-
-        <h2>Converting Decimal Hours to Hours and Minutes</h2>
-        <p>
-          Payroll software and spreadsheets often store time as a decimal — 7.5
-          hours instead of 7:30. To convert, multiply the decimal part by 60.
-          The table below covers the conversions people look up most often:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Decimal Hours
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Hours &amp; Minutes
-                </th>
+              <tr>
+                <th>Decimal hours</th>
+                <th>Hours and minutes</th>
+                <th>Commonly misread as</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["0.25 hr", "15 min"],
-                ["0.50 hr", "30 min"],
-                ["0.75 hr", "45 min"],
-                ["1.5 hr", "1 hr 30 min"],
-                ["2.25 hr", "2 hr 15 min"],
-                ["7.5 hr", "7 hr 30 min"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              <tr>
+                <td>7.25</td>
+                <td>7h 15m</td>
+                <td>7h 25m</td>
+              </tr>
+              <tr>
+                <td>7.50</td>
+                <td>7h 30m</td>
+                <td>7h 50m</td>
+              </tr>
+              <tr>
+                <td>7.75</td>
+                <td>7h 45m</td>
+                <td>7h 75m</td>
+              </tr>
+              <tr>
+                <td>8.10</td>
+                <td>8h 6m</td>
+                <td>8h 10m</td>
+              </tr>
+              <tr>
+                <td>8.33</td>
+                <td>8h 20m</td>
+                <td>8h 33m</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Time Format Guide</h2>
-        <p>This calculator accepts times in two standard formats:</p>
-        <ul className="custom-list">
-          <li>
-            <strong>HH:MM</strong> — hours and minutes only. Example:{" "}
-            <code>3:45</code> means 3 hours and 45 minutes.
-          </li>
-          <li>
-            <strong>HH:MM:SS</strong> — hours, minutes, and seconds. Example:{" "}
-            <code>1:30:20</code> means 1 hour, 30 minutes, and 20 seconds.
-          </li>
-        </ul>
         <p>
-          Hours can exceed 23 — this calculator is not limited to a 24-hour
-          clock. You can enter values like <code>36:00</code> to represent 36
-          hours.
+          The 8.10 row is the one that costs people. Entering 8 hours 10 minutes
+          into a decimal timesheet as 8.10 overstates the shift by four minutes,
+          because 8 hours 10 minutes is 8.17 in decimal. Repeated daily, that is
+          most of an hour a month in the wrong direction.
         </p>
 
-        <h2>How to Calculate Work Hours for Payroll</h2>
+        <h2>Crossing Midnight</h2>
         <p>
-          A common use of this time duration calculator is turning a clock-in
-          and clock-out time into billable or payable hours. Say an employee
-          clocks in at 8:52 AM and clocks out at 5:07 PM. Enter 8:52 as the
-          start time and 17:07 as the end time in Duration mode, and the
-          calculator returns 8 hours 15 minutes. Many payroll policies then
-          round that figure to the nearest quarter hour — 8:15 in this case
-          needs no rounding, but 8:07 would typically round down to 8:00 and
-          8:23 would round up to 8:30, depending on your company's rounding
-          rules. Once you have hours per shift, the{" "}
-          <Link className="my-link" href="/salary-hike-calculator/">
-            Salary Hike Calculator
-          </Link>{" "}
-          can help you work out what a change in hourly rate does to total pay.
+          A shift from 22:00 to 06:00 produces a negative result if you subtract
+          directly, because the end time is numerically smaller than the start.
+          The fix is to recognise that the span crosses into the next day and add
+          24 hours to the end time.
+        </p>
+        <pre>
+          06:00 − 22:00 = −16 hours (wrong){"\n"}(06:00 + 24h) − 22:00 = 30:00 −
+          22:00 = 8 hours (correct)
+        </pre>
+        <p>
+          A negative time result is therefore usually not an error in the
+          arithmetic but a missing day boundary. The exception is when you
+          genuinely subtracted a later time from an earlier one, in which case
+          the magnitude is right and the sign tells you the order was reversed.
         </p>
 
-        <h2>Understanding a Negative Time Result</h2>
+        <h2>12-Hour and 24-Hour Notation</h2>
         <p>
-          In Subtract mode, if the second time you enter is later than the
-          first, the result will be negative — shown with a leading minus sign,
-          like <strong>−1:15:00</strong>. This isn't an error; it simply means
-          the second value was larger than the first, which is useful for
-          flagging when a task ran over its allotted time or when a countdown
-          has passed zero. If you always want a positive, "how much time passed"
-          answer regardless of order, use Duration mode instead — it always
-          returns the absolute difference.
+          The 24-hour clock exists because the 12-hour one is ambiguous at
+          exactly the two points people most often need to be precise about.
         </p>
 
-        <h2>Common Uses of a Time Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Payroll and work hours:</strong> Add up daily work hours
-            across the week to calculate total hours worked for salary or
-            billing purposes.
-          </li>
-          <li>
-            <strong>Project and task management:</strong> Estimate total time
-            required by adding individual task durations.
-          </li>
-          <li>
-            <strong>Sports and fitness timing:</strong> Calculate lap times,
-            race durations, training session lengths, or workout intervals.
-          </li>
-          <li>
-            <strong>Video and audio editing:</strong> Add clip durations, find
-            the total runtime of a project, or calculate the time remaining in a
-            sequence.
-          </li>
-          <li>
-            <strong>Cooking and baking:</strong> Add cooking, resting, and prep
-            times to find when a meal will be ready.
-          </li>
-          <li>
-            <strong>Travel planning:</strong> Add flight duration, layover time,
-            and transfer time to calculate total travel time.
-          </li>
-          <li>
-            <strong>Meeting and schedule planning:</strong> Add meeting
-            durations to find when a series of back-to-back meetings ends.
-          </li>
-          <li>
-            <strong>Scientific and academic research:</strong> Precisely
-            calculate experiment durations and observation windows.
-          </li>
-          <li>
-            <strong>Time Units Conversion:</strong> Like how many hours in a
-            month or etc.
-          </li>
-        </ul>
-
-        <h2>Time Conversion Reference</h2>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Unit
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Equals
-                </th>
+              <tr>
+                <th>12-hour</th>
+                <th>24-hour</th>
+                <th>Note</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["1 minute", "60 seconds"],
-                ["1 hour", "60 minutes = 3,600 seconds"],
-                ["1 day", "24 hours = 1,440 minutes = 86,400 seconds"],
-                ["1 week", "7 days = 168 hours = 10,080 minutes"],
-                ["1 month", "≈ 30.44 days = ≈ 730.5 hours"],
-                ["1 year", "365 days (366 in leap year) = 8,760 hours"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              <tr>
+                <td>12:00 AM</td>
+                <td>00:00</td>
+                <td>Midnight — the start of the day, not the end</td>
+              </tr>
+              <tr>
+                <td>12:00 PM</td>
+                <td>12:00</td>
+                <td>Midday — despite AM meaning before noon</td>
+              </tr>
+              <tr>
+                <td>1:00 PM</td>
+                <td>13:00</td>
+                <td>Add 12 to any PM hour except 12 itself</td>
+              </tr>
+              <tr>
+                <td>11:59 PM</td>
+                <td>23:59</td>
+                <td>The last minute of the day</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Frequently Asked Questions</h2>
-
-        {FAQS.map((item, i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {item.q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              />
-            </h3>
-            {openFAQ === i && <p>{item.a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
         <p>
-          Whether you're adding up a timesheet, subtracting a break from a
-          shift, or working out the duration between two dates, this time
-          calculator handles the HH:MM:SS math instantly so you don't have to
-          carry and borrow by hand. Bookmark it for payroll, project planning,
-          or any time you need a fast, accurate time difference calculator.
+          A deadline of &quot;midnight on the 15th&quot; is genuinely ambiguous —
+          it can mean the moment the 15th begins or the moment it ends, and
+          people read it both ways. Writing 23:59 on the 15th removes the
+          ambiguity entirely, which is why contracts and systems use it.
         </p>
+
+        <h2>Timesheets and Rounding</h2>
+        <p>
+          Many workplaces round clock entries to a fixed interval, commonly to
+          the nearest six or fifteen minutes. The mechanism is neutral only if
+          it rounds in both directions.
+        </p>
+        <p>
+          Rounding to the nearest quarter hour means anything within seven
+          minutes rounds down and anything beyond rounds up, so over many shifts
+          the gains and losses cancel. Rounding that only ever moves against the
+          worker — always down on arrival, always up on departure — is not
+          rounding but systematic deduction, and it is worth checking which
+          version your timesheet applies.
+        </p>
+        <p>
+          Six-minute intervals are common in professional billing because each
+          one is exactly 0.1 of an hour, which makes the decimal conversion
+          trivial. Twelve minutes is 0.2, eighteen is 0.3, and so on.
+        </p>
+
+        <h2>Adding Time Across Many Entries</h2>
+        <p>
+          Summing a week of shifts by hand invites carry errors at every step.
+          The reliable method is to convert everything to a single unit first,
+          add in that unit, then convert once at the end.
+        </p>
+        <pre>
+          Convert each entry to minutes{"\n"}Add all the minutes{"\n"}Divide the
+          total by 60 for hours; the remainder is the minutes
+        </pre>
+        <p>
+          A week of 7h 45m, 8h 15m, 6h 30m, 8h 00m and 7h 20m becomes 465 + 495 +
+          390 + 480 + 440 = 2,270 minutes. Dividing by 60 gives 37 with a
+          remainder of 50, so 37 hours 50 minutes. One conversion at the end
+          replaces four opportunities to carry incorrectly.
+        </p>
+        <p>
+          For spans measured in days rather than hours, the{" "}
+          <Link href="/days-between-calculator/" className="my-link">
+            days between dates calculator
+          </Link>{" "}
+          handles calendar arithmetic, and the{" "}
+          <Link href="/time-zone-converter/" className="my-link">
+            time zone converter
+          </Link>{" "}
+          covers times in different places.
+        </p>
+        <h2>Time Calculation Questions</h2>
+
+        {FAQS.map((item, i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {item.q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{item.a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
       </div>
 
       {/* ── SIDEBAR ── */}
@@ -990,7 +934,7 @@ export default function TimeCalculator() {
           </p>
           <ul style={{ listStyle: "none", padding: 0 }}>
             {[
-              ["/days-between-dates-calculator/", "Days Between Dates"],
+              ["/days-between-calculator/", "Days Between Dates"],
               ["/age-calculator/", "Age Calculator"],
               ["/bmi-calculator/", "BMI Calculator"],
               ["/salary-hike-calculator/", "Salary Hike Calculator"],

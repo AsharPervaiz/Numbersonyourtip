@@ -2,6 +2,46 @@
 import { useState } from "react";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import BlogSidebar from "./BlogSidebar";
+
+const FAQ_DATA: [string, string][] = [
+  [
+    "What are the 2026 federal income tax brackets?",
+    "The 2026 federal income tax brackets have seven rates: 10%, 12%, 22%, 24%, 32%, 35%, and 37%. For single filers, the rates begin at $0 (10%), $12,400 (12%), $48,475 (22%), $103,350 (24%), $197,300 (32%), $250,525 (35%), and $640,600 (37%). For married filing jointly, the brackets are approximately double the single thresholds, with the 37% rate beginning at $768,700. These figures come from IRS Revenue Procedure 2025-32.",
+  ],
+  [
+    "Did tax rates change for 2026?",
+    "No, the seven tax rates (10%, 12%, 22%, 24%, 32%, 35%, 37%) stayed the same. The One Big Beautiful Bill Act (OBBBA), signed July 4, 2025, made these rates permanent, preventing the scheduled reversion to pre-2018 rates (including a 39.6% top rate). What changed for 2026 are the income thresholds, which the IRS adjusted upward by approximately 2.7% for inflation using the Chained Consumer Price Index.",
+  ],
+  [
+    "What is the 2026 standard deduction?",
+    "The 2026 standard deduction is $16,100 for single filers and married individuals filing separately, $32,200 for married filing jointly or qualifying surviving spouses, and $24,150 for head of household filers. These represent increases of $350–$700 from the 2025 amounts. Taxpayers 65 or older can claim an additional senior bonus deduction of up to $6,000 (subject to income phaseout thresholds).",
+  ],
+  [
+    "When are 2026 tax returns due?",
+    "Tax year 2026 covers income earned from January 1, 2026 through December 31, 2026. Tax returns for this period are due on April 15, 2027. Quarterly estimated tax payments for 2026 are due April 15, June 16, and September 15 of 2026, and January 15, 2027.",
+  ],
+  [
+    "What is my marginal tax rate vs. my effective tax rate?",
+    "Your marginal tax rate is the rate that applies to your last dollar of income — your highest bracket. Your effective tax rate is the actual percentage of your total gross income paid in federal tax. Because the US system is progressive (each bracket only taxes the income within that range), your effective rate is always lower than your marginal rate. A single filer earning $100,000 in 2026 has a 22% marginal rate but an effective rate of approximately 13.4%.",
+  ],
+  [
+    "How did the One Big Beautiful Bill Act change 2026 taxes?",
+    "The OBBBA, signed July 4, 2025, made permanent the TCJA's seven-bracket rate structure (preventing the top rate from reverting to 39.6%), raised the SALT deduction cap from $10,000 to $40,400 for most filers, introduced a senior bonus deduction of up to $6,000 for taxpayers 65+, raised the child tax credit to $2,200 per child with future inflation indexing, made permanent the 20% pass-through deduction (§199A), raised the estate and gift tax exemption to $15 million per person, and added new deductions for qualifying tip income and overtime pay.",
+  ],
+  [
+    "What are the 2026 capital gains tax rates?",
+    "Long-term capital gains (assets held more than one year) are taxed at 0%, 15%, or 20% in 2026. Single filers with taxable income up to $49,450 pay 0%. The 15% rate applies from $49,451 to $518,900. Above $518,900, the rate is 20%. For married filing jointly, the 0% threshold is $98,900 and the 20% rate begins above $583,750. Higher earners may also owe the 3.8% Net Investment Income Tax on top of these rates.",
+  ],
+  [
+    "Is it better to file jointly or separately in 2026?",
+    "For most married couples, filing jointly is more advantageous in 2026. Joint filers get a $32,200 standard deduction (versus $16,100 for each spouse filing separately) and wider bracket thresholds at every rate. Filing separately can occasionally be beneficial when one spouse has significant medical expenses or student loan income-driven repayment plans affected by combined income, but these are specific situations. Married filing separately also loses access to certain credits like the Earned Income Tax Credit.",
+  ],
+  [
+    "How does the $40,400 SALT cap work in 2026?",
+    "The OBBBA raised the state and local tax (SALT) deduction cap from $10,000 to $40,400 for most taxpayers in 2026. This means you can deduct up to $40,400 of combined state income taxes, local income taxes, and property taxes if you itemize. The increased cap phases out at higher incomes, reverting toward $10,000 for the highest earners, and is scheduled to return to $10,000 permanently after 2029 under current law. For taxpayers in high-tax states who itemize, this change can meaningfully reduce their 2026 federal taxable income.",
+  ],
+];
 
 export default function TaxBrackets2026() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -9,38 +49,21 @@ export default function TaxBrackets2026() {
 
   return (
     <div className="blog-container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="blog-content">
-        {/* BREADCRUMB */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "14px",
-            marginBottom: "10px",
-          }}
-        >
-          <Link
-            href="https://numbersonyourtip.com/"
-            className="my-link"
-            style={{
-              textDecoration: "none",
-              color: "#000",
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-            }}
-          >
-            <i className="fa-solid fa-house" />
-            Home
-          </Link>
-          <i className="fa-solid fa-angle-right" style={{ fontSize: "12px" }} />
-          <span style={{ color: "#000" }}>
-            2026 Tax Brackets: Complete Federal Income Tax Guide
-          </span>
-        </div>
-        <hr />
-
         <img
           src="/blog12.1.webp"
           className="image-blog"
@@ -63,12 +86,14 @@ export default function TaxBrackets2026() {
                 fontSize: "14px",
               }}
             >
+              <Link href="/author/ashar-pervaiz/" className="byline-author">
               <img
                 className="founder-photo"
                 src="/founder_photo.webp"
                 alt="Ashar Pervaiz"
               />
               Ashar Pervaiz
+              </Link>
             </span>
             <span
               style={{
@@ -89,10 +114,7 @@ export default function TaxBrackets2026() {
         <article>
           {/* HEADER */}
           <header>
-            <h1>
-              2026 Tax Brackets: Complete Guide to Federal Income Tax Rates,
-              Standard Deductions, and What Changed
-            </h1>
+            <h1>2026 Tax Brackets, Deductions and What Changed</h1>
             <p>
               The IRS released the official 2026 federal income tax brackets in
               October 2025 through Revenue Procedure 2025-32. On top of the
@@ -845,89 +867,91 @@ export default function TaxBrackets2026() {
                 <br />
                 <strong>Taxable income: $43,900</strong>
               </p>
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  fontSize: "0.93rem",
-                  marginTop: "12px",
-                }}
-              >
-                <thead>
-                  <tr style={{ backgroundColor: "#1B3066", color: "white" }}>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Bracket
-                    </th>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Income in Bracket
-                    </th>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Tax
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["10%", "$0 – $12,400 = $12,400", "$1,240"],
-                    ["12%", "$12,401 – $43,900 = $31,500", "$3,780"],
-                  ].map(([br, inc, tax], i) => (
-                    <tr
-                      key={i}
-                      style={{
-                        backgroundColor: i % 2 === 0 ? "#fff" : "#f0f4ff",
-                      }}
-                    >
+              <div style={{ overflowX: "auto", margin: "20px 0" }}>
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    fontSize: "0.93rem",
+                    marginTop: "12px",
+                  }}
+                >
+                  <thead>
+                    <tr style={{ backgroundColor: "#1B3066", color: "white" }}>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Bracket
+                      </th>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Income in Bracket
+                      </th>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Tax
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ["10%", "$0 – $12,400 = $12,400", "$1,240"],
+                      ["12%", "$12,401 – $43,900 = $31,500", "$3,780"],
+                    ].map(([br, inc, tax], i) => (
+                      <tr
+                        key={i}
+                        style={{
+                          backgroundColor: i % 2 === 0 ? "#fff" : "#f0f4ff",
+                        }}
+                      >
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                            fontWeight: 600,
+                            color: "#1B3066",
+                          }}
+                        >
+                          {br}
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                          }}
+                        >
+                          {inc}
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {tax}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr style={{ backgroundColor: "#e8f0fd", fontWeight: 700 }}>
+                      <td
+                        colSpan={2}
+                        style={{
+                          padding: "8px 12px",
+                          border: "1px solid #d0d9ef",
+                        }}
+                      >
+                        Total Federal Income Tax
+                      </td>
                       <td
                         style={{
                           padding: "8px 12px",
                           border: "1px solid #d0d9ef",
-                          fontWeight: 600,
                           color: "#1B3066",
                         }}
                       >
-                        {br}
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 12px",
-                          border: "1px solid #d0d9ef",
-                        }}
-                      >
-                        {inc}
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 12px",
-                          border: "1px solid #d0d9ef",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {tax}
+                        $5,020
                       </td>
                     </tr>
-                  ))}
-                  <tr style={{ backgroundColor: "#e8f0fd", fontWeight: 700 }}>
-                    <td
-                      colSpan={2}
-                      style={{
-                        padding: "8px 12px",
-                        border: "1px solid #d0d9ef",
-                      }}
-                    >
-                      Total Federal Income Tax
-                    </td>
-                    <td
-                      style={{
-                        padding: "8px 12px",
-                        border: "1px solid #d0d9ef",
-                        color: "#1B3066",
-                      }}
-                    >
-                      $5,020
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
               <p
                 style={{
                   margin: "10px 0 0 0",
@@ -957,90 +981,92 @@ export default function TaxBrackets2026() {
                 <br />
                 <strong>Taxable income: $83,900</strong>
               </p>
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  fontSize: "0.93rem",
-                  marginTop: "12px",
-                }}
-              >
-                <thead>
-                  <tr style={{ backgroundColor: "#1B3066", color: "white" }}>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Bracket
-                    </th>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Income in Bracket
-                    </th>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Tax
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["10%", "$12,400", "$1,240"],
-                    ["12%", "$36,075 ($48,475 − $12,400)", "$4,329"],
-                    ["22%", "$35,425 ($83,900 − $48,475)", "$7,794"],
-                  ].map(([br, inc, tax], i) => (
-                    <tr
-                      key={i}
-                      style={{
-                        backgroundColor: i % 2 === 0 ? "#fff" : "#f0f4ff",
-                      }}
-                    >
+              <div style={{ overflowX: "auto", margin: "20px 0" }}>
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    fontSize: "0.93rem",
+                    marginTop: "12px",
+                  }}
+                >
+                  <thead>
+                    <tr style={{ backgroundColor: "#1B3066", color: "white" }}>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Bracket
+                      </th>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Income in Bracket
+                      </th>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Tax
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ["10%", "$12,400", "$1,240"],
+                      ["12%", "$36,075 ($48,475 − $12,400)", "$4,329"],
+                      ["22%", "$35,425 ($83,900 − $48,475)", "$7,794"],
+                    ].map(([br, inc, tax], i) => (
+                      <tr
+                        key={i}
+                        style={{
+                          backgroundColor: i % 2 === 0 ? "#fff" : "#f0f4ff",
+                        }}
+                      >
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                            fontWeight: 600,
+                            color: "#1B3066",
+                          }}
+                        >
+                          {br}
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                          }}
+                        >
+                          {inc}
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {tax}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr style={{ backgroundColor: "#e8f0fd", fontWeight: 700 }}>
+                      <td
+                        colSpan={2}
+                        style={{
+                          padding: "8px 12px",
+                          border: "1px solid #d0d9ef",
+                        }}
+                      >
+                        Total Federal Income Tax
+                      </td>
                       <td
                         style={{
                           padding: "8px 12px",
                           border: "1px solid #d0d9ef",
-                          fontWeight: 600,
                           color: "#1B3066",
                         }}
                       >
-                        {br}
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 12px",
-                          border: "1px solid #d0d9ef",
-                        }}
-                      >
-                        {inc}
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 12px",
-                          border: "1px solid #d0d9ef",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {tax}
+                        $13,363
                       </td>
                     </tr>
-                  ))}
-                  <tr style={{ backgroundColor: "#e8f0fd", fontWeight: 700 }}>
-                    <td
-                      colSpan={2}
-                      style={{
-                        padding: "8px 12px",
-                        border: "1px solid #d0d9ef",
-                      }}
-                    >
-                      Total Federal Income Tax
-                    </td>
-                    <td
-                      style={{
-                        padding: "8px 12px",
-                        border: "1px solid #d0d9ef",
-                        color: "#1B3066",
-                      }}
-                    >
-                      $13,363
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
               <p
                 style={{
                   margin: "10px 0 0 0",
@@ -1108,90 +1134,92 @@ export default function TaxBrackets2026() {
                 <br />
                 <strong>Taxable income: $117,800</strong>
               </p>
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  fontSize: "0.93rem",
-                  marginTop: "12px",
-                }}
-              >
-                <thead>
-                  <tr style={{ backgroundColor: "#1B3066", color: "white" }}>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Bracket
-                    </th>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Income in Bracket
-                    </th>
-                    <th style={{ padding: "8px 12px", textAlign: "left" }}>
-                      Tax
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["10%", "$24,800", "$2,480"],
-                    ["12%", "$72,150 ($96,950 − $24,800)", "$8,658"],
-                    ["22%", "$20,850 ($117,800 − $96,950)", "$4,587"],
-                  ].map(([br, inc, tax], i) => (
-                    <tr
-                      key={i}
-                      style={{
-                        backgroundColor: i % 2 === 0 ? "#fff" : "#f0f4ff",
-                      }}
-                    >
+              <div style={{ overflowX: "auto", margin: "20px 0" }}>
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    fontSize: "0.93rem",
+                    marginTop: "12px",
+                  }}
+                >
+                  <thead>
+                    <tr style={{ backgroundColor: "#1B3066", color: "white" }}>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Bracket
+                      </th>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Income in Bracket
+                      </th>
+                      <th style={{ padding: "8px 12px", textAlign: "left" }}>
+                        Tax
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ["10%", "$24,800", "$2,480"],
+                      ["12%", "$72,150 ($96,950 − $24,800)", "$8,658"],
+                      ["22%", "$20,850 ($117,800 − $96,950)", "$4,587"],
+                    ].map(([br, inc, tax], i) => (
+                      <tr
+                        key={i}
+                        style={{
+                          backgroundColor: i % 2 === 0 ? "#fff" : "#f0f4ff",
+                        }}
+                      >
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                            fontWeight: 600,
+                            color: "#1B3066",
+                          }}
+                        >
+                          {br}
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                          }}
+                        >
+                          {inc}
+                        </td>
+                        <td
+                          style={{
+                            padding: "8px 12px",
+                            border: "1px solid #d0d9ef",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {tax}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr style={{ backgroundColor: "#e8f0fd", fontWeight: 700 }}>
+                      <td
+                        colSpan={2}
+                        style={{
+                          padding: "8px 12px",
+                          border: "1px solid #d0d9ef",
+                        }}
+                      >
+                        Total Federal Income Tax
+                      </td>
                       <td
                         style={{
                           padding: "8px 12px",
                           border: "1px solid #d0d9ef",
-                          fontWeight: 600,
                           color: "#1B3066",
                         }}
                       >
-                        {br}
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 12px",
-                          border: "1px solid #d0d9ef",
-                        }}
-                      >
-                        {inc}
-                      </td>
-                      <td
-                        style={{
-                          padding: "8px 12px",
-                          border: "1px solid #d0d9ef",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {tax}
+                        $15,725
                       </td>
                     </tr>
-                  ))}
-                  <tr style={{ backgroundColor: "#e8f0fd", fontWeight: 700 }}>
-                    <td
-                      colSpan={2}
-                      style={{
-                        padding: "8px 12px",
-                        border: "1px solid #d0d9ef",
-                      }}
-                    >
-                      Total Federal Income Tax
-                    </td>
-                    <td
-                      style={{
-                        padding: "8px 12px",
-                        border: "1px solid #d0d9ef",
-                        color: "#1B3066",
-                      }}
-                    >
-                      $15,725
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
               <p
                 style={{
                   margin: "10px 0 0 0",
@@ -1668,152 +1696,67 @@ export default function TaxBrackets2026() {
             </ul>
           </section>
 
-          {/* CTA */}
-          <section
-            style={{
-              backgroundColor: "#1B3066",
-              padding: "36px",
-              borderRadius: "12px",
-              textAlign: "center",
-              color: "#fff",
-              marginBottom: "48px",
-              boxShadow: "0 10px 20px rgba(27,48,103,0.2)",
-            }}
-          >
-            <h2 style={{ color: "#ffffff" }}>
-              See Your Exact 2026 Tax Bill in 60 Seconds
-            </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.85)",
-                maxWidth: "620px",
-                margin: "0 auto 24px auto",
-                lineHeight: 1.7,
-              }}
-            >
-              Enter your income, filing status, and deductions into our free
-              income tax calculator. It applies the 2026 federal brackets step
-              by step and shows your effective rate, marginal rate, net
-              take-home, and a full breakdown of where your income goes. No
-              sign-up, no account, completely free.
-            </p>
-            <Link
-              href="/income-tax-calculator/"
-              style={{
-                display: "inline-block",
-                backgroundColor: "#1F9FB8",
-                color: "#fff",
-                padding: "14px 36px",
-                fontSize: "1.1rem",
-                fontWeight: 700,
-                textDecoration: "none",
-                borderRadius: "6px",
-              }}
-            >
-              Calculate My 2026 Tax →
-            </Link>
-          </section>
-
           {/* FAQ */}
           <section>
-            <h2>Frequently Asked Questions</h2>
+            <h2>2026 Bracket Questions</h2>
 
-            {[
-              [
-                "What are the 2026 federal income tax brackets?",
-                "The 2026 federal income tax brackets have seven rates: 10%, 12%, 22%, 24%, 32%, 35%, and 37%. For single filers, the rates begin at $0 (10%), $12,400 (12%), $48,475 (22%), $103,350 (24%), $197,300 (32%), $250,525 (35%), and $640,600 (37%). For married filing jointly, the brackets are approximately double the single thresholds, with the 37% rate beginning at $768,700. These figures come from IRS Revenue Procedure 2025-32.",
-              ],
-              [
-                "Did tax rates change for 2026?",
-                "No, the seven tax rates (10%, 12%, 22%, 24%, 32%, 35%, 37%) stayed the same. The One Big Beautiful Bill Act (OBBBA), signed July 4, 2025, made these rates permanent, preventing the scheduled reversion to pre-2018 rates (including a 39.6% top rate). What changed for 2026 are the income thresholds, which the IRS adjusted upward by approximately 2.7% for inflation using the Chained Consumer Price Index.",
-              ],
-              [
-                "What is the 2026 standard deduction?",
-                "The 2026 standard deduction is $16,100 for single filers and married individuals filing separately, $32,200 for married filing jointly or qualifying surviving spouses, and $24,150 for head of household filers. These represent increases of $350–$700 from the 2025 amounts. Taxpayers 65 or older can claim an additional senior bonus deduction of up to $6,000 (subject to income phaseout thresholds).",
-              ],
-              [
-                "When are 2026 tax returns due?",
-                "Tax year 2026 covers income earned from January 1, 2026 through December 31, 2026. Tax returns for this period are due on April 15, 2027. Quarterly estimated tax payments for 2026 are due April 15, June 16, and September 15 of 2026, and January 15, 2027.",
-              ],
-              [
-                "What is my marginal tax rate vs. my effective tax rate?",
-                "Your marginal tax rate is the rate that applies to your last dollar of income — your highest bracket. Your effective tax rate is the actual percentage of your total gross income paid in federal tax. Because the US system is progressive (each bracket only taxes the income within that range), your effective rate is always lower than your marginal rate. A single filer earning $100,000 in 2026 has a 22% marginal rate but an effective rate of approximately 13.4%.",
-              ],
-              [
-                "How did the One Big Beautiful Bill Act change 2026 taxes?",
-                "The OBBBA, signed July 4, 2025, made permanent the TCJA's seven-bracket rate structure (preventing the top rate from reverting to 39.6%), raised the SALT deduction cap from $10,000 to $40,400 for most filers, introduced a senior bonus deduction of up to $6,000 for taxpayers 65+, raised the child tax credit to $2,200 per child with future inflation indexing, made permanent the 20% pass-through deduction (§199A), raised the estate and gift tax exemption to $15 million per person, and added new deductions for qualifying tip income and overtime pay.",
-              ],
-              [
-                "What are the 2026 capital gains tax rates?",
-                "Long-term capital gains (assets held more than one year) are taxed at 0%, 15%, or 20% in 2026. Single filers with taxable income up to $49,450 pay 0%. The 15% rate applies from $49,451 to $518,900. Above $518,900, the rate is 20%. For married filing jointly, the 0% threshold is $98,900 and the 20% rate begins above $583,750. Higher earners may also owe the 3.8% Net Investment Income Tax on top of these rates.",
-              ],
-              [
-                "Is it better to file jointly or separately in 2026?",
-                "For most married couples, filing jointly is more advantageous in 2026. Joint filers get a $32,200 standard deduction (versus $16,100 for each spouse filing separately) and wider bracket thresholds at every rate. Filing separately can occasionally be beneficial when one spouse has significant medical expenses or student loan income-driven repayment plans affected by combined income, but these are specific situations. Married filing separately also loses access to certain credits like the Earned Income Tax Credit.",
-              ],
-              [
-                "How does the $40,400 SALT cap work in 2026?",
-                "The OBBBA raised the state and local tax (SALT) deduction cap from $10,000 to $40,400 for most taxpayers in 2026. This means you can deduct up to $40,400 of combined state income taxes, local income taxes, and property taxes if you itemize. The increased cap phases out at higher incomes, reverting toward $10,000 for the highest earners, and is scheduled to return to $10,000 permanently after 2029 under current law. For taxpayers in high-tax states who itemize, this change can meaningfully reduce their 2026 federal taxable income.",
-              ],
-            ].map(([q, a], i) => (
-              <div className="faq-item" key={i}>
-                <h3 onClick={() => toggleFAQ(i)}>
-                  {q}
-                  <i
-                    className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-                  />
-                </h3>
-                {openFAQ === i && <p style={{ margin: 0 }}>{a}</p>}
-              </div>
-            ))}
+            {FAQ_DATA.map(([q, a], i) => {
+              const isOpen = openFAQ === i;
+              return (
+                <div className="faq-item" key={i}>
+                  <h3
+                    onClick={() => toggleFAQ(i)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleFAQ(i);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${i}`}
+                  >
+                    {q}
+                    <i
+                      className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                      aria-hidden="true"
+                    />
+                  </h3>
+                  <div
+                    id={`faq-answer-${i}`}
+                    className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="faq-answer-inner">
+                      <p style={{ margin: 0 }}>{a}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </section>
         </article>
       </div>
 
-      {/* SIDEBAR */}
-      <aside className="blog-sidebar">
-        <p>Recent Blogs</p>
-        <ul>
-          {[
-            [
-              "/blog/matrix-calculator-guide/",
-              "Matrix Calculator: Complete Guide",
-            ],
-            [
-              "/blog/what-is-numbers-on-your-tip/",
-              "What Is Numbers on Your Tip?",
-            ],
-            [
-              "/blog/healthy-bodyfat-percentage-by-age-and-gender/",
-              "Healthy Body Fat % by Age & Gender",
-            ],
-            ["/blog/renting-vs-buying-a-home/", "Renting vs. Buying a Home"],
-            [
-              "/blog/can-ai-replace-financial-calculators/",
-              "Can AI Replace Financial Calculators?",
-            ],
-          ].map(([href, label]) => (
-            <li key={href as string}>
-              <Link href={href as string}>
-                <span
-                  style={{
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                  }}
-                >
-                  <i
-                    className="fa-solid fa-angle-right"
-                    style={{ color: "#D8A13A" }}
-                  />
-                  {label}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </aside>
+      <BlogSidebar
+        relatedTools={[
+          ["/income-tax-calculator/", "Income Tax Calculator"],
+          ["/freelancer-tax-calculator/", "Freelancer Tax Calculator"],
+          ["/salary-hike-calculator/", "Salary Hike Calculator"],
+        ]}
+        relatedPosts={[
+          [
+            "/blog/marginal-vs-effective-tax-rate/",
+            "Marginal vs Effective Tax Rate",
+          ],
+          [
+            "/blog/why-was-my-bonus-taxed-so-much/",
+            "Why Was My Bonus Taxed So Much?",
+          ],
+          ["/blog/what-is-vat/", "What Is VAT? The Chain, the Reclaim and the Threshold"],
+        ]}
+      />
     </div>
   );
 }

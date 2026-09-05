@@ -2,6 +2,42 @@
 import { useState } from "react";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import BlogSidebar from "./BlogSidebar";
+
+const FAQ_DATA: [string, string][] = [
+  [
+    "What is Numbers on Your Tip?",
+    "Numbers on Your Tip (numbersonyourtip.com) is a free online calculator and tools platform with 48 tools across health, finance, daily use, maths, networking, and utility categories. Everything is completely free, requires no account or sign-up, and stores zero user data. It is built for students, freelancers, healthcare professionals, and anyone who needs a fast, accurate calculation without friction.",
+  ],
+  [
+    "Do I need to create an account to use the calculators?",
+    "No. Zero sign-up is required for any tool on the platform. You open the page, enter your numbers, and get your result. There is no account created, no email required, and no personal data collected. Free online calculators with no account is the core design principle of the site.",
+  ],
+  [
+    "Is Numbers on Your Tip really free?",
+    "Yes, entirely. There is no freemium tier, no premium version, and no paid features. The plan is to fund it through contextual advertising, in the same way most free reference sites are funded. Every one of the 48 tools is free to use, unlimited, for anyone.",
+  ],
+  [
+    "What makes it different from calculator.net?",
+    "Calculator.net is a well-established platform with hundreds of calculators covering a broad range of categories. Numbers on Your Tip is more deliberately curated, with a specific focus on clinical medical tools (IV drip rate, dose, pharmacokinetics), freelancer finance tools, and practical utility tools that general-purpose calculator sites do not typically offer. The design is also cleaner and less advertising-heavy for daily use.",
+  ],
+  [
+    "Is there a free IV drip calculator on the site?",
+    "Yes. The IV Drip Calculator at numbersonyourtip.com/iv-calculator/ calculates IV flow rates in drops per minute and mL per hour from volume, time, and drop factor inputs. It is free, requires no sign-up, and works on any device. The full guide to using it is available in the IV infusion calculator blog post.",
+  ],
+  [
+    "Can students use this site for medical calculations?",
+    "Yes, and many do. The health calculator section includes a Dose Calculator, Dose Stock Calculator, IV Drip Rate Calculator, and Pharmacokinetics Calculator — all designed to support nursing students, paramedic trainees, pharmacy students, and clinical practitioners. Each has an associated educational guide on the blog explaining the underlying formulas.",
+  ],
+  [
+    "Are the financial calculators accurate?",
+    "Yes. Every financial calculator on Numbers on Your Tip uses standard, verified financial formulas — the EMI formula, standard loan amortization, Gallagher body fat equations, and established tax calculation methodology. For a deeper explanation of accuracy and why AI alternatives are often unreliable for specific financial calculations, see the post on whether AI can replace financial calculators.",
+  ],
+  [
+    "What free tools are available for freelancers?",
+    "Freelancers get the most value from the Freelancer Tax Calculator, VAT Calculator, Income Tax Calculator, Salary Hike Calculator, Word and Character Counter, Image Compressor, Lorem Ipsum Generator, Color Picker, and Currency Converter. All are free, browser-based, and require no registration.",
+  ],
+];
 
 export default function WhatIsNumbersOnYourTip() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -9,36 +45,21 @@ export default function WhatIsNumbersOnYourTip() {
 
   return (
     <div className="blog-container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="blog-content">
-        {/* BREADCRUMB */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "14px",
-            marginBottom: "10px",
-          }}
-        >
-          <Link
-            href="https://numbersonyourtip.com/"
-            className="my-link"
-            style={{
-              textDecoration: "none",
-              color: "#000",
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-            }}
-          >
-            <i className="fa-solid fa-house" />
-            Home
-          </Link>
-          <i className="fa-solid fa-angle-right" style={{ fontSize: "12px" }} />
-          <span style={{ color: "#000" }}>What Is Numbers on Your Tip?</span>
-        </div>
-        <hr />
-
         <img
           src="/blog10.1.webp"
           className="image-blog"
@@ -61,12 +82,14 @@ export default function WhatIsNumbersOnYourTip() {
                 fontSize: "14px",
               }}
             >
+              <Link href="/author/ashar-pervaiz/" className="byline-author">
               <img
                 className="founder-photo"
                 src="/founder_photo.webp"
                 alt="Ashar Pervaiz"
               />
               Ashar Pervaiz
+              </Link>
             </span>
             <span
               style={{
@@ -115,7 +138,7 @@ export default function WhatIsNumbersOnYourTip() {
             <h2 style={{ color: "white" }}>What Is Numbers on Your Tip?</h2>
             <p style={{ marginBottom: 0, color: "white" }}>
               <strong>Numbers on Your Tip</strong> (numbersonyourtip.com) is a
-              free online calculator and tools platform offering 43+ calculators
+              free online calculator and tools platform offering 48 calculators
               across health, finance, daily use, maths, networking, and utility
               categories. Everything is{" "}
               <strong>100% free with zero sign-up required</strong>, zero data
@@ -176,7 +199,7 @@ export default function WhatIsNumbersOnYourTip() {
               get it.
             </p>
             <p>
-              The site currently offers 43 calculators and tools, organized into
+              The site currently offers 48 calculators and tools, organized into
               six clear categories: Health, Finance, Daily Use, Maths,
               Networking, and Tools. Every single one of them is free to use.
               Not freemium. Not free with a limited number of uses before a
@@ -224,7 +247,7 @@ export default function WhatIsNumbersOnYourTip() {
           {/* SECTION 3 — THE FULL TOOL LIBRARY */}
           <section id="tool-library" style={{ marginBottom: "48px" }}>
             <h2>
-              The Complete Calculator Library: 43 Free Tools Across 6 Categories
+              The Complete Calculator Library: 48 Free Tools Across 6 Categories
             </h2>
             <p>
               One of the defining features of Numbers on Your Tip as a platform
@@ -305,6 +328,12 @@ export default function WhatIsNumbersOnYourTip() {
                       "/pharmacokinetics-calculator/",
                       "PK parameters: half-life, clearance, Vd, Ke",
                       "Clinical pharmacology, med students",
+                    ],
+                    [
+                      "Pharmacodynamics Calculator",
+                      "/pharmacodynamics-calculator/",
+                      "Emax model, EC50, potency and efficacy from a dose-response curve",
+                      "Pharmacology students, researchers",
                     ],
                   ].map(([name, href, desc, users], i) => (
                     <tr
@@ -593,9 +622,9 @@ export default function WhatIsNumbersOnYourTip() {
             {/* MATHS */}
             <h3>Maths Calculators</h3>
             <p>
-              Two purpose-built maths tools that go beyond basic arithmetic —
-              designed specifically for students and anyone working with
-              statistical or matrix problems.
+              Three purpose-built maths tools that go beyond basic arithmetic
+              — designed for students and anyone working with statistics,
+              matrices or fractions.
             </p>
             <ul style={{ paddingLeft: "20px", lineHeight: 2 }}>
               <li>
@@ -621,12 +650,22 @@ export default function WhatIsNumbersOnYourTip() {
                 matrices. Valuable for linear algebra students and engineering
                 coursework.
               </li>
+              <li>
+                <strong>
+                  <Link href="/mixed-number-calculator/" className="my-link">
+                    Mixed Number Calculator
+                  </Link>
+                </strong>{" "}
+                — Add, subtract, multiply and divide mixed numbers, with the
+                lowest common denominator, the simplification and every step
+                shown. Converts between mixed, improper and decimal form.
+              </li>
             </ul>
 
             {/* NETWORKING */}
             <h3>Networking Tools</h3>
             <p>
-              Three utility tools that developers, IT professionals, and
+              Five utility tools that developers, IT professionals, and
               technically curious users will find useful for diagnostics and
               verification.
             </p>
@@ -655,6 +694,23 @@ export default function WhatIsNumbersOnYourTip() {
                 </strong>{" "}
                 — Check whether an email address is properly formatted and
                 valid.
+              </li>
+              <li>
+                <strong>
+                  <Link href="/domain-name-checker/" className="my-link">
+                    Domain Name Checker
+                  </Link>
+                </strong>{" "}
+                — See whether a domain is registered, and who holds it.
+              </li>
+              <li>
+                <strong>
+                  <Link href="/internet-speed-test/" className="my-link">
+                    Internet Speed Test
+                  </Link>
+                </strong>{" "}
+                — Measure download speed, upload speed and latency in the
+                browser.
               </li>
             </ul>
 
@@ -741,6 +797,11 @@ export default function WhatIsNumbersOnYourTip() {
                       "Carbon Footprint Calculator",
                       "/carbon-footprint-calculator/",
                       "Estimate personal CO₂ emissions from travel, diet, and energy use",
+                    ],
+                    [
+                      "Time Zone Converter",
+                      "/time-zone-converter/",
+                      "Convert a time between zones, with daylight saving handled",
                     ],
                   ].map(([name, href, desc], i) => (
                     <tr
@@ -985,7 +1046,7 @@ export default function WhatIsNumbersOnYourTip() {
                       "⚠️ Ad-heavy",
                       "⚠️ Ad-heavy",
                     ],
-                    ["Number of total tools", "43+", "200+", "3,500+"],
+                    ["Number of total tools", "47", "200+", "3,500+"],
                   ].map(([feat, noyt, calc, omni], i) => (
                     <tr
                       key={i}
@@ -1104,7 +1165,7 @@ export default function WhatIsNumbersOnYourTip() {
                 >
                   Best Free Financial Calculators for Everyday Money Questions
                 </Link>{" "}
-                — A complete walkthrough of all 10 finance tools and when to use
+                — A complete walkthrough of all 11 finance tools and when to use
                 each.
               </li>
               <li>
@@ -1173,8 +1234,8 @@ export default function WhatIsNumbersOnYourTip() {
             <p>
               There is no freemium model. There is no "premium version" with
               more features. There is no email list you are covertly added to
-              when you use a tool. There is no account created. The 43 tools
-              that exist on the platform today are the same 43 tools that a
+              when you use a tool. There is no account created. The 48 tools
+              that exist on the platform today are the same 48 tools that a
               first-time visitor sees as a returning user. No gates, no ladders,
               no friction.
             </p>
@@ -1191,7 +1252,7 @@ export default function WhatIsNumbersOnYourTip() {
           <section id="whats-next" style={{ marginBottom: "48px" }}>
             <h2>What Is Being Built Next</h2>
             <p>
-              The platform currently sits at 43 tools and is expanding steadily.
+              The platform currently sits at 48 tools and is expanding steadily.
               The guiding principle for what gets built next is the same as what
               drove the original library: does a real person regularly need this
               calculation, and is there a better-than-acceptable free version
@@ -1216,146 +1277,67 @@ export default function WhatIsNumbersOnYourTip() {
             </p>
           </section>
 
-          {/* CTA */}
-          <section
-            style={{
-              backgroundColor: "#1B3066",
-              padding: "36px",
-              borderRadius: "12px",
-              textAlign: "center",
-              color: "#fff",
-              marginBottom: "48px",
-              boxShadow: "0 10px 20px rgba(27,48,103,0.2)",
-            }}
-          >
-            <h2 style={{ color: "#ffffff" }}>
-              43 Free Tools. Zero Sign-Up. Zero Data Stored.
-            </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.85)",
-                maxWidth: "600px",
-                margin: "0 auto 28px auto",
-                lineHeight: 1.7,
-              }}
-            >
-              Everything on Numbers on Your Tip is free to use right now — no
-              account, no registration, no waiting. Pick the tool you need and
-              get your answer.
-            </p>
-            <Link
-              href="/"
-              style={{
-                display: "inline-block",
-                backgroundColor: "#1F9FB8",
-                color: "#fff",
-                padding: "14px 32px",
-                fontSize: "1.1rem",
-                fontWeight: 700,
-                textDecoration: "none",
-                borderRadius: "6px",
-              }}
-            >
-              Browse All Free Calculators →
-            </Link>
-          </section>
-
           {/* FAQ */}
           <section>
-            <h2>Frequently Asked Questions</h2>
+            <h2>Questions About This Site</h2>
 
-            {[
-              [
-                "What is Numbers on Your Tip?",
-                "Numbers on Your Tip (numbersonyourtip.com) is a free online calculator and tools platform with 43+ tools across health, finance, daily use, maths, networking, and utility categories. Everything is completely free, requires no account or sign-up, and stores zero user data. It is built for students, freelancers, healthcare professionals, and anyone who needs a fast, accurate calculation without friction.",
-              ],
-              [
-                "Do I need to create an account to use the calculators?",
-                "No. Zero sign-up is required for any tool on the platform. You open the page, enter your numbers, and get your result. There is no account created, no email required, and no personal data collected. Free online calculators with no account is the core design principle of the site.",
-              ],
-              [
-                "Is Numbers on Your Tip really free?",
-                "Yes, entirely. There is no freemium tier, no premium version, and no paid features. The platform is funded by contextual advertising through Google AdSense. Every one of the 43 tools is free to use, unlimited, for anyone.",
-              ],
-              [
-                "What makes it different from calculator.net?",
-                "Calculator.net is a well-established platform with hundreds of calculators covering a broad range of categories. Numbers on Your Tip is more deliberately curated, with a specific focus on clinical medical tools (IV drip rate, dose, pharmacokinetics), freelancer finance tools, and practical utility tools that general-purpose calculator sites do not typically offer. The design is also cleaner and less advertising-heavy for daily use.",
-              ],
-              [
-                "Is there a free IV drip calculator on the site?",
-                "Yes. The IV Drip Calculator at numbersonyourtip.com/iv-calculator/ calculates IV flow rates in drops per minute and mL per hour from volume, time, and drop factor inputs. It is free, requires no sign-up, and works on any device. The full guide to using it is available in the IV infusion calculator blog post.",
-              ],
-              [
-                "Can students use this site for medical calculations?",
-                "Yes, and many do. The health calculator section includes a Dose Calculator, Dose Stock Calculator, IV Drip Rate Calculator, and Pharmacokinetics Calculator — all designed to support nursing students, paramedic trainees, pharmacy students, and clinical practitioners. Each has an associated educational guide on the blog explaining the underlying formulas.",
-              ],
-              [
-                "Are the financial calculators accurate?",
-                "Yes. Every financial calculator on Numbers on Your Tip uses standard, verified financial formulas — the EMI formula, standard loan amortization, Gallagher body fat equations, and established tax calculation methodology. For a deeper explanation of accuracy and why AI alternatives are often unreliable for specific financial calculations, see the post on whether AI can replace financial calculators.",
-              ],
-              [
-                "What free tools are available for freelancers?",
-                "Freelancers get the most value from the Freelancer Tax Calculator, VAT Calculator, Income Tax Calculator, Salary Hike Calculator, Word and Character Counter, Image Compressor, Lorem Ipsum Generator, Color Picker, and Currency Converter. All are free, browser-based, and require no registration.",
-              ],
-            ].map(([q, a], i) => (
+            {FAQ_DATA.map(([q, a], i) => {
+              const isOpen = openFAQ === i;
+              return (
               <div className="faq-item" key={i}>
-                <h3 onClick={() => toggleFAQ(i)}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleFAQ(i);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                >
                   {q}
                   <i
-                    className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
                   />
                 </h3>
-                {openFAQ === i && <p style={{ margin: 0 }}>{a}</p>}
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p style={{ margin: 0 }}>{a}</p>
+                  </div>
+                </div>
               </div>
-            ))}
+              );
+            })}
           </section>
         </article>
       </div>
 
-      {/* SIDEBAR */}
-      <aside className="blog-sidebar">
-        <p>Recent Blogs</p>
-        <ul>
-          {[
-            [
-              "/blog/healthy-bodyfat-percentage-by-age-and-gender/",
-              "Healthy Body Fat % by Age & Gender",
-            ],
-            ["/blog/renting-vs-buying-a-home/", "Renting vs. Buying a Home"],
-            [
-              "/blog/can-ai-replace-financial-calculators/",
-              "Can AI Replace Financial Calculators?",
-            ],
-            [
-              "/blog/best-free-financial-calculators-for-everyday-money-questions/",
-              "Best Free Financial Calculators",
-            ],
-            [
-              "/blog/how-do-i-calculate-my-net-worth/",
-              "How Do I Calculate My Net Worth?",
-            ],
-          ].map(([href, label]) => (
-            <li key={href as string}>
-              <Link href={href as string}>
-                <span
-                  style={{
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                  }}
-                >
-                  <i
-                    className="fa-solid fa-angle-right"
-                    style={{ color: "#D8A13A" }}
-                  />
-                  {label}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </aside>
+      <BlogSidebar
+        relatedTools={[
+          ["/bmi-calculator/", "BMI Calculator"],
+          ["/emi-calculator/", "EMI Calculator"],
+          ["/iv-calculator/", "IV Calculator"],
+        ]}
+        relatedPosts={[
+          [
+            "/blog/best-free-financial-calculators-for-everyday-money-questions/",
+            "Best Free Financial Calculators",
+          ],
+          [
+            "/blog/healthy-bodyfat-percentage-by-age-and-gender/",
+            "Healthy Body Fat % by Age & Gender",
+          ],
+          ["/blog/matrix-calculator-guide/", "Every Matrix Operation, Worked by Hand"],
+        ]}
+      />
     </div>
   );
 }

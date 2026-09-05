@@ -22,6 +22,45 @@ interface IPData {
   country_calling_code?: string;
 }
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "Is this my computer's IP address?",
+    "No. It is the address of the point where your network meets the internet, usually your router. Every device in your home shares it as far as any website is concerned. Inside your network each device has a private address beginning 192.168, 10. or 172.16 to 172.31, which is not routable across the internet and cannot be seen from outside.",
+  ],
+  [
+    "Why does the city shown not match where I am?",
+    "Because there is no location data in an IP address. Geolocation works from a database mapping address ranges to places, built from registry records and inference, so country and provider are usually right while city is frequently wrong. Mobile connections route through gateways that may be in another city, and office or university networks often route through a central site, so a remote worker can appear at their employer's headquarters.",
+  ],
+  [
+    "Are the coordinates my actual position?",
+    "No. When a database has no precise information it returns a default point for the region or country, which is why unrelated addresses map to the same spot. It looks like precision and is a placeholder. Nothing in an IP address describes a physical position.",
+  ],
+  [
+    "Can someone find my home address from my IP?",
+    "Not from outside. An IP address identifies a connection, not a person — it carries no name, address or identity. The link between an address and a subscriber is held by your internet provider and released to third parties only under legal process. What a website can reasonably infer is your country, your provider and an approximate area.",
+  ],
+  [
+    "Why does my IP address keep changing?",
+    "Most residential connections get a dynamic address from a pool, reassigned when the router restarts, when the lease expires, or when the provider reorganises. A static address stays fixed and is usually a paid business option, since it is what running a server reachable from outside requires.",
+  ],
+  [
+    "The address here does not appear anywhere in my router settings. Why?",
+    "You are probably behind carrier-grade translation, where the provider places multiple subscribers behind one public address because IPv4 addresses ran short. If so, you share that address with strangers, and incoming connections and port forwarding will not work no matter how the router is configured. Getting a genuinely public address usually means asking the provider for one.",
+  ],
+  [
+    "What is the difference between IPv4 and IPv6?",
+    "IPv4 uses four numbers like 203.0.113.42 and its roughly 4.3 billion addresses ran out, which is why sharing behind translation became common. IPv6 uses a much longer hexadecimal format and has enough addresses that scarcity is not a concern, so devices can each hold a routable one. That makes a single device potentially easier to follow across sites, which is why operating systems rotate IPv6 addresses using privacy extensions.",
+  ],
+  [
+    "Does a VPN hide my IP address?",
+    "It replaces the address sites see with the VPN server's, so reloading this page on a VPN should show a different result — if it does not, the tunnel is not carrying your traffic. It does not make you anonymous: accounts, cookies and browser characteristics still identify returning visitors, and logging in identifies you outright. Also check that DNS queries go through the tunnel, or your provider still sees every domain you look up.",
+  ],
+  [
+    "Is it dangerous for a website to see my IP address?",
+    "It is unavoidable and normally harmless — the address is how responses find their way back to you, so every site you visit necessarily sees it. The realistic risks are approximate location disclosure and, for someone running a server at home, being a target for unsolicited connection attempts. It is not a credential and cannot be used to access your devices on its own.",
+  ],
+];
+
 export default function IPDetector() {
   const [data, setData] = useState<IPData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -117,9 +156,23 @@ export default function IPDetector() {
 
   return (
     <div className="single-page-padding">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div>
         <h1>
-          Free IP Address Detector – Find Your IP &amp; Location Instantly
+          IP Address Detector — Your Public IP, Provider and Location
         </h1>
         <p>
           Instantly detect your public IP address, ISP, city, country, and
@@ -141,7 +194,7 @@ export default function IPDetector() {
         {!loading && error && (
           <div className="empty-hint">
             <i className="fa-solid fa-triangle-exclamation"></i>
-            Couldn't fetch IP data{errorDetail ? `: ${errorDetail}` : "."}{" "}
+            Couldn&apos;t fetch IP data{errorDetail ? `: ${errorDetail}` : "."}{" "}
             Please try again.
           </div>
         )}
@@ -231,473 +284,329 @@ export default function IPDetector() {
         )}
       </div>
 
-      {/* ===== SEO CONTENT ===== */}
+        {/* ---- SEO CONTENT ---- */}
 
-      <h2>What Is an IP Address Detector?</h2>
-      <p>
-        An IP address detector is a free online tool that instantly reveals your
-        public IP address along with related network and location information —
-        your approximate city, country, internet service provider (ISP),
-        timezone, and autonomous system number (ASN). The moment you load this
-        page, your browser's public-facing IP is automatically detected and
-        displayed without you clicking anything or signing up for an account.
-      </p>
-      <p>
-        Every device connected to the internet is assigned a public IP address
-        by its internet service provider. This address acts like a return
-        address for data traveling across the web, allowing websites, servers,
-        and other devices to know where to send information back to you. This
-        tool reads that address directly from your connection and
-        cross-references it against IP geolocation databases to surface useful
-        details about your network.
-      </p>
-      <p>
-        If you are troubleshooting a domain or email issue alongside your IP
-        lookup, our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>{" "}
-        lets you check a domain's A, MX, TXT, and NS records in real time — a
-        natural companion when diagnosing connectivity problems.
-      </p>
+        <h2>This Is Not Your Computer&apos;s Address</h2>
+        <p>
+          The address shown above belongs to the point where your network meets
+          the internet — usually your router, sometimes a piece of equipment
+          further upstream at your provider. Your laptop, phone and television
+          all appear as this same address to every site they visit.
+        </p>
+        <p>
+          Inside your home network each device has its own private address,
+          typically beginning 192.168, 10., or 172.16 through 172.31. Those
+          ranges are reserved and are not routable across the internet, so
+          countless networks worldwide use the identical numbers without
+          conflict. Your router translates between the private addresses inside
+          and the single public one outside, which is why a site can tell that
+          someone at your connection visited but not which device did.
+        </p>
+        <p>
+          This distinction matters for a practical reason. When a service asks
+          you to allow-list your IP address, it means the public one shown here.
+          When you are configuring a printer or a media server at home, it means
+          the private one, which this page cannot see.
+        </p>
 
-      <h2>Why Would You Need to Check Your IP Address?</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Troubleshooting network issues</strong> — Confirm your public
-          IP when setting up port forwarding, remote desktop access, firewall
-          rules, or self-hosted services.
-        </li>
-        <li>
-          <strong>Verifying VPN or proxy connections</strong> — Check that your
-          IP actually changed after connecting to a VPN, confirming your traffic
-          is routing through the expected location and server.
-        </li>
-        <li>
-          <strong>Gaming and server hosting</strong> — Multiplayer games and
-          self-hosted game servers often require you to know your public IP so
-          friends can connect directly.
-        </li>
-        <li>
-          <strong>Security and privacy audits</strong> — See exactly what
-          information websites can detect about your connection, including your
-          approximate location, ISP, and ASN.
-        </li>
-        <li>
-          <strong>Remote work and IT support</strong> — Quickly share your IP
-          address with an IT administrator for whitelisting, VPN configuration,
-          or firewall rule setup.
-        </li>
-        <li>
-          <strong>Geo-restricted content troubleshooting</strong> — Understand
-          why a streaming service or website thinks you are in a particular
-          country when you are not.
-        </li>
-        <li>
-          <strong>Email deliverability checks</strong> — If your outbound email
-          is being rejected, knowing your sending IP helps you check whether it
-          is blacklisted. Pair this with our{" "}
-          <Link href="/email-validator/" className="my-link">
-            email validator
+        <h2>How Accurate Is the Location, Really?</h2>
+        <p>
+          Geolocation is not a measurement. There is no positioning data in an
+          IP address, and nothing about the number describes a place. What
+          exists is a database mapping ranges of addresses to locations, built
+          from registry records, provider disclosures and inference. Accuracy
+          therefore varies enormously by field.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Typical reliability</th>
+                <th>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Country</td>
+                <td>Usually correct</td>
+                <td>Address blocks are allocated by regional registries</td>
+              </tr>
+              <tr>
+                <td>Provider and network</td>
+                <td>Usually correct</td>
+                <td>Ownership of the block is a matter of public record</td>
+              </tr>
+              <tr>
+                <td>Region or state</td>
+                <td>Often correct</td>
+                <td>Depends on how the provider distributes its blocks</td>
+              </tr>
+              <tr>
+                <td>City</td>
+                <td>Frequently wrong</td>
+                <td>
+                  Often resolves to a provider hub rather than to you
+                </td>
+              </tr>
+              <tr>
+                <td>Coordinates</td>
+                <td>Not your location</td>
+                <td>
+                  Commonly a city or country centre point used as a placeholder
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The coordinates row is worth dwelling on. When a database has no
+          precise information it often returns a default point for the region,
+          which is how entirely unrelated addresses end up mapped to the same
+          spot. It looks like precision and is not.
+        </p>
+        <p>
+          Two situations make city-level results wrong almost by default. Mobile
+          data routes through gateways that may be in another city entirely, so
+          a phone can appear a hundred kilometres from where it is. Business and
+          university connections often route through a central office, which is
+          why a remote worker can appear at their employer&apos;s headquarters.
+        </p>
+
+        <h2>What Your Address Reveals, and What It Does Not</h2>
+        <p>
+          A website you visit can see your IP address without you doing
+          anything. From it, with a lookup like this one, it can reasonably infer
+          your country, your internet provider and an approximate area. That is
+          the extent of it.
+        </p>
+        <p>
+          What it does not reveal is your name, your address, your identity, or
+          anything about you personally. The mapping from an address to a
+          subscriber is held by your provider and released to third parties only
+          under legal process. From outside, an IP address identifies a
+          connection, not a person.
+        </p>
+        <p>
+          Your provider is in a different position. They allocated the address,
+          so they can connect it to your account, and they see which sites you
+          connect to. Encryption protects the contents of what you send; it does
+          not hide who you are talking to. Our{" "}
+          <Link
+            href="/blog/online-privacy-security-basics/"
+            className="my-link"
+          >
+            guide to what your IP address and DNS actually reveal
           </Link>{" "}
-          to verify recipient addresses and our{" "}
+          works through this in more detail.
+        </p>
+
+        <h2>Why the Number Changes</h2>
+        <p>
+          Most residential connections receive a dynamic address, reassigned
+          from a pool. It commonly changes when the router restarts, when a
+          lease expires, or when the provider reorganises its network. A static
+          address stays fixed and is normally a paid business option, because it
+          is what running a server reachable from outside requires.
+        </p>
+        <p>
+          There is a third arrangement that surprises people. Because IPv4
+          addresses ran short years ago, many providers place multiple
+          subscribers behind a single public address using carrier-grade
+          translation. If that is your situation, you share a public IP with
+          strangers, and neither incoming connections nor port forwarding will
+          work regardless of how your router is configured. The symptom is
+          usually that the address shown here does not appear anywhere in your
+          router&apos;s own settings.
+        </p>
+
+        <h2>IPv4 and IPv6 Side by Side</h2>
+        <p>
+          You may be shown either format, or both, depending on your connection.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>IPv4</th>
+                <th>IPv6</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Looks like</td>
+                <td>203.0.113.42</td>
+                <td>2001:0db8:85a3::8a2e:0370:7334</td>
+              </tr>
+              <tr>
+                <td>Address space</td>
+                <td>About 4.3 billion — exhausted</td>
+                <td>Vast enough that scarcity is not a concern</td>
+              </tr>
+              <tr>
+                <td>Sharing</td>
+                <td>Frequently shared behind translation</td>
+                <td>Devices can each hold a routable address</td>
+              </tr>
+              <tr>
+                <td>Privacy note</td>
+                <td>Shared addresses blur individual devices</td>
+                <td>
+                  A per-device address can be more identifying, which privacy
+                  extensions rotate to mitigate
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The last row is a genuine trade-off rather than a flaw. IPv6 removes
+          the address shortage and, without privacy extensions, would make a
+          single device easier to follow across sites than a shared IPv4 address
+          does. Modern operating systems rotate their IPv6 addresses for exactly
+          this reason.
+        </p>
+
+        <h2>When a VPN Changes the Answer and When It Does Not</h2>
+        <p>
+          A VPN routes your traffic through another server, so the address a
+          site sees becomes the VPN&apos;s rather than yours. Reload this page on
+          a VPN and the result should change — if it does not, the tunnel is not
+          carrying your traffic.
+        </p>
+        <p>
+          What a VPN moves is the answer to &quot;where does this connection
+          appear to come from&quot;. It does not make you anonymous. Sites still
+          identify returning visitors through accounts, cookies and browser
+          characteristics, none of which the tunnel touches. If you log in, you
+          have identified yourself regardless of the address.
+        </p>
+        <p>
+          Two leaks are worth checking rather than assuming. If DNS queries
+          bypass the tunnel, your provider still sees every domain you look up
+          even though the traffic itself is encrypted elsewhere. And browser
+          features that establish direct peer connections have historically been
+          able to expose a local address. A VPN that changes the result here has
+          passed the basic test, not every test.
+        </p>
+
+        <h2>What to Do With This Page</h2>
+        <ul className="custom-list">
+          <li>
+            <strong>Allow-listing.</strong> Copy the public address when a
+            service asks you to authorise your connection — and remember it will
+            stop working when a dynamic address changes.
+          </li>
+          <li>
+            <strong>Confirming a VPN is active.</strong> Compare the result with
+            and without the tunnel. Country and provider should both change.
+          </li>
+          <li>
+            <strong>Explaining a geo-restriction.</strong> If a service thinks
+            you are in the wrong country, this shows what it is seeing.
+          </li>
+          <li>
+            <strong>Reporting a fault.</strong> Support teams routinely ask for
+            your public address and the provider name, both of which are shown
+            above.
+          </li>
+        </ul>
+        <p>
+          To look up the records behind a domain rather than your own
+          connection, use the{" "}
           <Link href="/dns-lookup/" className="my-link">
             DNS lookup tool
+          </Link>
+          , and the{" "}
+          <Link href="/internet-speed-test/" className="my-link">
+            internet speed test
           </Link>{" "}
-          to check SPF and DKIM records.
-        </li>
-      </ul>
+          measures what the connection is actually delivering.
+        </p>
+      <h2>IP Address Questions</h2>
 
-      <h2>What Information Does This Tool Show?</h2>
-      <p>
-        The table below explains each data point this IP detector returns and
-        what it tells you about your connection:
-      </p>
-      <div style={{ overflowX: "auto" }}>
-        <table
+      {FAQ_DATA.map(([q, a], i) => {
+        const isOpen = openFAQ === i;
+        return (
+          <div className="faq-item" key={i}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
+              {q}
+              <i
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
+              />
+            </h3>
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+    </div>
+  );
+}
+
+function InfoRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: string;
+  label: string;
+  value?: string;
+}) {
+  if (!value) return null;
+  return (
+    <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+      <i
+        className={`fa-solid ${icon}`}
+        style={{
+          color: "#1F9FB8",
+          fontSize: "14px",
+          marginTop: "3px",
+          width: "16px",
+        }}
+      ></i>
+      <div>
+        <div
           style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            color: "#999",
           }}
         >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #f5f5f5)",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Field
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                What It Shows
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Why It Matters
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              [
-                "Public IP Address",
-                "Your IPv4 or IPv6 address as seen by external servers",
-                "Required for remote access, port forwarding, VPN verification",
-              ],
-              [
-                "City & Region",
-                "Approximate geographic location from ISP-assigned IP ranges",
-                "Helps diagnose geo-restriction issues and VPN location checks",
-              ],
-              [
-                "Country",
-                "Country your IP block is registered to, with country code",
-                "Explains why region-locked content is or isn't accessible",
-              ],
-              [
-                "ISP / Organization",
-                "The company that owns the IP block (your internet provider)",
-                "Useful for reporting abuse, checking blacklists, or contacting support",
-              ],
-              [
-                "Timezone",
-                "Local timezone associated with your detected location",
-                "Helpful when scheduling across time zones or debugging timestamps",
-              ],
-              [
-                "ASN",
-                "Autonomous System Number identifying your network operator",
-                "Used in network engineering, peering analysis, and abuse reporting",
-              ],
-              [
-                "Coordinates",
-                "Approximate latitude and longitude of the IP's registered location",
-                "Shows the general area, not your exact address — typically city-level",
-              ],
-            ].map(([field, shows, matters], i) => (
-              <tr key={i}>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {field}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {shows}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {matters}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <h2>How to Use the IP Address Detector</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Step 1:</strong> Your own public IP and location details load
-          automatically the moment you open this page — no action needed.
-        </li>
-        <li>
-          <strong>Step 2:</strong> To check a different IP address, type it into
-          the search field and press Enter.
-        </li>
-        <li>
-          <strong>Step 3:</strong> Click the large IP address display to
-          instantly copy it to your clipboard.
-        </li>
-        <li>
-          <strong>Step 4:</strong> Click "My IP" at any time to return to your
-          own detected address.
-        </li>
-      </ul>
-
-      <h2>IPv4 vs. IPv6 — What Is the Difference?</h2>
-      <p>
-        The internet uses two versions of the IP addressing system. This tool
-        automatically detects which one your connection is using.
-      </p>
-      <div style={{ overflowX: "auto" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #f5f5f5)",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Feature
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                IPv4
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                IPv6
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              [
-                "Format",
-                "Four decimal numbers (e.g. 192.168.1.1)",
-                "Eight hexadecimal groups (e.g. 2001:0db8::7334)",
-              ],
-              ["Address Length", "32-bit", "128-bit"],
-              [
-                "Total Addresses",
-                "~4.3 billion",
-                "~340 undecillion (virtually unlimited)",
-              ],
-              [
-                "Adoption",
-                "Universal — still the majority of traffic",
-                "Growing — most modern ISPs support both",
-              ],
-              [
-                "NAT Required?",
-                "Yes — ISPs share addresses via NAT",
-                "No — every device can have a unique address",
-              ],
-              [
-                "Header Complexity",
-                "More complex, variable-length",
-                "Simplified, fixed-length — faster routing",
-              ],
-            ].map(([feature, v4, v6], i) => (
-              <tr key={i}>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {feature}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {v4}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {v6}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p>
-        IPv4 is the older, more widely used system. Because its 4.3 billion
-        addresses have essentially run out, ISPs increasingly assign IPv6
-        addresses to new connections. Most devices and networks support both
-        simultaneously, and this detector automatically identifies which version
-        your connection is using.
-      </p>
-
-      <h2>Public vs. Private IP Addresses</h2>
-      <p>
-        Your home or office network actually uses two types of IP addresses, and
-        understanding the difference is important for troubleshooting:
-      </p>
-      <ul className="custom-list">
-        <li>
-          <strong>Public IP address</strong> — The address assigned by your ISP
-          that represents your entire network to the outside internet. This is
-          what websites, game servers, and remote services see when you connect.
-          This is the address this tool detects.
-        </li>
-        <li>
-          <strong>Private IP address</strong> — The address assigned by your
-          router to each device within your local network (typically starting
-          with 192.168.x.x, 10.x.x.x, or 172.16.x.x). Private IPs are invisible
-          to the outside internet and are only used for communication between
-          devices on your own network.
-        </li>
-      </ul>
-      <p>
-        When you set up port forwarding, configure a VPN, or share your IP with
-        IT support, they need your public IP — not your private one. This tool
-        always shows the public address.
-      </p>
-
-      <h2>How IP Geolocation Works — And Its Limitations</h2>
-      <p>
-        IP geolocation maps an IP address to a geographic location by
-        cross-referencing it against databases maintained by regional internet
-        registries (RIRs) and commercial geolocation providers. These databases
-        track which IP ranges are assigned to which ISPs, and where those ISPs
-        operate geographically.
-      </p>
-      <p>
-        The result is an approximation, not a GPS fix. Here is what you can
-        generally expect in terms of accuracy:
-      </p>
-      <ul className="custom-list">
-        <li>
-          <strong>Country:</strong> Accurate in 95 to 99% of cases.
-        </li>
-        <li>
-          <strong>City / Region:</strong> Accurate within 50 to 100 km for most
-          connections. Rural or mobile connections may resolve to the nearest
-          major city.
-        </li>
-        <li>
-          <strong>Exact street address:</strong> Not possible from an IP address
-          alone. IP geolocation will never pinpoint your house or building —
-          this is true of all IP lookup tools, not just this one.
-        </li>
-      </ul>
-      <p>
-        If the city shown does not match your actual location, it is usually
-        because your ISP routes your traffic through a regional hub in a
-        different city. This is especially common with mobile data connections,
-        satellite internet, and carrier-grade NAT setups.
-      </p>
-
-      <h2>Is It Safe to Share Your IP Address?</h2>
-      <p>
-        Sharing your public IP address carries minimal risk in most situations.
-        It does not reveal your exact physical address, name, or personal
-        identity — only an approximate location tied to your ISP's regional
-        infrastructure, which is often a city or region away from where you
-        actually are.
-      </p>
-      <p>
-        That said, it is good practice to avoid sharing your IP with untrusted
-        parties. A determined attacker with your IP could potentially attempt
-        port scanning, DDoS attacks, or social engineering against your ISP.
-        Using a VPN masks your real IP and adds a layer of protection in
-        situations where privacy matters.
-      </p>
-      <p>
-        This tool runs the lookup directly from your browser to a geolocation
-        API — we do not log, store, or track the IP addresses or results you
-        look up.
-      </p>
-
-      <h2>Common IP Address Troubleshooting Scenarios</h2>
-
-      <h3>VPN Not Working as Expected</h3>
-      <p>
-        Connect to your VPN, then reload this page. If the IP address shown is
-        still your real one (same city, same ISP), the VPN connection is not
-        active or is leaking your real IP. Try reconnecting, switching VPN
-        protocols, or contacting your VPN provider's support.
-      </p>
-
-      <h3>Remote Access Not Connecting</h3>
-      <p>
-        If you are trying to access your home computer remotely and the
-        connection fails, confirm that the public IP you shared has not changed.
-        Many ISPs assign dynamic IPs that rotate periodically. Check this tool
-        to see your current IP and update your remote access configuration if it
-        has changed.
-      </p>
-
-      <h3>Website or Service Thinks You Are in the Wrong Country</h3>
-      <p>
-        Some streaming services, banking apps, and government websites use IP
-        geolocation to restrict access. If a service blocks you despite being in
-        the correct country, your ISP may be routing traffic through an
-        international hub. Contacting your ISP to confirm your IP range's
-        registered country is the first step. Alternatively, connecting through
-        a VPN server in the correct country resolves most geo-restriction
-        issues.
-      </p>
-
-      <h3>Email Being Rejected or Blacklisted</h3>
-      <p>
-        If outbound email from your server is being rejected, your sending IP
-        may be on a blacklist. Use this tool to confirm the IP your mail server
-        is sending from, then check it against major blacklist databases. You
-        can also verify your email configuration using our{" "}
-        <Link href="/email-validator/" className="my-link">
-          email validator
-        </Link>{" "}
-        and confirm your domain's SPF and DKIM records with our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>
-        .
-      </p>
-
-      <h2>Frequently Asked Questions</h2>
-
-      {[
-        [
-          "Is this IP detector tool free to use?",
-          "Yes, completely free with no limits, no sign-up, and no hidden charges. Your IP and location details load automatically, and you can look up additional IP addresses as many times as you need.",
-        ],
-        [
-          "Why does the location shown not match my exact address?",
-          "IP geolocation is based on the regional block of addresses assigned by your ISP, not GPS data. It typically identifies the city or region accurately but rarely pinpoints an exact street address. This is a fundamental limitation of all IP lookup tools, not a flaw in this one.",
-        ],
-        [
-          "Can I look up someone else's IP address?",
-          "Yes. Enter any public IPv4 or IPv6 address into the search field to see its associated location, ISP, ASN, and other publicly available network details. This works for any valid public IP address.",
-        ],
-        [
-          "Why does my IP address change when I use a VPN?",
-          "A VPN routes your internet traffic through a remote server, so websites and tools see the VPN server's IP address instead of your real one. This tool is a quick way to confirm your VPN is actively masking your IP and showing the expected location.",
-        ],
-        [
-          "What is an ISP and why does it appear in the results?",
-          "ISP stands for Internet Service Provider — the company that provides your internet connection. Every public IP address is registered to an ISP or hosting organization, which is why this detail appears in the lookup. Common examples include Comcast, AT&T, Jio, PTCL, and Vodafone.",
-        ],
-        [
-          "Does this tool store or track my IP address?",
-          "No. The detection happens directly between your browser and the geolocation provider (GeoJS) in real time. We do not log, store, or share any IP addresses or lookup results.",
-        ],
-        [
-          "What is the difference between a public and private IP address?",
-          "A private IP address (like 192.168.1.x) is used only within your home or office network and is invisible to the outside internet. A public IP address is the one assigned by your ISP that represents your network to the wider internet — this is the address this tool detects. You need your public IP for remote access, gaming, and VPN verification.",
-        ],
-        [
-          "Does this work on mobile devices?",
-          "Yes. The IP detector is fully responsive and works on iPhones, Android phones, tablets, and desktop browsers. No app installation required — just open this page and your IP is detected instantly.",
-        ],
-        [
-          "Why does my IP address change periodically?",
-          "Most residential ISPs assign dynamic IP addresses, which can change every time your router restarts or at regular intervals set by the ISP. If you need a permanent address for hosting or remote access, ask your ISP about a static IP — though these usually cost extra.",
-        ],
-      ].map(([q, a], i) => (
-        <div className="faq-item" key={i}>
-          <h3 onClick={() => toggleFAQ(i)}>
-            {q}
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === i && <p>{a}</p>}
+          {label}
         </div>
-      ))}
-
-      <h2>Final Thoughts</h2>
-      <p>
-        Your IP address is one of the most basic but important pieces of your
-        internet identity. Whether you are verifying a VPN, setting up remote
-        access, diagnosing email issues, or simply curious about what the
-        internet can see about your connection, this tool gives you the answer
-        in seconds.
-      </p>
-      <p>
-        For related diagnostics, check domain configurations with our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>
-        , validate email addresses with our{" "}
-        <Link href="/email-validator/" className="my-link">
-          email validator
-        </Link>
-        , or explore our full collection of{" "}
-        <Link href="/" className="my-link">
-          free calculators and tools
-        </Link>
-        .
-      </p>
-
+        <div style={{ fontSize: "18px", fontWeight: 600, color: "#000" }}>
+          {value}
+        </div>
+      </div>
       <style jsx>{`
         .ip-hero {
           position: relative;
@@ -799,47 +708,6 @@ export default function IPDetector() {
           padding: 20px 16px 16px;
         }
       `}</style>
-    </div>
-  );
-}
-
-function InfoRow({
-  icon,
-  label,
-  value,
-}: {
-  icon: string;
-  label: string;
-  value?: string;
-}) {
-  if (!value) return null;
-  return (
-    <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-      <i
-        className={`fa-solid ${icon}`}
-        style={{
-          color: "#1F9FB8",
-          fontSize: "14px",
-          marginTop: "3px",
-          width: "16px",
-        }}
-      ></i>
-      <div>
-        <div
-          style={{
-            fontSize: "11px",
-            fontWeight: 700,
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-            color: "#999",
-          }}
-        >
-          {label}
-        </div>
-        <div style={{ fontSize: "18px", fontWeight: 600, color: "#000" }}>
-          {value}
-        </div>
-      </div>
     </div>
   );
 }

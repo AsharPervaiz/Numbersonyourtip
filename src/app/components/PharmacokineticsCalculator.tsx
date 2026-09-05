@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ReviewedBy from "./ReviewedBy";
 
 /* ─────────────────────────────────────────
    Types
@@ -180,6 +181,49 @@ function PKResultPanel({ result }: { result: PKResult | null }) {
     </div>
   );
 }
+
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do I calculate a drug half-life from two blood levels?",
+    "Take the natural log of each concentration, subtract, and divide by the time between the samples to get the elimination rate constant: k = (ln C₁ − ln C₂) ÷ (t₂ − t₁). Half-life is then 0.693 ÷ k. A level of 18 mg/L falling to 6 mg/L over eight hours gives k = 0.137 per hour and a half-life of 5.1 hours. Both samples must be drawn in the elimination phase, not while the drug is still distributing.",
+  ],
+  [
+    "Why is half-life calculated with 0.693?",
+    "It is the natural logarithm of 2, which appears whenever an exponential process is halved. First-order elimination removes a constant fraction per unit time, so the time to fall by half is the same wherever you start on the curve. That constancy is what makes half-life a usable single number.",
+  ],
+  [
+    "How long does it take to reach steady state?",
+    "About five half-lives, at which point roughly 97% of steady state has been reached. Each half-life closes half the remaining gap: 50%, 75%, 87.5%, 93.75%, then 96.9%. The same figures run in reverse after stopping. Five is a convention rather than a threshold — nothing changes at that point, the remaining gap simply becomes small enough to ignore.",
+  ],
+  [
+    "Why can volume of distribution be larger than the body?",
+    "Because it is a ratio, not a physical space. Vd is the volume that would be required to hold the entire dose at the concentration actually measured in plasma. A drug that binds extensively to tissue leaves very little in plasma, so the denominator is small and the calculated volume becomes very large. Read as a description of where the drug sits, a high Vd means most of it is out of the bloodstream.",
+  ],
+  [
+    "Why is dialysis ineffective for drugs with a high Vd?",
+    "Dialysis filters blood, and a drug with a high volume of distribution is mostly not in the blood — it is bound in tissue. Clearing the plasma compartment therefore removes only a small fraction of the total amount in the body, and tissue stores refill the plasma afterwards. Drugs confined largely to plasma are the ones dialysis removes efficiently.",
+  ],
+  [
+    "How are half-life, clearance and volume of distribution related?",
+    "Half-life is not independent of the other two: t½ = 0.693 × Vd ÷ Cl. This explains apparent contradictions. A drug with poor clearance can still have a short half-life if its Vd is small, and a drug with excellent clearance can have a long half-life if it is extensively distributed, because clearance can only act on the fraction currently in plasma.",
+  ],
+  [
+    "Should a loading dose be reduced in renal impairment?",
+    "Generally not. The loading dose fills the volume of distribution, which renal impairment does not meaningfully change, so the same loading dose is needed to reach the target concentration. What changes is clearance, so the maintenance dose or the dosing interval is adjusted instead. Reducing the loading dose only delays reaching a therapeutic level.",
+  ],
+  [
+    "What is the difference between clearance and the elimination rate constant?",
+    "Clearance is a volume of plasma cleared per unit time and is what sets the maintenance dose. The elimination rate constant k is the fraction of drug removed per unit time and is what sets half-life and the shape of the concentration curve. They are linked by Cl = k × Vd, so knowing any two gives the third.",
+  ],
+  [
+    "How does bioavailability change the dose?",
+    "Bioavailability F is the fraction of an administered dose that reaches systemic circulation, and both dose equations divide by it. Intravenous administration has F of 1. Any other route has less, because of incomplete absorption and first-pass metabolism, so an equivalent oral dose has to be larger. Halving F doubles the oral dose needed for the same exposure.",
+  ],
+  [
+    "When do these formulas stop applying?",
+    "When elimination is saturated. These equations assume first-order kinetics, where a constant fraction is removed per unit time. Under zero-order kinetics a constant amount is removed instead and half-life is no longer a fixed number. The warning sign is a small dose increase producing a disproportionately large rise in measured concentration — at that point extrapolation with these formulas will underestimate the next level.",
+  ],
+];
 
 /* ─────────────────────────────────────────
    Main Calculator Page
@@ -611,8 +655,23 @@ export default function PharmacokineticsCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
-        <h1>Pharmacokinetics Calculator</h1>
+        <h1>Pharmacokinetics Calculator — Half-Life, Vd, Clearance</h1>
+
         <p>
           Calculate half-life, elimination rate constant, volume of
           distribution, clearance, loading dose, and maintenance dose — with
@@ -889,600 +948,309 @@ export default function PharmacokineticsCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is Pharmacokinetics?</h2>
+        <h2>Half-Life Is the Parameter Everything Else Hangs Off</h2>
         <p>
-          Pharmacokinetics (PK) is the branch of pharmacology that studies what
-          the body does to a drug after it is administered. It covers four
-          fundamental processes — absorption, distribution, metabolism, and
-          excretion — collectively known as ADME. These processes determine how
-          quickly a drug reaches its target site, how long it remains active in
-          the body, and how it is eventually eliminated.
+          Of the six quantities this calculator handles, half-life is the one
+          most people arrive looking for, and it is also the one that answers
+          the largest number of practical questions. How long until the drug
+          works. How long until it has gone. How often it needs to be given.
+          Whether a level taken this morning tells you anything useful.
         </p>
         <p>
-          This free pharmacokinetics calculator covers the six core PK
-          parameters used daily in clinical and academic settings: half-life,
-          elimination rate constant, volume of distribution, clearance, loading
-          dose, and maintenance dose — with full support for both first order
-          and zero order kinetics. For the practical clinical tools that use
-          these PK values — calculating actual patient doses and infusion rates
-          — see our{" "}
-          <Link href="/dose-calculator/" className="my-link">
-            dose calculator
-          </Link>{" "}
-          and{" "}
-          <Link href="/iv-calculator/" className="my-link">
-            IV calculator
-          </Link>
-          .
+          Half-life is the time for the plasma concentration to fall by half. In
+          first-order kinetics that interval is constant regardless of where you
+          start, which is the property that makes the whole framework useful.
+        </p>
+        <pre>t½ = 0.693 ÷ k</pre>
+        <p>
+          The 0.693 is the natural logarithm of 2 and appears wherever
+          exponential decay is halved. If you know the elimination rate constant
+          k, you have the half-life; if you know the half-life, you have k.
         </p>
 
-        <h2>PK Parameters at a Glance — Summary Table</h2>
+        <h3>Getting Half-Life From Two Measured Levels</h3>
         <p>
-          The table below summarizes all six pharmacokinetic parameters this
-          calculator covers, their formulas, and what each one tells you
-          clinically:
+          In practice half-life is often not given — it is derived from two
+          concentrations taken a known time apart:
         </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <pre>
+          k = (ln C₁ − ln C₂) ÷ (t₂ − t₁){"\n"}t½ = 0.693 ÷ k
+        </pre>
+        <p>
+          A level of 18 mg/L falling to 6 mg/L over eight hours gives ln 18 =
+          2.890, ln 6 = 1.792, so k = (2.890 − 1.792) ÷ 8 = 0.137 per hour, and
+          t½ = 0.693 ÷ 0.137 = 5.1 hours.
+        </p>
+        <p>
+          Both samples must be drawn in the elimination phase for this to hold.
+          A level taken while the drug is still distributing out of the
+          bloodstream into tissue falls for a reason that has nothing to do with
+          elimination, and a half-life calculated from it will be far too short.
+          This is the single most common source of a nonsensical result.
+        </p>
+
+        <h2>Why Five Half-Lives Keeps Coming Up</h2>
+        <p>
+          The same figure governs both directions: accumulation towards steady
+          state on repeated dosing, and washout after stopping. Each half-life
+          closes half the remaining gap.
+        </p>
+
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Parameter
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Formula
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Unit
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Clinical Meaning
-                </th>
+              <tr>
+                <th>Half-lives elapsed</th>
+                <th>Percentage of steady state reached</th>
+                <th>Percentage remaining after stopping</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Half-Life (t½)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.693 ÷ k
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  hr
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Time for concentration to fall 50%
-                </td>
+                <td>1</td>
+                <td>50%</td>
+                <td>50%</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Elimination Rate (k)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.693 ÷ t½
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  hr⁻¹
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Fraction of drug removed per hour
-                </td>
+                <td>2</td>
+                <td>75%</td>
+                <td>25%</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Volume of Distribution (Vd)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  A ÷ Cp
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>L</td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  How widely drug distributes into tissues
-                </td>
+                <td>3</td>
+                <td>87.5%</td>
+                <td>12.5%</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Clearance (Cl)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  k × Vd
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  L/hr
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Volume of plasma cleared per hour
-                </td>
+                <td>4</td>
+                <td>93.75%</td>
+                <td>6.25%</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Loading Dose (LD)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  (Vd × Cp) ÷ F
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Initial dose to rapidly reach target level
-                </td>
+                <td>5</td>
+                <td>96.9%</td>
+                <td>3.1%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Five half-lives is a convention rather than a threshold — it is simply
+          where the remaining gap becomes small enough to ignore for most
+          purposes. Nothing changes at that point.
+        </p>
+        <p>
+          The practical consequences are worth spelling out. A drug with a
+          six-hour half-life reaches steady state inside about thirty hours, so
+          a level drawn on day two is meaningful. A drug with a half-life
+          measured in weeks will not be at steady state for months, which means
+          a level checked a fortnight in is still on the way up, and dose
+          decisions made from it will systematically under-dose the patient. The
+          same arithmetic explains why a drug stopped for a suspected adverse
+          effect may take days to clear, and why an interacting drug started
+          today may not show its full effect until next week.
+        </p>
+
+        <h2>Volume of Distribution Is Not a Volume</h2>
+        <p>
+          Vd is the parameter that causes the most confusion, because its name
+          suggests a physical space and it is not one.
+        </p>
+        <pre>Vd = Dose ÷ Plasma concentration</pre>
+        <p>
+          It is the volume that <em>would</em> be needed to hold the whole dose
+          at the concentration actually measured in plasma. If a drug leaves the
+          bloodstream and binds extensively to tissue, very little remains in
+          plasma to be measured, the denominator is small, and the calculated Vd
+          becomes enormous — larger than the body, which is the clue that it is a
+          ratio rather than a compartment.
+        </p>
+        <p>
+          Read that way, Vd tells you where the drug is:
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Vd is roughly</th>
+                <th>Interpretation</th>
+                <th>Consequence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Small (a few litres)</td>
+                <td>Drug largely confined to plasma, often protein-bound</td>
+                <td>Small loading doses; readily removed by dialysis</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Maintenance Dose (MD)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  (Cl × Cp × τ) ÷ F
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  mg
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Repeat dose to sustain therapeutic level
+                <td>Around total body water</td>
+                <td>Distributes through body fluid without much binding</td>
+                <td>Loading dose scales with body water, not total mass</td>
+              </tr>
+              <tr>
+                <td>Very large</td>
+                <td>Extensively bound in tissue, little left in plasma</td>
+                <td>
+                  Large loading doses required; dialysis removes almost nothing
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>First Order vs Zero Order Kinetics</h2>
         <p>
-          First order kinetics is the most common model. A constant fraction of
-          the drug is eliminated per unit time, and the elimination rate is
-          proportional to plasma concentration. As concentration falls, so does
-          the rate of removal — producing an exponential decline in drug levels.
-        </p>
-        <p>
-          Zero order kinetics occurs when elimination pathways become saturated.
-          A constant amount of drug is removed per unit time regardless of
-          concentration, leading to a linear decline. This model carries a
-          higher risk of toxic accumulation because small dose increases can
-          produce disproportionately large rises in plasma levels. Classic
-          examples include ethanol, phenytoin at high doses, and aspirin in
-          overdose.
+          That last row is why dialysis is ineffective for some overdoses. If
+          the drug is sitting in tissue rather than circulating, filtering the
+          blood filters a compartment that holds hardly any of it.
         </p>
 
-        <h2>Pharmacokinetic Formulas — Complete Reference with Examples</h2>
-
-        <h3>1. Half-Life (t½)</h3>
-        <p>
-          Half-life is the time required for plasma concentration to decrease by
-          50%. It determines dosing frequency, time to steady state
-          (approximately 5 half-lives), and how long a drug remains active after
-          discontinuation.
-        </p>
-        <h4>First Order</h4>
-        <p>
-          <strong>Formula:</strong> t½ = 0.693 ÷ k
-        </p>
-        <p>
-          <strong>Example:</strong> If k = 0.2 hr⁻¹ → t½ = 0.693 ÷ 0.2 ={" "}
-          <strong>3.46 hours</strong>
-        </p>
-        <h4>Zero Order</h4>
-        <p>
-          <strong>Formula:</strong> t½ = C₀ ÷ (2 × K₀)
-        </p>
-        <p>
-          <strong>Example:</strong> If C₀ = 100 mg/L, K₀ = 10 mg/L/hr → t½ = 100
-          ÷ 20 = <strong>5 hours</strong>
-        </p>
-
-        <h3>2. Elimination Rate Constant (k)</h3>
-        <p>
-          The elimination rate constant describes the fraction of drug removed
-          from the body per unit time. It is inversely related to half-life and
-          represents the slope of the log-linear concentration–time curve.
-        </p>
-        <h4>First Order</h4>
-        <p>
-          <strong>Formula:</strong> k = 0.693 ÷ t½
-        </p>
-        <p>
-          <strong>Example:</strong> If t½ = 6 hr → k = 0.693 ÷ 6 ={" "}
-          <strong>0.115 hr⁻¹</strong>
-        </p>
-        <h4>Zero Order</h4>
-        <p>
-          <strong>Formula:</strong> k₀ = (C₀ − C) ÷ t
-        </p>
-        <p>
-          <strong>Example:</strong> C₀ = 100 mg/L, C = 60 mg/L, t = 4 hr → k₀ =
-          40 ÷ 4 = <strong>10 mg/L/hr</strong>
-        </p>
-
-        <h3>3. Volume of Distribution (Vd)</h3>
-        <p>
-          Volume of distribution is a theoretical volume that relates the total
-          amount of drug in the body to its measured plasma concentration. A
-          high Vd indicates extensive tissue binding; a low Vd suggests the drug
-          largely remains in plasma.
-        </p>
-        <p>
-          <strong>Formula:</strong> Vd = A ÷ Cp
-        </p>
-        <p>
-          <strong>Example:</strong> 500 mg administered, Cp = 10 mg/L → Vd ={" "}
-          <strong>50 L</strong>
-        </p>
-
-        <h3>4. Clearance (Cl)</h3>
+        <h2>Clearance Sets the Maintenance Dose</h2>
         <p>
           Clearance is the volume of plasma completely cleared of drug per unit
-          time. It is the primary parameter for calculating maintenance doses
-          and is directly affected by renal and hepatic function.
+          time. It is the parameter that determines how much drug has to be
+          replaced to hold a concentration steady.
         </p>
-        <h4>First Order</h4>
+        <pre>Cl = k × Vd</pre>
         <p>
-          <strong>Formula:</strong> Cl = k × Vd
+          The relationship between the three parameters is the most useful thing
+          on this page. Half-life is not an independent property — it is what
+          falls out of clearance and volume of distribution together:
         </p>
+        <pre>t½ = 0.693 × Vd ÷ Cl</pre>
         <p>
-          <strong>Example:</strong> k = 0.1 hr⁻¹, Vd = 40 L → Cl ={" "}
-          <strong>4 L/hr</strong>
-        </p>
-        <h4>Zero Order</h4>
-        <p>
-          <strong>Formula:</strong> Cl = K₀ ÷ C
-        </p>
-        <p>
-          <strong>Example:</strong> K₀ = 20 mg/hr, C = 10 mg/L → Cl ={" "}
-          <strong>2 L/hr</strong>
+          This explains results that otherwise look contradictory. A drug with
+          poor clearance can still have a short half-life if its Vd is small. A
+          drug with excellent clearance can have a very long half-life if it is
+          extensively distributed into tissue, because clearance can only act on
+          the fraction currently in plasma. Half-life alone therefore says little
+          about how efficiently the body is eliminating a drug.
         </p>
 
-        <h3>5. Loading Dose (LD)</h3>
+        <h2>Loading and Maintenance Answer Different Questions</h2>
         <p>
-          A loading dose is a higher initial dose given to rapidly achieve a
-          therapeutic plasma concentration. It is essential for drugs with long
-          half-lives where waiting for steady state would take clinically
-          unacceptable time.
+          The two dose calculations use different parameters because they solve
+          different problems. The loading dose fills the distribution space; the
+          maintenance dose replaces what is cleared.
+        </p>
+        <pre>
+          Loading dose = (Target concentration × Vd) ÷ F{"\n"}Maintenance dose =
+          (Target concentration × Cl × Dosing interval) ÷ F
+        </pre>
+        <p>
+          Notice that the loading dose depends on Vd and not at all on clearance,
+          while the maintenance dose depends on clearance and not at all on Vd.
+          A patient with impaired renal function needs the same loading dose as
+          anyone else — their distribution space has not changed — but a reduced
+          maintenance dose, because the drug they are given now leaves more
+          slowly. Reducing the loading dose in renal impairment is a common error
+          that simply delays reaching a therapeutic concentration.
         </p>
         <p>
-          <strong>Formula:</strong> LD = (Vd × Cp) ÷ F
-        </p>
-        <p>
-          <strong>Example:</strong> Vd = 30 L, Cp = 5 mg/L, F = 0.5 → LD ={" "}
-          <strong>300 mg</strong>
-        </p>
-
-        <h3>6. Maintenance Dose (MD)</h3>
-        <p>
-          The maintenance dose replaces the amount of drug eliminated between
-          doses, keeping plasma concentrations within the therapeutic window.
-        </p>
-        <p>
-          <strong>Formula:</strong> MD = (Cl × Cp × τ) ÷ F
-        </p>
-        <p>
-          <strong>Example:</strong> Cl = 4 L/hr, Cp = 10 mg/L, τ = 12 hr, F =
-          0.8 → MD = <strong>600 mg</strong>
+          F is bioavailability, the fraction of an administered dose reaching
+          systemic circulation. It is 1 for intravenous administration and less
+          for every other route. Dividing by F is what converts an intravenous
+          dose into the larger oral dose that produces equivalent exposure.
         </p>
 
-        <h2>Common Drug PK Parameters — Reference Table</h2>
+        <h2>When First-Order Assumptions Break</h2>
         <p>
-          The following table provides approximate PK values for commonly
-          studied and clinically monitored drugs. Use these as reference points
-          when working through calculations. Values are for healthy adults and
-          may differ significantly in renal or hepatic impairment.
+          Everything above assumes first-order kinetics, where a constant
+          fraction of drug is eliminated per unit time and the elimination
+          machinery is nowhere near saturated. Most drugs at therapeutic
+          concentrations behave this way.
         </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
+        <p>
+          Zero-order kinetics is what happens when the enzymes are saturated: a
+          constant <em>amount</em> is eliminated per unit time rather than a
+          constant fraction, and half-life ceases to be a fixed number at all.
+          Alcohol is the familiar example. The clinically dangerous cases are
+          drugs that behave in first-order fashion through most of their
+          therapeutic range and cross into saturation near the top of it — a
+          modest dose increase then produces a disproportionate rise in
+          concentration rather than a proportional one.
+        </p>
+        <p>
+          A practical signal is worth watching for: if a small dose increase
+          produces a much larger rise in measured level than expected, the
+          assumption of first-order kinetics is probably no longer safe, and
+          extrapolating with these formulas will underestimate the next
+          concentration.
+        </p>
+
+        <h2>What Renal Impairment Actually Changes</h2>
+        <p>
+          Impaired renal function reduces clearance for renally eliminated
+          drugs. Vd is largely unaffected. Since half-life is 0.693 × Vd ÷ Cl,
+          a fall in clearance with unchanged Vd lengthens half-life
+          proportionally, and time to steady state lengthens with it.
+        </p>
+        <p>
+          Two adjustments follow, and they are not equivalent. Reducing the dose
+          while keeping the interval lowers both peak and trough. Extending the
+          interval while keeping the dose preserves the peak and lowers the
+          trough. For drugs whose effect depends on achieving a high peak, the
+          second is preferred; for drugs where toxicity tracks the trough,
+          extending the interval is what gives the concentration time to fall.
+          Which applies is a property of the drug.
+        </p>
+        <p>
+          For the arithmetic of turning a calculated dose into an administered
+          one, see the{" "}
+          <Link href="/dose-calculator/" className="my-link">
+            dosage calculator
+          </Link>{" "}
+          for weight-based orders and the{" "}
+          <Link href="/iv-calculator/" className="my-link">
+            IV calculator
+          </Link>{" "}
+          for infusion rates. The{" "}
+          <Link href="/pharmacodynamics-calculator/" className="my-link">
+            pharmacodynamics calculator
+          </Link>{" "}
+          covers the other half of the relationship — what the drug does once it
+          is there.
+        </p>
+        <h2>Pharmacokinetics Questions, Worked Through</h2>
+
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
                 }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
               >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Drug
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Half-Life
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Vd (L/kg)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Oral F
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Kinetics
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Gentamicin
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  2–3 hr
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.25
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  —(IV only)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1st order
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Vancomycin
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  4–6 hr
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.7
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  —(IV only)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1st order
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Digoxin
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  36–48 hr
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  7.0
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.60–0.80
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1st order
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Phenytoin
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  12–36 hr*
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.65
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.80–0.95
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Zero order at high C
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Lithium
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  18–24 hr
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.7–1.0
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  ~1.0
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1st order
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Amiodarone
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  40–55 days
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  66
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.35–0.65
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1st order
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>
-          <em>
-            *Phenytoin follows first order kinetics at low concentrations but
-            switches to zero order (Michaelis-Menten saturation) at higher
-            therapeutic and toxic concentrations — one of the reasons it
-            requires careful therapeutic drug monitoring.
-          </em>
-        </p>
-
-        <h2>Clinical Importance of Pharmacokinetic Calculations</h2>
-        <p>
-          Pharmacokinetic calculations are fundamental to individualizing drug
-          therapy. Incorrect dosing can lead to subtherapeutic levels, treatment
-          failure, or toxic accumulation. Key scenarios requiring PK-guided dose
-          adjustment include:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Renal impairment</strong> — reduces clearance of renally
-            excreted drugs (vancomycin, gentamicin, digoxin, metformin),
-            requiring dose reduction or interval extension
-          </li>
-          <li>
-            <strong>Hepatic disease</strong> — impairs first-pass metabolism and
-            hepatic clearance, increasing bioavailability and plasma levels
-          </li>
-          <li>
-            <strong>Pediatric and geriatric dosing</strong> — body composition,
-            renal function, and enzyme activity differ from standard adult
-            values. Use our{" "}
-            <Link href="/dose-calculator/" className="my-link">
-              weight-based dose calculator
-            </Link>{" "}
-            as a starting point for pediatric dose estimation
-          </li>
-          <li>
-            <strong>Obesity</strong> — alters Vd for lipophilic drugs, affecting
-            loading dose calculations. Our{" "}
-            <Link href="/bmi-calculator/" className="my-link">
-              BMI calculator
-            </Link>{" "}
-            can help classify the patient's weight status
-          </li>
-          <li>
-            <strong>Drug interactions</strong> — enzyme inducers (rifampicin)
-            and inhibitors (fluconazole) directly alter clearance and half-life
-            of co-administered drugs
-          </li>
-          <li>
-            <strong>Therapeutic drug monitoring (TDM)</strong> — drugs with
-            narrow therapeutic indices (lithium, aminoglycosides, cyclosporine,
-            phenytoin) require regular plasma level monitoring guided by PK
-            principles
-          </li>
-        </ul>
-
-        <h2>How This Calculator Fits With Other Clinical Tools</h2>
-        <p>
-          Pharmacokinetic parameters inform the calculations performed by our
-          other clinical tools:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>
-              <Link href="/dose-calculator/" className="my-link">
-                Dose Calculator
-              </Link>
-            </strong>{" "}
-            — uses patient weight and a prescribed mg/kg rate to calculate the
-            total dose in mg. The mg/kg rate itself is derived from PK studies
-            of the drug.
-          </li>
-          <li>
-            <strong>
-              <Link href="/dose-stock-calculator/" className="my-link">
-                Dose Stock Calculator
-              </Link>
-            </strong>{" "}
-            — converts the mg dose into tablets or mL of liquid from available
-            stock. Used after the dose is determined.
-          </li>
-          <li>
-            <strong>
-              <Link href="/iv-calculator/" className="my-link">
-                IV Calculator
-              </Link>
-            </strong>{" "}
-            — calculates infusion rate (mL/hr) and drip rate (drops/min) for IV
-            delivery. The infusion rate depends on the PK-derived dose and the
-            drug's concentration.
-          </li>
-        </ul>
-
-        <h2>How to Use This Pharmacokinetics Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Step 1:</strong> Select the PK parameter you want to
-            calculate — half-life, elimination rate constant, Vd, clearance,
-            loading dose, or maintenance dose.
-          </li>
-          <li>
-            <strong>Step 2:</strong> Choose the kinetic model — first order or
-            zero order — based on the drug's known elimination behavior.
-          </li>
-          <li>
-            <strong>Step 3:</strong> Enter the required input values.
-          </li>
-          <li>
-            <strong>Step 4:</strong> Click Calculate to see your result
-            instantly, with a visual gauge showing where the value falls on a
-            general clinical scale.
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {[
-          [
-            "What is the difference between first order and zero order kinetics?",
-            "In first order kinetics, a constant fraction of drug is eliminated per unit time and the rate depends on concentration — producing exponential decline. In zero order kinetics, a constant amount is eliminated regardless of concentration because metabolic pathways are saturated — producing linear decline. Zero order drugs (ethanol, phenytoin at high doses) carry a higher risk of toxic accumulation with small dose increases.",
-          ],
-          [
-            "Why is volume of distribution (Vd) important in clinical practice?",
-            "Vd determines the loading dose needed to achieve a target plasma concentration, predicts how long a drug remains in the body, and indicates whether a drug can be effectively removed by dialysis. Drugs with very high Vd (chloroquine, digoxin) are poorly dialyzable because most drug is bound in tissues rather than circulating in plasma.",
-          ],
-          [
-            "When is a loading dose clinically necessary?",
-            "A loading dose is used when a rapid therapeutic effect is needed and waiting 4–5 half-lives for steady state is clinically unacceptable. Common examples include digoxin in atrial fibrillation, amiodarone in arrhythmias, phenytoin in acute seizures, and vancomycin in serious gram-positive infections.",
-          ],
-          [
-            "What does bioavailability (F) mean and how does it affect dosing?",
-            "Bioavailability is the fraction of an administered dose that reaches systemic circulation unchanged. IV drugs have F = 1. Oral drugs have F less than 1 due to incomplete absorption and first-pass metabolism. If F = 0.5, you must double the oral dose to match IV exposure. F is essential for calculating accurate loading and maintenance doses for non-IV routes.",
-          ],
-          [
-            "How many half-lives does it take to reach steady state?",
-            "Approximately 5 half-lives are required to reach 97% of steady-state concentration. This applies both to accumulation during regular dosing and to elimination after stopping. For amiodarone with a half-life of 40–55 days, steady state without a loading dose would take over 6 months.",
-          ],
-          [
-            "What is therapeutic drug monitoring (TDM)?",
-            "TDM involves measuring plasma drug concentrations at specific time points and using PK calculations to individualize dosing. It is most critical for drugs with narrow therapeutic indices — vancomycin, aminoglycosides, lithium, digoxin, phenytoin, and cyclosporine — where small differences between effective and toxic concentrations require precise dose adjustment.",
-          ],
-          [
-            "How does renal impairment affect pharmacokinetics?",
-            "Renal impairment reduces clearance of renally excreted drugs, prolonging half-life and increasing accumulation risk. Drugs like gentamicin, vancomycin, metformin, and digoxin require dose reduction or interval extension based on creatinine clearance or eGFR.",
-          ],
-          [
-            "Can this calculator be used for pharmacy board exam preparation?",
-            "Yes. This calculator covers all core PK formulas tested in NAPLEX, OSCE, and university pharmacology exams — including half-life, Vd, clearance, loading dose, and maintenance dose for both kinetic orders. Use it to verify manual calculations during study.",
-          ],
-          [
-            "What is the difference between clearance and elimination rate constant?",
-            "Clearance (L/hr) is the volume of plasma cleared of drug per unit time — used to calculate maintenance doses. The elimination rate constant k (hr⁻¹) is the fraction removed per unit time — used to calculate half-life and predict concentration–time curves. They are linked by: Cl = k × Vd.",
-          ],
-          [
-            "Is this pharmacokinetics calculator free to use?",
-            "Yes, completely free with no registration required. Designed for pharmacy students, pharmacists, physicians, nurses, and clinical researchers. All calculations run locally in your browser. This tool is a reference aid — all clinical dosing decisions should be reviewed by a qualified healthcare professional.",
-          ],
-        ].map(([q, a], i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        <ReviewedBy medical />
       </div>
 
       {/* ── SIDEBAR ── */}

@@ -2,6 +2,42 @@
 import { useState } from "react";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import BlogSidebar from "./BlogSidebar";
+
+const FAQ_DATA: [string, string][] = [
+  [
+    "Is it better to rent or buy in 2026?",
+    "It depends on your timeline, market, and financial readiness. Buying is already cheaper on a monthly basis in 57.7% of U.S. counties. However, buying only makes financial sense if you're staying 5+ years — the national break-even point is 5 years and 8 months. For shorter timelines or high-cost markets with a price-to-rent ratio above 20, renting is the smarter financial move.",
+  ],
+  [
+    "How much do I need saved before buying a home?",
+    "You need three separate pools of money: your down payment (ideally 20%, minimum 10%), closing costs (2–5% of the purchase price, kept separate), and an emergency fund of 3–6 months of total housing costs after closing. Use our home mortgage calculator to work backward from a target payment to your required savings amount.",
+  ],
+  [
+    "Is renting really throwing money away?",
+    "No. Rent buys shelter, flexibility, and preserved investment capital. Homeowners also have unrecoverable costs — interest, property taxes, insurance, maintenance, and PMI. The question isn't which option is waste-free, but which builds more net worth for your specific situation, timeline, and financial discipline.",
+  ],
+  [
+    "What is a good price-to-rent ratio?",
+    "Below 15 strongly favors buying. Between 15 and 20, the answer depends on your timeline. Between 20 and 25, renting is competitive. Above 25, renting is almost always the better financial choice in the short to medium term. Many major metros in 2026 sit above 25.",
+  ],
+  [
+    "How do mortgage rates affect the rent vs. buy decision?",
+    "Enormously. When rates were at 3% in 2020–2021, buying was cheaper than renting in the vast majority of markets. At 6–7% in 2024–2026, the monthly cost of buying surged 40–50% for the same home, making renting more competitive. A 1% rate drop can shift the break-even timeline by 12–18 months.",
+  ],
+  [
+    "What is the 5% rule in the rent vs. buy decision?",
+    "The 5% rule estimates the total annual unrecoverable cost of owning a home at roughly 5% of its value — covering property taxes (1%), maintenance (1%), and the cost of capital (3%). Multiply the home price by 5% and divide by 12. If comparable rent is lower than that monthly figure, renting is the financially superior option on pure cost grounds.",
+  ],
+  [
+    "How do I know if I can afford to buy?",
+    "The standard benchmark is keeping total housing costs below 28–30% of your gross monthly income. Use our home mortgage calculator to find your exact monthly payment, then compare it to 28% of your gross income. If it exceeds that threshold, you are likely overextending and our rent calculator can help you find an affordable rental budget while you build toward a future purchase.",
+  ],
+  [
+    "What happens to my net worth if I rent vs. buy over 10 years?",
+    "In most markets, buying builds more net worth over a 10-year horizon through forced savings via principal paydown and home appreciation. A disciplined renter who invests the monthly savings can build comparable wealth, particularly in high-cost markets. The key word is disciplined. Most renters spend rather than invest the difference, which is why buying tends to build more wealth in practice for most households. Track your actual position using our net worth calculator.",
+  ],
+];
 
 export default function RentingVsBuying() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -12,38 +48,21 @@ export default function RentingVsBuying() {
 
   return (
     <div className="blog-container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="blog-content">
-        {/* BREADCRUMB */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "14px",
-            marginBottom: "10px",
-          }}
-        >
-          <Link
-            href="https://numbersonyourtip.com/"
-            className="my-link"
-            style={{
-              textDecoration: "none",
-              color: "#000",
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-            }}
-          >
-            <i className="fa-solid fa-house" />
-            Home
-          </Link>
-          <i className="fa-solid fa-angle-right" style={{ fontSize: "12px" }} />
-          <span style={{ color: "#000" }}>
-            Renting vs. Buying a Home: How to Decide With Numbers
-          </span>
-        </div>
-        <hr />
-
         <img
           src="/blog8.1.webp"
           className="image-blog"
@@ -66,12 +85,14 @@ export default function RentingVsBuying() {
                 fontSize: "14px",
               }}
             >
+              <Link href="/author/ashar-pervaiz/" className="byline-author">
               <img
                 className="founder-photo"
                 src="/founder_photo.webp"
                 alt="Ashar Pervaiz"
               />
               Ashar Pervaiz
+              </Link>
             </span>
             <span
               style={{
@@ -823,107 +844,109 @@ export default function RentingVsBuying() {
               </p>
             </div>
 
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                margin: "8px 0 20px",
-              }}
-            >
-              <thead>
-                <tr>
-                  <th
-                    style={{
-                      backgroundColor: navy,
-                      color: "white",
-                      padding: "13px 16px",
-                      textAlign: "left",
-                    }}
-                  >
-                    Ratio
-                  </th>
-                  <th
-                    style={{
-                      backgroundColor: navy,
-                      color: "white",
-                      padding: "13px 16px",
-                      textAlign: "left",
-                    }}
-                  >
-                    What It Means
-                  </th>
-                  <th
-                    style={{
-                      backgroundColor: navy,
-                      color: "white",
-                      padding: "13px 16px",
-                      textAlign: "left",
-                    }}
-                  >
-                    Verdict
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  [
-                    "Below 15",
-                    "Homes are cheap relative to rent",
-                    "✅ Strong signal to buy",
-                  ],
-                  [
-                    "15 – 20",
-                    "Borderline — depends on your timeline",
-                    "⚖️ Run the full calculation",
-                  ],
-                  [
-                    "20 – 25",
-                    "Renting is competitive",
-                    "⚠️ Only buy for 7+ year horizons",
-                  ],
-                  [
-                    "Above 25",
-                    "Homes are expensive relative to rent",
-                    "❌ Renting likely wins financially",
-                  ],
-                ].map(([r, m, v], i) => (
-                  <tr
-                    key={i}
-                    style={{
-                      backgroundColor: i % 2 === 0 ? "#fff" : "#f7f9ff",
-                    }}
-                  >
-                    <td
+            <div style={{ overflowX: "auto", margin: "20px 0" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  margin: "8px 0 20px",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
                       style={{
+                        backgroundColor: navy,
+                        color: "white",
                         padding: "13px 16px",
-                        border: "1px solid #e8edf5",
-                        fontWeight: 700,
-                        color: navy,
+                        textAlign: "left",
                       }}
                     >
-                      {r}
-                    </td>
-                    <td
+                      Ratio
+                    </th>
+                    <th
                       style={{
+                        backgroundColor: navy,
+                        color: "white",
                         padding: "13px 16px",
-                        border: "1px solid #e8edf5",
-                        color: "#444",
+                        textAlign: "left",
                       }}
                     >
-                      {m}
-                    </td>
-                    <td
+                      What It Means
+                    </th>
+                    <th
                       style={{
+                        backgroundColor: navy,
+                        color: "white",
                         padding: "13px 16px",
-                        border: "1px solid #e8edf5",
+                        textAlign: "left",
                       }}
                     >
-                      {v}
-                    </td>
+                      Verdict
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {[
+                    [
+                      "Below 15",
+                      "Homes are cheap relative to rent",
+                      "✅ Strong signal to buy",
+                    ],
+                    [
+                      "15 – 20",
+                      "Borderline — depends on your timeline",
+                      "⚖️ Run the full calculation",
+                    ],
+                    [
+                      "20 – 25",
+                      "Renting is competitive",
+                      "⚠️ Only buy for 7+ year horizons",
+                    ],
+                    [
+                      "Above 25",
+                      "Homes are expensive relative to rent",
+                      "❌ Renting likely wins financially",
+                    ],
+                  ].map(([r, m, v], i) => (
+                    <tr
+                      key={i}
+                      style={{
+                        backgroundColor: i % 2 === 0 ? "#fff" : "#f7f9ff",
+                      }}
+                    >
+                      <td
+                        style={{
+                          padding: "13px 16px",
+                          border: "1px solid #e8edf5",
+                          fontWeight: 700,
+                          color: navy,
+                        }}
+                      >
+                        {r}
+                      </td>
+                      <td
+                        style={{
+                          padding: "13px 16px",
+                          border: "1px solid #e8edf5",
+                          color: "#444",
+                        }}
+                      >
+                        {m}
+                      </td>
+                      <td
+                        style={{
+                          padding: "13px 16px",
+                          border: "1px solid #e8edf5",
+                        }}
+                      >
+                        {v}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
             <h3>A Real Example</h3>
             <p>
@@ -1117,119 +1140,121 @@ export default function RentingVsBuying() {
               </div>
             </div>
 
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                fontSize: "0.97rem",
-              }}
-            >
-              <thead>
-                <tr>
-                  <th
-                    style={{
-                      backgroundColor: navy,
-                      color: "white",
-                      padding: "14px 16px",
-                      textAlign: "left",
-                    }}
-                  >
-                    Metric
-                  </th>
-                  <th
-                    style={{
-                      backgroundColor: "#2563eb",
-                      color: "white",
-                      padding: "14px 16px",
-                      textAlign: "center",
-                    }}
-                  >
-                    James (Renting)
-                  </th>
-                  <th
-                    style={{
-                      backgroundColor: teal,
-                      color: "white",
-                      padding: "14px 16px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Priya (Buying)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  [
-                    "Monthly housing cost (Year 1)",
-                    "$1,900 rent",
-                    "~$2,640 all-in",
-                  ],
-                  [
-                    "Monthly housing cost (Year 10)",
-                    "~$2,480 after 3% annual increases",
-                    "$2,640 — unchanged",
-                  ],
-                  ["Total housing payments (10 yr)", "~$264,000", "~$316,800"],
-                  [
-                    "Cash difference (10 yr)",
-                    "Saves ~$52,800 vs Priya",
-                    "Spends $52,800 more",
-                  ],
-                  [
-                    "If James invests the savings at 7%",
-                    "Portfolio: ~$73,000",
-                    "—",
-                  ],
-                  ["Priya's equity from principal paydown", "—", "~$48,000"],
-                  ["Priya's home value (10 yr, 3.5%/yr)", "—", "~$494,000"],
-                  ["Priya's net equity after selling costs", "—", "~$140,000"],
-                  [
-                    "Net wealth position (Year 10)",
-                    "$73,000 (if invested)",
-                    "~$140,000 net equity",
-                  ],
-                ].map(([m, j, p], i) => (
-                  <tr
-                    key={i}
-                    style={{
-                      backgroundColor: i % 2 === 0 ? "#fff" : "#f7f9ff",
-                    }}
-                  >
-                    <td
+            <div style={{ overflowX: "auto", margin: "20px 0" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontSize: "0.97rem",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
                       style={{
-                        padding: "13px 16px",
-                        border: "1px solid #e8edf5",
-                        fontWeight: 600,
-                        color: navy,
+                        backgroundColor: navy,
+                        color: "white",
+                        padding: "14px 16px",
+                        textAlign: "left",
                       }}
                     >
-                      {m}
-                    </td>
-                    <td
+                      Metric
+                    </th>
+                    <th
                       style={{
-                        padding: "13px 16px",
-                        border: "1px solid #e8edf5",
+                        backgroundColor: "#2563eb",
+                        color: "white",
+                        padding: "14px 16px",
                         textAlign: "center",
-                        color: "#2563eb",
                       }}
                     >
-                      {j}
-                    </td>
-                    <td
+                      James (Renting)
+                    </th>
+                    <th
                       style={{
-                        padding: "13px 16px",
-                        border: "1px solid #e8edf5",
+                        backgroundColor: teal,
+                        color: "white",
+                        padding: "14px 16px",
                         textAlign: "center",
-                        color: "#0d7d8f",
                       }}
                     >
-                      {p}
-                    </td>
+                      Priya (Buying)
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {[
+                    [
+                      "Monthly housing cost (Year 1)",
+                      "$1,900 rent",
+                      "~$2,640 all-in",
+                    ],
+                    [
+                      "Monthly housing cost (Year 10)",
+                      "~$2,480 after 3% annual increases",
+                      "$2,640 — unchanged",
+                    ],
+                    ["Total housing payments (10 yr)", "~$264,000", "~$316,800"],
+                    [
+                      "Cash difference (10 yr)",
+                      "Saves ~$52,800 vs Priya",
+                      "Spends $52,800 more",
+                    ],
+                    [
+                      "If James invests the savings at 7%",
+                      "Portfolio: ~$73,000",
+                      "—",
+                    ],
+                    ["Priya's equity from principal paydown", "—", "~$48,000"],
+                    ["Priya's home value (10 yr, 3.5%/yr)", "—", "~$494,000"],
+                    ["Priya's net equity after selling costs", "—", "~$140,000"],
+                    [
+                      "Net wealth position (Year 10)",
+                      "$73,000 (if invested)",
+                      "~$140,000 net equity",
+                    ],
+                  ].map(([m, j, p], i) => (
+                    <tr
+                      key={i}
+                      style={{
+                        backgroundColor: i % 2 === 0 ? "#fff" : "#f7f9ff",
+                      }}
+                    >
+                      <td
+                        style={{
+                          padding: "13px 16px",
+                          border: "1px solid #e8edf5",
+                          fontWeight: 600,
+                          color: navy,
+                        }}
+                      >
+                        {m}
+                      </td>
+                      <td
+                        style={{
+                          padding: "13px 16px",
+                          border: "1px solid #e8edf5",
+                          textAlign: "center",
+                          color: "#2563eb",
+                        }}
+                      >
+                        {j}
+                      </td>
+                      <td
+                        style={{
+                          padding: "13px 16px",
+                          border: "1px solid #e8edf5",
+                          textAlign: "center",
+                          color: "#0d7d8f",
+                        }}
+                      >
+                        {p}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
             <div
               style={{
@@ -1366,91 +1391,6 @@ export default function RentingVsBuying() {
                     {item.body}
                   </p>
                 </div>
-              ))}
-            </div>
-          </section>
-
-          {/* CTA */}
-          <section
-            style={{
-              background: "#0D2A5C",
-              padding: "44px 36px",
-              borderRadius: "16px",
-              textAlign: "center",
-              color: "#fff",
-              marginBottom: "52px",
-              boxShadow: "0 12px 30px rgba(27,48,103,0.25)",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "11px",
-                letterSpacing: "2px",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.6)",
-                marginBottom: "10px",
-                fontWeight: 700,
-              }}
-            >
-              FREE TOOLS — NO SIGN-UP
-            </p>
-            <h2
-              style={{
-                color: "#ffffff",
-                fontSize: "1.6rem",
-                marginBottom: "14px",
-              }}
-            >
-              Stop Guessing. Start Calculating With Real Numbers.
-            </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.85)",
-                maxWidth: "620px",
-                margin: "0 auto 30px auto",
-                lineHeight: 1.7,
-              }}
-            >
-              Run your exact rent-vs-buy math in minutes. Get your precise
-              mortgage payment, model how much rent you can actually afford, and
-              check your current net worth baseline.
-            </p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "14px",
-                flexWrap: "wrap",
-              }}
-            >
-              {[
-                {
-                  label: "Mortgage Calculator",
-                  href: "/home-mortgage-calculator/",
-                },
-                { label: "Rent Calculator", href: "/rent-calculator/" },
-                {
-                  label: "Net Worth Calculator",
-                  href: "/net-worth-calculator/",
-                },
-              ].map((btn) => (
-                <Link
-                  key={btn.href}
-                  href={btn.href}
-                  style={{
-                    display: "inline-block",
-                    backgroundColor: "rgba(255,255,255,0.15)",
-                    border: "2px solid rgba(255,255,255,0.6)",
-                    color: "#fff",
-                    padding: "12px 24px",
-                    fontSize: "0.95rem",
-                    fontWeight: 700,
-                    textDecoration: "none",
-                    borderRadius: "6px",
-                  }}
-                >
-                  {btn.label}
-                </Link>
               ))}
             </div>
           </section>
@@ -1665,100 +1605,68 @@ export default function RentingVsBuying() {
 
           {/* FAQ */}
           <section>
-            <h2>Frequently Asked Questions</h2>
+            <h2>Rent-or-Buy Questions</h2>
 
-            {[
-              [
-                "Is it better to rent or buy in 2026?",
-                "It depends on your timeline, market, and financial readiness. Buying is already cheaper on a monthly basis in 57.7% of U.S. counties. However, buying only makes financial sense if you're staying 5+ years — the national break-even point is 5 years and 8 months. For shorter timelines or high-cost markets with a price-to-rent ratio above 20, renting is the smarter financial move.",
-              ],
-              [
-                "How much do I need saved before buying a home?",
-                "You need three separate pools of money: your down payment (ideally 20%, minimum 10%), closing costs (2–5% of the purchase price, kept separate), and an emergency fund of 3–6 months of total housing costs after closing. Use our home mortgage calculator to work backward from a target payment to your required savings amount.",
-              ],
-              [
-                "Is renting really throwing money away?",
-                "No. Rent buys shelter, flexibility, and preserved investment capital. Homeowners also have unrecoverable costs — interest, property taxes, insurance, maintenance, and PMI. The question isn't which option is waste-free, but which builds more net worth for your specific situation, timeline, and financial discipline.",
-              ],
-              [
-                "What is a good price-to-rent ratio?",
-                "Below 15 strongly favors buying. Between 15 and 20, the answer depends on your timeline. Between 20 and 25, renting is competitive. Above 25, renting is almost always the better financial choice in the short to medium term. Many major metros in 2026 sit above 25.",
-              ],
-              [
-                "How do mortgage rates affect the rent vs. buy decision?",
-                "Enormously. When rates were at 3% in 2020–2021, buying was cheaper than renting in the vast majority of markets. At 6–7% in 2024–2026, the monthly cost of buying surged 40–50% for the same home, making renting more competitive. A 1% rate drop can shift the break-even timeline by 12–18 months.",
-              ],
-              [
-                "What is the 5% rule in the rent vs. buy decision?",
-                "The 5% rule estimates the total annual unrecoverable cost of owning a home at roughly 5% of its value — covering property taxes (1%), maintenance (1%), and the cost of capital (3%). Multiply the home price by 5% and divide by 12. If comparable rent is lower than that monthly figure, renting is the financially superior option on pure cost grounds.",
-              ],
-              [
-                "How do I know if I can afford to buy?",
-                "The standard benchmark is keeping total housing costs below 28–30% of your gross monthly income. Use our home mortgage calculator to find your exact monthly payment, then compare it to 28% of your gross income. If it exceeds that threshold, you are likely overextending and our rent calculator can help you find an affordable rental budget while you build toward a future purchase.",
-              ],
-              [
-                "What happens to my net worth if I rent vs. buy over 10 years?",
-                "In most markets, buying builds more net worth over a 10-year horizon through forced savings via principal paydown and home appreciation. A disciplined renter who invests the monthly savings can build comparable wealth, particularly in high-cost markets. The key word is disciplined. Most renters spend rather than invest the difference, which is why buying tends to build more wealth in practice for most households. Track your actual position using our net worth calculator.",
-              ],
-            ].map(([q, a], i) => (
-              <div className="faq-item" key={i}>
-                <h3 onClick={() => toggleFAQ(i)}>
-                  {q}
-                  <i
-                    className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-                  />
-                </h3>
-                {openFAQ === i && <p style={{ margin: 0 }}>{a}</p>}
-              </div>
-            ))}
+            {FAQ_DATA.map(([q, a], i) => {
+              const isOpen = openFAQ === i;
+              return (
+                <div className="faq-item" key={i}>
+                  <h3
+                    onClick={() => toggleFAQ(i)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleFAQ(i);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${i}`}
+                  >
+                    {q}
+                    <i
+                      className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                      aria-hidden="true"
+                    />
+                  </h3>
+                  <div
+                    id={`faq-answer-${i}`}
+                    className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="faq-answer-inner">
+                      <p style={{ margin: 0 }}>{a}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </section>
         </article>
       </div>
 
-      {/* SIDEBAR */}
-      <aside className="blog-sidebar">
-        <p>Recent Blogs</p>
-        <ul>
-          {[
-            [
-              "/blog/can-ai-replace-financial-calculators/",
-              "Can AI Replace Financial Calculators?",
-            ],
-            [
-              "/blog/best-free-financial-calculators-for-everyday-money-questions/",
-              "Best Free Financial Calculators",
-            ],
-            [
-              "/blog/how-do-i-calculate-my-net-worth/",
-              "How Do I Calculate My Net Worth?",
-            ],
-            ["/blog/what-is-vat/", "What Is VAT?"],
-            [
-              "/blog/ultimate-iv-infusion-calculator-guide/",
-              "Ultimate IV Infusion Calculator Guide",
-            ],
-          ].map(([href, label]) => (
-            <li key={href as string}>
-              <Link href={href as string}>
-                <span
-                  style={{
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                  }}
-                >
-                  <i
-                    className="fa-solid fa-angle-right"
-                    style={{ color: "#D8A13A" }}
-                  />
-                  {label}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </aside>
+      <BlogSidebar
+        relatedTools={[
+          ["/home-mortgage-calculator/", "Home Mortgage Calculator"],
+          ["/rent-calculator/", "Rent Calculator"],
+          ["/net-worth-calculator/", "Net Worth Calculator"],
+        ]}
+        relatedPosts={[
+          [
+            "/blog/the-smart-renters-guide-what-you-can-actually-afford/",
+            "The Smart Renter's Guide: What You Can Actually Afford",
+          ],
+          [
+            "/blog/how-much-house-can-i-afford/",
+            "How Much House Can I Afford?",
+          ],
+          [
+            "/blog/how-do-i-calculate-my-net-worth/",
+            "How Do I Calculate My Net Worth?",
+          ],
+        ]}
+      />
     </div>
   );
 }

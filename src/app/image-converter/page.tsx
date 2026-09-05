@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import ImageConverter from "../components/ImageConverter";
 
 export const metadata: Metadata = {
-  title: "Free Image Converter | JPG to PNG, WebP, GIF Online",
+  title: "Image Converter — JPG, PNG, WebP, GIF",
   description:
-    "Convert images online instantly at Numbers On Your Tip. Free JPG to PNG, PNG to WebP, WebP to JPG, GIF, TIFF & more. High-quality, fast, secure image converter tool.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Convert images between JPG, PNG, WebP and GIF in your browser, and choose the format that suits the image rather than the one you always use.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/image-converter/",
+    canonical: "/image-converter/",
+  },
+  openGraph: {
+    title: "Image Converter — JPG, PNG, WebP, GIF",
+    description:
+      "Choosing a format is choosing what to lose. Lossy versus lossless, transparency, and stacking conversions.",
+    url: "/image-converter/",
+    type: "article",
+  },
+  twitter: {
+    title: "Image Converter — JPG, PNG, WebP, GIF",
+    description:
+      "Convert between JPG, PNG, WebP and GIF locally — nothing is uploaded.",
   },
 };
 

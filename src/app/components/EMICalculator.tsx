@@ -268,6 +268,45 @@ function EMIResultPanel({ result }: { result: EMIResult | null }) {
 /* ─────────────────────────────────────────
    Main Calculator Page — UNCHANGED content & field styles
 ───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "Why is most of my early EMI going to interest?",
+    "Because interest is charged on what you still owe, and at the start you owe almost everything. The instalment first covers the month's interest and only the remainder reduces the balance. As the balance falls the interest portion shrinks and the principal portion grows, so the split shifts every month even though the payment never changes. The effect is mild over five years and severe over twenty-five.",
+  ],
+  [
+    "What is the EMI formula?",
+    "EMI = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1), where P is the amount borrowed, n is the number of monthly payments, and r is the monthly rate. The usual error is r: a 12% annual rate is 0.01 per month, not 12 and not 0.12. Getting that conversion wrong is the most common reason a hand calculation disagrees with the lender's figure.",
+  ],
+  [
+    "Is a longer loan term cheaper?",
+    "Cheaper each month and considerably more expensive overall. On 500,000 at 12%, three years costs about 16,607 monthly and roughly 97,900 in interest, while seven years costs about 8,826 monthly and roughly 241,400 in interest. Halving the instalment nearly triples the interest. A longer term can still be the right choice, but it should be chosen knowing what the breathing room costs.",
+  ],
+  [
+    "Is it better to prepay early or later in the loan?",
+    "Early, by a wide margin. A prepayment removes all the future interest that the repaid principal would have generated, so a lump sum in year one of a five-year loan cancels four years of interest on that amount while the same sum in year four cancels only months. Check for prepayment penalties first, since on a loan already well advanced a penalty can outweigh the saving.",
+  ],
+  [
+    "After a prepayment, should I reduce the term or the instalment?",
+    "Reducing the term saves markedly more interest; reducing the instalment improves monthly cash flow. Both are legitimate and they suit different situations, but lenders frequently apply one by default without asking. Tell them explicitly which you want at the time of the prepayment rather than discovering the choice was made for you.",
+  ],
+  [
+    "What is the difference between a flat rate and a reducing balance rate?",
+    "A reducing balance rate charges interest on what you still owe, which falls each month. A flat rate charges interest on the original amount for the whole term regardless of repayments. On 500,000 over five years, a 10% flat rate produces 250,000 of interest and an instalment of 12,500 — matching that instalment on a reducing balance basis would need a rate close to 17%.",
+  ],
+  [
+    "How do I compare two loan offers quoted differently?",
+    "Ignore the advertised rate unless you know which basis it uses, and compare the monthly instalment and the total repayable instead. Those two figures are directly comparable whatever the quoting convention, and they also absorb any fees rolled into the loan. A lower headline rate quoted flat can easily cost more than a higher one quoted on reducing balance.",
+  ],
+  [
+    "Does doubling the interest rate double my EMI?",
+    "No. The relationship is not proportional, because the instalment is derived from a compounding calculation rather than a simple multiplication. A rate change moves the payment by less than the change itself in percentage terms, and the size of the effect grows with the length of the loan — the same rate rise matters far more on a twenty-year loan than a three-year one.",
+  ],
+  [
+    "What happens if I miss an EMI payment?",
+    "Three separate things. A late fee applies, usually modest. Interest keeps accruing on the balance that was not reduced, so the loan gets more expensive. And the missed payment is typically reported to credit reference agencies, which affects your borrowing terms for years and is normally the costliest of the three. Contacting the lender before a payment is missed usually produces a better outcome than afterwards.",
+  ],
+];
+
 export default function EMICalculator() {
   const [amount, setAmount] = useState("");
   const [rate, setRate] = useState("");
@@ -334,8 +373,22 @@ export default function EMICalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
-        <h1>EMI Calculator</h1>
+        <h1>EMI Calculator — Instalment, Interest Split and Prepayment</h1>
 
         <p>
           Quickly calculate your monthly loan installment, total interest, and
@@ -384,471 +437,263 @@ export default function EMICalculator() {
           <EMIResultPanel result={panelResult} />
         </div>
 
-        {/* ---- SEO CONTENT — UNTOUCHED ---- */}
+        {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is EMI and Why Does It Matter?</h2>
+        <h2>Every EMI Is Two Payments Wearing One Number</h2>
         <p>
-          EMI stands for Equated Monthly Installment. It is the fixed amount you
-          pay to a bank or lender every month until your loan is fully repaid.
-          Each EMI payment covers two parts: a portion of the original loan
-          amount (principal) and the interest charged on the outstanding
-          balance.
+          An equated monthly instalment stays the same every month, which makes
+          it easy to budget and easy to misunderstand. The total is fixed; what
+          it consists of changes with every payment.
         </p>
         <p>
-          Understanding your EMI before signing a loan agreement is one of the
-          smartest financial moves you can make. It lets you know exactly how
-          much leaves your account every month, helps you set realistic budgets,
-          and prevents you from borrowing more than you can comfortably repay.
-          If you are comparing offers from multiple lenders, an{" "}
-          <Link href="/loan-calculator/" className="my-link">
-            <span className="hover-item">loan calculator</span>
-          </Link>{" "}
-          or EMI calculator is the fastest way to see which deal actually costs
-          less over the full term.
-        </p>
-
-        <h2>How Is EMI Calculated? The Formula Explained</h2>
-        <p>
-          Banks and financial institutions use a standard mathematical formula
-          to arrive at your EMI figure. Here is the formula:
+          Each instalment covers the interest that accrued on the outstanding
+          balance since the last one, and whatever is left over reduces the
+          balance. Because the balance falls each month, the interest portion
+          falls too, and the principal portion grows to fill the gap.
         </p>
         <pre>
-          EMI = [P × R × (1 + R)<sup>N</sup>] / [(1 + R)<sup>N</sup> – 1]
-        </pre>
-        <p>Where:</p>
-        <ul>
-          <li>
-            <strong>P</strong> = Principal loan amount — the total money you
-            borrow.
-          </li>
-          <li>
-            <strong>R</strong> = Monthly interest rate — your annual rate
-            divided by 12 and then by 100. For example, a 12% annual rate
-            becomes 0.01 per month.
-          </li>
-          <li>
-            <strong>N</strong> = Loan tenure in months — the total number of
-            monthly payments.
-          </li>
-        </ul>
-        <p>
-          You do not need to memorize this formula. Simply enter your loan
-          amount, interest rate, and tenure in the calculator above, and it
-          handles the math instantly.
-        </p>
-
-        <h2>Step-by-Step EMI Calculation Example</h2>
-        <p>
-          Let's walk through a real example so you can see exactly how the
-          numbers work.
-        </p>
-
-        <h3>Scenario: Personal Loan of 500,000 at 14% for 3 Years</h3>
-        <ul>
-          <li>
-            <strong>Loan Amount (P):</strong> 500,000
-          </li>
-          <li>
-            <strong>Annual Interest Rate:</strong> 14%
-          </li>
-          <li>
-            <strong>Monthly Rate (R):</strong> 14 / 12 / 100 = 0.01167
-          </li>
-          <li>
-            <strong>Tenure (N):</strong> 36 months
-          </li>
-        </ul>
-        <p>Plugging these into the formula:</p>
-        <pre>
-          EMI = [500,000 × 0.01167 × (1.01167)<sup>36</sup>] / [(1.01167)
-          <sup>36</sup> – 1]
+          Interest this month = Outstanding balance × Monthly rate{"\n"}Principal
+          this month = EMI − Interest this month{"\n"}New balance = Outstanding
+          balance − Principal this month
         </pre>
         <p>
-          <strong>Monthly EMI ≈ 17,087</strong>
-        </p>
-        <p>
-          Over 36 months, you would pay a total of approximately 615,132 —
-          meaning the total interest cost is about 115,132.
-        </p>
-        <p>
-          Now suppose you extend the tenure to 5 years (60 months). The monthly
-          EMI drops to roughly 11,634, but the total interest jumps to about
-          198,040. That is the classic trade-off between lower monthly payments
-          and higher overall cost.
+          Take a 500,000 loan at 12% a year over five years. The monthly rate is
+          1%, and the instalment works out at about 11,122.
         </p>
 
-        <h2>How to Use This EMI Calculator</h2>
-        <p>Using this tool takes less than 30 seconds:</p>
-        <ul className="custom-list">
-          <li>
-            Enter your <strong>loan amount</strong> — the total sum you plan to
-            borrow.
-          </li>
-          <li>
-            Enter the <strong>annual interest rate</strong> — the percentage
-            your lender has quoted.
-          </li>
-          <li>
-            Enter the <strong>loan tenure in months</strong> — for example,
-            enter 60 for a 5-year loan.
-          </li>
-          <li>
-            Click <strong>Calculate</strong> to see your monthly EMI, total
-            interest payable, and total repayment amount.
-          </li>
-        </ul>
-        <p>
-          Try different combinations. Change the tenure or rate to see how each
-          variable affects your monthly payment and total cost.
-        </p>
-
-        <h2>Key Factors That Affect Your EMI</h2>
-
-        <h3>Loan Amount (Principal)</h3>
-        <p>
-          This is straightforward — the more you borrow, the higher your EMI. If
-          you can manage a larger down payment on a home or vehicle purchase,
-          the remaining loan amount shrinks and your monthly burden drops. Use
-          our{" "}
-          <Link href="/home-mortgage-calculator/" className="my-link">
-            home mortgage calculator
-          </Link>{" "}
-          to see how different down payment amounts change your monthly mortgage
-          payment.
-        </p>
-
-        <h3>Interest Rate</h3>
-        <p>
-          Even a small difference in interest rate creates a noticeable change
-          in EMI over long tenures. For instance, on a 3,000,000 home loan over
-          20 years, the difference between 9% and 10% annual interest adds
-          roughly 1,800 per month to your EMI. Always compare rates across
-          lenders before locking in.
-        </p>
-
-        <h3>Loan Tenure</h3>
-        <p>
-          Longer tenure means smaller monthly EMI but significantly more
-          interest paid over the life of the loan. Shorter tenure means higher
-          monthly payments but less total interest. The sweet spot depends on
-          your monthly income and expenses — this is why running numbers through
-          a calculator before committing is so valuable.
-        </p>
-
-        <h3>Type of Interest Rate: Fixed vs. Floating</h3>
-        <p>
-          With a <strong>fixed rate</strong>, your EMI stays the same throughout
-          the loan term. With a <strong>floating rate</strong>, the EMI changes
-          whenever the lender adjusts its benchmark rate. Fixed rates give you
-          predictability. Floating rates can save money when rates drop, but
-          they carry the risk of increases. Most home loans in many countries
-          use floating rates, while personal loans and car loans often come with
-          fixed rates.
-        </p>
-
-        <h2>EMI Comparison: How Tenure and Rate Change Your Cost</h2>
-        <p>
-          The table below shows how the same 1,000,000 loan amount behaves under
-          different interest rates and tenures.
-        </p>
-
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Interest Rate
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Tenure
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Monthly EMI
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total Interest
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total Payment
-                </th>
+              <tr>
+                <th>Payment</th>
+                <th>Goes to interest</th>
+                <th>Goes to principal</th>
+                <th>Balance after</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["8%", "12 months", "86,988", "43,856", "1,043,856"],
-                ["8%", "36 months", "31,334", "128,024", "1,128,024"],
-                ["10%", "36 months", "32,267", "161,612", "1,161,612"],
-                ["10%", "60 months", "21,247", "274,820", "1,274,820"],
-                ["12%", "60 months", "22,244", "334,640", "1,334,640"],
-                ["14%", "60 months", "23,268", "396,080", "1,396,080"],
-              ].map((row) => (
-                <tr key={row[0] + row[1]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              <tr>
+                <td>First</td>
+                <td>5,000</td>
+                <td>6,122</td>
+                <td>493,878</td>
+              </tr>
+              <tr>
+                <td>Second</td>
+                <td>4,939</td>
+                <td>6,183</td>
+                <td>487,695</td>
+              </tr>
+              <tr>
+                <td>Third</td>
+                <td>4,877</td>
+                <td>6,245</td>
+                <td>481,450</td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <p>
-          Notice how a 2-year loan at 10% costs 161,612 in interest, while the
-          same rate stretched to 5 years costs 274,820. That extra 113,000+ is
-          the real price of lower monthly payments.
-        </p>
 
-        <h2>Types of Loans You Can Calculate EMI For</h2>
         <p>
-          This calculator works for any loan that uses a fixed EMI repayment
-          structure. Here are the most common ones:
+          The instalment never moves. The split shifts a little every month, and
+          it accelerates: by the final year almost the whole payment is
+          principal. Across the full sixty months this borrower pays about
+          667,000 in total, of which roughly 167,000 is interest.
         </p>
-
-        <h3>Home Loan / Mortgage EMI</h3>
         <p>
-          Home loans typically run 15 to 30 years with the largest principal
-          amounts. Even a 0.25% rate difference can save or cost you hundreds of
-          thousands over the full term. Calculate your mortgage EMI here, or use
-          the dedicated{" "}
+          The front-loading is mild over five years and severe over twenty-five,
+          because the effect compounds with term. On a long mortgage the early
+          years barely touch the balance at all — the{" "}
           <Link href="/home-mortgage-calculator/" className="my-link">
-            home mortgage calculator
+            mortgage calculator
           </Link>{" "}
-          for a detailed breakdown including down payment and property tax
-          estimates.
+          shows how extreme that becomes.
         </p>
 
-        <h3>Car Loan EMI</h3>
+        <h2>The Formula, and Why It Looks Like That</h2>
+        <pre>EMI = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ − 1)</pre>
         <p>
-          Car loans usually range from 3 to 7 years. Since vehicles depreciate
-          quickly, keeping the tenure short saves you interest and avoids owing
-          more than the car is worth.
+          P is the amount borrowed, n is the number of monthly payments, and r
+          is the monthly rate — the annual rate divided by twelve and by a
+          hundred. A 12% annual rate is 0.01 as a monthly r, not 12 and not
+          0.12, and getting this conversion wrong is the most common reason a
+          hand calculation disagrees with a lender&apos;s figure.
+        </p>
+        <p>
+          The shape of the equation follows from a single requirement: find the
+          fixed payment whose present value, discounted at the loan rate, equals
+          the amount borrowed. Everything else is algebra. It also explains why
+          the relationship between rate and instalment is not proportional —
+          doubling the rate does not double the payment, and the effect of a
+          rate change grows with the term.
         </p>
 
-        <h3>Personal Loan EMI</h3>
+        <h2>Term and Rate Pull in Different Directions</h2>
         <p>
-          Personal loans carry higher interest rates (often 10% to 24%) because
-          they are unsecured. Calculate EMI before borrowing to make sure the
-          monthly payment fits your budget without straining other expenses.
+          Borrowers usually optimise for the monthly figure, which is the wrong
+          variable to fixate on if total cost matters. Lengthening the term
+          lowers the instalment and raises the total substantially.
         </p>
 
-        <h3>Education Loan EMI</h3>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Term on 500,000 at 12%</th>
+                <th>Monthly instalment</th>
+                <th>Total interest paid</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>3 years</td>
+                <td>about 16,607</td>
+                <td>about 97,900</td>
+              </tr>
+              <tr>
+                <td>5 years</td>
+                <td>about 11,122</td>
+                <td>about 167,300</td>
+              </tr>
+              <tr>
+                <td>7 years</td>
+                <td>about 8,826</td>
+                <td>about 241,400</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <p>
-          Education loans often include a moratorium period where you only pay
-          interest (or nothing at all) while studying. EMI repayment kicks in
-          after the course ends. Factor in this grace period when planning your
-          finances.
+          Moving from three years to seven cuts the monthly commitment by
+          roughly half and nearly triples the interest. Neither choice is wrong
+          — a lower instalment can be the difference between affordable and not
+          — but it should be made knowing what the extra breathing room costs.
         </p>
 
-        <h3>Business and Gold Loans</h3>
+        <h2>Prepayment: Why Timing Matters More Than Amount</h2>
         <p>
-          Business loans fund expansion, equipment, or working capital. Gold
-          loans use your gold as collateral and usually offer lower rates. Both
-          follow EMI structures that this calculator handles.
+          A lump sum paid against a loan comes off the principal, which removes
+          all the future interest that principal would have generated. Because
+          interest accrues on the balance, the earlier the payment lands, the
+          more interest it cancels.
         </p>
-
-        <h2>Practical Tips to Reduce Your EMI Burden</h2>
         <p>
-          If your calculated EMI feels too high, here are concrete steps to
-          bring it down:
+          The same 50,000 has a very different effect in year one than in year
+          four of a five-year loan. Early, it removes four years of interest on
+          that amount. Late, it removes months. This is why prepaying at the
+          start of a loan is disproportionately effective and why doing it near
+          the end achieves comparatively little.
+        </p>
+        <p>
+          Two things to check before prepaying:
         </p>
         <ul className="custom-list">
           <li>
-            <strong>Increase your down payment.</strong> A larger upfront
-            payment on a home or car reduces the loan principal, which directly
-            lowers every monthly installment.
+            <strong>Whether a penalty applies.</strong> Some agreements charge a
+            percentage of the amount prepaid, which can outweigh the interest
+            saved on a loan already well advanced.
           </li>
           <li>
-            <strong>Negotiate the interest rate.</strong> If you have a strong
-            credit score or an existing relationship with the bank, ask for a
-            rate reduction. Even 0.5% less makes a real difference over years.
-          </li>
-          <li>
-            <strong>Choose a longer tenure (with caution).</strong> Extending
-            tenure reduces EMI but increases total interest. Use the calculator
-            to find the balance point where the EMI is manageable without the
-            interest spiraling.
-          </li>
-          <li>
-            <strong>Make prepayments when possible.</strong> Many loans allow
-            partial prepayments without penalty. Paying an extra lump sum toward
-            the principal reduces the outstanding balance, which can lower
-            future EMIs or shorten the tenure.
-          </li>
-          <li>
-            <strong>Refinance if rates drop.</strong> If market interest rates
-            fall significantly after you have taken a loan, consider refinancing
-            with a new lender at the lower rate.
+            <strong>Which variable the lender reduces.</strong> After a
+            prepayment they can either shorten the term and keep the instalment,
+            or keep the term and lower the instalment. The first saves markedly
+            more interest; the second improves monthly cash flow. Lenders often
+            default to one without asking, so state which you want.
           </li>
         </ul>
+
+        <h2>Flat Rate and Reducing Balance Are Not Comparable</h2>
         <p>
-          Planning your monthly expenses alongside your EMI is essential. Our{" "}
-          <Link href="/rent-calculator/" className="my-link">
-            rent calculator
+          Two loans can advertise very different rates and cost almost the same,
+          because they are quoted on different bases.
+        </p>
+        <p>
+          A <strong>reducing balance</strong> rate charges interest on what you
+          still owe, which falls every month. This is what the EMI formula
+          above assumes and what most mortgages and bank loans use.
+        </p>
+        <p>
+          A <strong>flat rate</strong> charges interest on the original amount
+          for the whole term, regardless of how much you have repaid. On a
+          500,000 loan at 10% flat over five years, the interest is 250,000 —
+          ten percent of the full amount, five times over — giving a total of
+          750,000 and an instalment of 12,500.
+        </p>
+        <p>
+          That headline 10% is not comparable to a 10% reducing-balance rate. To
+          produce the same 12,500 instalment on a reducing-balance basis, the
+          rate would need to be close to 17%. The flat quote sounds like a
+          better deal and is considerably worse.
+        </p>
+        <p>
+          When comparing offers, ignore the advertised rate unless you know
+          which basis it uses, and compare the instalment and the total repayable
+          instead. Those two figures are directly comparable whatever the
+          quoting convention. Our{" "}
+          <Link href="/loan-calculator/" className="my-link">
+            loan calculator
           </Link>{" "}
-          can help if you are weighing rent payments against a mortgage, and the{" "}
-          <Link href="/income-tax-calculator/" className="my-link">
-            income tax calculator
-          </Link>{" "}
-          shows how much of your salary actually reaches your bank account after
-          deductions.
+          sets out how to compare competing offers including fees.
         </p>
 
-        <h2>What Happens If You Miss an EMI Payment?</h2>
+        <h2>What Happens If a Payment Is Missed</h2>
         <p>
-          Missing EMI payments has real consequences. Late payment fees are
-          usually charged immediately, and the missed amount plus penalty gets
-          added to your outstanding balance. Repeated misses damage your credit
-          score, making future borrowing more expensive. In severe cases with
-          secured loans (home or car), the lender can seize the collateral.
+          Missing an instalment has three separate consequences, and only the
+          first is obvious.
         </p>
         <p>
-          If you anticipate difficulty paying, contact your lender early. Many
-          banks offer restructuring options, moratorium periods, or tenure
-          extensions to reduce the monthly burden before things escalate.
+          There is usually a late fee, which is a fixed and generally modest
+          cost. Interest continues accruing on the unreduced balance, so the
+          loan quietly gets more expensive. And the missed payment is typically
+          reported to credit reference agencies, which affects borrowing terms
+          for years — normally the most expensive of the three by a wide margin.
         </p>
-
-        <h2>EMI vs. Flat Rate vs. Reducing Balance: What Is the Difference?</h2>
         <p>
-          Not all loan interest calculations work the same way. The EMI formula
-          used in this calculator is based on the{" "}
-          <strong>reducing balance method</strong>, which is the most common and
-          borrower-friendly approach. Here is how the three methods compare:
+          Where a payment is going to be missed, contacting the lender before it
+          happens is materially better than after. Restructuring, a payment
+          holiday, or a term extension are all easier to arrange in advance, and
+          an arrangement made ahead of time is usually recorded differently from
+          a default.
         </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Reducing Balance (used here):</strong> Interest is charged
-            on the remaining principal after each payment. As you pay down the
-            loan, the interest portion decreases and the principal portion
-            increases. This is what banks use for most home, car, and personal
-            loans.
-          </li>
-          <li>
-            <strong>Flat Rate:</strong> Interest is calculated on the original
-            loan amount for the entire tenure, regardless of how much you have
-            already repaid. This results in a higher effective interest rate and
-            more total interest paid. Some short-term or small-ticket loans use
-            this method.
-          </li>
-          <li>
-            <strong>Rule of 78:</strong> An older method that front-loads
-            interest payments. You pay proportionally more interest in the early
-            months and less later. It penalizes early repayment and is less
-            common today.
-          </li>
-        </ul>
-        <p>
-          Always confirm which method your lender uses. A "10% flat rate" loan
-          can cost significantly more than a "10% reducing balance" loan over
-          the same tenure.
-        </p>
+        <h2>EMI Questions</h2>
 
-        <h2>Benefits of Calculating EMI Before Taking a Loan</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Budget clarity:</strong> You know exactly how much to set
-            aside each month, so no surprises after the loan starts.
-          </li>
-          <li>
-            <strong>Compare lenders objectively:</strong> Two banks quoting
-            different rates and tenures are hard to compare without running the
-            numbers. An EMI calculator makes the comparison instant.
-          </li>
-          <li>
-            <strong>Avoid over-borrowing:</strong> Seeing the monthly payment
-            and total interest cost helps you decide whether the loan amount is
-            realistic for your income.
-          </li>
-          <li>
-            <strong>Plan prepayments:</strong> By seeing the total interest
-            cost, you can decide whether making early prepayments saves enough
-            to be worth the effort.
-          </li>
-          <li>
-            <strong>Negotiate better terms:</strong> Walking into a bank with
-            pre-calculated numbers puts you in a stronger position to push for
-            better rates or conditions.
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {[
-          [
-            "What is EMI in simple terms?",
-            "EMI is a fixed monthly payment you make to repay a loan. Each payment includes a portion of the borrowed amount (principal) and the interest charged by the lender. The amount stays the same every month until the loan is fully paid off.",
-          ],
-          [
-            "How does loan tenure affect my EMI and total interest?",
-            "A longer tenure lowers your monthly EMI because the same loan amount is spread over more months. However, since interest accrues for a longer period, the total interest you pay over the life of the loan increases. A shorter tenure means higher monthly payments but less total interest. The right balance depends on what your monthly budget can handle.",
-          ],
-          [
-            "Can I reduce my EMI after taking a loan?",
-            "Yes, there are a few ways. You can make a partial prepayment to reduce the outstanding principal, which lowers the EMI or shortens the tenure. You can also refinance the loan with another lender at a lower interest rate. Some lenders allow tenure extension, which brings down the EMI but increases total interest.",
-          ],
-          [
-            "What is the difference between flat rate and reducing balance EMI?",
-            "In the flat rate method, interest is charged on the full original loan amount for the entire tenure. In the reducing balance method (used by this calculator and most banks), interest is charged only on the remaining principal after each payment. The reducing balance method results in lower total interest and is more common for home, car, and personal loans.",
-          ],
-          [
-            "Does prepaying a loan save money on interest?",
-            "Yes. When you prepay, the outstanding principal decreases. Since interest is calculated on the remaining balance each month, a lower balance means less interest going forward. The earlier you prepay in the loan term, the more interest you save. Check with your lender about any prepayment penalties before doing so.",
-          ],
-          [
-            "What happens if I miss an EMI payment?",
-            "Missing an EMI payment typically results in a late fee and can negatively affect your credit score. The missed amount plus the penalty is added to your outstanding balance. Repeated misses can lead to loan default proceedings. If you foresee difficulty, contact your lender early to explore restructuring options.",
-          ],
-          [
-            "Is this EMI calculator accurate for all loan types?",
-            "This calculator uses the standard reducing balance EMI formula, which applies to most home loans, car loans, personal loans, education loans, business loans, and gold loans. It assumes a fixed interest rate. For floating-rate loans, the actual EMI may change over time as the rate adjusts.",
-          ],
-          [
-            "How do I convert loan tenure from years to months?",
-            "Multiply the number of years by 12. For example, a 5-year loan is 60 months, a 10-year loan is 120 months, a 15-year loan is 180 months, and a 20-year loan is 240 months. Enter the month value in the tenure field above.",
-          ],
-          [
-            "Should I choose the longest possible tenure to keep EMI low?",
-            "Not necessarily. While a longer tenure reduces your monthly EMI, it significantly increases the total interest paid over the life of the loan. The best approach is to choose the shortest tenure where the monthly EMI is still comfortable within your budget. Use this calculator to try different tenure lengths and compare total costs.",
-          ],
-        ].map(([q, a], i) => (
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
           <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
               {q}
               <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
               />
             </h3>
-            {openFAQ === i && <p>{a}</p>}
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
           </div>
-        ))}
+          );
+        })}
 
-        <h2>Final Thoughts</h2>
-        <p>
-          An EMI calculator is not just a convenience — it is a planning tool
-          that puts you in control of your borrowing decisions. Whether you are
-          taking out your first personal loan or refinancing a home mortgage,
-          knowing your exact monthly payment, total interest, and full repayment
-          cost lets you choose the loan structure that fits your financial life.
-        </p>
-        <p>
-          Plug your numbers into the calculator above, experiment with different
-          rates and tenures, and walk into your next loan conversation with
-          clarity instead of guesswork.
-        </p>
       </div>
 
       {/* ---- SIDEBAR ---- */}

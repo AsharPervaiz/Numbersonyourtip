@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import EMICalculator from "../components/EMICalculator";
 
 export const metadata: Metadata = {
-  title: "EMI Calculator | Calculate Your Monthly Loan Installment Online",
+  title: "EMI Calculator — Monthly Instalment & Interest",
   description:
-    "Use our free EMI calculator online to instantly find your monthly loan payment, total interest, and repayment breakdown for home, car, personal, and education loans.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Calculate your EMI, see how each payment splits between interest and principal, and compare flat versus reducing balance rates before signing anything.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/emi-calculator/",
+    canonical: "/emi-calculator/",
+  },
+  openGraph: {
+    title: "EMI Calculator — Monthly Instalment & Interest",
+    description:
+      "Where each instalment goes, what a longer term really costs, and why a 10% flat rate is nearer 17%.",
+    url: "/emi-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "EMI Calculator — Monthly Instalment & Interest",
+    description:
+      "EMI, the interest and principal split, prepayment timing and flat versus reducing rates.",
   },
 };
 

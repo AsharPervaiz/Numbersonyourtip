@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import IncomeTaxCalculator from "../components/IncomeTaxCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Free Income Tax Calculator 2026 | Pakistan, India, USA, UK, Canada & Australia",
+  title: "Income Tax Calculator With Deductions",
   description:
-    "Free income tax calculator with deductions for salaried persons — Pakistan FBR 2026, India, USA, UK, Canada, Australia, or custom rate. See tax slabs, effective rate, and net take-home instantly.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Estimate income tax across bands, and see why marginal, effective and withholding rates differ — plus what a deduction is really worth against a credit.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/income-tax-calculator/",
+    canonical: "/income-tax-calculator/",
+  },
+  openGraph: {
+    title: "Income Tax Calculator With Deductions",
+    description:
+      "Tax across bands, the three rates people all call their tax rate, and why a raise never leaves you worse off.",
+    url: "/income-tax-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Income Tax Calculator With Deductions",
+    description:
+      "Income tax by band, marginal versus effective rate, deductions versus credits.",
   },
 };
 

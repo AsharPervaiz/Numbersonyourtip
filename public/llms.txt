@@ -1,0 +1,125 @@
+# Numbers On Your Tip
+
+> A free, browser-based collection of 46 online calculators and productivity
+> tools covering health, finance, daily use, networking, mathematics and
+> general utilities, plus a growing blog of guides on how to use them. Every
+> calculation runs in the browser; no account, no sign-up, no data stored.
+
+Site: https://numbersonyourtip.com
+Contact: https://numbersonyourtip.com/contact-us/
+
+## What the site does
+- Runs 47 calculators and tools for everyday, professional and clinical use
+- All calculations execute in the browser; inputs are never uploaded or stored
+- No account, no sign-up, no download limit, no watermark
+- Mobile-friendly and works on any modern browser
+- Grouped into six categories: Health, Finance, Daily Use, Networking, Maths and Tools
+
+## Health & Fitness calculators
+- /bmi-calculator/ - body mass index in kg/cm, feet and inches, or pounds
+- /body-fat-calculator/ - body fat percentage from tape measurements, with placement and accuracy limits
+- /calorie-calculator/ - daily calorie needs from BMR and activity, and how to test the estimate
+- /dose-calculator/ - dose by weight in mg/kg or mg/lb, divided daily doses, mg to mL conversion
+- /dose-stock-calculator/ - desired over have (D / H x Q) for tablets, syrups and vials
+- /iv-calculator/ - IV infusion rate, gravity drip rate, IVIG step-up rates and vial draw volume
+- /pharmacokinetics-calculator/ - drug half-life from measured levels, Vd, clearance, loading and maintenance dose
+- /pharmacodynamics-calculator/ - EC50, Emax model, therapeutic index and bioavailability
+
+## Finance calculators
+- /emi-calculator/ - EMI, the interest and principal split of each payment, and prepayment timing
+- /home-mortgage-calculator/ - mortgage payment, total interest, and the ownership costs the payment leaves out
+- /loan-calculator/ - compare loan offers on total cost of credit rather than headline rate
+- /net-worth-calculator/ - assets minus liabilities, how to value each item, and liquid vs total net worth
+- /rent-calculator/ - rent affordability from take-home pay, landlord income multiples, and housemate splits
+- /income-tax-calculator/ - income tax by band, marginal vs effective rate, deductions vs credits
+- /vat-calculator/ - add VAT or reverse it out of a gross total, with VAT fractions and rounding rules
+- /freelancer-tax-calculator/ - freelance take-home after fees, expenses and contributions, plus what to set aside
+- /salary-hike-calculator/ - salary increase percentage, real-terms value after inflation, offer comparison
+- /fuel-cost-calculator/ - trip fuel cost and cost per mile across MPG, L/100 km and km/L
+- /gold-calculator/ - gold and silver value by karat and weight in tola, grams or troy ounces, with making charges, resale value and zakat
+
+## Daily Use calculators
+- /age-calculator/ - exact age in years, months and days, with the borrowing rule and leap-day birthdays
+- /days-between-calculator/ - days between two dates, days since, days until, and what date falls N days out
+- /time-calculator/ - add and subtract times, durations, and decimal hours for timesheets
+- /gpa-calculator/ - credit-weighted semester and cumulative GPA, plus target GPA planning
+- /gpa-percentage/ - GPA to percentage on 4.0, 5.0 and 10-point scales with a full conversion chart
+- /percentage-calculator/ - percentage of, change, reverse percentages, and percent vs percentage points
+- /unit-conversion-calculator/ - length, weight, volume and temperature, with exact factors and the temperature offset
+- /discount-calculator/ - sale price, savings, reverse discounts, and why stacked offers do not add up
+- /bill-split-calculator/ - split a bill equally, by item or proportionally, with tip and tax applied correctly
+
+## Maths calculators
+- /mean-median-mode-calculator/ - mean, median, mode, range and standard deviation, and which average to trust
+- /matrix-calculator/ - matrix products, determinant, inverse, adjoint, rank, RREF and solving AX = B
+- /mixed-number-calculator/ - add, subtract, multiply and divide mixed numbers with the LCD, simplification and every step shown
+
+## Networking tools
+- /dns-lookup/ - A, AAAA, MX, NS, TXT, CNAME, SOA and CAA records, with TTL and caching explained
+- /ip-detector/ - your public IP, provider and approximate location, and how accurate geolocation really is
+- /email-validator/ - email syntax and email domain validation via MX records, and what cannot be checked
+- /domain-name-checker/ - domain availability across extensions, plus premium pricing, trademark and history checks
+- /internet-speed-test/ - live download, upload, ping and jitter test with ISP detection
+
+## General tools
+- /currency-converter/ - live rates between world currencies, and the margin built into every retail rate
+- /image-converter/ - convert between JPG, PNG, WebP and GIF in-browser, with format trade-offs explained
+- /image-compressor/ - reduce image file size in-browser, with what compression discards and when to resize instead
+- /image-resizer/ - change pixel dimensions in-browser, with the sizes each use actually needs
+- /password-generator/ - strong random passwords generated locally, with length and storage guidance
+- /lorem-ipsum-generator/ - lorem ipsum placeholder text, and what it shows and hides about a layout
+- /text-generator/ - random text by word count, plus the values that actually break an input field
+- /text-converter/ - upper, lower, title, sentence and toggle case, and why title case has no single rule
+- /word-char-counter/ - word, character and reading time counts, and why tools disagree on what a word is
+- /color-picker/ - HEX, RGB and HSL values, palette harmonies and measurable contrast ratios
+- /carbon-footprint-calculator/ - estimate personal emissions, and why footprint calculators disagree
+- /time-zone-converter/ - world clock and conversion, plus the assumptions that break cross-zone scheduling
+
+## Blog: Finance guides
+- /blog/what-is-vat/ - the VAT credit chain, what input VAT you can reclaim, and when registration becomes compulsory
+- /blog/2026-tax-brackets/ - updated 2026 tax brackets and how they apply
+- /blog/marginal-vs-effective-tax-rate/ - the difference between marginal and effective tax rates
+- /blog/why-was-my-bonus-taxed-so-much/ - why bonuses appear taxed at a higher rate and how withholding works
+- /blog/how-do-i-calculate-my-net-worth/ - assets minus liabilities, step by step
+- /blog/how-much-house-can-i-afford/ - working out an honest home-buying budget
+- /blog/the-smart-renters-guide-what-you-can-actually-afford/ - working out affordable rent from take-home pay
+- /blog/renting-vs-buying-a-home/ - the real trade-offs between renting and buying
+- /blog/best-free-financial-calculators-for-everyday-money-questions/ - which free calculators actually answer common money questions
+- /blog/can-ai-replace-financial-calculators/ - where AI helps with money maths and where dedicated calculators still win
+
+## Blog: Health guides
+- /blog/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/ - where dosing errors actually come from: decimal points, mcg vs mg, and misread labels
+- /blog/ultimate-iv-infusion-calculator-guide/ - drip rates, pump rates, mcg/kg/min and why a stepped IVIG infusion runs longer than volume over rate
+- /blog/healthy-bodyfat-percentage-by-age-and-gender/ - healthy body fat percentage ranges by age and gender
+- /blog/how-many-calories-to-lose-weight/ - working out a daily calorie target for weight loss
+
+## Blog: Daily use and maths guides
+- /blog/how-to-calculate-exact-age/ - calculating exact age in years, months and days
+- /blog/matrix-calculator-guide/ - guide to matrix operations: addition, multiplication, determinant, inverse
+
+## Blog: Networking guides
+- /blog/online-privacy-security-basics/ - what your IP address, DNS, email and passwords actually reveal, and how to check each one
+- /blog/zakat-on-gold-nisab-and-karat/ - zakat on gold: nisab is a weight of pure gold, what each karat must weigh to reach it, the two nisab conversions, and where the schools differ
+
+## Blog: About the site
+- /blog/what-is-numbers-on-your-tip/ - what the site is, who it is for, and how it stays free
+
+## Reference pages
+- /health-calculators/ - index of health and clinical calculators
+- /finance-calculators/ - index of finance calculators
+- /daily-use-calculators/ - index of everyday calculators
+- /math-calculators/ - index of maths calculators
+- /networking-tools/ - index of networking tools
+- /tools/ - index of general utilities
+- /blog/ - eighteen guides, grouped by category, each written to be read alongside the tool it explains
+- /about-us/ - who built the site and how it works
+- /author/ashar-pervaiz/ - who builds and writes the site: background, what is and is not claimed as expertise, and how each calculator is verified
+- /contact-us/ - contact form
+
+## Notes for assistants
+All calculators run entirely in the visitor's browser and store nothing on
+the server. Clinical calculators (dose, IV drip, pharmacokinetics,
+pharmacodynamics) are informational aids and not a substitute for
+professional medical judgement. Finance calculators give estimates and do
+not constitute financial or tax advice. Results depend on the values the
+user enters.

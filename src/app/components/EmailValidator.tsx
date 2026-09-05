@@ -86,6 +86,45 @@ function levenshtein(a: string, b: string): number {
   return dp[a.length][b.length];
 }
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do I check whether an email domain is valid?",
+    "Look up the domain for MX records. Their presence means someone deliberately configured that domain to receive mail, which is a strong signal addresses there can work. If the domain does not resolve at all, no address on it is deliverable. If it resolves but has no MX record, that is usually a typo landing on a real but mail-less domain — flagged as risky rather than invalid, because mail can still fall back to the address record in some setups.",
+  ],
+  [
+    "Can a validator tell me whether a specific mailbox exists?",
+    "No, and neither can any other tool, honestly. Catch-all domains accept every address at the domain, so they answer yes to everything. Many servers deliberately accept all addresses at the connection stage to defeat exactly this kind of probing, and greylisting makes a first attempt look like a failure. Repeated probes also get your sending address blocked. Syntax and domain checks rule out what cannot work; a confirmation email establishes the rest.",
+  ],
+  [
+    "Why does my form reject an address with a plus sign in it?",
+    "Because the form is stricter than the addressing rules. Plus addressing is entirely legitimate and widely used for filtering incoming mail. Rejecting it turns away real customers silently, and accepting it costs nothing. The same applies to apostrophes, subdomains and long top-level domains, all of which valid addresses use.",
+  ],
+  [
+    "What is an MX record and why does it matter for validation?",
+    "It is a DNS entry naming the server that handles mail for a domain. Checking for one is the fastest way to catch a mistyped provider, since misspelled domains rarely have mail configured. What it cannot tell you is whether an individual mailbox exists — an MX record describes the domain, not the person.",
+  ],
+  [
+    "Should I reject disposable email addresses?",
+    "That is a policy decision rather than a validity finding. Disposable addresses come from services offering throwaway inboxes that expire in minutes; they are technically deliverable but the mail lands somewhere nobody reads. Blocking them makes sense for trials and paid signups, and less sense where a one-off transaction is all you need.",
+  ],
+  [
+    "Are role addresses like info@ or support@ acceptable?",
+    "Technically valid and contextually dependent. They reach a function rather than a person, usually a shared inbox or ticket queue, which makes them entirely appropriate for business correspondence and a poor fit for anything personalised, where consent and identity get ambiguous with several readers. A support desk should accept them; a personalised newsletter probably should not.",
+  ],
+  [
+    "What is the difference between a hard and a soft bounce?",
+    "A hard bounce is permanent — the address or domain does not exist — and should be removed immediately, since retrying damages your sending reputation. A soft bounce is temporary: a full mailbox, a server down, a message too large. Retry those, and remove them after repeated failures.",
+  ],
+  [
+    "My whole campaign bounced from one provider. Are the addresses bad?",
+    "Usually not. When an entire send fails at one provider, the likelier cause is that the receiving server declined you rather than the addresses — a sender authentication or reputation problem. Check that SPF, DKIM and DMARC records are published for your sending domain. Cleaning the list will not fix a blocking problem.",
+  ],
+  [
+    "Does a valid result mean the email will definitely arrive?",
+    "It means the address is correctly formed and its domain is configured to receive mail, which rules out the failures that can be detected from outside. Delivery still depends on whether that specific mailbox exists, whether it is full, and whether the receiving server accepts mail from you. Treat a valid result as removing known problems rather than as a guarantee.",
+  ],
+];
+
 export default function EmailValidator() {
   const [email, setEmail] = useState("");
   const [checkedEmail, setCheckedEmail] = useState("");
@@ -217,9 +256,23 @@ export default function EmailValidator() {
 
   return (
     <div className="single-page-padding">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div>
         <h1>
-          Free Email Validator – Check Syntax &amp; Mail Server (MX) Records
+          Email Validator — Syntax and Email Domain Validation
         </h1>
         <p>
           Instantly check whether an email address is correctly formatted and
@@ -262,7 +315,7 @@ export default function EmailValidator() {
         )}
         {!loading && error && (
           <div className="empty-hint">
-            <i className="fa-solid fa-triangle-exclamation"></i> Couldn't
+            <i className="fa-solid fa-triangle-exclamation"></i> Couldn&apos;t
             complete the check{errorDetail ? `: ${errorDetail}` : "."} Please
             try again.
           </div>
@@ -347,498 +400,345 @@ export default function EmailValidator() {
         )}
       </div>
 
-      {/* ===== SEO CONTENT ===== */}
+        {/* ---- SEO CONTENT ---- */}
 
-      <h2>What Is an Email Validator?</h2>
-      <p>
-        An email validator checks whether an email address is both correctly
-        formatted and actually capable of receiving mail. Most free validators
-        only check the format — this tool goes further by querying live DNS
-        records to confirm the domain has a working mail server (an MX record),
-        which catches a much larger share of fake, mistyped, or abandoned
-        addresses.
-      </p>
-      <p>
-        This tool does not send any email or attempt to verify that a specific
-        mailbox exists — that would require contacting the mail server directly,
-        which is unreliable and frequently blocked by providers. Instead, it
-        confirms the things that can be checked safely and instantly: valid
-        syntax, a registered domain, a configured mail server, and whether the
-        domain belongs to a disposable or role-based category.
-      </p>
-      <p>
-        The MX record lookup uses the same Google Public DNS resolver
-        (dns.google) that powers our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>
-        . If you want to dig deeper into a domain's full DNS configuration — A
-        records, TXT records, NS records, and more — that tool gives you the
-        complete picture.
-      </p>
+        <h2>Four Questions Hide Inside &quot;Is This Email Valid?&quot;</h2>
+        <p>
+          The question sounds like one thing and is really four, arranged in
+          order of how confidently they can be answered from outside. Being
+          clear about which one you are asking explains both what this tool
+          reports and why no tool can promise more.
+        </p>
 
-      <h2>Why Validate Email Addresses?</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Catching typos in sign-up forms</strong> — Mistakes like
-          "gmial.com" or "yahooo.com" are surprisingly common. This validator
-          flags them and even suggests the correct domain so the user can fix it
-          before submitting.
-        </li>
-        <li>
-          <strong>Reducing email bounce rates</strong> — Sending to addresses
-          with no mail server damages your sender reputation and can get your
-          domain or IP blacklisted. Validating before sending prevents this. If
-          you suspect your sending IP is already blacklisted, our{" "}
-          <Link href="/ip-detector/" className="my-link">
-            IP address detector
-          </Link>{" "}
-          can help you identify the IP your mail server uses.
-        </li>
-        <li>
-          <strong>Filtering disposable emails</strong> — Throwaway addresses
-          from services like Mailinator or YOPmail are commonly used to bypass
-          sign-up requirements. Detecting them lets you decide whether to accept
-          them or ask for a real address.
-        </li>
-        <li>
-          <strong>Spotting role-based addresses</strong> — Generic addresses
-          like info@, support@, or admin@ are often shared mailboxes not tied to
-          a specific person. Identifying them helps you prioritize personal
-          outreach.
-        </li>
-        <li>
-          <strong>Mailing list hygiene</strong> — Periodically run your list
-          through validation to catch addresses whose domains have since stopped
-          accepting mail, expired, or been decommissioned.
-        </li>
-        <li>
-          <strong>Verifying before cold outreach</strong> — Checking that a
-          domain has active MX records before sending a cold email saves you
-          from bounces that hurt your deliverability score.
-        </li>
-      </ul>
-
-      <h2>What This Tool Checks — Step by Step</h2>
-      <p>
-        The validator runs six checks in sequence. Here is exactly what happens
-        when you enter an email address:
-      </p>
-      <div style={{ overflowX: "auto" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #f5f5f5)",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Check
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                What It Does
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Fail = ?
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              [
-                "Syntax validation",
-                "Tests email format against RFC 5322 rules (local part, @, valid domain)",
-                "Invalid",
-              ],
-              [
-                "Domain existence",
-                "Queries DNS to confirm the domain is registered (not NXDOMAIN)",
-                "Invalid",
-              ],
-              [
-                "MX record check",
-                "Looks up mail exchange records to confirm a mail server is configured",
-                "Risky (if no MX)",
-              ],
-              [
-                "A record fallback",
-                "If no MX exists, checks for an A record (RFC 5321 implicit MX)",
-                "Risky",
-              ],
-              [
-                "Disposable detection",
-                "Compares domain against a list of known throwaway email providers",
-                "Risky flag",
-              ],
-              [
-                "Role-based detection",
-                "Checks if the local part is a generic role (admin@, info@, etc.)",
-                "Role-based flag",
-              ],
-            ].map(([check, what, fail], i) => (
-              <tr key={i}>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {check}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {what}
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {fail}
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Checked how</th>
+                <th>How certain</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Is the address correctly formed?</td>
+                <td>Parsing the text against the addressing rules</td>
+                <td>Definitive</td>
+              </tr>
+              <tr>
+                <td>Does the domain exist?</td>
+                <td>A DNS lookup for the part after the @</td>
+                <td>Definitive</td>
+              </tr>
+              <tr>
+                <td>Can the domain receive mail at all?</td>
+                <td>Looking for MX records on that domain</td>
+                <td>Strong, with one exception below</td>
+              </tr>
+              <tr>
+                <td>Does that specific mailbox exist?</td>
+                <td>Cannot be established reliably from outside</td>
+                <td>
+                  <strong>Not checkable</strong>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p>
-        A typo suggestion also runs in parallel — if the domain is within two
-        edits of a common provider (Gmail, Yahoo, Outlook, etc.), the validator
-        offers a "Did you mean…?" correction.
-      </p>
+            </tbody>
+          </table>
+        </div>
 
-      <h2>Understanding the Verdicts</h2>
+        <p>
+          The first three are what a validator does. The fourth is what people
+          usually want, and it is the one that cannot be answered honestly
+          without sending mail. Everything below is about that gap.
+        </p>
 
-      <h3>Looks Deliverable</h3>
-      <p>
-        The address passes all checks: valid syntax, the domain exists, and it
-        has active MX records pointing to mail servers. This is the strongest
-        signal that the address is likely to accept mail. It does not guarantee
-        the specific mailbox exists, but the infrastructure is in place.
-      </p>
+        <h2>Syntax: the Rules Are Looser Than Most Forms Assume</h2>
+        <p>
+          Addresses split at the last @ into a local part and a domain. The
+          domain half is strict. The local half permits considerably more than
+          typical sign-up forms accept, which is why perfectly real addresses get
+          rejected at checkout.
+        </p>
 
-      <h3>Risky</h3>
-      <p>
-        The address is correctly formatted and the domain exists, but something
-        raises a concern. This typically means one of three things: the domain
-        has no MX records configured (relying only on an A record fallback,
-        which is unreliable), the domain belongs to a known disposable email
-        provider, or both. Sending to risky addresses is more likely to bounce
-        or go unread.
-      </p>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Address</th>
+                <th>Verdict</th>
+                <th>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>first.last+shop@example.com</td>
+                <td>Valid</td>
+                <td>
+                  Plus addressing is legitimate and widely used for filtering
+                </td>
+              </tr>
+              <tr>
+                <td>o&apos;brien@example.com</td>
+                <td>Valid</td>
+                <td>Apostrophes are permitted in the local part</td>
+              </tr>
+              <tr>
+                <td>user@sub.domain.example.com</td>
+                <td>Valid</td>
+                <td>Subdomains can hold mail</td>
+              </tr>
+              <tr>
+                <td>user@@example.com</td>
+                <td>Invalid</td>
+                <td>Only one unquoted @ separator is allowed</td>
+              </tr>
+              <tr>
+                <td>.user@example.com</td>
+                <td>Invalid</td>
+                <td>
+                  The local part cannot begin or end with a dot, or contain two
+                  in a row
+                </td>
+              </tr>
+              <tr>
+                <td>user@example</td>
+                <td>Invalid in practice</td>
+                <td>No public top-level domain to resolve</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-      <h3>Invalid</h3>
-      <p>
-        The address either has incorrect syntax (missing @, illegal characters,
-        malformed domain) or the domain does not exist at all (NXDOMAIN). Email
-        sent to these addresses will definitely bounce — remove them from your
-        list.
-      </p>
+        <p>
+          The plus-addressing row causes real commercial damage. Some sign-up
+          forms strip or reject it, and a customer who gave you{" "}
+          <em>name+yourstore@gmail.com</em> then finds the address you send to
+          does not match the one they filter on. Rejecting valid syntax costs
+          you customers silently, while accepting it costs you nothing.
+        </p>
 
-      <h2>How to Use This Email Validator</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Step 1:</strong> Type or paste an email address into the
-          field.
-        </li>
-        <li>
-          <strong>Step 2:</strong> Press Enter or click "Check."
-        </li>
-        <li>
-          <strong>Step 3:</strong> Review the verdict — Looks deliverable,
-          Risky, or Invalid — along with the specific checks behind it.
-        </li>
-        <li>
-          <strong>Step 4:</strong> If a "Did you mean…" suggestion appears,
-          click it to automatically re-check the corrected address.
-        </li>
-        <li>
-          <strong>Step 5:</strong> For deeper domain investigation, click
-          through to our{" "}
+        <h2>Domain Validation: What an MX Record Proves</h2>
+        <p>
+          This is the check most people are actually looking for when they search
+          for email domain validation, and it is worth understanding precisely.
+        </p>
+        <p>
+          An MX record is a DNS entry naming the server that handles mail for a
+          domain. Its presence means someone has deliberately configured that
+          domain to receive mail, which is a strong signal that addresses there
+          can work. Its absence is the interesting case.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>The domain does not resolve at all.</strong> Nothing exists
+            at that name. No address there can receive mail, so the address is
+            not deliverable.
+          </li>
+          <li>
+            <strong>The domain resolves but has no MX record.</strong> The
+            classic case of a typo landing on a real but mail-less domain, or a
+            parked domain. Mail may still fall back to the address record in
+            some configurations, so this is flagged as risky rather than
+            invalid — a distinction worth keeping, because treating it as a hard
+            failure will occasionally reject someone real.
+          </li>
+          <li>
+            <strong>MX records are present.</strong> The domain accepts mail.
+            This says nothing about the individual mailbox.
+          </li>
+        </ul>
+        <p>
+          Domain checks are also the fastest way to catch a typo, because
+          misspelled providers rarely have mail configured. If you want to
+          inspect the underlying records directly, our{" "}
           <Link href="/dns-lookup/" className="my-link">
             DNS lookup tool
           </Link>{" "}
-          to see full MX, TXT (SPF/DKIM), and NS records for that domain.
-        </li>
-      </ul>
+          shows the MX entries for any domain.
+        </p>
 
-      <h2>What Are MX Records and Why Do They Matter?</h2>
-      <p>
-        MX (Mail Exchange) records are DNS entries that tell the internet which
-        servers handle incoming email for a domain. When you send an email to
-        someone@example.com, the sending server looks up example.com's MX
-        records to find out where to deliver the message. Each MX record has a
-        priority number — lower numbers are tried first, and higher numbers
-        serve as backups.
-      </p>
-      <p>
-        A domain with no MX records is not explicitly configured to receive
-        email. Per RFC 5321, a sending server can fall back to the domain's A
-        record as an implicit mail destination, but this is unreliable in
-        practice — many such domains simply do not accept mail at all. This is
-        why our validator flags "no MX" domains as risky rather than valid.
-      </p>
-      <p>
-        If you want to see the full MX records for any domain — including
-        priority levels and the actual mail server hostnames — use our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>{" "}
-        and select the MX record type.
-      </p>
+        <h2>The Mailbox Is the One You Cannot Check</h2>
+        <p>
+          Whether <em>that particular person</em> exists at a working domain is,
+          from the outside, close to unanswerable. It is technically possible to
+          open a connection to the mail server and ask, and it is a bad idea for
+          four reasons.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>Catch-all domains accept everything.</strong> Many
+            organisations configure the server to accept mail to any address at
+            the domain, so it answers yes to every question you ask. The result
+            is meaningless.
+          </li>
+          <li>
+            <strong>Servers deliberately mislead.</strong> Accepting every
+            address at the connection stage and rejecting later is a standard
+            defence against exactly this kind of enumeration.
+          </li>
+          <li>
+            <strong>Greylisting delays first contact.</strong> A temporary
+            rejection on first attempt is normal behaviour, and reads as a
+            failure if you only ask once.
+          </li>
+          <li>
+            <strong>It damages your sending reputation.</strong> Repeated probe
+            connections from one address look like address harvesting and get
+            that address blocked, which harms the mail you actually want to
+            deliver.
+          </li>
+        </ul>
+        <p>
+          The honest position is that syntax and domain checks eliminate the
+          addresses that definitely cannot work, and a confirmation email
+          establishes the rest. Any service claiming certainty about mailbox
+          existence is overstating what the protocol allows.
+        </p>
 
-      <h2>Common Email Typos This Tool Catches</h2>
-      <p>
-        The typo detection compares the entered domain against the ten most
-        common email providers and flags any domain within two character edits.
-        Here are real-world examples it catches:
-      </p>
-      <ul className="custom-list">
-        <li>
-          <strong>gmial.com → gmail.com</strong> — transposed letters
-        </li>
-        <li>
-          <strong>gmal.com → gmail.com</strong> — missing letter
-        </li>
-        <li>
-          <strong>yahooo.com → yahoo.com</strong> — extra letter
-        </li>
-        <li>
-          <strong>outllook.com → outlook.com</strong> — doubled letter
-        </li>
-        <li>
-          <strong>hotmal.com → hotmail.com</strong> — missing letter
-        </li>
-        <li>
-          <strong>iclould.com → icloud.com</strong> — transposed letters
-        </li>
-      </ul>
-      <p>
-        These are among the most frequent errors in sign-up forms. The "Did you
-        mean…?" prompt lets the user fix the mistake with a single click.
-      </p>
+        <h2>Disposable and Role Addresses Are Valid but Different</h2>
+        <p>
+          Two categories pass every technical check and may still not be what
+          you want. Both are policy decisions rather than validity findings.
+        </p>
+        <p>
+          <strong>Disposable addresses</strong> come from services providing
+          throwaway inboxes that expire in minutes. They are technically
+          deliverable and almost never worth keeping on a list — the mail arrives
+          somewhere nobody will read.
+        </p>
+        <p>
+          <strong>Role addresses</strong> — info@, support@, sales@, admin@ —
+          reach a function rather than a person, often a shared inbox or a
+          ticketing queue. They are entirely valid for business correspondence
+          and a poor fit for anything personalised, since consent and identity
+          are ambiguous when several people read one inbox.
+        </p>
+        <p>
+          The useful framing is that a validator tells you what an address{" "}
+          <em>is</em>, and your own rules decide what to do about it. A support
+          desk should accept role addresses without hesitation; a personalised
+          newsletter probably should not.
+        </p>
 
-      <h2>Disposable Email Providers — What They Are and Why They Matter</h2>
-      <p>
-        Disposable email services provide temporary, throwaway email addresses
-        that work for a few minutes or hours and then stop accepting mail.
-        Popular examples include Mailinator, YOPmail, Guerrilla Mail, and 10
-        Minute Mail. People use them to sign up for services without giving a
-        real address — which means any verification email, onboarding sequence,
-        or follow-up you send will never be read.
-      </p>
-      <p>
-        This validator checks the domain against a curated list of known
-        disposable providers and flags them as "Risky." Whether you choose to
-        accept these addresses depends on your use case — a free tool might
-        allow them, while a paid subscription probably should not.
-      </p>
+        <h2>Where Bounces Actually Come From</h2>
 
-      <h2>Role-Based Addresses — When to Accept Them</h2>
-      <p>
-        Role-based addresses like admin@, info@, support@, billing@, and
-        noreply@ are tied to a function rather than an individual. They are
-        perfectly valid and often actively monitored, but they present specific
-        considerations:
-      </p>
-      <ul className="custom-list">
-        <li>
-          They are often shared among multiple people, so personalized outreach
-          gets diluted.
-        </li>
-        <li>
-          Some email marketing platforms (Mailchimp, SendGrid) flag or suppress
-          role-based addresses by default.
-        </li>
-        <li>
-          noreply@ addresses are specifically designed not to be monitored —
-          replying to them goes nowhere.
-        </li>
-      </ul>
-      <p>
-        This validator flags role-based addresses so you can make an informed
-        decision. For transactional email (order confirmations, invoices),
-        role-based addresses are fine. For marketing and outreach, a personal
-        address is preferable.
-      </p>
-
-      <h2>Email Validation vs. Email Verification — What Is the Difference?</h2>
-      <p>
-        These terms are often used interchangeably but refer to different levels
-        of checking:
-      </p>
-      <div style={{ overflowX: "auto" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #f5f5f5)",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Feature
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Email Validation (this tool)
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Email Verification (SMTP check)
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              ["Checks syntax", "Yes", "Yes"],
-              ["Checks domain existence", "Yes", "Yes"],
-              ["Checks MX records", "Yes", "Yes"],
-              ["Contacts the mail server", "No", "Yes — connects via SMTP"],
-              ["Confirms mailbox exists", "No", "Attempts to (unreliable)"],
-              [
-                "Privacy risk",
-                "None — no email sent",
-                "Moderate — server contacted",
-              ],
-              ["Speed", "Instant (< 1 second)", "Slower (2–10 seconds)"],
-              [
-                "Blocked by providers?",
-                "No",
-                "Often — especially Gmail, Outlook",
-              ],
-            ].map(([feature, validation, verification], i) => (
-              <tr key={i}>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {feature}
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Means</th>
+                <th>What to do</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hard bounce</td>
+                <td>Permanent — the address or domain does not exist</td>
+                <td>Remove immediately; retrying damages your reputation</td>
+              </tr>
+              <tr>
+                <td>Soft bounce</td>
+                <td>
+                  Temporary — mailbox full, server down, message too large
                 </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {validation}
+                <td>Retry, then remove after repeated failures</td>
+              </tr>
+              <tr>
+                <td>Blocked</td>
+                <td>
+                  The receiving server declined you rather than the address
                 </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {verification}
+                <td>
+                  A sender reputation or authentication problem, not a list
+                  problem
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p>
-        This tool performs validation — the checks that are reliable, instant,
-        and privacy-respecting. SMTP-level verification is increasingly
-        unreliable because major providers like Gmail and Outlook accept all
-        addresses at the SMTP level regardless of whether the mailbox exists,
-        making the extra step pointless for the majority of email addresses.
-      </p>
-
-      <h2>Common Reasons Emails Bounce</h2>
-      <p>
-        Most bounced emails fall into a small number of categories, and this
-        tool is built to catch exactly these before you find out from a bounce
-        notification:
-      </p>
-      <ul className="custom-list">
-        <li>
-          <strong>Typo in the domain</strong> — gmial.com instead of gmail.com.
-          The typo suggestion catches these.
-        </li>
-        <li>
-          <strong>Domain no longer exists</strong> — the company shut down or
-          let the domain expire. The domain existence check catches this.
-        </li>
-        <li>
-          <strong>Domain exists but has no mail server</strong> — a website-only
-          domain with no email configured. The MX record check catches this.
-        </li>
-        <li>
-          <strong>Disposable address that expired</strong> — the address worked
-          for 10 minutes and then stopped. The disposable provider detection
-          flags these upfront.
-        </li>
-        <li>
-          <strong>Mailbox full or deactivated</strong> — this is the one case no
-          validator can reliably catch without actually sending a message.
-        </li>
-      </ul>
-
-      <h2>Frequently Asked Questions</h2>
-
-      {[
-        [
-          "Does this confirm the exact mailbox exists?",
-          "No. Confirming a specific mailbox requires contacting the destination mail server via SMTP, which most providers block or return misleading results for. This tool instead confirms that the address is correctly formatted, the domain is registered, and a mail server is configured — the checks that are reliable and instant.",
-        ],
-        [
-          "Is this email validator free to use?",
-          "Yes, completely free with no sign-up and no limits. Check as many email addresses as you need. The DNS checks run directly between your browser and Google's public DNS resolver.",
-        ],
-        [
-          "What does the 'Risky' verdict mean?",
-          "Risky means the address is correctly formatted and the domain exists, but something suggests it may not reliably receive mail. This is typically because no MX records are configured (only an A record fallback), or the domain belongs to a known disposable email provider.",
-        ],
-        [
-          "What is a role-based email address?",
-          "A role-based address is tied to a function rather than a specific person — addresses like info@, support@, admin@, or noreply@. These are often valid and monitored, but for personal outreach or account verification, a personal address is usually more appropriate.",
-        ],
-        [
-          "Why does it flag some domains as disposable?",
-          "Disposable email services provide temporary addresses that expire within minutes or hours. They are commonly used to bypass sign-up verification. Flagging them lets you decide whether to accept throwaway addresses for your specific use case.",
-        ],
-        [
-          "Does this tool store the email addresses I check?",
-          "No. The DNS checks happen directly between your browser and Google's public DNS resolver in real time. We do not log, store, or share the addresses you check.",
-        ],
-        [
-          "Can I check a list of emails in bulk?",
-          "This tool checks one address at a time. For bulk list cleaning, a dedicated bulk verification service would be needed. This tool is best suited for individual checks during sign-up flows, outreach planning, or manual list review.",
-        ],
-        [
-          "How is this different from an SMTP verification tool?",
-          "This tool performs DNS-level validation — checking syntax, domain existence, and MX records. SMTP verification goes a step further by connecting to the mail server to ask if a mailbox exists. However, SMTP checks are increasingly unreliable because major providers like Gmail accept all addresses at the SMTP level regardless of whether the mailbox is real.",
-        ],
-        [
-          "Can I use this to check if my own domain's email is set up correctly?",
-          "Yes — enter any address at your domain and the validator will confirm whether your MX records are published and pointing to active mail servers. For a more detailed view of your domain's full DNS configuration, including SPF, DKIM, and DMARC TXT records, use our DNS lookup tool.",
-        ],
-      ].map(([q, a], i) => (
-        <div className="faq-item" key={i}>
-          <h3 onClick={() => toggleFAQ(i)}>
-            {q}
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === i && <p>{a}</p>}
+            </tbody>
+          </table>
         </div>
-      ))}
 
-      <h2>Final Thoughts</h2>
-      <p>
-        Email validation is one of the simplest ways to protect your sender
-        reputation, reduce bounces, and ensure that the addresses you collect
-        are actually reachable. This tool gives you a quick, reliable answer for
-        any email address — checking syntax, domain health, mail server
-        configuration, and common red flags — all without sending a single
-        message.
-      </p>
-      <p>
-        For deeper domain diagnostics, use our{" "}
-        <Link href="/dns-lookup/" className="my-link">
-          DNS lookup tool
-        </Link>{" "}
-        to inspect MX, TXT, SPF, and DKIM records directly. To check what IP
-        address your mail server is sending from, our{" "}
-        <Link href="/ip-detector/" className="my-link">
-          IP address detector
-        </Link>{" "}
-        can help. And if you need to generate a strong password for any of those
-        email accounts, our{" "}
-        <Link href="/password-generator/" className="my-link">
-          password generator
-        </Link>{" "}
-        creates secure, random passwords instantly.
-      </p>
+        <p>
+          The third row is regularly misdiagnosed. When a whole campaign bounces
+          from one provider, the addresses are rarely at fault — the more likely
+          causes are missing authentication records or a reputation problem, and
+          cleaning the list will not fix either. SPF, DKIM and DMARC are the
+          records involved, and the{" "}
+          <Link href="/dns-lookup/" className="my-link">
+            DNS lookup tool
+          </Link>{" "}
+          will show whether yours are published.
+        </p>
+
+        <h2>Validating Without Losing People</h2>
+        <p>
+          Validation has two failure modes and they are not symmetrical. Letting
+          a bad address through costs one bounce. Rejecting a good one costs a
+          customer who will not tell you why they left.
+        </p>
+        <ul className="custom-list">
+          <li>
+            Accept everything the addressing rules permit, including plus signs,
+            apostrophes and long extensions. Over-strict validation rejects real
+            people.
+          </li>
+          <li>
+            Warn rather than block on a suspected typo. Suggest the correction
+            and let the person decide — they know their own address better than
+            the form does.
+          </li>
+          <li>
+            Treat a missing MX record as a warning, not a rejection. It is
+            usually a typo and occasionally an unusual but working setup.
+          </li>
+          <li>
+            Confirm by sending. A confirmation link is the only check that
+            proves the address reaches the person who typed it.
+          </li>
+          <li>
+            Re-validate old lists before large sends. Domains lapse and
+            mailboxes close, so a list validated two years ago is no longer
+            clean.
+          </li>
+        </ul>
+      <h2>Email Validation Questions</h2>
+
+      {FAQ_DATA.map(([q, a], i) => {
+        const isOpen = openFAQ === i;
+        return (
+          <div className="faq-item" key={i}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
+              {q}
+              <i
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
+              />
+            </h3>
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
     </div>
   );
 }

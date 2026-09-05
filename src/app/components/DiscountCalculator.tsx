@@ -2,6 +2,50 @@
 import { useState } from "react";
 import Link from "next/link";
 
+/* ─────────────────────────────────────────
+   FAQ data (also used to build the FAQPage
+   JSON-LD schema, so schema and on-page copy
+   always match exactly)
+───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "Is 30% off then an extra 20% off the same as 50% off?",
+    "No, it is 44% off. The second discount applies to the already-reduced price rather than the original: 100 becomes 70, then 70 becomes 56. The shortcut is to multiply the multipliers — 0.70 × 0.80 = 0.56, so you pay 56% and save 44%. Stacked discounts always come to less than the sum of the parts, and the gap widens as the discounts grow.",
+  ],
+  [
+    "Does the order of two discounts matter?",
+    "No. Applying 30% then 20% gives exactly the same result as 20% then 30%, because multiplying the two multipliers is commutative. If a retailer suggests one order works out better for you, the arithmetic says otherwise — though the order can matter if one discount applies only to certain items rather than the whole basket.",
+  ],
+  [
+    "How do I find the original price from a sale price?",
+    "Divide by one minus the discount rate. An item at 63 after 30% off was 63 ÷ 0.70 = 90. Adding 30% back to 63 gives 81.90, which is wrong, because the discount was calculated on the larger original figure rather than on the reduced one. Reversing a percentage is always a division.",
+  ],
+  [
+    "How do I work out what percentage off something is?",
+    "Divide the saving by the original price and multiply by 100. An item reduced from 90 to 63 has saved 27, and 27 ÷ 90 gives 30%. The common slip is dividing by the sale price instead, which would give 43% — always divide by what the price started at.",
+  ],
+  [
+    "Can two 50% discounts make something free?",
+    "No, they make it 75% off. Each discount only removes half of what remains, so 100 becomes 50 and then 25. No sequence of percentage discounts below 100% can ever reach zero, which is a useful sanity check whenever stacked offers look too good.",
+  ],
+  [
+    "Why is a 50% markup not reversed by a 50% discount?",
+    "Because the two percentages are calculated on different bases. Marking 100 up by 50% gives 150, and taking 50% off 150 gives 75 — below where you started. Reversing a 50% markup actually needs a 33.3% discount. This is also why an item marked up 100% and then sold at half price is back exactly at its original price while appearing to be a bargain.",
+  ],
+  [
+    "What is the quickest way to calculate a discount mentally?",
+    "Think in multipliers rather than subtractions. Ten percent off is × 0.9, twenty percent is × 0.8, twenty-five percent is × 0.75 and thirty percent is × 0.7. One multiplication replaces working out the saving and then subtracting it, which removes an intermediate number you can mis-copy — and it makes stacked offers trivial.",
+  ],
+  [
+    "How do I tell whether a discount is genuinely a good deal?",
+    "Compare against what the same item costs elsewhere today rather than against the crossed-out reference price, which the seller sets. Work out the unit price by weight, volume or count, since a larger discounted pack is not automatically better value. And include delivery or the cost of a trip, which can absorb the whole saving.",
+  ],
+  [
+    "Should I buy something because it is heavily discounted?",
+    "Only if you were going to buy it anyway. A discount reduces what you spend on a planned purchase and increases what you spend on an unplanned one. Spending 60 to save 40 on something you did not need leaves you 60 poorer, not 40 richer, however large the percentage on the label.",
+  ],
+];
+
 export default function DiscountCalculator() {
   /* ---- STATE ---- */
   const [originalPrice, setOriginalPrice] = useState("");
@@ -29,6 +73,12 @@ export default function DiscountCalculator() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const toggleFAQ = (index: number) =>
     setOpenFAQ(openFAQ === index ? null : index);
+  const handleFAQKey = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleFAQ(index);
+    }
+  };
 
   /* ---- COMMA HELPERS ---- */
   const addCommas = (val: string): string => {
@@ -117,10 +167,25 @@ export default function DiscountCalculator() {
   };
 
   return (
-    <>
-      <div className="page-layout single-page-padding">
-        <div className="single-page-padding">
-          <h1>Discount Calculator</h1>
+    <div className="page-layout">
+      {/* FAQ JSON-LD schema for rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+
+      <div className="single-page-padding">
+        <h1>Discount Calculator — Sale Price, Savings and Stacked Offers</h1>
           <p>
             Calculate Sale Price, Savings &amp; Final Price After Discount —
             Free &amp; Instant
@@ -334,287 +399,200 @@ export default function DiscountCalculator() {
             )}
           </div>
 
-          {/* ---- SEO CONTENT ---- */}
-          <h2>What is a Discount Calculator?</h2>
-          <p>
-            A discount calculator helps you instantly find out how much you save
-            and what the final price is after a percentage or flat amount
-            discount is applied. Whether you are shopping during a sale,
-            negotiating a deal, or running a business promotion, this tool
-            removes all the mental math and gives you an accurate answer in
-            seconds. You can also add a tax rate to see the true final amount
-            you will pay including GST, VAT, or any local tax.
-          </p>
+        {/* ---- SEO CONTENT ---- */}
 
-          <h2>How to Calculate a Discount</h2>
-          <p>
-            Calculating a discount is straightforward once you understand the
-            formula. There are two types of discounts — a percentage discount
-            (like 20% off) and a flat amount discount (like $50 off). Both are
-            handled by this calculator. Here is how each works:
-          </p>
+        <h2>Two Ways to Get the Same Answer, and One Is Faster</h2>
+        <p>
+          A single discount can be worked out in two steps or one, and the
+          one-step version is both quicker and less error-prone because it
+          removes an intermediate figure you can mis-copy.
+        </p>
+        <pre>
+          Two steps: saving = price × rate ÷ 100, then final = price − saving
+          {"\n"}One step: final = price × (1 − rate ÷ 100)
+        </pre>
+        <p>
+          A 40 item at 25% off is 40 × 0.75 = 30. The multiplier is worth
+          learning as a reflex: 10% off is × 0.9, 20% off is × 0.8, 25% is ×
+          0.75, and 30% is × 0.7. Once you think in multipliers rather than
+          subtractions, stacked offers become straightforward too.
+        </p>
 
-          <h2>Discount Formulas Explained</h2>
+        <h2>Stacked Discounts Do Not Add Up</h2>
+        <p>
+          This is the one piece of discount arithmetic that genuinely costs
+          people money, because the intuitive answer is always too generous.
+        </p>
+        <p>
+          &quot;30% off, then an extra 20% off at the till&quot; is not 50% off.
+          The second discount applies to the already-reduced price, not to the
+          original.
+        </p>
+        <pre>
+          100 × 0.70 = 70{"\n"}70 × 0.80 = 56{"\n"}
+          {"\n"}Total reduction: 44%, not 50%
+        </pre>
+        <p>
+          The shortcut is to multiply the multipliers: 0.70 × 0.80 = 0.56, so you
+          pay 56% of the original and save 44%. Stacking always produces less
+          than the sum of the parts, and the gap widens as the discounts get
+          larger.
+        </p>
 
-          <h3>Percentage Discount Formula</h3>
-          <pre>
-            Discount Amount = (Original Price × Discount%) ÷ 100{"\n"}
-            Sale Price = Original Price − Discount Amount
-          </pre>
-          <p>
-            Example: A jacket originally costs $120 and is on 25% sale. Discount
-            Amount = (120 × 25) ÷ 100 = $30. Sale Price = 120 − 30 = $90. You
-            save $30.
-          </p>
-
-          <h3>Flat Amount Discount Formula</h3>
-          <pre>
-            Sale Price = Original Price − Flat Discount Amount{"\n"}
-            Savings % = (Flat Amount ÷ Original Price) × 100
-          </pre>
-          <p>
-            Example: A product costs $350 and has a $50 flat discount. Sale
-            Price = 350 − 50 = $300. You save $50, which is a 14.3% effective
-            discount.
-          </p>
-
-          <h3>Discount with Tax (GST / VAT)</h3>
-          <pre>
-            Price After Discount = Original Price − Discount Amount{"\n"}
-            Tax Amount = (Price After Discount × Tax%) ÷ 100{"\n"}
-            Final Price = Price After Discount + Tax Amount
-          </pre>
-          <p>
-            In many countries, tax is applied after the discount is deducted,
-            not on the original price. This calculator follows that correct
-            method so the final price you see is as accurate as possible.
-          </p>
-
-          <h2>What is a Good Discount Percentage?</h2>
-          <p>
-            Discount percentages vary widely depending on the product, season,
-            and industry. Here is a general guide to what different discount
-            levels typically signal:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <strong>5% – 10%</strong> — small loyalty or early-bird discount,
-              common in subscriptions and B2B deals
-            </li>
-            <li>
-              <strong>15% – 20%</strong> — standard promotional sale, common
-              during weekends and seasonal events
-            </li>
-            <li>
-              <strong>25% – 30%</strong> — strong sale discount, typical during
-              holiday seasons and clearance events
-            </li>
-            <li>
-              <strong>40% – 50%</strong> — major sale, end-of-season clearance,
-              or product discontinuation
-            </li>
-            <li>
-              <strong>60% – 70%+</strong> — extreme clearance, liquidation, or
-              flash sales to clear stock quickly
-            </li>
-          </ul>
-
-          <h2>How to Find the Original Price from a Sale Price</h2>
-          <p>
-            Sometimes you see a sale price and want to know the original price
-            before the discount. Use this reverse discount formula:
-          </p>
-          <pre>Original Price = Sale Price ÷ (1 − Discount% ÷ 100)</pre>
-          <p>
-            Example: An item is on sale for $75 after a 25% discount. Original
-            Price = 75 ÷ (1 − 0.25) = 75 ÷ 0.75 = $100. The item was originally
-            $100.
-          </p>
-
-          <h2>How to Calculate What Percentage Off Something Is</h2>
-          <p>
-            If you know the original price and the sale price and want to find
-            the discount percentage, use this formula:
-          </p>
-          <pre>
-            Discount % = [(Original Price − Sale Price) ÷ Original Price] × 100
-          </pre>
-          <p>
-            Example: A phone was $800 and is now $600. Discount % = [(800 − 600)
-            ÷ 800] × 100 = (200 ÷ 800) × 100 = 25% off.
-          </p>
-
-          <h2>Common Discount Scenarios This Calculator Handles</h2>
-          <ul className="custom-list">
-            <li>What is 10% off $50? → $45 (save $5)</li>
-            <li>What is 20% off $120? → $96 (save $24)</li>
-            <li>What is 30% off $200? → $140 (save $60)</li>
-            <li>What is 50% off $999? → $499.50 (save $499.50)</li>
-            <li>$500 item with $75 flat discount → $425 (save 15%)</li>
-            <li>25% off + 8% tax on $160 → $129.60 final price</li>
-          </ul>
-
-          <h2>Discount Calculator for Shopping, Business & Finance</h2>
-          <p>
-            This calculator is useful in many real-world situations beyond
-            simple shopping. Businesses use it to calculate trade discounts on
-            bulk orders. Freelancers use it to work out client discounts on
-            service packages. Students use it to understand percentage
-            calculations in maths. Finance professionals use it to work out bond
-            discounts and present value adjustments. No matter the context, the
-            underlying calculation is the same — and this tool handles it all
-            instantly.
-          </p>
-
-          <h2>Black Friday, Eid, and Seasonal Sale Tips</h2>
-          <p>
-            During major sale events like Black Friday, Eid sales, Diwali
-            offers, Christmas sales, or Amazon Prime Day, retailers often
-            advertise discounts that look bigger than they are. The original
-            price may have been inflated before the sale, making a 40% discount
-            look impressive when the actual saving is much less. Always use a
-            discount calculator to verify the real saving amount before making a
-            purchase decision. Compare the final price across multiple stores to
-            make sure you are genuinely getting the best deal.
-          </p>
-
-          <h2>Benefits of Using Our Discount Calculator</h2>
-          <ul className="custom-list">
-            <li>
-              Handles both percentage and flat amount discounts in one tool
-            </li>
-            <li>
-              Optional tax field for accurate final price including GST or VAT
-            </li>
-            <li>
-              Shows discount amount, final price, and total savings clearly
-            </li>
-            <li>Supports multiple currencies — USD, GBP, EUR, INR, PKR, AED</li>
-            <li>Instant results — no page reload, no signup required</li>
-            <li>Works on mobile while shopping in-store or online</li>
-          </ul>
-
-          <h2>Frequently Asked Questions</h2>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(0)}>
-              How do I calculate a percentage discount?
-              <i
-                className={`fa-solid fa-chevron-down ${
-                  openFAQ === 0 ? "rotate" : ""
-                }`}
-              ></i>
-            </h3>
-            {openFAQ === 0 && (
-              <p>
-                Multiply the original price by the discount percentage, then
-                divide by 100 to get the discount amount. Subtract that from the
-                original price to get the sale price. For example, 20% off $150
-                means discount = (150 × 20) ÷ 100 = $30, so the sale price is
-                $150 − $30 = $120.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(1)}>
-              What is 30% off $100?
-              <i
-                className={`fa-solid fa-chevron-down ${
-                  openFAQ === 1 ? "rotate" : ""
-                }`}
-              ></i>
-            </h3>
-            {openFAQ === 1 && (
-              <p>
-                30% off $100 is a saving of $30, making the sale price $70. You
-                can verify this instantly using the calculator above — enter 100
-                as the original price and 30 as the discount percentage.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(2)}>
-              How do I calculate the original price before a discount?
-              <i
-                className={`fa-solid fa-chevron-down ${
-                  openFAQ === 2 ? "rotate" : ""
-                }`}
-              ></i>
-            </h3>
-            {openFAQ === 2 && (
-              <p>
-                Divide the sale price by (1 minus the discount rate as a
-                decimal). For example, if something costs $80 after a 20%
-                discount, the original price was 80 ÷ (1 − 0.20) = 80 ÷ 0.80 =
-                $100.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(3)}>
-              Does tax apply before or after the discount?
-              <i
-                className={`fa-solid fa-chevron-down ${
-                  openFAQ === 3 ? "rotate" : ""
-                }`}
-              ></i>
-            </h3>
-            {openFAQ === 3 && (
-              <p>
-                In most countries and standard retail practice, tax is applied
-                after the discount is deducted. So the tax is calculated on the
-                discounted price, not the original price. Our calculator follows
-                this correct method — discount is applied first, then tax is
-                added to the reduced price.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(4)}>
-              What is the difference between a percentage discount and a flat
-              discount?
-              <i
-                className={`fa-solid fa-chevron-down ${
-                  openFAQ === 4 ? "rotate" : ""
-                }`}
-              ></i>
-            </h3>
-            {openFAQ === 4 && (
-              <p>
-                A percentage discount gives you a saving proportional to the
-                price — 20% off a $500 item saves $100, while 20% off a $50 item
-                saves only $10. A flat discount gives a fixed saving regardless
-                of price — $50 off always means $50 saved, no matter what the
-                item costs. Flat discounts are more valuable on cheaper items,
-                while percentage discounts are more valuable on expensive items.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(5)}>
-              How do I calculate the discount percentage between two prices?
-              <i
-                className={`fa-solid fa-chevron-down ${
-                  openFAQ === 5 ? "rotate" : ""
-                }`}
-              ></i>
-            </h3>
-            {openFAQ === 5 && (
-              <p>
-                Subtract the sale price from the original price to get the
-                discount amount, then divide by the original price and multiply
-                by 100. For example, original price $250, sale price $175 —
-                discount amount = $75, discount percentage = (75 ÷ 250) × 100 =
-                30% off.
-              </p>
-            )}
-          </div>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Stacked offer</th>
+                <th>Sounds like</th>
+                <th>Actually is</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10% then 10%</td>
+                <td>20% off</td>
+                <td>19% off</td>
+              </tr>
+              <tr>
+                <td>20% then 20%</td>
+                <td>40% off</td>
+                <td>36% off</td>
+              </tr>
+              <tr>
+                <td>30% then 20%</td>
+                <td>50% off</td>
+                <td>44% off</td>
+              </tr>
+              <tr>
+                <td>50% then 50%</td>
+                <td>100% off</td>
+                <td>75% off</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
+        <p>
+          The last row makes the principle unmistakable. Two halvings can never
+          reach free, because each one only removes half of what remains.
+        </p>
+        <p>
+          A useful corollary: the order does not matter. Applying 30% then 20%
+          gives exactly the same result as 20% then 30%, because multiplication
+          is commutative. If a shop insists one order is better for you, the
+          arithmetic disagrees.
+        </p>
+
+        <h2>Working Back to the Original Price</h2>
+        <p>
+          Knowing the sale price and the discount, the original is a division —
+          never the discount added back on.
+        </p>
+        <pre>Original = Sale price ÷ (1 − rate ÷ 100)</pre>
+        <p>
+          An item at 63 after 30% off was 63 ÷ 0.70 = 90. Adding 30% to 63 gives
+          81.90, which is wrong because the 30% was calculated on the larger
+          original figure rather than on the reduced one.
+        </p>
+        <p>
+          The same division answers the other common question — what percentage
+          off is this? Divide the saving by the original price: an item reduced
+          from 90 to 63 has saved 27, and 27 ÷ 90 = 30%.
+        </p>
+
+        <h2>Discount and Markup Are Not Symmetrical</h2>
+        <p>
+          Adding a percentage and then removing the same percentage does not
+          return you to where you started, because the two percentages are
+          calculated on different bases.
+        </p>
+        <pre>
+          100 marked up 50% → 150{"\n"}150 discounted 50% → 75{"\n"}
+          {"\n"}To reverse a 50% markup you need a 33.3% discount
+        </pre>
+        <p>
+          This is worth knowing when a price is inflated before a sale. An item
+          marked up 50% and then advertised at &quot;50% off&quot; ends up below
+          its original price, but an item marked up 100% and then sold at 50% off
+          is back exactly where it started while appearing to be half price.
+        </p>
+
+        <h2>Is It Actually a Good Deal?</h2>
+        <p>
+          The percentage tells you how the price changed, not whether the price
+          is good. Three checks separate the two.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>Compare against the price elsewhere, not the reference
+            price.</strong> The crossed-out figure on the label is set by the
+            seller. The only meaningful comparison is what the same item costs
+            somewhere else today.
+          </li>
+          <li>
+            <strong>Work out the unit price.</strong> A larger pack at a
+            discount is not automatically better value. Divide by weight, volume
+            or count and compare the per-unit figures — this reverses the ranking
+            more often than people expect.
+          </li>
+          <li>
+            <strong>Include the cost of getting it.</strong> Delivery, a trip
+            across town, or a minimum spend that pushes you into buying
+            something else can absorb the whole saving.
+          </li>
+        </ul>
+        <p>
+          The framing that helps most is that a discount is a reduction in what
+          you spend only if you were going to buy the thing anyway. Spending 60
+          to save 40 on something you did not need leaves you 60 down, not 40 up.
+        </p>
+        <p>
+          For percentage arithmetic in other contexts — increases, reverse
+          percentages, and the difference between percent and percentage points
+          — see the{" "}
+          <Link href="/percentage-calculator/" className="my-link">
+            percentage calculator
+          </Link>
+          . If the price includes sales tax that you need to separate out, the{" "}
+          <Link href="/vat-calculator/" className="my-link">
+            VAT calculator
+          </Link>{" "}
+          handles that.
+        </p>
+        <h2>Discount Questions</h2>
+
+          {FAQ_DATA.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => handleFAQKey(e, i)}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+      </div>
 
         {/* ---- SIDEBAR ---- */}
         <aside className="sidebar">
@@ -681,8 +659,7 @@ export default function DiscountCalculator() {
               `}</style>
             </ul>
           </div>
-        </aside>
-      </div>
-    </>
+      </aside>
+    </div>
   );
 }

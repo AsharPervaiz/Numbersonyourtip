@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import TimeCalculator from "../components/TimeCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Free Time Calculator – Add Hours & Minutes, Time Difference & Conversions",
+  title: "Time Calculator — Add and Subtract Hours",
   description:
-    "Free time calculator — add or subtract hours and minutes, find hours between two times, convert minutes to hours, and see what time it will be in X hours. Instant results.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Add and subtract times, find durations, and convert between decimal hours and hours and minutes — including shifts that cross midnight.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/time-calculator/",
+    canonical: "/time-calculator/",
+  },
+  openGraph: {
+    title: "Time Calculator — Add and Subtract Hours",
+    description:
+      "Time is base 60, which is the whole problem. Carrying, borrowing, decimal hours and midnight crossings.",
+    url: "/time-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Time Calculator — Add and Subtract Hours",
+    description:
+      "Add, subtract and convert times, with decimal hour conversion for timesheets.",
   },
 };
 

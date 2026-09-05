@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import MatrixCalculator from "../components/MatrixCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Free Matrix Calculator | Add, Multiply, Invert & Solve Matrices Online",
+  title: "Matrix Calculator — Multiply, Invert, Solve",
   description:
-    "Free matrix calculator for addition, subtraction, multiplication, transpose, determinant, inverse, adjoint, rank, trace, RREF, and solving AX=B. Up to 6×6, instant results.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Matrix addition, multiplication, determinant, inverse, adjoint, rank, trace, RREF and solving AX = B — plus why each dimension error happens and how to fix it.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/matrix-calculator/",
+    canonical: "/matrix-calculator/",
+  },
+  openGraph: {
+    title: "Matrix Calculator — Multiply, Invert, Solve",
+    description:
+      "Every matrix operation has a shape rule. Here is which one you broke, and what singular actually means.",
+    url: "/matrix-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Matrix Calculator — Multiply, Invert, Solve",
+    description:
+      "Matrix operations up to 6×6, with the dimension rules behind every error.",
   },
 };
 

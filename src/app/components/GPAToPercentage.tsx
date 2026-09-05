@@ -298,44 +298,40 @@ export default function GPAToPercentageCalculator() {
   /* ── FAQ data (also used for JSON-LD schema) ── */
   const faqs: [string, string][] = [
     [
-      "How do I convert GPA to percentage?",
-      "Divide your GPA by the maximum GPA of your scale, then multiply by 100. For a 4.0 scale: (GPA ÷ 4.0) × 100. For a 5.0 scale: (GPA ÷ 5.0) × 100. For a 10-point CGPA scale, use the standard UGC formula: CGPA × 9.5.",
+      "What is 4.2 GPA in percentage?",
+      "Not 105%, which is what the usual multiplier of 25 produces and is the giveaway that the wrong scale has been used. A GPA above 4.0 comes from a weighted scale, normally out of 5.0, so 4.2 ÷ 5.0 × 100 = 84%. A percentage above 100 always means the scale maximum was wrong, not that the result is exceptional.",
     ],
     [
-      "What is 3.5 GPA in percentage?",
-      "A 3.5 GPA on a 4.0 scale equals 87.5%, calculated as (3.5 ÷ 4.0) × 100. On a 5.0 scale, 3.5 GPA equals 70%. Always specify your scale when reporting the percentage.",
+      "What is 3.4 GPA in percentage?",
+      "On an unweighted 4.0 scale, 3.4 × 25 = 85%, which is roughly a B+. On a 5.0 weighted scale the same 3.4 is 68%. Both are arithmetically correct and only one matches your transcript, so identify the scale maximum before converting anything.",
     ],
     [
-      "Is 3.5 GPA good?",
-      "Yes — a 3.5 GPA is very good. It's above the average of 3.0 at most U.S. colleges, typically qualifies for Dean's List, and is competitive for graduate school admissions. In percentage terms, it equals about 87–89%.",
+      "What is 3.9 GPA in percentage?",
+      "97.5% on a 4.0 scale, since 3.9 × 25 = 97.5. That sits at the top of the A band. On a 5.0 weighted scale the same figure would be 78%, which is a good illustration of why the scale matters more than the number.",
     ],
     [
-      "What is 3.0 GPA in percentage?",
-      "A 3.0 GPA on a 4.0 scale = 75%. On a 5.0 scale, 3.0 GPA = 60%. On a 10-point scale, a 3.0 CGPA = 28.5% (using CGPA × 9.5) — which is why scale matters so much for accurate reporting.",
+      "What is 2.5 GPA in percentage?",
+      "62.5% on a 4.0 scale, which is around a B− or C+ depending on the institution's letter bands. On a 5.0 scale it converts to 50%. If you are checking against an entry requirement, use whichever scale your transcript is issued on.",
     ],
     [
-      "What is 7.5 CGPA in percentage on a 10-point scale?",
-      "Using the standard UGC formula: 7.5 × 9.5 = 71.25%. This is one of the most searched CGPA conversions for Indian engineering and university students.",
+      "Is there one formula for converting GPA to percentage?",
+      "There is one general method — divide your GPA by the scale maximum and multiply by 100 — but no single universal multiplier, because scales differ. Multiplying by 25 is that formula with a maximum of 4.0 already substituted in, which is why it breaks on any other scale. Where an institution publishes its own conversion, that published rule overrides the arithmetic.",
     ],
     [
-      "What's the difference between GPA, CGPA, and SGPA?",
-      "SGPA (Semester GPA) is calculated for one semester. CGPA (Cumulative GPA) is the weighted average of all semesters completed. GPA is a general term that can refer to either — used mostly in the US. SGPA and CGPA are the standard terms in India and other South Asian countries.",
+      "Why is CGPA multiplied by 9.5 instead of 10?",
+      "Because the 10-point scale used by Indian school boards was calibrated against an observed relationship between grade points and marks rather than as a straight proportion, and 9.5 is the multiplier published for it. A CGPA of 8.0 therefore converts to 76%, not 80%. Some universities publish different rules again, so check whether yours specifies a method before using the general one.",
     ],
     [
-      "Do all universities use the same GPA to percentage formula?",
-      "No. The US typically uses (GPA ÷ 4.0) × 100. Indian universities under UGC guidelines use CGPA × 9.5. European institutions often use their own conversion tables. Always check your target institution's official policy before submitting documents.",
+      "What is the difference between GPA, CGPA and SGPA?",
+      "SGPA covers a single semester and moves considerably term to term. CGPA covers everything completed so far, weighted by credit hours, so it moves slowly. GPA is used for either meaning depending on the country, which is why an application asking for your GPA is worth clarifying. Averaging semester figures only gives a correct cumulative result when every semester carried identical credits.",
     ],
     [
-      "Can I use this to convert CGPA to percentage?",
-      "Yes. CGPA and GPA use the same conversion math. Enter your CGPA value and pick the matching scale — the calculator handles 4.0, 5.0, and 10-point CGPA systems.",
+      "Should I put a converted percentage on a university application?",
+      "Usually not. Submit the transcript as issued and let the institution apply its own conversion policy, since a self-converted figure that disagrees with theirs creates a discrepancy on your file. For study abroad, many institutions require an official credential evaluation that applies country-specific equivalences rather than arithmetic, and that assessment supersedes any calculator.",
     ],
     [
-      "Is a percentage or GPA more useful for study abroad applications?",
-      "It depends on the country. Universities in the US and Canada typically prefer GPA. UK, Australian, Indian, and Middle Eastern universities usually require percentages. Providing both on your application removes any ambiguity.",
-    ],
-    [
-      "Is this GPA to percentage calculator free?",
-      "Yes, it's 100% free, requires no login or signup, works on any device, and supports 4.0, 5.0, and 10-point scales. Enter your GPA to get an instant percentage equivalent.",
+      "Can two students with the same weighted GPA have different records?",
+      "Yes, and it is common. Each school decides which courses carry extra weight and by how much, so a 4.2 from one school and a 4.2 from another are not directly comparable. This is why many universities recalculate an unweighted GPA from the transcript rather than using the reported number.",
     ],
   ];
 
@@ -358,7 +354,7 @@ export default function GPAToPercentageCalculator() {
           }}
         />
 
-        <h1>GPA to Percentage Calculator</h1>
+        <h1>GPA to Percentage Calculator — 4.0, 5.0 and 10-Point Scales</h1>
 
         <p>
           Free <strong>GPA to percentage calculator</strong> — convert your GPA
@@ -417,794 +413,337 @@ export default function GPAToPercentageCalculator() {
           <GPAPctResultPanel result={panelResult} />
         </div>
 
-        {/* ── SEO CONTENT — REWRITTEN ── */}
+        {/* ── SEO CONTENT ── */}
 
-        <h2>What Is GPA to Percentage Conversion?</h2>
+        <h2>There Is No Single GPA-to-Percentage Formula</h2>
         <p>
-          Different countries measure academic performance differently. The US
-          and Canada report grades as a <strong>GPA on a 4.0 scale</strong>.
-          India, Pakistan, and much of South Asia use a{" "}
-          <strong>10-point CGPA</strong>. Universities in the UK, Australia, and
-          the Middle East report grades as a straight{" "}
-          <strong>percentage</strong>. Applying across borders means converting
-          between them.
+          This is the part most conversion pages skip, and it decides whether
+          your answer is usable. A grade point average is a position on a scale,
+          and converting it to a percentage requires knowing which scale it came
+          from. The same number means different things on different systems.
         </p>
         <p>
-          This <strong>GPA to percentage converter</strong> handles all three
-          major systems — 4.0, 5.0, and 10-point — using the standard formulas
-          accepted by most universities and credential evaluators. Enter your
-          GPA above and pick the matching scale to get your percentage
-          instantly.
+          A GPA of 3.4 is 85% on an unweighted 4.0 scale and 68% on a 5.0
+          weighted scale. Both conversions are arithmetically correct. Only one
+          of them describes your transcript.
+        </p>
+        <pre>Percentage = (Your GPA ÷ Scale maximum) × 100</pre>
+        <p>
+          Everything else on this page follows from that single expression. The
+          familiar shortcut of multiplying by 25 is just this formula with a
+          maximum of 4.0 substituted in, which is why it produces nonsense the
+          moment your scale is anything else.
         </p>
 
-        <h2>How to Convert GPA to Percentage (The Formula)</h2>
+        <h2>First, Identify Your Scale</h2>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Scale</th>
+                <th>Maximum</th>
+                <th>Multiply your GPA by</th>
+                <th>Where you will meet it</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Unweighted 4.0</td>
+                <td>4.0</td>
+                <td>25</td>
+                <td>Most United States institutions</td>
+              </tr>
+              <tr>
+                <td>Extended 4.3</td>
+                <td>4.3</td>
+                <td>23.26</td>
+                <td>Systems awarding an A+ above 4.0</td>
+              </tr>
+              <tr>
+                <td>Weighted 5.0</td>
+                <td>5.0</td>
+                <td>20</td>
+                <td>High schools weighting honours and advanced courses</td>
+              </tr>
+              <tr>
+                <td>10-point CGPA</td>
+                <td>10.0</td>
+                <td>9.5 by convention</td>
+                <td>Indian school boards and many universities</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <p>
-          The <strong>GPA to percentage formula</strong> depends on your grading
-          scale. There are three standard conversion methods, each used by
-          different regions:
+          The last row is the exception to the general formula. A strict
+          proportional conversion would multiply by 10, but the widely used
+          convention multiplies by 9.5 instead, because the scale was designed
+          against an observed relationship between grade points and marks rather
+          than as a straight proportion. Where an institution specifies 9.5, use
+          9.5 — the formula does not override a published rule.
         </p>
+
+        <h2>GPA to Percentage Table — 4.0 Scale</h2>
+        <p>
+          Every tenth of a point from 1.0 to 4.0, using the standard
+          multiplier of 25. Find your GPA in the first column.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>GPA</th>
+                <th>Percentage</th>
+                <th>Typical letter</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: 31 }, (_, i) => {
+                const gpa = 4.0 - i * 0.1;
+                const g = Math.round(gpa * 10) / 10;
+                const pct = Math.round(g * 25 * 10) / 10;
+                const letter =
+                  g >= 3.85
+                    ? "A"
+                    : g >= 3.5
+                      ? "A−"
+                      : g >= 3.15
+                        ? "B+"
+                        : g >= 2.85
+                          ? "B"
+                          : g >= 2.5
+                            ? "B−"
+                            : g >= 2.15
+                              ? "C+"
+                              : g >= 1.85
+                                ? "C"
+                                : g >= 1.5
+                                  ? "C−"
+                                  : g >= 1.15
+                                    ? "D+"
+                                    : "D";
+                return (
+                  <tr key={g}>
+                    <td>
+                      <strong>{g.toFixed(1)}</strong>
+                    </td>
+                    <td>{pct}%</td>
+                    <td>{letter}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Values between rows convert the same way — a 3.47 GPA is 3.47 × 25 =
+          86.75%, which rounds to roughly 87%.
+        </p>
+
+        <h2>What a GPA Above 4.0 Actually Means</h2>
+        <p>
+          A reported GPA of 4.2 or 4.5 is one of the most common sources of a
+          wrong conversion, because applying the usual multiplier of 25 gives
+          105% or 112.5%. A percentage above 100 is a signal that the wrong
+          scale maximum has been used, not a remarkable achievement.
+        </p>
+        <p>
+          Averages above 4.0 come from weighted scales, where advanced,
+          honours or college-level courses are worth extra grade points. The
+          maximum is typically 5.0, and occasionally higher.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Reported GPA</th>
+                <th>On a 5.0 weighted scale</th>
+                <th>If wrongly treated as 4.0 scale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>4.1</td>
+                <td>82%</td>
+                <td>102.5% — impossible</td>
+              </tr>
+              <tr>
+                <td>4.2</td>
+                <td>84%</td>
+                <td>105% — impossible</td>
+              </tr>
+              <tr>
+                <td>4.3</td>
+                <td>86%</td>
+                <td>107.5% — impossible</td>
+              </tr>
+              <tr>
+                <td>4.5</td>
+                <td>90%</td>
+                <td>112.5% — impossible</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Weighted averages are also not comparable between schools, because
+          each institution decides which courses are weighted and by how much. A
+          4.2 from one school and a 4.2 from another can represent noticeably
+          different records, which is why many universities recalculate an
+          unweighted GPA from the transcript rather than accepting the reported
+          figure.
+        </p>
+
+        <h2>CGPA to Percentage — 10-Point Scale</h2>
+        <p>
+          Using the 9.5 multiplier applied by Indian school boards and adopted
+          widely by universities.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>CGPA</th>
+                <th>Percentage (× 9.5)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: 11 }, (_, i) => {
+                const c = Math.round((10 - i * 0.5) * 10) / 10;
+                return (
+                  <tr key={c}>
+                    <td>
+                      <strong>{c.toFixed(1)}</strong>
+                    </td>
+                    <td>{Math.round(c * 9.5 * 10) / 10}%</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Some universities publish their own conversion instead, occasionally
+          subtracting a fixed amount from the CGPA before multiplying, or using
+          a stepped table rather than a formula. Where a rule is published, that
+          rule is the correct answer regardless of what any general calculator
+          produces.
+        </p>
+
+        <h2>GPA, CGPA and SGPA Are Not Interchangeable</h2>
         <ul className="custom-list">
           <li>
-            <strong>4.0 Scale</strong> (US, Canada, most international
-            universities): <code>Percentage = (GPA ÷ 4.0) × 100</code>
+            <strong>SGPA</strong> covers a single semester. It moves
+            considerably from term to term and describes a snapshot.
           </li>
           <li>
-            <strong>5.0 Scale</strong> (weighted / honors / some high schools):{" "}
-            <code>Percentage = (GPA ÷ 5.0) × 100</code>
+            <strong>CGPA</strong> covers everything completed so far, weighted
+            by credit hours. It moves slowly, because each new semester is a
+            small share of the total.
           </li>
           <li>
-            <strong>10-Point CGPA Scale</strong> (India, Pakistan, UGC
-            institutions): <code>Percentage = CGPA × 9.5</code>
+            <strong>GPA</strong> is used for both meanings depending on the
+            country, which is why an application asking for &quot;your GPA&quot;
+            is worth clarifying.
           </li>
         </ul>
         <p>
-          <strong>Worked examples:</strong>
-        </p>
-        <ul className="custom-list">
-          <li>
-            3.5 GPA on 4.0 scale → (3.5 ÷ 4.0) × 100 = <strong>87.5%</strong>
-          </li>
-          <li>
-            4.2 GPA on 5.0 scale → (4.2 ÷ 5.0) × 100 = <strong>84%</strong>
-          </li>
-          <li>
-            8.0 CGPA on 10-point scale → 8.0 × 9.5 = <strong>76%</strong>
-          </li>
-        </ul>
-
-        <h2>GPA to Percentage Chart — 4.0 Scale (US Standard)</h2>
-        <p>
-          Use this reference chart if your GPA is on the standard 4.0 scale used
-          by most American, Canadian, and international universities:
-        </p>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>GPA</th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Letter Grade
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Classification
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>4.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                100%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>A+</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Outstanding
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>3.7</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                92.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>A−</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Excellent
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>3.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                87.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>B+</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Very good
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>3.3</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                82.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>B+</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Very good
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>3.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>75%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>B</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Good
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>2.7</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                67.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>C+</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Above average
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>2.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                62.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>C</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Average
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>2.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>50%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>C−</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Satisfactory
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>1.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                37.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>D</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Below average
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>1.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>25%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>D−</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Passing
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>CGPA to Percentage Chart — 10-Point Scale (India / UGC)</h2>
-        <p>
-          The <strong>UGC-approved formula</strong> for converting 10-point CGPA
-          to percentage is <code>Percentage = CGPA × 9.5</code>. This is the
-          standard used by most Indian universities, engineering colleges
-          (including IITs, NITs, and state universities), and CBSE for higher
-          secondary results.
-        </p>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                CGPA
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Classification
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                10.0
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>95%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Outstanding
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>9.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                90.25%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Excellent
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>9.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                85.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Excellent
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>8.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                80.75%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                First Class with Distinction
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>8.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>76%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                First Class with Distinction
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>7.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                71.25%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                First Class
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>7.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                66.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                First Class
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>6.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                61.75%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Second Class
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>6.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>57%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Second Class
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>5.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                47.5%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Pass
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>GPA to Percentage Chart — 5.0 Scale (Weighted / Honors)</h2>
-        <p>
-          The <strong>5.0 scale</strong> is used by some high schools and honors
-          programs where AP, IB, or advanced courses can push GPA above 4.0.
-          Conversion formula: <code>Percentage = (GPA ÷ 5.0) × 100</code>.
-        </p>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                GPA (5.0 scale)
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Meaning
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>5.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                100%
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Perfect (all AP/honors A's)
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>4.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>90%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Excellent
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>4.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>80%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Very good
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>3.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>70%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Good
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>3.0</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>60%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Above average
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>2.5</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>50%</td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Passing
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>3.5 GPA to Percentage — And Every Other Common GPA</h2>
-        <p>
-          These are the most searched individual GPA-to-percentage conversions.
-          Bookmark this section as a quick reference:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>4.0 GPA to percentage</strong> = 100% (4.0 scale)
-          </li>
-          <li>
-            <strong>3.9 GPA to percentage</strong> = 97.5%
-          </li>
-          <li>
-            <strong>3.8 GPA to percentage</strong> = 95%
-          </li>
-          <li>
-            <strong>3.7 GPA to percentage</strong> = 92.5%
-          </li>
-          <li>
-            <strong>3.6 GPA to percentage</strong> = 90%
-          </li>
-          <li>
-            <strong>3.5 GPA to percentage</strong> = 87.5%
-          </li>
-          <li>
-            <strong>3.4 GPA to percentage</strong> = 85%
-          </li>
-          <li>
-            <strong>3.3 GPA to percentage</strong> = 82.5%
-          </li>
-          <li>
-            <strong>3.2 GPA to percentage</strong> = 80%
-          </li>
-          <li>
-            <strong>3.0 GPA to percentage</strong> = 75%
-          </li>
-          <li>
-            <strong>2.7 GPA to percentage</strong> = 67.5%
-          </li>
-          <li>
-            <strong>2.5 GPA to percentage</strong> = 62.5%
-          </li>
-          <li>
-            <strong>2.0 GPA to percentage</strong> = 50%
-          </li>
-        </ul>
-        <p>
-          All values assume a 4.0 scale. If your GPA is on a different scale,
-          use the calculator at the top and switch to the correct dropdown
-          option.
-        </p>
-
-        <h2>Difference Between GPA, CGPA, and SGPA</h2>
-        <p>
-          These three terms cause a lot of confusion — especially for students
-          moving between education systems. Here's the clean breakdown:
-        </p>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Term
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Full Form
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                What It Measures
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Where It's Used
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                <strong>SGPA</strong>
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Semester Grade Point Average
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Performance in one semester only
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                India, Pakistan, Bangladesh
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                <strong>CGPA</strong>
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Cumulative Grade Point Average
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Weighted average of all semesters
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                India, South Asia, Middle East
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                <strong>GPA</strong>
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Grade Point Average
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Can be semester or cumulative
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                US, Canada, most global schools
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p>
-          To calculate SGPA and CGPA from your subject grades, use our{" "}
-          <Link className="my-link" href="/gpa-calculator/">
-            <span className="hover-item">
-              semester GPA calculator with credit hours
-            </span>
+          Averaging your semester figures to obtain a cumulative one is only
+          correct when every semester carried identical credits. Otherwise the
+          cumulative average must be weighted by credit hours — our{" "}
+          <Link href="/gpa-calculator/" className="my-link">
+            GPA calculator
           </Link>{" "}
-          — then convert the result to percentage here.
+          does that weighting for you.
         </p>
 
-        <h2>Is 3.5 GPA Good? (And Other GPA Reality Checks)</h2>
+        <h2>When an Application Asks for a Percentage</h2>
         <p>
-          A quick guide to what different GPA values actually mean in real
-          admissions and job screening:
+          A converted figure is an estimate, and how much that matters depends
+          entirely on who is reading it.
         </p>
         <ul className="custom-list">
           <li>
-            <strong>3.9–4.0 GPA (≈ 97–100%)</strong> — Top of the class. Ivy
-            League and top-20 competitive.
+            <strong>For a rough self-assessment</strong> — checking whether you
+            are near an entry threshold — a conversion is fine and this page
+            answers it.
           </li>
           <li>
-            <strong>3.5–3.8 GPA (≈ 87–95%)</strong> — Very strong. Dean's List,
-            competitive for grad school and top employers.{" "}
-            <strong>Yes, 3.5 GPA is good.</strong>
+            <strong>For a formal application</strong>, submit the transcript as
+            issued and let the institution convert. Most have their own policy,
+            and a self-converted number that disagrees with theirs creates a
+            discrepancy on your file.
           </li>
           <li>
-            <strong>3.0–3.4 GPA (≈ 75–85%)</strong> — Above average. Meets most
-            grad school minimums and job-screening cutoffs.
+            <strong>For study or work abroad</strong>, many institutions require
+            an official credential evaluation, which applies country-specific
+            equivalences rather than arithmetic. That assessment supersedes any
+            calculator.
           </li>
           <li>
-            <strong>2.5–2.9 GPA (≈ 62–72%)</strong> — Average. Still passes most
-            programs but limits scholarship access.
-          </li>
-          <li>
-            <strong>2.0–2.4 GPA (≈ 50–60%)</strong> — Minimum passing. Often
-            triggers academic probation review.
-          </li>
-          <li>
-            <strong>Below 2.0 (below 50%)</strong> — At risk of dismissal at
-            most universities.
+            <strong>If a form insists on a number</strong>, use the conversion
+            your own institution publishes, and say which method you used. A
+            stated method is defensible; an unexplained figure is not.
           </li>
         </ul>
-
-        <h2>Why You Need to Convert GPA to Percentage</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Study abroad applications</strong> — UK, Australia, and
-            European universities usually ask for percentages, not GPA
-          </li>
-          <li>
-            <strong>Scholarships</strong> — many scholarship applications set
-            percentage cutoffs (e.g., "80%+ required")
-          </li>
-          <li>
-            <strong>Job applications</strong> — employers in India, Pakistan,
-            and the Middle East expect percentage on your CV
-          </li>
-          <li>
-            <strong>Credential evaluation</strong> — agencies like WES and ECE
-            use standard conversions to validate foreign transcripts
-          </li>
-          <li>
-            <strong>Graduate school</strong> — some GRE/GMAT and Master's
-            applications ask for both GPA and percentage
-          </li>
-        </ul>
-
-        <h2>Country-by-Country: Which System Do They Use?</h2>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "var(--card-bg, #0D2A5C)",
-                color: "#fff",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Country / Region
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Primary System
-              </th>
-              <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Preferred on Applications
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                United States
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                4.0 GPA
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>GPA</td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Canada
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                4.0 GPA (some use 4.3)
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>GPA</td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                United Kingdom
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage / Classification
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Australia
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                7-point GPA or Percentage
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Both
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                India
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                10-point CGPA
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Both (percentage often required)
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Pakistan
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                4.0 GPA or Percentage
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Both
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                UAE / Middle East
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Percentage
-              </td>
-            </tr>
-            <tr>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Germany
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                1.0–5.0 (reversed scale)
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                Local conversion
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h2>Common Mistakes When Converting GPA to Percentage</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Using the wrong scale</strong> — a 3.5 on a 4.0 scale
-            (87.5%) is very different from a 3.5 on a 5.0 scale (70%). Always
-            confirm your scale.
-          </li>
-          <li>
-            <strong>Applying the ×9.5 formula to a 4.0 GPA</strong> — this only
-            works for 10-point CGPA, not for 4.0 GPA.
-          </li>
-          <li>
-            <strong>Ignoring your institution's official conversion</strong> —
-            some universities publish their own official chart. Use theirs when
-            applying for admissions or transcripts.
-          </li>
-          <li>
-            <strong>Rounding too aggressively</strong> — 3.47 GPA becomes
-            86.75%, not 87% — small differences matter for scholarship cutoffs.
-          </li>
-        </ul>
-
-        <h2>Why Use This Free GPA to Percentage Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            ✅ <strong>100% free</strong> — no login, no signup, no ads on the
-            tool
-          </li>
-          <li>
-            ✅ <strong>All three scales</strong> — 4.0, 5.0, and 10-point in one
-            tool
-          </li>
-          <li>
-            ✅ <strong>UGC-standard formula</strong> for CGPA (×9.5)
-          </li>
-          <li>
-            ✅ <strong>Instant, live results</strong> as you type
-          </li>
-          <li>
-            ✅ <strong>Works for GPA, CGPA, and SGPA</strong>
-          </li>
-          <li>
-            ✅ <strong>Mobile-friendly</strong> — phone, tablet, laptop, all
-            fine
-          </li>
-          <li>
-            ✅ <strong>Grade classification</strong> included (Distinction,
-            First Class, etc.)
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {faqs.map(([q, a], i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              />
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
         <p>
-          Converting GPA to percentage isn't complicated once you know your
-          scale — but the difference between 4.0, 5.0, and 10-point can
-          completely change your number. Use this{" "}
-          <strong>GPA to percentage calculator</strong> whenever you're filling
-          out a study abroad application, scholarship form, or CV, and always
-          double-check with the specific institution's official conversion
-          policy.
-        </p>
-        <p>
-          Need related tools? Try our{" "}
-          <Link className="my-link" href="/gpa-calculator/">
-            <span className="hover-item">semester GPA calculator</span>
+          To work out a GPA from individual course grades in the first place,
+          the{" "}
+          <Link href="/gpa-calculator/" className="my-link">
+            GPA calculator
           </Link>{" "}
-          to compute your GPA from credits and grades, or the{" "}
-          <Link className="my-link" href="/percentage-calculator/">
-            <span className="hover-item">percentage calculator</span>
+          handles credit weighting, and the{" "}
+          <Link href="/percentage-calculator/" className="my-link">
+            percentage calculator
           </Link>{" "}
-          for general percentage math.
+          covers general percentage arithmetic.
         </p>
+        <h2>GPA Conversion Questions</h2>
+
+        {faqs.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
       </div>
 
       {/* ── SIDEBAR — UNCHANGED ── */}

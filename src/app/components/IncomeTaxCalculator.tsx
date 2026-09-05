@@ -365,44 +365,40 @@ function calcTax(
 
 const FAQ_DATA = [
   {
-    q: "How is income tax calculated in Pakistan for salaried persons?",
-    a: "Pakistan taxes salaried individuals using progressive slabs under FBR rules. Income up to PKR 600,000 is tax-free. Above that, rates range from 5% to 35% across six slabs. Subtract eligible deductions from your gross salary, then apply the slabs to the taxable amount. This calculator implements the FBR slab structure for FY 2024-25.",
+    q: "Will a pay rise push me into a higher bracket and leave me worse off?",
+    a: "No. A higher band applies only to the income above its threshold, not to everything you earn. In a system taxing 20% up to 40,000 and 40% above it, going from 40,000 to 41,000 means the extra 1,000 is taxed at 40%, so 600 of it survives. That is less than the whole raise and still 600 more than before. Nobody takes home less by earning more under a marginal system.",
   },
   {
-    q: "How is income tax calculated in India?",
-    a: "Under the new regime for FY 2024-25, income up to ₹3 lakh is tax-free, then rates increase from 5% to 30%. A rebate under Section 87A makes income up to ₹7 lakh effectively tax-free. Subtract deductions from gross income, apply the slab rates to what remains.",
+    q: "What is the difference between my marginal and effective tax rate?",
+    a: "The marginal rate is charged on your next unit of income — your top band. The effective rate is your total tax divided by your total income. Someone earning 41,000 in the example above is a 40% taxpayer with an effective rate of 15.6%, because most of their income was taxed at lower rates or not at all. Both statements are true at once, which is why the two terms exist.",
   },
   {
-    q: "What is the difference between gross income and taxable income?",
-    a: "Gross income is your total earnings before any deductions. Taxable income is what remains after subtracting eligible deductions and allowances. Tax is calculated on taxable income, not gross — which is why maximising deductions reduces your tax bill.",
+    q: "Is a tax deduction the same as a tax credit?",
+    a: "No, and they are worth different amounts. A deduction reduces the income you are taxed on, so it is worth your marginal rate — a 1,000 deduction saves 200 at 20% and 400 at 40%. A credit reduces the tax itself, so 1,000 saves 1,000 for everyone. This is why targeted support is often given as a credit: its value does not rise with income.",
   },
   {
-    q: "What is the difference between marginal and effective tax rate?",
-    a: "The marginal rate is the rate on your last dollar or rupee of income — your highest tax bracket. The effective rate is the actual percentage of total gross income paid as tax. Due to progressive slabs, effective rate is always lower than marginal. If you pay 120,000 tax on 600,000 income, your effective rate is 20% even if your marginal rate is 30%.",
+    q: "Is it worth buying something because it is tax deductible?",
+    a: "Only if you needed it anyway. A deduction returns your marginal rate on the amount spent, never the whole amount. Spending 1,000 to save 400 in tax leaves you 600 poorer than not spending it. Deductibility reduces the cost of a purchase you were going to make; it does not make a purchase free.",
   },
   {
-    q: "How much tax will I pay on 50,000, 75,000, or 100,000?",
-    a: "It depends on your country and deductions. In the USA: $50,000 income = ~$5,826 tax (11.7% effective); $75,000 = ~$11,556 (15.4%); $100,000 = ~$17,056 (17.1%). In the UK: £50,000 = ~£7,486 (15%); £75,000 = ~£17,486 (23.3%); £100,000 = ~£27,486 (27.5%). Enter your exact income above for precise figures.",
+    q: "Why was my bonus taxed so heavily?",
+    a: "Because withholding assumes your current pay continues all year. A month containing a large one-off payment looks to the payroll system like a month at a much higher annual salary, so it withholds at a higher rate. There is usually no special bonus tax — it is a timing effect that settles when the year is assessed, which is why bonus months often precede a refund.",
   },
   {
-    q: "Can I use this for freelance or self-employed income?",
-    a: "Yes. Enter your total annual income and deductible business expenses. The same tax slabs apply. For a more detailed freelance calculation that includes platform fees (Upwork, Fiverr) and effective rate breakdowns, use our freelancer tax calculator.",
+    q: "Why does my payslip deduction not match my final tax bill?",
+    a: "Withholding is a running estimate rather than a calculation of your actual liability. It goes wrong whenever the assumption of steady income breaks — starting or leaving mid-year, holding two jobs whose payrolls cannot see each other, receiving bonuses, or having income outside payroll such as freelance work or rent. The annual assessment reconciles the estimate against reality.",
   },
   {
-    q: "What deductions should I enter?",
-    a: "Enter the total of all eligible deductions — standard deduction, retirement contributions (EPF, PPF, NPS, 401k, RRSP), home loan interest, health insurance premiums, education expenses, and any other allowable deductions. If unsure, enter 0 to see tax on full gross income, then adjust.",
+    q: "Is a big tax refund a good thing?",
+    a: "It is your own money being returned after being held for a year without interest. A refund means withholding over-collected, and a bill means it under-collected. Neither indicates a mistake, but a consistently large refund is worth adjusting, since the same money in your account through the year is more useful than a lump sum afterwards.",
   },
   {
-    q: "What is the standard deduction?",
-    a: "The standard deduction is a fixed amount you can subtract from gross income without itemizing. In India it is ₹50,000 for salaried employees (new regime FY 2024-25). In the USA it is $14,600 for single filers (2024). Pakistan does not have a standard deduction in the same format — deductions are claimed individually.",
+    q: "Why are pension contributions more valuable to higher earners?",
+    a: "Because of where they sit in the calculation. Pre-tax contributions come off before the bands are applied, so they remove income from the top of your earnings rather than the bottom. A 40% taxpayer therefore saves 40% on the amount contributed, while a 20% taxpayer saves 20% on the same contribution.",
   },
   {
-    q: "Is the income tax the same as total tax I owe?",
-    a: "Not always. Depending on your country, you may also owe social security contributions, National Insurance (UK), self-employment tax (USA), or surcharge and cess (India). This calculator covers income tax only. Consult a tax professional for the complete picture.",
-  },
-  {
-    q: "Is this income tax calculator free?",
-    a: "Yes — completely free with no sign-up and no limits. Calculate income tax for Pakistan, India, USA, UK, Canada, Australia, or any custom rate. Shows tax slabs, effective rate, deduction impact, and net take-home instantly.",
+    q: "Can I rely on tax rates I find online?",
+    a: "Only with a year attached and confirmed against your own tax authority. Thresholds, rates, allowances and the definition of taxable income change regularly, often annually, and differ substantially between countries. The structure is stable — a tax-free amount, rising rates on successive slices, deductions and credits treated differently — but the numbers are not.",
   },
 ];
 
@@ -497,7 +493,7 @@ export default function IncomeTaxCalculator() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
 
-        <h1>Free Income Tax Calculator With Deductions</h1>
+        <h1>Income Tax Calculator — Marginal vs Effective Rate</h1>
         <p>
           Calculate your income tax, taxable income, effective tax rate, and net
           take-home pay instantly. This free income tax calculator with
@@ -572,536 +568,283 @@ export default function IncomeTaxCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is Income Tax?</h2>
+        <h2>Three Numbers People All Call &quot;My Tax Rate&quot;</h2>
         <p>
-          Income tax is a direct tax levied by governments on the earnings of
-          individuals and businesses. It is one of the primary sources of
-          government revenue, funding public services including healthcare,
-          education, infrastructure, and defence. For most salaried persons,
-          income tax is calculated on annual earnings above a tax-free
-          threshold, with rates that increase progressively as income rises.
-          Understanding how your income tax is calculated — and how deductions
-          reduce your taxable income — helps you plan finances, maximise
-          legitimate savings, and avoid surprises at tax time.
-        </p>
-        <p>
-          This tax calculator for salaried persons covers six countries with
-          built-in progressive slab structures plus a custom rate option for any
-          other jurisdiction. It doubles as an effective tax rate calculator —
-          showing the actual percentage of your gross income that goes to tax,
-          not just the marginal bracket. For freelance and self-employed income
-          with platform fees, our{" "}
-          <Link href="/freelancer-tax-calculator/" className="my-link">
-            freelancer tax calculator
-          </Link>{" "}
-          provides a more specialized breakdown.
+          Ask someone what tax rate they pay and you will get one of three
+          answers, all of them arguably correct and all of them different. Most
+          confusion about income tax dissolves once you can tell them apart.
         </p>
 
-        <h2>How Income Tax Is Calculated</h2>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rate</th>
+                <th>What it measures</th>
+                <th>What it is useful for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Marginal</td>
+                <td>
+                  The rate charged on your next unit of income — your top band
+                </td>
+                <td>
+                  Deciding whether extra work, a bonus or a deduction is worth it
+                </td>
+              </tr>
+              <tr>
+                <td>Effective</td>
+                <td>Total tax divided by total income</td>
+                <td>Understanding what you actually paid over the year</td>
+              </tr>
+              <tr>
+                <td>Withholding</td>
+                <td>What is deducted from each payslip</td>
+                <td>Cash flow — and it is only an estimate</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The first is nearly always the largest and the second nearly always
+          the smallest. Quoting the marginal rate as &quot;what I pay&quot;
+          overstates the position substantially, because it applies only to the
+          top slice of income rather than to all of it.
+        </p>
+
+        <h2>Why a Raise Never Leaves You Worse Off</h2>
+        <p>
+          The most persistent misconception about income tax is that crossing
+          into a higher band applies the new rate to everything you earn. It
+          applies only to the income above the threshold.
+        </p>
+        <p>
+          Take a simplified system with nothing taxed up to 10,000, 20% from
+          10,001 to 40,000, and 40% above that.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Gross income</th>
+                <th>Tax</th>
+                <th>Take-home</th>
+                <th>Effective rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>40,000</td>
+                <td>6,000</td>
+                <td>34,000</td>
+                <td>15.0%</td>
+              </tr>
+              <tr>
+                <td>41,000</td>
+                <td>6,400</td>
+                <td>34,600</td>
+                <td>15.6%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The extra 1,000 is taxed at 40%, so 600 of it survives. That is less
+          than the whole raise, and it is still 600 more than before. Nobody
+          takes home less by earning more under a marginal system.
+        </p>
+        <p>
+          Notice the second row as well: this person is a 40% taxpayer whose
+          effective rate is 15.6%. Both statements are true simultaneously, and
+          that gap is the entire reason the two terms exist. Our guide on{" "}
+          <Link
+            href="/blog/marginal-vs-effective-tax-rate/"
+            className="my-link"
+          >
+            marginal versus effective tax rates
+          </Link>{" "}
+          works through further examples.
+        </p>
+        <p>
+          One genuine exception is worth knowing. Some systems withdraw an
+          allowance or a benefit as income rises, which can create a narrow band
+          where the effective rate on additional income is unusually high. That
+          is a taper, not a tax band, and it is the only situation where the
+          intuition about &quot;being pushed into a higher bracket&quot; has any
+          real basis.
+        </p>
+
+        <h2>A Deduction and a Credit Are Not the Same Size</h2>
+        <p>
+          These two get used interchangeably in conversation and they are worth
+          very different amounts.
+        </p>
+        <p>
+          A <strong>deduction</strong> reduces the income you are taxed on, so
+          it is worth your marginal rate. A <strong>credit</strong> reduces the
+          tax itself, so it is worth its full face value regardless of what you
+          earn.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Your marginal rate</th>
+                <th>Value of a 1,000 deduction</th>
+                <th>Value of a 1,000 credit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>20%</td>
+                <td>200</td>
+                <td>1,000</td>
+              </tr>
+              <tr>
+                <td>40%</td>
+                <td>400</td>
+                <td>1,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Two consequences follow. A credit is worth the same to everyone, while
+          a deduction is worth more to higher earners — which is why targeted
+          support is often delivered as a credit. And a deduction is never worth
+          more than the amount spent, so &quot;it is tax deductible&quot; is not
+          a reason to buy something. Spending 1,000 to save 400 leaves you 600
+          down.
+        </p>
+
+        <h2>Why Your Payslip Does Not Match Your Return</h2>
+        <p>
+          Withholding is a running estimate, not a calculation of your actual
+          liability. It works by assuming your current pay continues unchanged
+          for the whole year, and it goes wrong whenever that assumption does.
+        </p>
         <ul className="custom-list">
           <li>
-            <strong>Step 1 — Determine gross income:</strong> Add up all sources
-            of earnings — salary, bonuses, rental income, capital gains, and
-            other taxable receipts.
+            <strong>Bonuses.</strong> A month containing a large one-off payment
+            looks, to the payroll system, like a month at a much higher annual
+            salary, so it is withheld at a higher rate. This is a timing effect,
+            not a special bonus tax — it settles up when the year is assessed.
           </li>
           <li>
-            <strong>Step 2 — Subtract deductions:</strong> Deduct eligible
-            allowances (standard deduction, retirement contributions, home loan
-            interest, health insurance premiums) to arrive at your taxable
-            income.
+            <strong>Starting or leaving mid-year.</strong> Working part of a year
+            means your allowance is spread across fewer months, and the estimate
+            often over-collects.
           </li>
           <li>
-            <strong>Step 3 — Apply tax slabs:</strong> Apply your country's
-            progressive slab rates to the taxable income.
+            <strong>Two jobs at once.</strong> Neither employer sees the other,
+            so allowances can be applied twice or not at all.
           </li>
           <li>
-            <strong>Step 4 — Apply rebates and credits:</strong> Subtract any
-            applicable rebates or credits to arrive at final tax payable.
+            <strong>Income outside payroll.</strong> Freelance work, rent or
+            investment income is not visible to your employer and is not being
+            withheld against.
           </li>
         </ul>
+        <p>
+          The practical upshot is that a large refund is not a windfall — it is
+          your own money returned after being held for a year — and an unexpected
+          bill usually means withholding under-collected rather than that
+          something went wrong.
+        </p>
+
+        <h2>The Order Things Happen In</h2>
+        <p>
+          Every system runs broadly the same sequence, and knowing it tells you
+          where a given item takes effect.
+        </p>
         <pre>
-          Taxable Income = Gross Income − Deductions{"\n"}Tax Amount = Tax on
-          Taxable Income (per slab rates){"\n"}Net Take-Home = Taxable Income −
-          Tax Amount
+          Gross income{"\n"}− Pre-tax deductions (pension, certain benefits)
+          {"\n"}− Allowances and reliefs{"\n"}= Taxable income{"\n"}× Applied
+          band by band, not all at one rate{"\n"}− Tax credits{"\n"}= Tax
+          payable
         </pre>
-
-        <h2>How Much Tax Will I Pay? — Quick Reference by Income Level</h2>
         <p>
-          One of the most searched tax questions is "how much tax will I pay on
-          50,000 / 75,000 / 100,000?" The answer depends on your country and
-          deductions. Here is a reference table for common income levels across
-          four countries (no deductions applied, using current slab rates):
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Income
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  USA (Federal)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  UK
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  India (₹)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Pakistan (PKR)
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                [
-                  "50,000",
-                  "$5,826 (11.7%)",
-                  "£7,486 (15.0%)",
-                  "₹10,000 (2.0%)*",
-                  "PKR 0 (0%)†",
-                ],
-                [
-                  "75,000",
-                  "$11,556 (15.4%)",
-                  "£12,486 (16.6%)",
-                  "₹27,500 (3.7%)*",
-                  "PKR 0 (0%)†",
-                ],
-                [
-                  "100,000",
-                  "$17,056 (17.1%)",
-                  "£17,486 (17.5%)",
-                  "₹ exempt (0%)*",
-                  "PKR 0 (0%)†",
-                ],
-                [
-                  "500,000",
-                  "$108,388 (21.7%)",
-                  "£177,486 (35.5%)",
-                  "₹25,000 (5.0%)",
-                  "PKR 0 (0%)†",
-                ],
-                ["1,000,000", "—", "—", "₹70,000 (7.0%)", "PKR 90,000 (9.0%)"],
-                [
-                  "2,500,000",
-                  "—",
-                  "—",
-                  "₹4,12,500 (16.5%)",
-                  "PKR 3,45,000 (13.8%)",
-                ],
-              ].map(([inc, usa, uk, india, pak], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {inc}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {usa}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {uk}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {india}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {pak}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p style={{ fontSize: "13px", color: "#666" }}>
-          *India: Income up to ₹7 lakh is effectively tax-free under Section 87A
-          rebate (new regime). †Pakistan: Income up to PKR 600,000 is tax-free
-          under FBR slabs. Enter your exact figures in the calculator above for
-          a precise result with deductions.
+          The position in that list is what determines an item&apos;s value.
+          Anything above the &quot;taxable income&quot; line saves you your
+          marginal rate. Anything below the band calculation saves you its face
+          amount. This is also why pension contributions are efficient for
+          higher-rate taxpayers specifically — they come off before the bands
+          are applied, at the top of your income rather than the bottom.
         </p>
 
-        <h2>Income Tax Slabs — Pakistan (FBR Salaried, FY 2024-25)</h2>
+        <h2>What Changes Between Countries, and What Does Not</h2>
         <p>
-          This Pakistan salary tax calculator implements the FBR income tax
-          slabs for salaried persons. Select "Pakistan" from the dropdown above
-          to use these rates automatically:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Income (PKR)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Tax Rate
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["Up to 6,00,000", "Nil"],
-                ["6,00,001 – 12,00,000", "5%"],
-                ["12,00,001 – 22,00,000", "15%"],
-                ["22,00,001 – 32,00,000", "25%"],
-                ["32,00,001 – 41,00,000", "30%"],
-                ["Above 41,00,000", "35%"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h2>Income Tax Slabs — India (New Regime FY 2024-25)</h2>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Income (₹)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Tax Rate
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["Up to 3,00,000", "Nil"],
-                ["3,00,001 – 7,00,000", "5%"],
-                ["7,00,001 – 10,00,000", "10%"],
-                ["10,00,001 – 12,00,000", "15%"],
-                ["12,00,001 – 15,00,000", "20%"],
-                ["Above 15,00,000", "30%"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h2>Income Tax Brackets — USA (2024, Single Filer)</h2>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Income ($)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Tax Rate
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["$0 – $11,600", "10%"],
-                ["$11,601 – $47,150", "12%"],
-                ["$47,151 – $100,525", "22%"],
-                ["$100,526 – $191,950", "24%"],
-                ["$191,951 – $243,725", "32%"],
-                ["$243,726 – $609,350", "35%"],
-                ["Above $609,350", "37%"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h2>Income Tax Bands — UK (2024-25)</h2>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Income (£)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Tax Rate
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["Up to £12,570", "Personal Allowance (0%)"],
-                ["£12,571 – £50,270", "Basic Rate (20%)"],
-                ["£50,271 – £125,140", "Higher Rate (40%)"],
-                ["Above £125,140", "Additional Rate (45%)"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h2>What Are Tax Deductions?</h2>
-        <p>
-          Tax deductions are amounts subtracted from your gross income before
-          tax is applied, reducing your taxable income and therefore your tax
-          bill. Using the deductions field in this income tax calculator with
-          deductions shows you exactly how much each deduction saves. Common
-          deductions include:
-        </p>
-        <ul className="custom-list">
-          <li>
-            Standard deduction (₹50,000 in India for salaried; $14,600 in USA
-            for single filers 2024)
-          </li>
-          <li>Retirement contributions (EPF, PPF, NPS, 401k, RRSP, pension)</li>
-          <li>
-            Home loan interest payments — our{" "}
-            <Link href="/home-mortgage-calculator/" className="my-link">
-              home mortgage calculator
-            </Link>{" "}
-            shows how much interest you pay annually
-          </li>
-          <li>Medical and health insurance premiums</li>
-          <li>Charitable donations</li>
-          <li>
-            Business and professional expenses (especially for self-employed —
-            see our{" "}
-            <Link href="/freelancer-tax-calculator/" className="my-link">
-              freelancer tax calculator
-            </Link>
-            )
-          </li>
-          <li>Education loan interest</li>
-          <li>House rent allowance (HRA) in India</li>
-        </ul>
-
-        <h2>Marginal vs. Effective Tax Rate — What Is the Difference?</h2>
-        <p>
-          These two terms are frequently confused but represent very different
-          things:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Marginal tax rate</strong> — the rate applied to the last
-            rupee or dollar you earn. This is the highest slab your income
-            reaches. If you are in the 30% bracket, your marginal rate is 30% —
-            but you do not pay 30% on your entire income.
-          </li>
-          <li>
-            <strong>Effective tax rate</strong> — the actual percentage of your
-            total gross income that goes to tax, after applying progressive
-            slabs. This is always lower than the marginal rate because lower
-            portions of your income are taxed at lower rates. This calculator
-            displays both your tax amount and your effective rate.
-          </li>
-        </ul>
-        <p>
-          For example, if your total tax is ₹1,20,000 on an income of ₹6,00,000,
-          your effective rate is 20% — even though your marginal rate might be
-          30%. To see how a salary increase changes both rates, use our{" "}
-          <Link href="/salary-hike-calculator/" className="my-link">
-            salary hike calculator
-          </Link>{" "}
-          to model the before-and-after numbers.
-        </p>
-
-        <h2>How to Reduce Taxable Income Legally</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Maximise retirement contributions</strong> — EPF, PPF, NPS,
-            401(k), RRSP contributions reduce taxable income directly and grow
-            tax-free or tax-deferred.
-          </li>
-          <li>
-            <strong>Claim all eligible deductions</strong> — many people miss
-            home loan interest, health insurance premiums, and education
-            expenses. Model different amounts using the deductions field above.
-          </li>
-          <li>
-            <strong>Invest in tax-saving instruments</strong> — India's Section
-            80C allows up to ₹1.5 lakh through ELSS, PPF, life insurance.
-            Similar tax-advantaged instruments exist in other countries.
-          </li>
-          <li>
-            <strong>Use the correct tax regime</strong> — in India, compare old
-            vs new regime to find which saves more. In the USA, compare standard
-            vs itemized deductions.
-          </li>
-          <li>
-            <strong>Time your income and deductions</strong> — deferring income
-            to a lower-earning year or accelerating deductions can optimise your
-            effective rate.
-          </li>
-          <li>
-            <strong>Consult a professional</strong> — a tax advisor can identify
-            country-specific credits and structures a general calculator cannot
-            capture.
-          </li>
-        </ul>
-        <p>
-          Every deduction you claim reduces your taxable income, which reduces
-          your tax. To see how your after-tax income compares to your housing
-          costs, our{" "}
-          <Link href="/rent-calculator/" className="my-link">
-            rent calculator
-          </Link>{" "}
-          shows what percentage of take-home should go to rent, and our{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          tracks how tax savings contribute to your overall financial growth.
-        </p>
-
-        <h2>How to Use This Income Tax Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Step 1:</strong> Select your country from the dropdown —
-            Pakistan, India, USA, UK, Canada, Australia, or Custom for any other
-            jurisdiction.
-          </li>
-          <li>
-            <strong>Step 2:</strong> Enter your annual gross income (salary +
-            other taxable income).
-          </li>
-          <li>
-            <strong>Step 3:</strong> Enter total deductions (optional). Leave
-            blank or 0 to see tax on full gross income.
-          </li>
-          <li>
-            <strong>Step 4:</strong> Click Calculate. The panel shows your tax
-            amount, effective rate, net take-home, and a visual breakdown of
-            where your income goes.
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {FAQ_DATA.map(({ q, a }, i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              />
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          Understanding your income tax is the starting point for every
-          financial decision — from how much you can afford to save, to whether
-          a salary hike actually improves your take-home, to how much you can
-          comfortably borrow. Use this calculator to see the exact numbers for
-          your country and income level.
+          Band thresholds, rates, allowance amounts, the treatment of pensions
+          and the definition of taxable income all differ by country and are
+          revised regularly, often annually. Any figure quoted online without a
+          year attached should be treated as unreliable.
         </p>
         <p>
-          For related tools, our{" "}
-          <Link href="/salary-hike-calculator/" className="my-link">
-            salary hike calculator
-          </Link>{" "}
-          shows how a raise changes your take-home after tax, our{" "}
+          The structure is remarkably consistent. Almost every system has a
+          tax-free amount at the bottom, applies rising rates to successive
+          slices rather than to the whole, distinguishes deductions from
+          credits, and collects through the year against an estimate that is
+          reconciled afterwards. Understanding that shape transfers between
+          jurisdictions even when none of the numbers do.
+        </p>
+        <p>
+          Use this calculator to model the shape of a liability and to compare
+          scenarios, then confirm current thresholds with your own tax authority
+          before relying on a figure. Current-year bands are set out in our{" "}
+          <Link href="/blog/2026-tax-brackets/" className="my-link">
+            2026 tax brackets guide
+          </Link>
+          . If your income is self-employed rather than salaried, the{" "}
           <Link href="/freelancer-tax-calculator/" className="my-link">
             freelancer tax calculator
           </Link>{" "}
-          handles self-employment tax with platform fees, our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          shows your loan payments relative to net income, and our{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          puts it all in the context of your complete financial picture.
+          accounts for contributions and business expenses as well.
         </p>
+        <h2>Income Tax Questions</h2>
+
+        {FAQ_DATA.map(({ q, a }, i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
       </div>
 
       {/* ---- SIDEBAR ---- */}

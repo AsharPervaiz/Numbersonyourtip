@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 type Person = {
@@ -134,7 +134,6 @@ export default function BillSplitCalculator() {
         mode: "equal",
       });
     } else {
-      // Custom — each person pays their entered amount
       const customSplit = people.map((p) => {
         const subtotal = toNum(p.amount);
         const personTip =
@@ -149,7 +148,6 @@ export default function BillSplitCalculator() {
         };
       });
 
-      // If shared tip mode, distribute tip equally among all
       const sharedTipPerPerson =
         tipMode === "shared" ? tipAmount / people.length : 0;
       const finalSplit =
@@ -189,12 +187,75 @@ export default function BillSplitCalculator() {
     setResult(null);
   };
 
+  /* ── FAQ data (also used for JSON-LD schema) ── */
+  const faqs: [string, string][] = [
+    [
+      "Should I tip on the pre-tax or post-tax total?",
+      "Pre-tax is the more common convention, since the tax is not part of the service. On a 200 subtotal with 10% tax, a 20% tip comes to 40 pre-tax and 44 post-tax, giving totals of 260 or 264. The difference is small enough not to argue about and large enough to explain why two people using different apps get different answers from the same receipt.",
+    ],
+    [
+      "How do I split a bill when everyone ordered different amounts?",
+      "Assign each person their own items, divide any shared dishes among the people who actually ate them, then apply tax and tip to each person in proportion to their own subtotal. The step people skip is that last one — itemising the food and then splitting the tip equally quietly moves money from the light eaters to the heavy ones, which defeats the purpose.",
+    ],
+    [
+      "How should we handle drinks when someone is not drinking?",
+      "Split the drinks separately among the people who had them, then split the food however the group prefers. Alcohol is usually the single largest distortion on a restaurant bill, and this is the one adjustment almost everyone accepts without needing a discussion.",
+    ],
+    [
+      "Who pays the extra cent when the split does not divide evenly?",
+      "Someone has to. Three people splitting 100 each owe 33.333, so either everyone rounds up to 33.34 and the payer keeps the two-cent surplus, or one person covers the remainder while the others pay 33.33. For a group that eats together often, rotating who absorbs it is simpler than recalculating every time.",
+    ],
+    [
+      "How do I work out a tip in my head?",
+      "Move the decimal point one place left for ten percent, double it for twenty, and add half of the ten percent figure for fifteen. On a 68 bill that gives 6.80, 13.60 and 10.20. For the split itself, round the total up to something divisible by your group size first — a 137 bill among four is awkward, while treating it as 140 gives 35 each with a small surplus toward the tip.",
+    ],
+    [
+      "Someone arrived late. How should we charge them?",
+      "For what they actually had, rather than prorating by how long they were there. Time-based apportionment sounds fairer than it is: it is fiddly to work out, easy to argue about, and rarely matches what anyone consumed. Itemising the latecomer's order and splitting the rest is faster and less contentious.",
+    ],
+    [
+      "Is an equal split ever unfair?",
+      "It is fine when orders are comparable, and it becomes unfair when one person had three courses and wine while another had soup. The argument that it averages out over time only holds for a group that eats together regularly — for a one-off gathering there is no future meal to balance it against.",
+    ],
+    [
+      "Do I still tip if a service charge is on the bill?",
+      "An additional tip is discretionary once a service charge has been added, and the charge is easy to miss on a long receipt. Check the itemised lines before calculating anything, since tipping on top of an included service charge is a common and entirely avoidable overpayment.",
+    ],
+    [
+      "How do we split when one person is paying for a child?",
+      "Count them as two people rather than one. Splitting by heads present at the table rather than by people fed is a common slip when children are eating, and it quietly shifts the cost of the extra meal onto everyone else.",
+    ],
+  ];
+
   return (
     <>
+      {/* FAQ JSON-LD schema for rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+
       <div className="page-layout single-page-padding">
         <div className="single-page-padding">
-          <h1>Bill Split Calculator with Tip</h1>
-          <p>Split Any Bill Equally or Unevenly — With Tip — Instantly Free</p>
+          <h1>
+            Bill Split Calculator — Equal, Itemised or Proportional
+          </h1>
+          <p>
+            Split any restaurant bill equally or by exact orders, add the tip,
+            and see what each person owes — instantly, with no signup and no
+            math in your head. Works for groups of 2 to 20 people, any currency,
+            any tip rate.
+          </p>
 
           <div className="calc-card single-calc">
             {/* Row 1 — Bill Total + Tip % */}
@@ -340,7 +401,7 @@ export default function BillSplitCalculator() {
                       color: "#ffffff",
                     }}
                   >
-                    Enter each person's order amount below
+                    Enter each person&apos;s order amount below
                   </div>
                 </div>
 
@@ -393,7 +454,6 @@ export default function BillSplitCalculator() {
             {/* Result */}
             {result && (
               <div className="calc-result" style={{ lineHeight: "2" }}>
-                {/* Summary row always shown */}
                 <div
                   style={{
                     display: "grid",
@@ -424,52 +484,48 @@ export default function BillSplitCalculator() {
                   </div>
                 </div>
 
-                {/* Equal split breakdown */}
                 {result.mode === "equal" && (
-                  <>
+                  <div
+                    style={{
+                      borderTop: "1px solid #e5e7eb",
+                      paddingTop: "8px",
+                    }}
+                  >
                     <div
                       style={{
-                        borderTop: "1px solid #e5e7eb",
-                        paddingTop: "8px",
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: "6px 20px",
                       }}
                     >
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
-                          gap: "6px 20px",
-                        }}
-                      >
-                        <div>Each Person Pays (Bill):</div>
-                        <div>
-                          <strong>{fmt(result.perPersonBase)}</strong>
-                        </div>
+                      <div>Each Person Pays (Bill):</div>
+                      <div>
+                        <strong>{fmt(result.perPersonBase)}</strong>
+                      </div>
 
-                        {result.perPersonTip > 0 && (
-                          <>
-                            <div>Each Person's Tip:</div>
-                            <div>
-                              <strong style={{ color: "green" }}>
-                                + {fmt(result.perPersonTip)}
-                              </strong>
-                            </div>
-                          </>
-                        )}
+                      {result.perPersonTip > 0 && (
+                        <>
+                          <div>Each Person&apos;s Tip:</div>
+                          <div>
+                            <strong style={{ color: "green" }}>
+                              + {fmt(result.perPersonTip)}
+                            </strong>
+                          </div>
+                        </>
+                      )}
 
-                        <div style={{ fontWeight: 700 }}>
-                          Each Person's Total:
-                        </div>
-                        <div>
-                          <strong style={{ fontSize: "1.1em" }}>
-                            {fmt(result.perPersonTotal)}
-                          </strong>
-                        </div>
+                      <div style={{ fontWeight: 700 }}>
+                        Each Person&apos;s Total:
+                      </div>
+                      <div>
+                        <strong style={{ fontSize: "1.1em" }}>
+                          {fmt(result.perPersonTotal)}
+                        </strong>
                       </div>
                     </div>
-                  </>
+                  </div>
                 )}
 
-                {/* Custom split breakdown */}
                 {result.mode === "custom" && result.customSplit.length > 0 && (
                   <div
                     style={{
@@ -499,24 +555,18 @@ export default function BillSplitCalculator() {
                         Total
                       </div>
                       {result.customSplit.map((c, i) => (
-                        <>
-                          <div key={`name-${i}`}>{c.name}</div>
-                          <div key={`sub-${i}`} style={{ textAlign: "right" }}>
+                        <React.Fragment key={i}>
+                          <div>{c.name}</div>
+                          <div style={{ textAlign: "right" }}>
                             {fmt(c.subtotal)}
                           </div>
-                          <div
-                            key={`tip-${i}`}
-                            style={{ textAlign: "right", color: "green" }}
-                          >
+                          <div style={{ textAlign: "right", color: "green" }}>
                             + {fmt(c.tip)}
                           </div>
-                          <div
-                            key={`tot-${i}`}
-                            style={{ textAlign: "right", fontWeight: 700 }}
-                          >
+                          <div style={{ textAlign: "right", fontWeight: 700 }}>
                             {fmt(c.total)}
                           </div>
-                        </>
+                        </React.Fragment>
                       ))}
                     </div>
                   </div>
@@ -525,248 +575,221 @@ export default function BillSplitCalculator() {
             )}
           </div>
 
-          {/* ---- SEO CONTENT ---- */}
-          <h2>What is a Bill Split Calculator?</h2>
-          <p>
-            A bill split calculator helps you divide a restaurant bill, dinner
-            tab, or any shared expense fairly among a group of people. Whether
-            you are splitting equally with friends or dividing unevenly because
-            different people ordered different things, this tool does the math
-            instantly — including tip. No more awkward mental arithmetic at the
-            table or arguments about who owes what.
-          </p>
+        {/* ---- SEO CONTENT ---- */}
 
-          <h2>How to Split a Bill with Tip</h2>
-          <p>
-            Splitting a bill with tip involves two steps: first calculating the
-            tip amount on top of the original bill, then dividing the total
-            among the people sharing it. Our calculator handles both steps at
-            once. You can also choose whether everyone splits the tip equally or
-            whether each person's tip is proportional to what they ordered —
-            which is the fairest method when orders vary widely.
-          </p>
+        <h2>Equal Is Simple. Fair Is Sometimes Different.</h2>
+        <p>
+          Splitting a bill equally is the default because it is fast and because
+          proposing anything else feels awkward. It is the right answer when
+          everyone ordered roughly comparably. It stops being the right answer
+          the moment one person had a starter, three courses and half the wine
+          while another had soup and tap water.
+        </p>
 
-          <h2>Equal Split vs Uneven Split — Which Should You Use?</h2>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Works well when</th>
+                <th>Breaks down when</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Equal split</td>
+                <td>Orders are similar, or the group eats together often</td>
+                <td>One or two people ordered far more or far less</td>
+              </tr>
+              <tr>
+                <td>Itemised split</td>
+                <td>Orders differ substantially, or someone is on a budget</td>
+                <td>
+                  Many shared dishes, which have to be divided separately anyway
+                </td>
+              </tr>
+              <tr>
+                <td>Proportional split</td>
+                <td>
+                  Mostly shared food, but with clearly unequal participation
+                </td>
+                <td>
+                  Nobody wants to work out percentages at the end of a meal
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-          <h3>Equal Split</h3>
-          <p>
-            Equal split is the simplest approach — the total bill (including
-            tip) is divided by the number of people present. It works well when
-            everyone ordered roughly the same amount, or when the group just
-            wants to keep things simple and fast. Enter the total bill, tip
-            percentage, and number of people and you get an instant answer.
-          </p>
+        <p>
+          The argument for equal splitting over many meals is that it averages
+          out — you overpay one week and underpay the next. That works for a
+          regular group and not at all for a one-off gathering of people who will
+          not eat together again.
+        </p>
 
-          <h3>Uneven (Custom) Split</h3>
-          <p>
-            Custom split is the fair approach when people ordered very different
-            things — one person had a steak and cocktails, another just had a
-            salad and water. Enter each person's name and the amount they
-            ordered, and the calculator shows exactly what each person owes,
-            including their share of the tip. This avoids the common situation
-            where light eaters end up subsidising heavy spenders.
-          </p>
+        <h2>Tip and Tax: What Gets Charged on What</h2>
+        <p>
+          The order of operations changes the total, and this is where the
+          arithmetic genuinely matters.
+        </p>
+        <pre>
+          Subtotal → the food and drink{"\n"}+ Tax, calculated on the subtotal
+          {"\n"}+ Tip, calculated on the subtotal or on the taxed total{"\n"}=
+          What the group pays
+        </pre>
+        <p>
+          On a 200 subtotal with 10% tax and a 20% tip, tipping on the pre-tax
+          figure gives 200 + 20 + 40 = 260. Tipping on the post-tax figure gives
+          200 + 20 + 44 = 264. Four units on a 200 meal is not worth an argument,
+          but it explains why two people using different apps get different
+          totals from the same receipt.
+        </p>
+        <p>
+          The convention worth knowing is that tipping on the pre-tax subtotal is
+          the more common practice, since the tax is not part of the service.
+          Where a service charge has already been added to the bill, an
+          additional tip is discretionary rather than expected — and the charge
+          being on the bill is easy to miss.
+        </p>
 
-          <h2>How is Tip Calculated?</h2>
-          <p>
-            Tip is calculated as a percentage of the pre-tax bill total.
-            Standard tip percentages vary by country and culture. Our calculator
-            lets you enter any percentage, but here are common benchmarks as a
-            reference:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <strong>10%</strong> — minimum tip for basic service in most
-              countries
-            </li>
-            <li>
-              <strong>15%</strong> — standard tip for good service in the US and
-              Canada
-            </li>
-            <li>
-              <strong>18%–20%</strong> — standard tip for great service in the
-              US
-            </li>
-            <li>
-              <strong>25%+</strong> — exceptional service or special occasions
-            </li>
-            <li>
-              <strong>0%</strong> — tipping is not customary in Japan, South
-              Korea, and some European countries
-            </li>
-          </ul>
+        <h2>Itemising Properly, Including Shared Dishes</h2>
+        <p>
+          The mistake in itemised splitting is handling shared items badly.
+          Assign what each person ordered, divide shared dishes among the people
+          who actually ate them, then apply tax and tip to each person in
+          proportion to their own subtotal rather than equally.
+        </p>
+        <pre>
+          Each person&apos;s share ={"\n"}  (their items + their portion of
+          shared items){"\n"}  × (1 + tax rate){"\n"}  × (1 + tip rate)
+        </pre>
+        <p>
+          Applying tip and tax proportionally is the step people skip. Splitting
+          the food itemised and then dividing the tip equally quietly transfers
+          money from the light eaters to the heavy ones, which defeats the point
+          of itemising in the first place.
+        </p>
+        <p>
+          A worked example. Three people: A orders 20, B orders 45, C orders 35,
+          and they share a 30 platter equally. Subtotals become 30, 55 and 45,
+          totalling 130. With 8% tax and an 18% tip on the pre-tax amount, the
+          multiplier is 1.08 plus 0.18 of the subtotal — so A pays 30 × 1.26 =
+          37.80, B pays 69.30, and C pays 56.70.
+        </p>
 
-          <h2>
-            How to Split a Bill When People Drank Alcohol and Others Didn't
-          </h2>
-          <p>
-            This is one of the most common and uncomfortable bill-splitting
-            situations. The fairest solution is to use the uneven (custom) split
-            option. Assign each person or subgroup what they actually consumed,
-            then split the tip proportionally or equally. This way, non-drinkers
-            or light eaters are not forced to cover the cost of someone else's
-            alcohol or expensive dishes.
-          </p>
+        <h2>The Rounding Problem</h2>
+        <p>
+          Three people splitting 100 each owe 33.333… and no arrangement of
+          coins produces that. Somebody has to absorb the difference.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>Round everyone up and let the payer keep the excess.</strong>{" "}
+            Three payments of 33.34 total 100.02. Simple, and the payer is
+            marginally ahead.
+          </li>
+          <li>
+            <strong>Round down and have one person cover the remainder.</strong>{" "}
+            Two pay 33.33 and one pays 33.34. Exact, and requires someone to
+            volunteer.
+          </li>
+          <li>
+            <strong>Let the person paying the bill absorb it.</strong> They are
+            already carrying the transaction and often the loyalty points.
+          </li>
+        </ul>
+        <p>
+          For a group that eats together regularly, rotating who absorbs the
+          rounding is neater than recalculating it each time. Over a year the
+          amounts are trivial; the friction of deciding each time is not.
+        </p>
 
-          <h2>Bill Split Formula</h2>
-          <pre>
-            Tip Amount = (Bill Total × Tip%) ÷ 100{"\n"}
-            Total with Tip = Bill Total + Tip Amount{"\n\n"}
-            Equal Split:{"\n"}
-            Each Person Pays = Total with Tip ÷ Number of People{"\n\n"}
-            Custom Split:{"\n"}
-            Person's Tip = (Person's Order ÷ Bill Total) × Tip Amount{"\n"}
-            Person's Total = Person's Order + Person's Tip
-          </pre>
+        <h2>The Awkward Situations, Solved</h2>
+        <p>
+          <strong>Someone did not drink.</strong> Alcohol is usually the largest
+          single distortion on a restaurant bill. Split the drinks separately
+          among the people who had them, then split the food however the group
+          prefers. This is the one adjustment almost everyone accepts without
+          discussion.
+        </p>
+        <p>
+          <strong>Someone arrived late or left early.</strong> Charge them for
+          what they had rather than trying to prorate by time. Time-based
+          apportionment sounds fair and is fiddly, contentious, and rarely
+          matches what anyone consumed.
+        </p>
+        <p>
+          <strong>One person is paying for two.</strong> Count them as two
+          people, not one. Splitting a bill by heads present rather than by
+          people fed is a common and expensive slip when children are at the
+          table.
+        </p>
+        <p>
+          <strong>A birthday meal.</strong> Divide the guest of honour&apos;s
+          share among everyone else before splitting, rather than after — the
+          arithmetic is the same but the conversation is easier when it is
+          settled up front.
+        </p>
 
-          <h2>Tips for Splitting Bills Fairly in a Group</h2>
-          <ul className="custom-list">
-            <li>
-              Always agree on the splitting method before ordering — saves
-              arguments later
-            </li>
-            <li>
-              Use custom split mode when orders vary significantly in price
-            </li>
-            <li>
-              Split the tip equally even in custom mode unless someone is a
-              known over-tipper
-            </li>
-            <li>
-              Apps like Splitwise are great for tracking bills over multiple
-              outings with the same group
-            </li>
-            <li>
-              When in doubt, round up your contribution slightly — no one likes
-              being short-changed on a group bill
-            </li>
-            <li>
-              Tax is sometimes added automatically — check if your bill total
-              already includes it before entering
-            </li>
-          </ul>
+        <h2>Doing It at the Table</h2>
+        <p>
+          Two shortcuts cover almost every situation without a phone.
+        </p>
+        <p>
+          <strong>For a tip:</strong> ten percent is the decimal point moved one
+          place left. Twenty percent is that doubled. Fifteen percent is ten
+          percent plus half of it again. On a 68 bill: 6.80, then 13.60 for
+          twenty percent, or 10.20 for fifteen.
+        </p>
+        <p>
+          <strong>For the split:</strong> round the total up to something
+          divisible by the group size before dividing. A 137 bill among four is
+          awkward; treating it as 140 gives 35 each and leaves a small surplus
+          toward the tip, which is usually the intention anyway.
+        </p>
+        <p>
+          For splitting shared household costs rather than a single bill, the{" "}
+          <Link href="/rent-calculator/" className="my-link">
+            rent calculator
+          </Link>{" "}
+          covers dividing rent by room size or income, and the{" "}
+          <Link href="/percentage-calculator/" className="my-link">
+            percentage calculator
+          </Link>{" "}
+          handles any proportional share you need to work out separately.
+        </p>
+        <h2>Bill Splitting Questions</h2>
 
-          <h2>Benefits of Using Our Bill Split Calculator</h2>
-          <ul className="custom-list">
-            <li>Handles both equal and uneven custom splits</li>
-            <li>Tip can be split equally or proportionally by order amount</li>
-            <li>Supports up to 20 people in a single calculation</li>
-            <li>
-              Shows a clear per-person breakdown with name, order, tip, and
-              total
-            </li>
-            <li>Free, instant, no login required</li>
-            <li>Works perfectly on mobile at the restaurant table</li>
-          </ul>
+          {faqs.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                  role="button"
+                  tabIndex={0}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  ></i>
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
 
-          <h2>Frequently Asked Questions</h2>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(0)}>
-              How do I split a restaurant bill equally?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 0 && (
-              <p>
-                Enter the total bill amount and tip percentage, select "Split
-                Equally", enter the number of people, and click Calculate. The
-                result shows exactly how much each person pays including their
-                share of the tip.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(1)}>
-              How do I split a bill unevenly when people ordered different
-              things?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 1 && (
-              <p>
-                Select "Split Unevenly (Custom)", enter the number of people,
-                then add each person's name and the amount they ordered. The
-                calculator will work out each person's share including their
-                proportional or equal tip automatically.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(2)}>
-              What is a fair tip percentage to add?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 2 && (
-              <p>
-                In the US and Canada, 15% is considered the standard minimum for
-                decent service, and 18%–20% is standard for good service. In the
-                UK, 10%–15% is common. In many Asian countries, tipping is not
-                customary at all. You can enter any percentage in this
-                calculator, including 0 if you prefer not to tip.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(3)}>
-              Should tip be split equally or by what each person ordered?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 3 && (
-              <p>
-                Either method is acceptable. Splitting tip equally is simpler
-                and works well when orders are similar. Splitting tip
-                proportionally by order amount is fairer when there is a big
-                difference — someone who ordered a 5 dish meal should tip more
-                than someone who had just a drink. Our calculator supports both
-                options.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(4)}>
-              Does this calculator work for splitting other expenses too?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 4 && (
-              <p>
-                Yes. While designed for restaurant bills, this calculator works
-                for splitting any shared cost — hotel rooms, taxi fares, group
-                groceries, event tickets, or any other expense where multiple
-                people need to divide a total fairly.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(5)}>
-              How many people can I split a bill between?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 5 && (
-              <p>
-                Our calculator supports splitting between up to 20 people in a
-                single calculation. This covers most group dinners, parties, and
-                shared expenses comfortably. For ongoing group expense tracking
-                across multiple events, you may also want to use a dedicated app
-                like Splitwise.
-              </p>
-            )}
-          </div>
         </div>
 
         {/* ---- SIDEBAR ---- */}
@@ -777,52 +800,52 @@ export default function BillSplitCalculator() {
             </p>
             <ul style={{ listStyle: "none", padding: 0 }}>
               <li>
-                <Link href="/freelancer-tax-calculator/">
+                <Link href="/discount-calculator/">
                   <span
                     style={{ textDecoration: "none" }}
                     className="hover-item"
                   >
-                    Freelancer Tax Calculator
+                    Discount Calculator
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/salary-hike-calculator/">
+                <Link href="/vat-calculator/">
                   <span
                     style={{ textDecoration: "none" }}
                     className="hover-item"
                   >
-                    Salary Hike Calculator
+                    VAT Calculator
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/net-worth-calculator/">
+                <Link href="/percentage-calculator/">
                   <span
                     style={{ textDecoration: "none" }}
                     className="hover-item"
                   >
-                    Net Worth Calculator
+                    Percentage Calculator
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/emi-calculator/">
+                <Link href="/currency-converter/">
                   <span
                     style={{ textDecoration: "none" }}
                     className="hover-item"
                   >
-                    EMI Calculator
+                    Currency Converter
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/loan-calculator/">
+                <Link href="/fuel-cost-calculator/">
                   <span
                     style={{ textDecoration: "none" }}
                     className="hover-item"
                   >
-                    Loan Calculator
+                    Fuel Cost Calculator
                   </span>
                 </Link>
               </li>

@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import UnitConversionCalculator from "../components/UnitConversionCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Unit Conversion Calculator | Convert Length, Mass, Temperature & More",
+  title: "Unit Conversion Calculator",
   description:
-    "Free Unit Conversion Calculator for converting length, mass, temperature, volume, area, and time. Enter value, choose units, and get instant accurate results online.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Convert length, weight, volume, temperature and more, with exact conversion factors — and why temperature needs an offset that every other unit does not.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/unit-conversion-calculator/",
+    canonical: "/unit-conversion-calculator/",
+  },
+  openGraph: {
+    title: "Unit Conversion Calculator",
+    description:
+      "Exact conversion factors, the temperature exception, and how much precision to actually report.",
+    url: "/unit-conversion-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Unit Conversion Calculator",
+    description:
+      "Length, weight, volume and temperature conversions with exact factors.",
   },
 };
 

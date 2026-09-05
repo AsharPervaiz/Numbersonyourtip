@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ReviewedBy from "./ReviewedBy";
 
 /* ─────────────────────────────────────────
    Types
@@ -173,12 +174,51 @@ function IVResultPanel({ result }: { result: IVResult | null }) {
           style={{ marginRight: "6px" }}
         />
         This meter is a general reference, not drug-specific. Always verify
-        against the prescribing physician's instructions and your institution's
+        against the prescribing physician&apos;s instructions and your institution&apos;s
         protocols before administration.
       </div>
     </div>
   );
 }
+
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do you calculate an IVIG infusion rate in mL per hour?",
+    "Immunoglobulin rates are ordered in mg/kg/min, so you need the patient weight and the product concentration to reach a pump rate: (mg/kg/min × weight in kg × 60) ÷ concentration in mg/mL. For a 70 kg patient on a 10% product (100 mg/mL) at 0.5 mg/kg/min, that is (0.5 × 70 × 60) ÷ 100 = 21 mL/hr. Repeat the same calculation at each step of the escalation, because IVIG is stepped up at intervals rather than run at one rate.",
+  ],
+  [
+    "How long will an IVIG infusion take if the rate steps up?",
+    "Work out the volume delivered during each held step, subtract that from the bag volume, then divide the remainder by the final rate. A 280 mL bag delivered at 21, 42 and 84 mL/hr for 30 minutes each has given 73.5 mL after 90 minutes; the remaining 206.5 mL at 168 mL/hr takes another 74 minutes, so the total is about 2 hours 45 minutes. Dividing the whole bag by the final rate alone would have estimated 100 minutes and under-booked the chair by more than an hour.",
+  ],
+  [
+    "How do I convert mcg/kg/min to mL/hr for an infusion pump?",
+    "Multiply the ordered dose by the weight and by 60, then divide by the concentration of the prepared bag in mcg/mL. Norepinephrine 4 mg in 250 mL is 16 mcg/mL, so an 80 kg patient at 0.1 mcg/kg/min needs (0.1 × 80 × 60) ÷ 16 = 30 mL/hr. The factor of 60 converts per-minute to per-hour and is the step most often left out.",
+  ],
+  [
+    "What is the difference between infusion rate and drip rate?",
+    "Infusion rate is millilitres per hour and is what you program into an electronic pump. Drip rate is drops per minute and applies to gravity sets, where the flow is set by a roller clamp and counted in the drip chamber. Converting between them needs the drop factor of the tubing, which is printed on the packet and varies between 10, 15, 20 and 60 gtt/mL.",
+  ],
+  [
+    "Which drop factor should I use?",
+    "Read it off the giving set rather than assuming it. Macrodrip sets are commonly 10, 15 or 20 gtt/mL and are used for adult fluids; microdrip sets are 60 gtt/mL and are used in paediatrics and for low-volume infusions. Sets from different manufacturers on the same trolley can differ, and calculating with 20 gtt/mL on a 15 gtt/mL set runs the infusion about a third too fast.",
+  ],
+  [
+    "Why does a 10% solution mean 100 mg per mL?",
+    "A percentage concentration means grams of solute per 100 mL of solution. Ten percent is therefore 10 g in 100 mL, which is 10,000 mg in 100 mL, or 100 mg/mL. Reading 10% as 10 mg/mL introduces a tenfold error into every calculation downstream, which is why immunoglobulin and albumin rates should always be converted to mg/mL before any rate arithmetic begins.",
+  ],
+  [
+    "How much do I draw from a vial, and does reconstitution change it?",
+    "For a ready-made solution, volume to draw = (required dose ÷ vial dose) × vial volume, so 750 mg from a 1 g in 10 mL vial is 7.5 mL. For powders, the dry drug displaces volume, so the label may specify adding 9.6 mL of diluent to produce 10 mL of solution. Adding a round 10 mL instead makes the resulting concentration lower than stated and every dose drawn from it slightly under-strength.",
+  ],
+  [
+    "Can nursing students use this for dosage calculation practice?",
+    "Yes — the four modes cover the calculation types that appear most often in nursing dosage exams: weight-based dose, mL/hr, gtt/min, and volume from a vial. The most useful way to practise is to work each problem on paper first and use the calculator only to check, because exams test whether you can select the right formula from the wording of the order, which is the step a calculator cannot do for you.",
+  ],
+  [
+    "What does KVO or TKO mean on an order?",
+    "Keep vein open, sometimes written as to keep open, means running fluid slowly enough to stop the cannula clotting without giving a clinically meaningful volume. It is a low fixed rate rather than a calculated one, and the exact figure comes from local policy rather than a formula. Because it is not weight-based or time-based, it is the one common IV order that needs no calculation at all.",
+  ],
+];
 
 /* ─────────────────────────────────────────
    Main Calculator Page
@@ -378,8 +418,23 @@ export default function IVCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
-        <h1>IV Calculator — Infusion Rate, Drip Rate & IV Dosage</h1>
+        <h1>IV Infusion Rate Calculator — Drip Rate, IVIG & Vial Dose</h1>
+
 
         <p>
           Calculate IV infusion rate in mL/hr, drip rate in drops/min,
@@ -565,682 +620,471 @@ export default function IVCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is an IV Calculator?</h2>
+        <h2>Start With What the Order Says</h2>
         <p>
-          An IV calculator is a clinical tool that computes the key parameters
-          of intravenous therapy — infusion rate, drip rate, weight-based
-          dosing, and vial draw volume. Nurses, pharmacists, paramedics, and
-          physicians rely on these calculations daily to ensure patients receive
-          the right amount of fluid or medication at the right speed.
+          Almost every IV calculation error starts in the same place: the
+          clinician reaches for a formula before deciding which quantity the
+          order is actually asking for. An order for 1 gram of vancomycin, an
+          order for 125 mL/hr, and an order for 0.5 mg/kg/min are three
+          different problems, and only one of them is solved by dividing volume
+          by time.
         </p>
-        <p>
-          Getting IV calculations wrong carries serious consequences. Too much
-          fluid too quickly can cause pulmonary edema. Too slow, and a
-          time-critical antibiotic or vasopressor may never reach therapeutic
-          levels. An IV infusion calculator removes the manual arithmetic from
-          this process and gives you a verifiable result in seconds.
-        </p>
-        <p>
-          This tool covers all four core IV calculation types used in hospitals,
-          field medicine, and nursing education. For the weight-based dose that
-          often precedes IV preparation, start with our{" "}
-          <Link href="/dose-calculator/" className="my-link">
-            dose calculator
-          </Link>{" "}
-          to determine the total mg dose first.
-        </p>
+        <p>Use the wording of the order to pick the mode:</p>
 
-        <h2>What Is Intravenous (IV) Therapy?</h2>
-        <p>
-          Intravenous therapy delivers fluids, medications, nutrients, or blood
-          products directly into the bloodstream through a vein. Because IV
-          drugs bypass the gastrointestinal tract, they reach circulation
-          immediately with 100% bioavailability — making IV the fastest and most
-          reliable drug delivery route. Common applications include hydration,
-          antibiotic infusions, chemotherapy, electrolyte replacement, pain
-          management, and total parenteral nutrition.
-        </p>
-        <p>
-          Every IV treatment requires at least one calculation before
-          administration — whether that is the infusion rate for a pump, the
-          drip rate for a gravity set, or the volume to draw from a vial. This
-          calculator handles all three.
-        </p>
-
-        <h2>IV Calculation Formulas — All Four Modes Explained</h2>
-
-        <h3>1. Body Weight Dose — IV Dosing by Patient Weight</h3>
-        <p>
-          Many IV medications — antibiotics, sedatives, chemotherapy agents,
-          vasopressors — are prescribed as a dose per kilogram or per pound of
-          body weight. This ensures the patient receives a therapeutically
-          effective amount scaled to their size.
-        </p>
-        <pre>
-          IV Dose (mg) = Patient Weight (kg or lb) × Prescribed Dose (mg/kg or
-          mg/lb)
-        </pre>
-
-        <h4>Worked Example</h4>
-        <p>A 70 kg patient is prescribed gentamicin at 5 mg/kg IV.</p>
-        <ul className="custom-list">
-          <li>
-            70 kg × 5 mg/kg = <strong>350 mg IV</strong>
-          </li>
-        </ul>
-        <p>
-          This 350 mg is the total dose to prepare. Next, use the Dose from Vial
-          mode to determine how much to draw from the available vial, or use our{" "}
-          <Link href="/dose-stock-calculator/" className="my-link">
-            dose stock calculator
-          </Link>{" "}
-          for the same conversion step.
-        </p>
-
-        <h3>2. Infusion Rate — How to Calculate mL per Hour</h3>
-        <p>
-          The infusion rate tells an electronic IV pump how many milliliters to
-          deliver each hour. This is the most frequently performed IV
-          calculation in hospital nursing.
-        </p>
-        <pre>
-          Infusion Rate (mL/hr) = Total Volume (mL) ÷ Total Time (hours)
-        </pre>
-
-        <h4>Worked Example</h4>
-        <p>
-          A physician orders 1,000 mL of normal saline to infuse over 8 hours.
-        </p>
-        <ul className="custom-list">
-          <li>
-            1,000 mL ÷ 8 hours = <strong>125 mL/hr</strong>
-          </li>
-        </ul>
-        <p>
-          Set the infusion pump to 125 mL/hr. The bag will be empty in 8 hours.
-        </p>
-
-        <h3>3. Drip Rate — Drops per Minute for Gravity IV Sets</h3>
-        <p>
-          When an electronic pump is unavailable — in the field, in rural
-          clinics, or during emergency transport — nurses and paramedics
-          calculate drip rate manually by counting drops in the drip chamber.
-          The drop factor depends on the IV tubing set used.
-        </p>
-        <pre>
-          Drip Rate (drops/min) = (Total Volume × Drop Factor) ÷ Time (minutes)
-        </pre>
-
-        <h4>Worked Example</h4>
-        <p>
-          500 mL of Ringer's lactate to infuse over 4 hours using a macrodrip
-          set (15 drops/mL).
-        </p>
-        <ul className="custom-list">
-          <li>Time in minutes: 4 × 60 = 240 minutes</li>
-          <li>
-            Drip Rate = (500 × 15) ÷ 240 = <strong>31.25 drops/min</strong>
-          </li>
-        </ul>
-        <p>
-          Count approximately 31 drops per minute in the drip chamber. Adjust
-          the roller clamp until the count matches.
-        </p>
-
-        <h3>4. Dose from Vial — How Much to Draw</h3>
-        <p>
-          Medications in vials have a known concentration. Once the total mg
-          dose is established, this calculation tells you exactly how many
-          milliliters to draw with a syringe.
-        </p>
-        <pre>
-          Volume to Draw (mL) = (Required Dose ÷ Available Dose) × Vial Volume
-        </pre>
-
-        <h4>Worked Example</h4>
-        <p>
-          A patient needs 80 mg of furosemide IV. The vial contains 100 mg in 10
-          mL.
-        </p>
-        <ul className="custom-list">
-          <li>
-            Volume = (80 ÷ 100) × 10 = <strong>8 mL</strong>
-          </li>
-        </ul>
-        <p>
-          Draw 8 mL from the vial. For more complex stock calculations involving
-          tablets or oral liquids, our{" "}
-          <Link href="/dose-stock-calculator/" className="my-link">
-            dose stock calculator
-          </Link>{" "}
-          covers those scenarios.
-        </p>
-
-        <h2>IV Drop Factor Reference Table</h2>
-        <p>
-          The drop factor is printed on the IV tubing packaging, but knowing the
-          standard values saves time during clinical calculations. Here is a
-          quick reference:
-        </p>
-
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Set Type
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Drop Factor
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Typical Use
-                </th>
+              <tr>
+                <th>If the order is written as</th>
+                <th>What is missing</th>
+                <th>Mode to use</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Macrodrip
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  10 drops/mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Large-volume fluid replacement, rapid infusion
-                </td>
+                <td>&quot;1 g in 250 mL over 90 minutes&quot;</td>
+                <td>The pump rate</td>
+                <td>Infusion Rate (mL/hr)</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Macrodrip
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  15 drops/mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Standard adult IV fluid administration
-                </td>
+                <td>&quot;1000 mL NS over 8 hours, gravity set&quot;</td>
+                <td>Drops per minute</td>
+                <td>Drip Rate (gtt/min)</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Macrodrip
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  20 drops/mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Standard adult IV, some regions/manufacturers
-                </td>
+                <td>&quot;5 mg/kg IV&quot;</td>
+                <td>The total dose in mg</td>
+                <td>Body Weight Dose</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Microdrip
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  60 drops/mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Pediatric, neonatal, precise slow infusions
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>
-          Always confirm the drop factor from the tubing package before
-          calculating. Using 15 drops/mL when the actual set is 20 drops/mL
-          gives a 33% error in drip rate — enough to cause clinical harm.
-        </p>
-
-        <h2>Common Infusion Rates — Quick Reference</h2>
-        <p>
-          The table below shows infusion rates for standard fluid orders. These
-          are the calculations most frequently performed on hospital wards:
-        </p>
-
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Order
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Volume
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Time
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Rate (mL/hr)
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  NS over 4 hours
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1,000 mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  4 hrs
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  250
-                </td>
+                <td>&quot;Give 750 mg from a 1 g/10 mL vial&quot;</td>
+                <td>The volume to draw</td>
+                <td>Dose from Vial</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  NS over 8 hours
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  1,000 mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  8 hrs
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  125
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  D5W over 6 hours
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  500 mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  6 hrs
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  83
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Antibiotic piggyback
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  100 mL
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  0.5 hrs
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  200
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  KVO / keep-vein-open
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>—</td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>—</td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  10–30
-                </td>
+                <td>&quot;0.1 mcg/kg/min&quot; or &quot;0.5 mg/kg/min&quot;</td>
+                <td>Two conversions before a rate</td>
+                <td>Weight dose, then Infusion Rate</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>How This IV Calculator Fits With Other Dosing Tools</h2>
         <p>
-          In clinical practice, three tools are used in sequence before any IV
-          medication is administered:
+          The last row is the one that catches people out, and it is covered in
+          detail below. A weight-and-time order is not a rate until you have
+          folded in the concentration of the bag hanging on the pole.
+        </p>
+
+        <h2>The Pump Number: mL per Hour</h2>
+        <p>
+          An electronic pump wants one thing — millilitres per hour. If the
+          order gives you a volume and a duration, that is a single division:
+        </p>
+        <pre>Rate (mL/hr) = Volume (mL) ÷ Time (hours)</pre>
+        <p>
+          A 250 mL piggyback over 90 minutes is 250 ÷ 1.5 = 166.7 mL/hr. Most
+          pumps accept one decimal place, so this is programmed as 166.7 mL/hr
+          rather than rounded to 167. The difference is trivial over 90 minutes
+          and meaningless for an antibiotic, but the habit matters: on a
+          72-hour heparin infusion, rounding at every rate change compounds.
+        </p>
+
+        <h3>When the Order Is in mcg/kg/min</h3>
+        <p>
+          Vasoactive drugs are ordered by weight and time, not by volume. To
+          reach a pump rate you need the concentration of the prepared bag,
+          which is rarely printed on the order.
+        </p>
+        <pre>
+          Rate (mL/hr) = (Dose in mcg/kg/min × Weight in kg × 60) ÷
+          Concentration in mcg/mL
+        </pre>
+        <p>
+          Norepinephrine 4 mg in 250 mL gives 4000 mcg ÷ 250 mL = 16 mcg/mL. For
+          an 80 kg patient ordered at 0.1 mcg/kg/min:
+        </p>
+        <pre>(0.1 × 80 × 60) ÷ 16 = 480 ÷ 16 = 30 mL/hr</pre>
+        <p>
+          The 60 in the numerator is the only reason this differs from a
+          straight weight-based dose — it converts per-minute to per-hour.
+          Leaving it out produces a rate 60 times too low, which reads as
+          plausible on a pump screen and is the single most common vasopressor
+          programming error.
+        </p>
+
+        <h2>Drops per Minute When There Is No Pump</h2>
+        <p>
+          Gravity sets are still standard in field medicine, in theatres, and
+          anywhere a pump is unavailable. The drip chamber delivers a fixed
+          number of drops per millilitre, printed on the tubing packet.
+        </p>
+        <pre>
+          Drops per minute = (Volume in mL × Drop factor in gtt/mL) ÷ Time in
+          minutes
+        </pre>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Set type</th>
+                <th>Drop factor</th>
+                <th>Typical use</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Macrodrip</td>
+                <td>10 gtt/mL</td>
+                <td>Rapid volume replacement, trauma</td>
+              </tr>
+              <tr>
+                <td>Macrodrip</td>
+                <td>15 gtt/mL</td>
+                <td>General adult maintenance fluids</td>
+              </tr>
+              <tr>
+                <td>Macrodrip</td>
+                <td>20 gtt/mL</td>
+                <td>Adult maintenance, some blood sets</td>
+              </tr>
+              <tr>
+                <td>Microdrip</td>
+                <td>60 gtt/mL</td>
+                <td>Paediatrics, precise low-volume infusions</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          For 1000 mL of normal saline over 8 hours through a 15 gtt/mL set:
+          (1000 × 15) ÷ 480 minutes = 31.25, counted as 31 drops per minute.
+        </p>
+        <p>
+          Two practical points that the formula does not capture. First, count
+          for a full 60 seconds rather than counting 15 seconds and multiplying
+          by four — a one-drop miscount in a 15-second window becomes a
+          four-drop error per minute, roughly 13% off on this example. Second,
+          gravity rates drift as the bag empties and the pressure head falls, so
+          a set checked once at the start will run slower by the end. Recount at
+          every round.
+        </p>
+        <p>
+          With a microdrip set at 60 gtt/mL, the drop rate and the hourly rate
+          are numerically identical: 50 mL/hr is 50 gtt/min. This is why 60
+          gtt/mL sets are standard in paediatrics — it removes a conversion step
+          from the population where errors are least forgiving.
+        </p>
+
+        <h2>IVIG and SCIg: When the Rate Changes Every Thirty Minutes</h2>
+        <p>
+          Immunoglobulin is the reason most people searching for an infusion
+          rate calculator do not find what they need. IVIG is not administered
+          at one rate. It is started low, held, and stepped up at intervals,
+          because the adverse effects associated with it — headache, chills,
+          flushing, rigors, and less commonly thrombotic or renal events — track
+          with the rate of delivery rather than the total dose. A calculator that
+          returns a single mL/hr figure cannot describe that order.
+        </p>
+        <p>
+          There are three separate numbers to work out, in this sequence.
+        </p>
+
+        <h3>1. The Grams, From Body Weight</h3>
+        <p>
+          Immunoglobulin is dosed in grams per kilogram, not milligrams.
+          Replacement dosing in primary immunodeficiency sits in a different
+          range from immunomodulatory courses, which are prescribed as a larger
+          total and usually divided across consecutive days. Take both the
+          figure and the schedule from the prescription and the product label
+          rather than from any general reference, including this one.
+        </p>
+        <pre>Total dose (g) = Weight (kg) × Prescribed dose (g/kg)</pre>
+        <p>A 70 kg patient prescribed 0.4 g/kg needs 28 g.</p>
+
+        <h3>2. The Volume, From Product Concentration</h3>
+        <p>
+          Immunoglobulin products are supplied at different strengths, and the
+          strength decides the volume — which in turn decides how long the
+          patient sits in the chair. A 10% product is 100 mg/mL; a 5% product is
+          50 mg/mL and therefore double the volume for the same number of grams.
+        </p>
+        <pre>Volume (mL) = Total dose (g) × 1000 ÷ Concentration (mg/mL)</pre>
+        <p>
+          That 28 g dose is 28,000 mg. At 10% it is 280 mL. At 5% it would be
+          560 mL — same drug, same dose, twice the fluid, which matters
+          considerably in a patient with cardiac or renal impairment.
+        </p>
+
+        <h3>3. The Rate at Each Step</h3>
+        <p>
+          Immunoglobulin rates are written in mg/kg/min, so converting to a pump
+          rate needs both the weight and the concentration:
+        </p>
+        <pre>
+          Rate (mL/hr) = (mg/kg/min × Weight in kg × 60) ÷ Concentration in
+          mg/mL
+        </pre>
+        <p>
+          For the same 70 kg patient on a 10% product, each step of an
+          escalating order converts as below. The mg/kg/min figures here are
+          only to show the arithmetic — every product has its own licensed
+          starting rate and its own ceiling, and those are the numbers that must
+          be used at the bedside.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Ordered rate</th>
+                <th>Pump rate (70 kg, 10%)</th>
+                <th>Volume in 30 min</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Initial 30 min</td>
+                <td>0.5 mg/kg/min</td>
+                <td>21 mL/hr</td>
+                <td>10.5 mL</td>
+              </tr>
+              <tr>
+                <td>Second 30 min</td>
+                <td>1 mg/kg/min</td>
+                <td>42 mL/hr</td>
+                <td>21 mL</td>
+              </tr>
+              <tr>
+                <td>Third 30 min</td>
+                <td>2 mg/kg/min</td>
+                <td>84 mL/hr</td>
+                <td>42 mL</td>
+              </tr>
+              <tr>
+                <td>Remainder</td>
+                <td>4 mg/kg/min</td>
+                <td>168 mL/hr</td>
+                <td>Balance of the bag</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Working Out the Chair Time</h3>
+        <p>
+          Infusion time for a stepped order is the sum of the held steps plus
+          the time needed to clear whatever volume is left at the final rate.
+          Using the table above against a 280 mL bag:
+        </p>
+        <pre>
+          Delivered in first 90 min = 10.5 + 21 + 42 = 73.5 mL{"\n"}Remaining =
+          280 − 73.5 = 206.5 mL{"\n"}At 168 mL/hr = 206.5 ÷ 168 = 1.23 hr = 74
+          min{"\n"}Total = 90 + 74 = 164 min, about 2 hours 45 minutes
+        </pre>
+        <p>
+          Estimating this from the final rate alone gives 280 ÷ 168 = 100
+          minutes, which under-books the chair by more than an hour. In an
+          outpatient day unit that is the difference between a schedule that
+          holds and one that overruns every afternoon.
+        </p>
+
+        <h3>Where SCIg Differs</h3>
+        <p>
+          Subcutaneous immunoglobulin replaces one long venous infusion with
+          smaller, more frequent doses delivered by syringe driver into
+          subcutaneous tissue, often across two or more sites at once. The
+          arithmetic changes in two ways. The dose per administration is a
+          fraction of the equivalent intravenous dose because it is given far
+          more often, and the rate ceiling is set per site by how much fluid the
+          tissue will accept rather than by systemic tolerance. Splitting a dose
+          across sites is a volume-per-site division, not a rate calculation,
+          and how many sites to use is a clinical decision made with the
+          patient.
+        </p>
+
+        <h2>Drawing From the Vial</h2>
+        <p>
+          Once the total dose in milligrams is settled, the volume to draw
+          depends only on what is in the vial:
+        </p>
+        <pre>
+          Volume to draw (mL) = (Required dose ÷ Vial dose) × Vial volume
+        </pre>
+        <p>
+          Needing 750 mg from a 1 g in 10 mL vial: (750 ÷ 1000) × 10 = 7.5 mL.
+        </p>
+        <p>
+          Powder for reconstitution introduces a trap that catches the
+          arithmetic out. Dry drug occupies space, so adding 10 mL of diluent to
+          a vial does not give 10 mL of solution — it gives 10 mL plus the
+          displacement volume of the powder. Manufacturers account for this by
+          specifying a diluent volume smaller than the final volume: a vial that
+          yields 10 mL at 100 mg/mL may call for 9.6 mL of water for injection,
+          the missing 0.4 mL being the powder itself. Adding a round 10 mL
+          because it looks tidier makes every dose drawn from that vial roughly
+          4% low. Use the reconstitution volume printed on the label, and
+          calculate concentration from the stated final volume.
+        </p>
+        <p>
+          The same displacement logic applies to oral powders and suspensions.
+          Our{" "}
+          <Link href="/dose-stock-calculator/" className="my-link">
+            dose stock calculator
+          </Link>{" "}
+          handles tablets and syrups, where stock strength is expressed per
+          tablet or per 5 mL.
+        </p>
+
+        <h2>Working Backwards From a Deadline</h2>
+        <p>
+          Sometimes the fixed point is the finish time, not the rate — a
+          pre-operative antibiotic that has to be complete before incision, or a
+          transfusion that must finish inside its hang limit.
+        </p>
+        <pre>Time (hours) = Volume (mL) ÷ Rate (mL/hr)</pre>
+        <p>
+          A 500 mL unit running at 125 mL/hr takes four hours exactly, which
+          leaves no margin at all against a four-hour limit. Any interruption — a
+          line flush, a positional occlusion alarm, a patient going to the
+          bathroom — pushes it past. Whether to build in a margin is a clinical
+          judgement, but making that judgement consciously requires knowing the
+          finishing time before you start rather than discovering it at hour
+          three.
+        </p>
+
+        <h2>Where These Calculations Actually Go Wrong</h2>
+        <p>
+          The failure modes worth memorising are specific rather than general.
         </p>
         <ul className="custom-list">
           <li>
-            <strong>
-              <Link href="/dose-calculator/" className="my-link">
-                Dose Calculator
-              </Link>
-            </strong>{" "}
-            — determines the total drug dose in mg based on the patient's body
-            weight and the prescribed mg/kg rate. This is always the first step.
+            <strong>The missing 60.</strong> Any order in mcg/kg/min or
+            mg/kg/min needs multiplying by 60 to become an hourly rate. Omit it
+            and the rate is sixty-fold low; apply it twice and it is sixty-fold
+            high. Both look like plausible pump entries.
           </li>
           <li>
-            <strong>
-              <Link href="/dose-stock-calculator/" className="my-link">
-                Dose Stock Calculator
-              </Link>
-            </strong>{" "}
-            — converts the mg dose into the volume of stock solution to draw up,
-            using the drug's concentration. Equivalent to the "Dose from Vial"
-            mode in this IV calculator.
+            <strong>Percentage read as mg/mL.</strong> A 10% solution is 100
+            mg/mL, not 10 mg/mL. This tenfold error propagates through every
+            immunoglobulin and albumin calculation that follows it.
           </li>
           <li>
-            <strong>IV Calculator (this tool)</strong> — once the volume is
-            prepared, calculates the infusion rate or drip rate for safe, timed
-            delivery.
+            <strong>Concentration taken from the vial, not the bag.</strong>{" "}
+            Once a drug has been diluted into a bag, the vial concentration is
+            irrelevant. The rate calculation uses the concentration of what is
+            actually hanging.
+          </li>
+          <li>
+            <strong>A course total entered as a single-day dose.</strong>{" "}
+            Immunomodulatory immunoglobulin courses are frequently prescribed as
+            a total to be divided across consecutive days. Infusing the whole
+            course in one sitting is a volume error and a rate error at the same
+            time.
+          </li>
+          <li>
+            <strong>Drop factor assumed rather than read.</strong> Sets from
+            different manufacturers on the same trolley can be 15 and 20 gtt/mL.
+            Running a 20 gtt/mL calculation through a 15 gtt/mL set delivers
+            about a third too fast.
+          </li>
+          <li>
+            <strong>Weight taken from the notes rather than the scale.</strong>{" "}
+            A documented weight that is months old, or one the patient
+            estimated, quietly corrupts every weight-based figure downstream of
+            it.
+          </li>
+        </ul>
+
+        <h2>Before You Press Start</h2>
+        <p>
+          A short independent check catches most of the above without slowing
+          anything down.
+        </p>
+        <ul className="custom-list">
+          <li>
+            Does the rate look like a rate? Adult maintenance fluids sit in the
+            tens to low hundreds of mL/hr. A four-digit rate on a routine
+            infusion is nearly always a decimal error.
+          </li>
+          <li>
+            Does the bag empty in a sensible time? Divide the volume by your
+            calculated rate and check the answer against the length of the
+            shift.
+          </li>
+          <li>
+            Is the concentration the one on the label in front of you, in mg/mL,
+            converted from any percentage on the packaging?
+          </li>
+          <li>
+            For anything weight-based, has the weight been measured today, and
+            in kilograms?
+          </li>
+          <li>
+            For high-risk infusions, has a second clinician worked the
+            arithmetic independently rather than confirming yours?
           </li>
         </ul>
         <p>
-          For more advanced drug modeling — including half-life, clearance, and
-          volume of distribution — see our{" "}
+          For the pharmacology behind why the rate matters as much as the dose —
+          half-life, clearance, and time to steady state — see our{" "}
           <Link href="/pharmacokinetics-calculator/" className="my-link">
             pharmacokinetics calculator
           </Link>
-          .
-        </p>
-
-        <h2>Who Uses an IV Infusion Calculator?</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Nurses and nursing students</strong> — for daily IV pump
-            programming, manual drip rate calculation, and NCLEX exam
-            preparation
-          </li>
-          <li>
-            <strong>Paramedics and EMTs</strong> — for field IV fluid
-            administration where gravity drip is the only option
-          </li>
-          <li>
-            <strong>Pharmacists</strong> — for verifying IV admixture orders and
-            confirming infusion rates before dispensing
-          </li>
-          <li>
-            <strong>Physicians and intensivists</strong> — for weight-based IV
-            dosing in ICU and critical care settings
-          </li>
-          <li>
-            <strong>Veterinarians</strong> — for computing IV fluid rates and
-            drug doses in animals. Our{" "}
-            <Link href="/dose-calculator/" className="my-link">
-              dose calculator
-            </Link>{" "}
-            handles the weight-based step for any species
-          </li>
-          <li>
-            <strong>Medical and pharmacy students</strong> — for learning IV
-            calculation formulas for exams and clinical rotations
-          </li>
-        </ul>
-
-        <h2>Common IV Calculation Errors and How to Avoid Them</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Using the wrong drop factor.</strong> Plugging in 15
-            drops/mL when the tubing set is 20 drops/mL creates a 33% error.
-            Always read the number from the tubing packaging, not from memory.
-          </li>
-          <li>
-            <strong>Confusing hours and minutes.</strong> The infusion rate
-            formula uses hours; the drip rate formula uses minutes. Entering 240
-            minutes into the infusion rate field instead of 4 hours gives a
-            result that is 60 times too low. Choose the correct calculator mode
-            for each scenario.
-          </li>
-          <li>
-            <strong>Not converting mg/lb to mg/kg.</strong> A dose rate of 5
-            mg/kg is very different from 5 mg/lb — the lb rate produces roughly
-            half the dose. Confirm which unit the prescriber intended before
-            calculating.
-          </li>
-          <li>
-            <strong>
-              Forgetting to account for displacement in reconstitution.
-            </strong>{" "}
-            When reconstituting a powdered drug with diluent, the resulting
-            volume may be slightly more than the diluent alone due to the volume
-            occupied by the powder (displacement volume). This affects the final
-            concentration and therefore the volume to draw. Check the drug
-            monograph for displacement values.
-          </li>
-          <li>
-            <strong>
-              Programming the pump in mL/hr when the order is in mcg/kg/min.
-            </strong>{" "}
-            Some IV drug orders — dopamine, dobutamine, nitroglycerin — are
-            written as micrograms per kilogram per minute, not mL/hr. These
-            require an additional conversion step before programming the pump.
-            Always confirm units.
-          </li>
-        </ul>
-
-        <h2>Why Accurate IV Calculations Are Critical</h2>
-        <p>
-          IV medication errors are among the most dangerous in clinical
-          medicine. High-alert IV drugs — potassium chloride, insulin, heparin,
-          opioids, and concentrated electrolytes — have a narrow therapeutic
-          window where even small calculation mistakes can cause serious patient
-          harm. Using a reliable IV infusion rate calculator, verifying the dose
-          with a{" "}
+          . For weight-based dosing before an IV is prepared, the{" "}
           <Link href="/dose-calculator/" className="my-link">
             dose calculator
-          </Link>
-          , and cross-checking the stock volume with a{" "}
-          <Link href="/dose-stock-calculator/" className="my-link">
-            dose stock calculator
           </Link>{" "}
-          before preparation reduces error risk at every step of the IV
-          medication process.
+          handles mg/kg and mg/lb orders, and our{" "}
+          <Link
+            href="/blog/ultimate-iv-infusion-calculator-guide/"
+            className="my-link"
+          >
+            full IV infusion guide
+          </Link>{" "}
+          works through longer scenarios end to end.
         </p>
+        <h2>IV Infusion Questions, Answered</h2>
 
-        <h2>Important Safety Notes</h2>
-        <ul className="custom-list">
-          <li>
-            This IV calculator provides a mathematical result based on the
-            values entered. It is designed to support — not replace —
-            professional clinical judgment.
-          </li>
-          <li>
-            Always verify results against the prescribing physician's orders,
-            current drug references, and your institution's protocols before
-            administration.
-          </li>
-          <li>
-            For high-alert drugs, perform an independent double-check with a
-            second clinician before programming the pump or adjusting the drip
-            rate.
-          </li>
-          <li>
-            Monitor the patient continuously during IV infusions, especially
-            during the first 15 minutes of a new medication or rate change.
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions About IV Calculations</h2>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(0)}>
-            How do you calculate IV infusion rate in mL per hour?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 0 && (
-            <p>
-              Divide the total volume to be infused (mL) by the total time in
-              hours. For example, 500 mL over 4 hours = 500 ÷ 4 = 125 mL/hr.
-              Enter these values into the Infusion Rate mode above. This is the
-              standard formula used when programming electronic infusion pumps.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(1)}>
-            What is the difference between infusion rate and drip rate?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 1 && (
-            <p>
-              Infusion rate (mL/hr) is used when programming an electronic pump
-              — it measures how many milliliters the pump delivers per hour.
-              Drip rate (drops/min) is used with gravity IV sets where you count
-              drops manually in the drip chamber. Both control fluid delivery
-              speed, but through different mechanisms. Use the Infusion Rate
-              mode for pumps and the Drip Rate mode for manual setups.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(2)}>
-            How do I calculate how much to draw from a medication vial?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 2 && (
-            <p>
-              Use the formula: Volume = (Required Dose ÷ Available Dose) × Vial
-              Volume. For example, if you need 75 mg and the vial contains 100
-              mg in 2 mL, then (75 ÷ 100) × 2 = 1.5 mL. The Dose from Vial mode
-              above does this instantly. For non-IV stock calculations (tablets,
-              oral liquids), our{" "}
-              <Link href="/dose-stock-calculator/" className="my-link">
-                dose stock calculator
-              </Link>{" "}
-              handles the same logic.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(3)}>
-            What drop factor should I use?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 3 && (
-            <p>
-              Check the IV tubing packaging. Standard macrodrip sets deliver 10,
-              15, or 20 drops/mL depending on the manufacturer. Microdrip sets
-              deliver 60 drops/mL and are used for precise, slow infusions —
-              particularly in pediatric and neonatal care. Never assume the drop
-              factor from memory; always verify from the package.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(4)}>
-            Can nursing students use this for NCLEX preparation?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 4 && (
-            <p>
-              Yes. All four calculation modes — body weight dose, infusion rate,
-              drip rate, and dose from vial — are standard competencies tested
-              on the NCLEX and other nursing licensing exams. Use this tool to
-              practice calculations and verify your manual work. Understanding
-              the underlying formulas is just as important as getting the right
-              answer.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(5)}>
-            How is an IV dose different from an oral dose?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 5 && (
-            <p>
-              An IV dose is delivered directly into the bloodstream, so 100% of
-              the drug reaches systemic circulation (100% bioavailability). Oral
-              doses pass through the gastrointestinal tract and liver first
-              (first-pass metabolism), which reduces the amount that reaches
-              circulation. Because of this, IV doses are often lower than
-              equivalent oral doses. Use our{" "}
-              <Link href="/dose-calculator/" className="my-link">
-                dose calculator
-              </Link>{" "}
-              for standard weight-based oral or injectable dosing.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(6)}>
-            What does "KVO" or "keep vein open" mean?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 6 && (
-            <p>
-              KVO (keep vein open) is a very slow IV infusion rate — usually 10
-              to 30 mL/hr — used to maintain venous access without delivering a
-              significant fluid volume. It keeps the IV line patent and ready
-              for medication administration when needed. KVO is commonly ordered
-              between scheduled IV medications or when the primary infusion has
-              completed but IV access must be preserved.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(7)}>
-            How do I convert mcg/kg/min to mL/hr for an IV pump?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 7 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 7 && (
-            <p>
-              This requires a multi-step conversion. First, calculate the total
-              dose per minute: patient weight (kg) × dose rate (mcg/kg/min).
-              Then convert to mg/min by dividing by 1,000. Then convert to mg/hr
-              by multiplying by 60. Finally, divide by the drug concentration
-              (mg/mL) to get mL/hr. For example, a 70 kg patient on dopamine at
-              5 mcg/kg/min with a concentration of 1.6 mg/mL: (70 × 5) = 350
-              mcg/min → 0.35 mg/min → 21 mg/hr → 21 ÷ 1.6 = 13.1 mL/hr.
-            </p>
-          )}
-        </div>
-
-        <div className="faq-item">
-          <h3 onClick={() => toggleFAQ(8)}>
-            Can this IV calculator be used for veterinary patients?
-            <i
-              className={`fa-solid fa-chevron-down ${openFAQ === 8 ? "rotate" : ""}`}
-            ></i>
-          </h3>
-          {openFAQ === 8 && (
-            <p>
-              Yes. The formulas for IV infusion rate, drip rate, and
-              weight-based dosing are identical for animals and humans. The Body
-              Weight Dose mode supports both mg/kg and mg/lb. Always use
-              species-specific drug references to confirm dose rates, as these
-              can differ significantly from human protocols.
-            </p>
-          )}
-        </div>
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        <ReviewedBy medical />
       </div>
 
       {/* ---- SIDEBAR ---- */}

@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import DNSLookup from "../components/DNSLookup";
 
 export const metadata: Metadata = {
-  title: "Free DNS Lookup Tool | Check A, MX, TXT, NS, CNAME & More",
+  title: "DNS Lookup — A, MX, TXT, NS and CNAME",
   description:
-    "Instantly look up DNS records for any domain — A, AAAA, MX, TXT, NS, CNAME, SOA, CAA. Free, no sign-up, queries Google's public DNS resolver directly.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Look up DNS records for any domain, and understand what TTL, caching and each record type mean — including why your change has not appeared yet.",
   alternates: {
-    canonical: "https://numbersonyourtip/dns-lookup/",
+    canonical: "/dns-lookup/",
+  },
+  openGraph: {
+    title: "DNS Lookup — A, MX, TXT, NS and CNAME",
+    description:
+      "Every record type answers a different question. Plus why nothing actually propagates.",
+    url: "/dns-lookup/",
+    type: "article",
+  },
+  twitter: {
+    title: "DNS Lookup — A, MX, TXT, NS and CNAME",
+    description:
+      "DNS records for any domain, with TTL, caching and mail authentication explained.",
   },
 };
 

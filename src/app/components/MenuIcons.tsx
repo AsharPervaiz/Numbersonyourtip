@@ -572,13 +572,11 @@ export const Icons = {
       height="22"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#101010"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <title>arrow autofit up</title>
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 4h-6a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h8" />
       <path d="M18 20v-17" />
       <path d="M15 6l3 -3l3 3" />
@@ -587,17 +585,15 @@ export const Icons = {
   Freelancer: () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="256"
-      height="256"
+      width="22"
+      height="22"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#101010"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <title>receipt 2</title>
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
       <path d="M14 8h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5m2 0v1.5m0 -9v1.5" />
     </svg>
@@ -606,12 +602,28 @@ export const Icons = {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 256 256"
-      fill="#101010"
-      width="256"
-      height="256"
+      fill="currentColor"
+      width="22"
+      height="22"
     >
-      <title>arrows out line horizontal</title>
       <path d="M136,40V216a8,8,0,0,1-16,0V40a8,8,0,0,1,16,0ZM96,120H35.31l18.35-18.34A8,8,0,0,0,42.34,90.34l-32,32a8,8,0,0,0,0,11.32l32,32a8,8,0,0,0,11.32-11.32L35.31,136H96a8,8,0,0,0,0-16Zm149.66,2.34-32-32a8,8,0,0,0-11.32,11.32L220.69,120H160a8,8,0,0,0,0,16h60.69l-18.35,18.34a8,8,0,0,0,11.32,11.32l32-32A8,8,0,0,0,245.66,122.34Z" />
+    </svg>
+  ),
+  Gold: () => (
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="8" cy="8" r="6" />
+      <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
+      <path d="M7 6h1v4" />
+      <path d="m16.71 13.88.7.71-2.82 2.82" />
     </svg>
   ),
   Fuel: () => (
@@ -761,6 +773,73 @@ export const Icons = {
       <line x1="2" y1="12" x2="22" y2="12" />
       <line x1="12" y1="2" x2="12" y2="4" />
       <line x1="12" y1="20" x2="12" y2="22" />
+    </svg>
+  ),
+  Search: () => (
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  ),
+  Keyboard: () => (
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="6" width="20" height="12" rx="2" />
+      <line x1="6" y1="10" x2="6" y2="10.01" />
+      <line x1="10" y1="10" x2="10" y2="10.01" />
+      <line x1="14" y1="10" x2="14" y2="10.01" />
+      <line x1="18" y1="10" x2="18" y2="10.01" />
+      <line x1="6" y1="14" x2="18" y2="14" />
+    </svg>
+  ),
+  CheckCircle: () => (
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="8 12 11 15 16 9" />
+    </svg>
+  ),
+  Speed: () => (
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 21a9 9 0 1 0 -9 -9" />
+      <path d="M12 12l4 -4" />
+      <path d="M12 3v1" />
+      <path d="M3 12h1" />
+      <path d="M5.6 5.6l.7 .7" />
     </svg>
   ),
   Domainname: () => (

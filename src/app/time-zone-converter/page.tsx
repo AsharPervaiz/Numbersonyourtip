@@ -1,17 +1,27 @@
 import { Metadata } from "next";
-import TimezoneTool from "../components/TimeZone";
+import TimeZone from "../components/TimeZone";
 
 export const metadata: Metadata = {
-  title:
-    "Free Time Zone Converter & World Clock | Convert EST, PST, IST, PKT & 80+ Cities",
+  title: "Time Zone Converter & World Clock",
   description:
-    "Free time zone converter with DST support — convert PKT to EST, IST to PST, GMT to IST, and 80+ cities instantly. Live world clock with analog clocks, 12/24h toggle, and abbreviation reference.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Convert times between cities worldwide, and avoid the four assumptions that break cross-zone scheduling — fixed offsets, whole hours, and ambiguous abbreviations.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/time-zone-converter/",
+    canonical: "/time-zone-converter/",
+  },
+  openGraph: {
+    title: "Time Zone Converter & World Clock",
+    description:
+      "Why recurring meetings drift by an hour, and why CST can mean three different zones.",
+    url: "/time-zone-converter/",
+    type: "article",
+  },
+  twitter: {
+    title: "Time Zone Converter & World Clock",
+    description:
+      "Convert times between cities, with the scheduling traps that catch people out.",
   },
 };
 
 export default function Page() {
-  return <TimezoneTool />;
+  return <TimeZone />;
 }

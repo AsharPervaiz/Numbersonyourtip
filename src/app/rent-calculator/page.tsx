@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import RentCalculator from "../components/RentCalculator";
 
 export const metadata: Metadata = {
-  title: "Rent Calculator | How Much Rent Can You Afford? Free Online Tool",
+  title: "Rent Affordability Calculator",
   description:
-    "Use our free rent calculator online to find out how much rent you can afford based on your income and debts. Get a personalized affordable rent range instantly.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Work out the rent you can afford from take-home pay, check what landlords require, and split rent fairly with housemates by room size or income.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/rent-calculator/",
+    canonical: "/rent-calculator/",
+  },
+  openGraph: {
+    title: "Rent Affordability Calculator",
+    description:
+      "What you can afford, what a landlord will accept, and why those two numbers are not the same.",
+    url: "/rent-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Rent Affordability Calculator",
+    description:
+      "Rent you can afford from net pay, landlord income multiples, and fair housemate splits.",
   },
 };
 

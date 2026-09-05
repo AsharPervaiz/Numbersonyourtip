@@ -3,6 +3,46 @@ import React, { useState, useRef } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import Link from "next/link";
+
+const FAQ_DATA: [string, string][] = [
+  [
+    "Can I enlarge an image without losing quality?",
+    "Not really. Reducing an image discards pixels, which is straightforward, but enlarging has to invent pixels that were never captured. Interpolation estimates each new one from its neighbours, producing a larger and softer image rather than a more detailed one. A 400-pixel image scaled to 1600 holds exactly as much real information spread over sixteen times the area.",
+  ],
+  [
+    "How do I resize without squashing the image?",
+    "Keep the aspect ratio locked so both dimensions change together. Manually, the new height is the original height multiplied by the new width divided by the original width — so 1600 × 1200 resized to 800 wide needs a height of 600. When an image must fit a different shape, crop it rather than stretching, since cropping keeps what remains correct.",
+  ],
+  [
+    "What size should my images be for a website?",
+    "Roughly twice the width they will display at, which covers high-density screens without wasting data. That means about 1920–2400 pixels for a full-width banner, 1200–1600 for a main content image, 600–800 for a card, and 200–400 for an avatar. Anything much larger is downloaded and then discarded by the browser.",
+  ],
+  [
+    "Does changing DPI make my image better on screen?",
+    "No. DPI describes how densely pixels are placed when printed and has no effect on screen display. A 1200-pixel-wide image is 1200 pixels wide whether its metadata says 72 or 300. Changing that number alters nothing on a website, and it is the single most common piece of wasted effort in image preparation.",
+  ],
+  [
+    "What does a 300 DPI image actually mean for print?",
+    "It is a request for enough pixels rather than for a metadata value. At 300 DPI, a photo printed six inches wide needs 1800 pixels across. Work out the printed size in inches, multiply by 300, and that is the pixel count you need. The DPI field itself is just the unit the requirement was expressed in.",
+  ],
+  [
+    "Why is my image still a large file after resizing?",
+    "Resizing reduces the pixel count, which usually reduces file size substantially, but format and compression also matter. A resized photograph saved as PNG can still be very large, because lossless compression suits graphics rather than photos. Choose the format next, then compress if it remains bigger than you want.",
+  ],
+  [
+    "Should I resize or compress to fix a slow page?",
+    "Resize first. The most common cause is an image containing far more pixels than are ever displayed — a 4000-pixel phone photo used as a 600-pixel thumbnail wastes most of its size before anything is drawn. Compressing a hugely oversized image produces a file that is both large and visibly degraded.",
+  ],
+  [
+    "Does resizing change how big the image looks on my page?",
+    "Not directly. An image displays at whatever size the layout gives it, and the browser scales the pixels to fit. Making the file larger does not make the picture appear bigger — it only means more data is downloaded and then thrown away. Display size is controlled by the page, not by the file.",
+  ],
+  [
+    "Are my images uploaded when I resize them?",
+    "No. Resizing runs in your browser and the file never leaves your device. Work on a copy rather than your only original, though — resizing is destructive, and the discarded pixels cannot be recovered from the smaller version afterwards.",
+  ],
+];
 
 export default function ImageResizer() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -141,6 +181,20 @@ export default function ImageResizer() {
       `}</style>
 
       <div className="single-page-padding">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: FAQ_DATA.map(([q, a]) => ({
+                "@type": "Question",
+                name: q,
+                acceptedAnswer: { "@type": "Answer", text: a },
+              })),
+            }),
+          }}
+        />
         <h1>
           Free Online Image Resizer &amp; Crop Tool – Resize Images to Exact
           Pixels
@@ -339,403 +393,216 @@ export default function ImageResizer() {
 
         {/* ===== SEO CONTENT ===== */}
 
+        <h2>Pixels, File Size and Display Size Are Three Different Numbers</h2>
+        <p>
+          Almost every confusion about image sizing comes from treating these as
+          one thing.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Means</th>
+                <th>Changed by</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pixel dimensions</td>
+                <td>How much detail the image contains</td>
+                <td>Resizing</td>
+              </tr>
+              <tr>
+                <td>File size</td>
+                <td>How many bytes it occupies</td>
+                <td>Resizing, compression and format together</td>
+              </tr>
+              <tr>
+                <td>Display size</td>
+                <td>How large it appears on screen or paper</td>
+                <td>The page layout, not the file</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The third is the one people expect the file to control and it does
+          not. An image displays at whatever size the layout gives it, and the
+          browser scales the pixels to fit. Making the file bigger does not make
+          the picture appear larger; it only means more data is downloaded and
+          then discarded.
+        </p>
+
+        <h2>Enlarging Cannot Add Detail</h2>
+        <p>
+          Reducing an image discards pixels, which is straightforward. Enlarging
+          it has to invent pixels that were never captured, and there is no way
+          to invent the right ones.
+        </p>
+        <p>
+          Interpolation estimates each new pixel from its neighbours, which
+          produces a larger image that is softer than the original rather than a
+          more detailed one. A 400-pixel image scaled to 1600 pixels contains
+          exactly as much real information as it did before, spread across
+          sixteen times the area.
+        </p>
+        <p>
+          The practical rule is to always start from the largest version you
+          have. If the only file available is small, enlarging it is a
+          compromise rather than a fix, and modest enlargement — up to perhaps
+          150% — survives better than dramatic scaling.
+        </p>
+
+        <h2>Aspect Ratio, and Why Images Get Squashed</h2>
+        <p>
+          Aspect ratio is the relationship between width and height. Change one
+          without the other and the image distorts — faces widen, circles become
+          ovals, and text stretches.
+        </p>
+        <pre>
+          New height = Original height × (New width ÷ Original width)
+        </pre>
+        <p>
+          A 1600 × 1200 image resized to 800 wide needs a height of 1200 × (800 ÷
+          1600) = 600. Keeping the ratio locked handles this automatically, and
+          it should be the default.
+        </p>
+        <p>
+          When an image genuinely has to fit a different shape — a square avatar
+          from a landscape photo — crop rather than stretch. Cropping removes
+          part of the picture and keeps the rest correct. Stretching keeps
+          everything and makes all of it wrong, which is far more noticeable.
+        </p>
+
+        <h2>What Size Does an Image Actually Need to Be?</h2>
+        <p>
+          The useful rule for screens is roughly twice the display width, which
+          covers high-density displays without wasting data.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Use</th>
+                <th>Sensible width</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Full-width banner</td>
+                <td>Around 1920–2400 pixels</td>
+              </tr>
+              <tr>
+                <td>Main content image</td>
+                <td>Around 1200–1600 pixels</td>
+              </tr>
+              <tr>
+                <td>Card or thumbnail</td>
+                <td>Around 600–800 pixels</td>
+              </tr>
+              <tr>
+                <td>Avatar or icon</td>
+                <td>Around 200–400 pixels</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Anything substantially above these is downloaded and thrown away. A
+          phone photograph at 4000 pixels used as a 600-pixel thumbnail wastes
+          most of its file size before a single pixel is drawn.
+        </p>
+
+        <h2>DPI Does Not Affect Screen Images</h2>
+        <p>
+          This causes more wasted effort than any other sizing misconception. DPI
+          — or PPI — describes how densely pixels are placed when an image is
+          printed. It has no effect on how an image appears on a screen.
+        </p>
+        <p>
+          A 1200-pixel-wide image is 1200 pixels wide whether its metadata says
+          72 DPI or 300 DPI. Changing that number alters nothing visible on a
+          website. Being asked for a &quot;300 DPI image&quot; for print is
+          really a request for enough pixels: at 300 DPI, a photo printed 6
+          inches wide needs 1800 pixels. The pixel count is the real requirement
+          and DPI is just the unit it was expressed in.
+        </p>
+
+        <h2>Working Order</h2>
+        <ul className="custom-list">
+          <li>
+            Start from the largest original you have, and keep it. Resizing is
+            destructive, so work on a copy.
+          </li>
+          <li>
+            Resize to about twice the intended display width, with the aspect
+            ratio locked.
+          </li>
+          <li>
+            Choose the format next — photographic or graphic decides it, and the{" "}
+            <Link href="/image-converter/" className="my-link">
+              image converter
+            </Link>{" "}
+            covers the trade-offs.
+          </li>
+          <li>
+            Compress last, if the file is still larger than you want, using the{" "}
+            <Link href="/image-compressor/" className="my-link">
+              image compressor
+            </Link>
+            .
+          </li>
+          <li>
+            Check the result at its real display size rather than zoomed in.
+          </li>
+        </ul>
+        <p>
+          Resizing here happens in your browser, so images are never uploaded and
+          nothing leaves your device.
+        </p>
         <section>
-          <h2>What Is an Online Image Resizer and Crop Tool?</h2>
-          <p>
-            An online image resizer and crop tool lets you change the dimensions
-            of an image, trim it to a specific area, or prepare it for a
-            particular platform — all without installing any software. You
-            upload an image, drag a selection box over the area you want to
-            keep, set your exact pixel dimensions, and download the result in
-            seconds.
-          </p>
-          <p>
-            This kind of tool is used by web designers preparing hero images,
-            bloggers resizing photos for posts, social media managers creating
-            platform-specific thumbnails, photographers delivering client-ready
-            crops, and anyone who's ever tried to upload a photo only to be told
-            it's the wrong size. Our resizer handles all of it, directly in your
-            browser, without your image ever leaving your device.
-          </p>
-        </section>
+          <h2>Image Resizing Questions</h2>
 
-        <section>
-          <h2>How to Resize and Crop an Image Online — Step by Step</h2>
-          <p>
-            Using our tool takes under a minute from upload to download. Here's
-            exactly how it works:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <b>Step 1:</b> Click "Upload Image" and select your photo.
-            </li>
-            <li>
-              <b>Step 2:</b> Enter your desired Width and Height in the Crop
-              Size inputs on the right panel.
-            </li>
-            <li>
-              <b>Step 3:</b> Drag the crop box on the image to select the exact
-              area you want to keep.
-            </li>
-            <li>
-              <b>Step 4:</b> Fine-tune the X and Y position inputs if you need
-              the crop to start at a specific pixel offset.
-            </li>
-            <li>
-              <b>Step 5:</b> Click "Crop &amp; Save." The image is processed in
-              your browser and ready to download as a lossless PNG immediately.
-            </li>
-          </ul>
-          <p>
-            No account, no watermark, no file uploaded to any server. The entire
-            operation happens locally on your device.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Crop an Image to Exact Pixel Dimensions</h2>
-          <p>
-            Most online crop tools let you drag a selection and download
-            whatever size that produces. That's fine for casual use, but it
-            doesn't give you precise control. Our tool lets you specify the
-            exact pixel dimensions you need in the Width and Height fields — the
-            crop selection updates to match, and the output file is exactly that
-            size.
-          </p>
-          <p>
-            This is particularly useful when you have a strict pixel requirement
-            — for example, a product image that must be exactly 800 × 800 pixels
-            for an e-commerce platform, or a banner that must be exactly 728 ×
-            90 pixels for an ad network. Enter the dimensions, position the crop
-            box over the right part of your image, and the output will be
-            precisely what you specified.
-          </p>
-          <p>
-            The Selection value in the Output section updates after each
-            completed drag, so you can always confirm the exact dimensions of
-            your selection before clicking Crop &amp; Save.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Resize Images for a Website Without Losing Quality</h2>
-          <p>
-            Oversized images are one of the most common causes of slow websites.
-            A photo taken on a modern smartphone or camera is often 4000–6000
-            pixels wide and several megabytes in size. If your website only
-            displays it at 800 pixels wide, you're making visitors download
-            5–10x more data than necessary.
-          </p>
-          <p>
-            Cropping and resizing your images to the actual display size before
-            uploading has a direct, measurable impact on your site's loading
-            speed:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <b>Blog post images:</b> Resize to 1200 px wide. Most blog layouts
-              display images at 700–900 px, so 1200 px gives you a sharp result
-              on retina screens without excess file size.
-            </li>
-            <li>
-              <b>Hero / banner images:</b> Crop and resize to your exact banner
-              dimensions — upload the exact size rather than letting the browser
-              scale down a 4 MB photo.
-            </li>
-            <li>
-              <b>Product images:</b> Square crops work best for product grids.
-              Set W and H to the same value (e.g. 800 × 800), position the crop
-              over your product, and save.
-            </li>
-            <li>
-              <b>Thumbnails:</b> Crop to a consistent aspect ratio first, then
-              scale down. Consistent thumbnails look professional in grids and
-              lists.
-            </li>
-          </ul>
-          <p>
-            After resizing, run your image through an image compressor for
-            maximum efficiency. A 1200 px PNG resized from a 4000 px original,
-            then compressed to WebP, can be 10–20x smaller than the original
-            with no visible quality difference on screen.
-          </p>
-        </section>
-
-        <section>
-          <h2>Cropping vs Resizing — What's the Difference?</h2>
-
-          <h3>Cropping</h3>
-          <p>
-            Cropping removes portions of an image. You select a rectangular area
-            to keep and discard everything outside it. The pixel density of the
-            remaining area stays the same as the original. Cropping changes the
-            composition and aspect ratio — it's the right tool when you want to
-            remove background, reframe a subject, or produce a specific ratio
-            like 1:1 for Instagram.
-          </p>
-
-          <h3>Resizing</h3>
-          <p>
-            Resizing scales the entire image to different pixel dimensions. The
-            composition stays the same — you're just making the whole thing
-            bigger or smaller. It's the right tool when you need an image at a
-            specific pixel size for a platform or want to reduce file size.
-          </p>
-
-          <h3>Using Both Together</h3>
-          <p>
-            Most professional workflows use both in sequence: first crop to the
-            right composition and aspect ratio, then resize to the target pixel
-            dimensions. Our tool handles both steps — drag the crop box to
-            select the area, specify exact pixel dimensions in the inputs, and
-            the output is produced at precisely those dimensions.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Resize Images for Social Media</h2>
-          <p>
-            Every social media platform has its own image size requirements.
-            Getting them wrong results in blurry images, awkward automatic
-            crops, or black bars. Here are the most common sizes — enter any of
-            these directly into the W and H inputs:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <b>Instagram Feed Post:</b> 1080 × 1080 px (square), 1080 × 566 px
-              (landscape), 1080 × 1350 px (portrait).
-            </li>
-            <li>
-              <b>Instagram Story / Reel:</b> 1080 × 1920 px (9:16 vertical).
-            </li>
-            <li>
-              <b>Facebook Feed Post:</b> 1200 × 630 px. Cover photo: 820 × 312
-              px.
-            </li>
-            <li>
-              <b>Twitter / X:</b> 1200 × 675 px in-feed. Profile photo: 400 ×
-              400 px.
-            </li>
-            <li>
-              <b>LinkedIn Post:</b> 1200 × 627 px. Profile banner: 1584 × 396
-              px.
-            </li>
-            <li>
-              <b>YouTube Thumbnail:</b> 1280 × 720 px (16:9).
-            </li>
-            <li>
-              <b>TikTok:</b> 1080 × 1920 px.
-            </li>
-            <li>
-              <b>Pinterest:</b> 1000 × 1500 px (2:3 ratio).
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Why Our Resizer Processes Images in the Browser</h2>
-          <p>
-            Most online image tools upload your file to a remote server, resize
-            it there, and send it back. That means your photos travel across the
-            internet and pass through infrastructure you don't control.
-          </p>
-          <p>
-            Our tool handles everything locally using the HTML5 Canvas API. When
-            you click Crop &amp; Save, the entire operation happens in your
-            browser tab — your image never leaves your device. There are no file
-            size limits, no daily usage caps, no account requirements, and it
-            works even with a slow connection once the page has loaded.
-          </p>
-        </section>
-
-        <section>
-          <h2>Common Image Resizing Use Cases</h2>
-
-          <h3>E-commerce Product Images</h3>
-          <p>
-            Marketplaces like Amazon, Etsy, and Shopify require product images
-            at specific dimensions. Amazon's main image must be at least 1000 ×
-            1000 px for zoom functionality, with the product occupying at least
-            85% of the frame. Our crop tool lets you precisely frame your
-            product and export at exactly the required dimensions.
-          </p>
-
-          <h3>Blog Featured Images</h3>
-          <p>
-            Most CMS themes display featured images at a specific aspect ratio —
-            often 16:9, 4:3, or 3:2. If you upload a mismatched ratio, the theme
-            crops it automatically and often cuts off important parts.
-            Pre-cropping to your theme's exact ratio prevents this.
-          </p>
-
-          <h3>Email Marketing Headers</h3>
-          <p>
-            Email templates typically display headers at a fixed width of 600
-            px. Resizing your image to exactly 600 px wide before inserting
-            ensures it renders correctly across all email clients — no
-            unexpected scaling, no overflow.
-          </p>
-
-          <h3>Presentation Slides</h3>
-          <p>
-            Standard slides are 16:9 — 1920 × 1080 px for HD or 1280 × 720 px
-            for standard. Set those dimensions, position the crop over the most
-            visually interesting part of your image, and the result fills any
-            widescreen slide perfectly without distortion or black bars.
-          </p>
-        </section>
-
-        <section>
-          <h2>Frequently Asked Questions – Free Online Image Resizer</h2>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(0)}>
-              Is this image resizer free to use?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 0 && (
-              <p>
-                Yes, completely free. No hidden costs, account requirements,
-                daily limits, or watermarks.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(1)}>
-              Is my image uploaded to a server?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 1 && (
-              <p>
-                No. All processing happens locally in your browser using the
-                HTML5 Canvas API. Your image never leaves your device and is
-                never sent to any server.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(2)}>
-              Will resizing or cropping reduce my image quality?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 2 && (
-              <p>
-                Cropping doesn't reduce quality — it just removes parts of the
-                image while keeping the remaining pixels exactly as they are.
-                The output is saved as PNG, a lossless format, so no compression
-                artifacts are introduced.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(3)}>
-              Can I set exact pixel dimensions for the output?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 3 && (
-              <p>
-                Yes. Use the Width and Height inputs to type in exact pixel
-                dimensions. The output file will be precisely that size.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(4)}>
-              What image formats can I upload?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 4 && (
-              <p>
-                You can upload any format your browser supports — JPG, PNG,
-                WebP, GIF, AVIF, and HEIC on compatible browsers. The output is
-                always PNG, a lossless high-quality format suitable for further
-                editing or uploading.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(5)}>
-              Does this tool work on mobile?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 5 && (
-              <p>
-                Yes. The tool works on iPhone, iPad, and Android devices. The
-                crop interface is touch-responsive — you can drag the crop box
-                with your finger. The layout stacks vertically on smaller
-                screens.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(6)}>
-              What are the X and Y position inputs for?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 6 && (
-              <p>
-                X sets how far from the left edge the crop starts. Y sets how
-                far from the top. These inputs let you position the crop at a
-                precise pixel offset — more accurate than dragging when you need
-                the crop to start at a very specific position.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(7)}>
-              What's the difference between cropping and resizing?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 7 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 7 && (
-              <p>
-                Cropping removes portions of an image — you select what to keep
-                and discard the rest. Resizing scales the entire image to
-                different pixel dimensions without changing the composition. Our
-                tool combines both in one pass.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(8)}>
-              Is there a file size limit?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 8 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 8 && (
-              <p>
-                Because everything is processed in your browser, there's no
-                externally imposed file size limit. Very large images may take a
-                moment longer depending on your device's speed, but the tool
-                handles them. Most photos and graphics process in under two
-                seconds.
-              </p>
-            )}
-          </div>
+          {FAQ_DATA.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleFAQ(i);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </section>
 
         <section>

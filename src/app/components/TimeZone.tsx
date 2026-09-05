@@ -1053,40 +1053,40 @@ function AbbrConverter({
 
 const FAQ_DATA = [
   {
-    q: "Does this tool account for daylight saving time?",
-    a: "Yes. The tool uses the browser's built-in Intl.DateTimeFormat API with full IANA timezone data, which automatically applies DST rules based on the exact date you enter. This makes it a reliable time zone converter with DST — conversions are accurate for any date, past or future.",
+    q: "Why did my recurring meeting shift by an hour?",
+    a: "One location changed its clocks and the other did not, or they changed on different dates. A call agreed as 15:00 in one city and 10:00 in another stays correct only while the gap between them holds — and that gap moves when either place starts or ends daylight saving. Agree the meeting in one anchor location and let everyone convert, rather than fixing two local times as if they were permanently linked.",
   },
   {
-    q: "How do I convert PKT to EST?",
-    a: "Select Karachi (PKT, UTC+05:00) as your source city, add New York (EST/EDT, UTC−05:00 or UTC−04:00) as a destination, and enter your time. PKT is 10 hours ahead of EST in winter and 9 hours ahead during EDT (summer). The tool handles this automatically.",
+    q: "Is the time difference between two cities always the same?",
+    a: "No. It changes during the year depending on whether each place observes daylight saving and when it switches. Two cities normally five hours apart can be four or six for a few weeks. Northern and Southern hemisphere locations shift in opposite directions, so a European and an Australian city can move by two hours rather than one.",
   },
   {
-    q: "How do I convert IST to PST?",
-    a: "Select Mumbai or Delhi (IST, UTC+05:30) as source and add Los Angeles (PST/PDT, UTC−08:00 or UTC−07:00) as destination. IST is 13.5 hours ahead of PST in winter and 12.5 hours ahead during PDT. Enter your time and see the conversion instantly.",
+    q: "Are all time zones a whole number of hours from UTC?",
+    a: "No. Half-hour offsets are used across South Asia, parts of Australia and Newfoundland, so a time on the hour in one place lands on the half hour in the other. Forty-five-minute offsets exist in Nepal and the Chatham Islands. The total spread across the world also exceeds 24 hours, which is why three calendar dates can be in use at once.",
   },
   {
-    q: "What is the difference between 12-hour and 24-hour format?",
-    a: "12-hour format uses AM/PM (e.g. 3:00 PM), while 24-hour format runs 00:00 to 23:59 (e.g. 15:00). Use the 12h/24h toggle at the top to switch. The 24-hour format avoids AM/PM ambiguity and is standard in military, aviation, and most countries outside the US.",
+    q: "What does CST actually mean?",
+    a: "It depends who wrote it. CST is used for Central Standard Time in North America, China Standard Time and Cuba Standard Time — readings that can be thirteen hours apart. IST covers India, Ireland and Israel; BST covers Britain and Bangladesh. Abbreviations are not standardised, so name the city or give the UTC offset when it matters.",
   },
   {
-    q: "How many time zones are there in the world?",
-    a: "There are 24 standard UTC-offset time zones, but in practice over 38 are in use because several countries and territories use half-hour or quarter-hour offsets (like India at UTC+05:30, Nepal at UTC+05:45, and parts of Australia at UTC+09:30). This tool covers 80+ cities across all of them.",
+    q: "Should I write EST or EDT?",
+    a: "They are different offsets an hour apart, so it depends on the date. EST is standard time and EDT is the summer offset, which means writing EST in July is technically wrong and usually indicates the writer meant current local time. Naming the city sidesteps the distinction entirely, since the reader's software knows which applies on that date.",
   },
   {
-    q: "How do time zones work?",
-    a: "The Earth is divided into zones based on longitude, each roughly 15 degrees apart (360° ÷ 24 hours). Each zone is expressed as an offset from UTC (Coordinated Universal Time). Moving east adds hours, moving west subtracts them. Many countries also observe daylight saving time, shifting their clocks forward by one hour in summer.",
+    q: "Does everyone in one country share the same time?",
+    a: "Not necessarily, and the exceptions run both ways. Some countries span several zones and split accordingly, so saying you are in the US or Australia narrows the answer only to a range of several hours. Others cover a wide longitudinal range and use a single official time as a matter of policy, which means the sun rises at very different clock times across them.",
   },
   {
-    q: "What time zone am I in right now?",
-    a: "Your browser automatically detects your local time zone. The live clock at the top of the World Clock tab shows your current UTC time, and the converter defaults to your browser's timezone. Check the UTC offset displayed next to any city to compare it with your own.",
+    q: "How do I write a time so nobody misreads it?",
+    a: "Use the 24-hour clock to avoid the AM and PM confusion around midnight and midday, name the city rather than an abbreviation, and include the date. Thursday 14:00 in London is unambiguous to anyone. 2pm BST requires the reader to know which BST you mean and whether summer time applies on that date.",
   },
   {
-    q: "Can I use this to find the best time to call between two countries?",
-    a: "Yes. Add both cities to the converter and look for times that fall between 9 AM and 6 PM in both locations. The day/night sun and moon icons on each converted time help you quickly see whether the time is during waking hours.",
+    q: "Why does a meeting land on a different day for some people?",
+    a: "Because the spread of world time zones is greater than 24 hours, so a single instant falls on different calendar dates in different places. A Friday afternoon call in one city can be Saturday morning in another. Always check the date alongside the hour when scheduling across a wide spread, since no amount of goodwill fixes a weekend.",
   },
   {
-    q: "Is this time zone converter free?",
-    a: "Yes — completely free, no sign-up, no limits. Convert between any combination of 80+ cities, switch between 12h and 24h format, and use the abbreviation reference to look up any timezone code.",
+    q: "What is the best way to schedule across many time zones?",
+    a: "Collect each participant's acceptable window in their own local time, convert them all into one reference zone, and look for the overlap. Where none exists, rotate the inconvenience between meetings rather than permanently assigning it to whoever is furthest away. Send calendar invitations rather than written times, since a calendar entry carries the underlying instant and converts itself.",
   },
 ];
 
@@ -1255,7 +1255,7 @@ export default function TimezoneTool() {
         />
 
         <h1>
-          Time Zone Converter &amp; World Clock — EST, PST, IST, PKT &amp; 80+
+          Time Zone Converter and World Clock — 80+
           Cities
         </h1>
         <p>
@@ -1693,243 +1693,262 @@ export default function TimezoneTool() {
 
         {/* ── SEO Content ── */}
 
-        <h2>What Is a Time Zone Converter?</h2>
+        <h2>Why Scheduling Across Zones Goes Wrong</h2>
         <p>
-          A time zone converter translates a specific date and time from one
-          location to another, accounting for UTC offsets and daylight saving
-          time rules. This free time zone converter with DST support covers 80+
-          cities across every time zone — from PKT to EST, IST to PST, GMT to
-          IST, EST to JST, and every other combination. Select your source city,
-          enter a date and time, and see the converted result for as many
-          destination cities as you need — all in one view.
+          Converting a single time between two places is arithmetic. Scheduling
+          a recurring meeting across them is not, and almost every failure comes
+          from one of four assumptions that feel safe and are not.
         </p>
 
-        <h2>Popular Time Zone Conversions</h2>
-        <p>
-          The table below shows the UTC offsets and typical hour differences for
-          the most frequently searched conversion pairs. Offsets shift by one
-          hour during daylight saving time (DST) in countries that observe it:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Conversion
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  From (UTC)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  To (UTC)
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Difference
-                </th>
+              <tr>
+                <th>The assumption</th>
+                <th>Why it fails</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["PKT to EST", "+05:00", "−05:00", "PKT is 10h ahead"],
-                ["EST to PKT", "−05:00", "+05:00", "EST is 10h behind"],
-                ["IST to PST", "+05:30", "−08:00", "IST is 13.5h ahead"],
-                ["PST to IST", "−08:00", "+05:30", "PST is 13.5h behind"],
-                ["CST to IST", "−06:00", "+05:30", "CST is 11.5h behind"],
-                ["GMT to PKT", "+00:00", "+05:00", "GMT is 5h behind"],
-                ["GMT to IST", "+00:00", "+05:30", "GMT is 5.5h behind"],
-                ["EST to JST", "−05:00", "+09:00", "EST is 14h behind"],
-                ["PST to JST", "−08:00", "+09:00", "PST is 17h behind"],
-                ["EST to AEST", "−05:00", "+10:00", "EST is 15h behind"],
-                ["EST to CET", "−05:00", "+01:00", "EST is 6h behind"],
-                [
-                  "EST to BST",
-                  "−05:00",
-                  "+01:00 (summer)",
-                  "EST is 5–6h behind",
-                ],
-                ["CST to PST", "−06:00", "−08:00", "CST is 2h ahead"],
-                ["UTC to IST", "+00:00", "+05:30", "UTC is 5.5h behind"],
-              ].map(([conv, from, to, diff], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    <strong>{conv}</strong>
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {from}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {to}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {diff}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>A zone has a fixed offset from UTC</td>
+                <td>
+                  Daylight saving moves it twice a year in many places, and not
+                  at all in others
+                </td>
+              </tr>
+              <tr>
+                <td>Offsets are whole hours</td>
+                <td>
+                  Several zones are offset by 30 or even 45 minutes
+                </td>
+              </tr>
+              <tr>
+                <td>An abbreviation identifies a zone</td>
+                <td>
+                  The same letters are used by different zones on different
+                  continents
+                </td>
+              </tr>
+              <tr>
+                <td>A country has one time</td>
+                <td>
+                  Some large countries span several zones; others deliberately
+                  use one
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
+
+        <h2>Offsets Are Not Fixed</h2>
         <p>
-          These offsets shift during DST transitions. This converter handles DST
-          automatically — enter the exact date and the tool applies the correct
-          offset for that specific day.
+          The gap between two places changes during the year, and it changes by
+          different amounts depending on whether each place observes daylight
+          saving and when it switches.
+        </p>
+        <p>
+          Two cities that are five hours apart for most of the year can be four
+          or six hours apart for a few weeks, because their clock changes fall on
+          different dates. The Northern and Southern hemispheres shift in
+          opposite directions, so the gap between a European and an Australian
+          city can move by two hours rather than one.
+        </p>
+        <p>
+          The practical consequence is the recurring-meeting problem. A call set
+          for 15:00 in one city and 10:00 in another stays correct until one of
+          them changes its clocks, at which point the meeting silently moves an
+          hour for one participant. Anyone who has arrived an hour early to a
+          standing call in late March or October has met this.
+        </p>
+        <p>
+          The reliable fix is to agree the meeting in one anchor location and let
+          everyone else convert, rather than agreeing two local times as if they
+          were permanently linked.
         </p>
 
-        <h2>How to Use the Converter</h2>
+        <h2>Not Every Zone Is a Whole Hour Off</h2>
+        <p>
+          The assumption that offsets come in whole hours is built into a
+          surprising amount of mental arithmetic, and it breaks in several parts
+          of the world.
+        </p>
         <ul className="custom-list">
           <li>
-            <strong>Step 1:</strong> Select your source city using the "Convert
-            from" dropdown — search by city name, country, or timezone
-            abbreviation.
+            <strong>Half-hour offsets</strong> are used across South Asia, in
+            parts of Australia, and in Newfoundland among others. A meeting time
+            that lands on the hour in one place lands on the half hour in the
+            other.
           </li>
           <li>
-            <strong>Step 2:</strong> Enter the date and time you want to
-            convert, or leave it to see the current live time.
+            <strong>Forty-five-minute offsets</strong> exist too, in Nepal and in
+            the Chatham Islands. These are rare enough that many scheduling
+            habits simply do not account for them.
           </li>
           <li>
-            <strong>Step 3:</strong> Add destination cities using the search box
-            or the quick-add buttons (London, Dubai, Mumbai, Singapore, Tokyo,
-            Sydney).
-          </li>
-          <li>
-            <strong>Step 4:</strong> Toggle between 12-hour and 24-hour format
-            using the button at the top right.
-          </li>
-          <li>
-            <strong>Step 5:</strong> Sun and moon icons indicate whether the
-            converted time falls during daytime or nighttime hours — useful for
-            finding the best time to call between two countries.
+            <strong>Offsets beyond twelve hours</strong> exist on both sides, so
+            the total spread across the world is more than 24 hours. At certain
+            moments three different calendar dates are in use simultaneously.
           </li>
         </ul>
 
-        <h2>Multiple Time Zone Clock Online</h2>
+        <h2>Abbreviations Are Ambiguous</h2>
         <p>
-          The World Clock tab shows live ticking times for all your added cities
-          simultaneously. Each card features an analog clock face that changes
-          color palette by time of day (morning gold, afternoon blue, evening
-          orange, night indigo), a digital time display with seconds, the
-          current date, UTC offset, and a 24-hour day progress bar. Filter by
-          region (Americas, Europe, Asia, Africa, Pacific) to focus on the zones
-          that matter to you. You can see the current time in all time zones at
-          a glance.
+          Zone abbreviations look precise and are not standardised. Several are
+          used by more than one zone.
         </p>
 
-        <h2>How Do Time Zones Work?</h2>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Abbreviation</th>
+                <th>Can mean</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CST</td>
+                <td>
+                  Central Standard Time in North America, China Standard Time,
+                  or Cuba Standard Time
+                </td>
+              </tr>
+              <tr>
+                <td>IST</td>
+                <td>India, Ireland, or Israel Standard Time</td>
+              </tr>
+              <tr>
+                <td>BST</td>
+                <td>British Summer Time or Bangladesh Standard Time</td>
+              </tr>
+              <tr>
+                <td>AMT</td>
+                <td>Amazon Time or Armenia Time</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <p>
-          The Earth rotates 360 degrees in 24 hours, so it is divided into zones
-          roughly 15 degrees of longitude apart — each offset by one hour from
-          its neighbor. All zones are expressed as offsets from Coordinated
-          Universal Time (UTC, the modern successor to GMT). Moving east from
-          the Prime Meridian adds hours (UTC+1, +2, etc.); moving west subtracts
-          them (UTC−1, −2, etc.).
+          Where precision matters, name the city or use the UTC offset for the
+          specific date. &quot;14:00 UTC&quot; is unambiguous; &quot;2pm
+          CST&quot; is not, and the difference between the readings can be
+          thirteen hours.
         </p>
         <p>
-          In practice, time zone boundaries follow national and regional borders
-          rather than strict longitude lines, which is why the world has over 38
-          distinct offsets rather than a clean 24. Several countries use
-          half-hour offsets (India at UTC+05:30, Iran at UTC+03:30) or even
-          quarter-hour offsets (Nepal at UTC+05:45). Many countries also observe
-          daylight saving time (DST), shifting clocks forward by one hour during
-          summer months. This converter uses the IANA timezone database to
-          handle all of these edge cases automatically.
+          There is a second trap in the standard-versus-summer distinction. EST
+          and EDT are different offsets an hour apart, so writing EST during
+          summer is technically wrong and frequently means the writer meant the
+          current local time rather than standard time.
         </p>
 
-        <h2>When Is It Tomorrow in Another Country?</h2>
+        <h2>Country Does Not Mean Time Zone</h2>
         <p>
-          If you are in New York (EST, UTC−05:00) at 8 PM, it is already
-          tomorrow in Tokyo (JST, UTC+09:00) — specifically 10 AM the next day.
-          The date line effectively runs through the Pacific Ocean, so locations
-          far east of you can be a full calendar day ahead. The converter shows
-          the full date alongside the time for each destination, so you can
-          immediately see when it is "tomorrow" in any city relative to your
-          source time.
+          Some countries span many zones and split accordingly; others span many
+          and use a single time anyway, as a matter of policy. China is the
+          best-known example of a country covering a wide longitudinal range on
+          one official time, which means the sun rises at very different clock
+          times across it.
+        </p>
+        <p>
+          The reverse case matters just as much for scheduling. In countries with
+          several zones, saying you are &quot;in the US&quot; or &quot;in
+          Australia&quot; narrows the answer to a range of several hours rather
+          than pinning it down. Always exchange cities rather than countries.
         </p>
 
-        <h2>Finding the Best Time to Call Between Two Countries</h2>
+        <h2>Finding a Time That Works for Everyone</h2>
         <p>
-          Add both cities to the converter and look for times that fall between
-          9 AM and 6 PM in both locations. The day/night icons on each converted
-          time make this easy — if both show the sun icon, both parties are in
-          daytime hours. For challenging pairs like EST to JST (14 hours apart),
-          the overlap window is narrow — typically early morning in the US and
-          evening in Japan. If you are calculating durations for those calls,
-          our{" "}
+          For two or three locations, a workable window is usually findable. For
+          more than that, someone is going to be inconvenienced, and the useful
+          question becomes who and how often.
+        </p>
+        <ul className="custom-list">
+          <li>
+            List each participant&apos;s acceptable window in their own local
+            time, then convert all of them into one reference zone and look for
+            the overlap.
+          </li>
+          <li>
+            Where no overlap exists, rotate the inconvenience between meetings
+            rather than fixing it permanently on whoever is furthest away.
+          </li>
+          <li>
+            Watch the date, not just the hour. A Friday afternoon call in one
+            place can be Saturday morning in another, which no amount of goodwill
+            fixes.
+          </li>
+          <li>
+            Send invitations from a calendar rather than as written times. A
+            calendar entry carries the underlying instant and converts itself;
+            text does not.
+          </li>
+        </ul>
+
+        <h2>Writing a Time So It Cannot Be Misread</h2>
+        <p>
+          When a time has to be communicated as text, three habits remove almost
+          all ambiguity.
+        </p>
+        <p>
+          Use the 24-hour clock, which eliminates the midnight and midday
+          confusion that AM and PM create. Name the city rather than an
+          abbreviation. And include the date, since the same instant can fall on
+          different days for different readers.
+        </p>
+        <p>
+          &quot;Thursday 14:00 in London&quot; can be converted by anyone
+          without ambiguity. &quot;2pm BST&quot; requires the reader to know
+          which BST you mean and whether summer time is in effect on that date.
+        </p>
+        <p>
+          For durations and elapsed time rather than clock conversions, the{" "}
           <Link href="/time-calculator/" className="my-link">
             time calculator
           </Link>{" "}
-          handles hours, minutes, and seconds arithmetic. And to count the days
-          until an important meeting or deadline across time zones, our{" "}
+          handles the arithmetic, and the{" "}
           <Link href="/days-between-calculator/" className="my-link">
-            days between calculator
+            days between dates calculator
           </Link>{" "}
-          can help.
+          covers spans measured in days.
         </p>
+        <h2>Time Zone Questions</h2>
+        {FAQ_DATA.map(({ q, a }, i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => setOpenFAQ(isOpen ? null : i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setOpenFAQ(isOpen ? null : i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down${isOpen ? " rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
 
-        <h2>Understanding UTC Offsets and DST</h2>
-        <p>
-          All time zones are expressed as an offset from UTC. For example, New
-          York is UTC−05:00 in winter (EST) and UTC−04:00 in summer (EDT). This
-          tool uses the browser's Intl API with full IANA timezone data, so DST
-          transitions are handled automatically based on the exact date you
-          enter — you never need to manually account for daylight saving shifts.
-        </p>
-
-        <h2>12-Hour vs 24-Hour Time Format</h2>
-        <p>
-          The 12-hour format uses AM and PM notation (e.g. 3:00 PM), while the
-          24-hour format runs from 00:00 to 23:59 (e.g. 15:00). Most of the
-          world uses 24-hour format in official contexts — military, aviation,
-          medicine, and most countries outside the US. Use the toggle at the top
-          of this tool to switch between them. This effectively makes the tool a
-          12 hour to 24 hour converter alongside its timezone functionality.
-        </p>
-
-        <h2>Frequently Asked Questions</h2>
-        {FAQ_DATA.map(({ q, a }, i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => setOpenFAQ(openFAQ === i ? null : i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down${openFAQ === i ? " rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          Whether you are scheduling a call from Karachi to New York,
-          coordinating a remote team across London, Dubai, and Tokyo, or just
-          checking what time it is on the other side of the world, this tool
-          gives you instant, DST-aware conversions for 80+ cities with a live
-          world clock.
-        </p>
-        <p>
-          For related tools, our{" "}
-          <Link href="/time-calculator/" className="my-link">
-            time calculator
-          </Link>{" "}
-          handles duration arithmetic, our{" "}
-          <Link href="/days-between-calculator/" className="my-link">
-            days between calculator
-          </Link>{" "}
-          counts days between any two dates, and our{" "}
-          <Link href="/currency-converter/" className="my-link">
-            currency converter
-          </Link>{" "}
-          handles the financial side of international coordination.
-        </p>
       </div>
     </>
   );

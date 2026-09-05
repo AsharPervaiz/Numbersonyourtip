@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import TextConverter from "../components/TextConverter";
 
 export const metadata: Metadata = {
-  title:
-    "Text Case Converter | Free Online UPPERCASE, camelCase, snake_case & More",
+  title: "Text Case Converter — Title, Sentence",
   description:
-    "Free text case converter online. Convert to UPPERCASE, lowercase, Title Case, camelCase, PascalCase, snake_case & kebab-case instantly — no signup.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Convert text between upper, lower, title, sentence and toggle case — and see why automatic title case never matches every style guide.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/text-converter/",
+    canonical: "/text-converter/",
+  },
+  openGraph: {
+    title: "Text Case Converter — Title, Sentence",
+    description:
+      "Title case is not one rule. Plus what case conversion permanently destroys.",
+    url: "/text-converter/",
+    type: "article",
+  },
+  twitter: {
+    title: "Text Case Converter — Title, Sentence",
+    description:
+      "Convert text between upper, lower, title, sentence and toggle case.",
   },
 };
 

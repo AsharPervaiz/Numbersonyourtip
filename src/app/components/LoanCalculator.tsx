@@ -269,6 +269,45 @@ const formatNumber = (value: string) => {
 /* ─────────────────────────────────────────
    Main Calculator Page
 ───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do I compare two loan offers properly?",
+    "Compare the cost of credit: total repaid minus the cash you actually receive. On two 300,000 loans over four years, one at 9.5% with a 3% fee taken from the advance costs about 70,773, while one at 10.5% with no fee costs about 68,689. The first wins on rate, on monthly payment and on total repaid, and still costs more — because 9,000 never reached you.",
+  ],
+  [
+    "Does a lower interest rate always mean a cheaper loan?",
+    "No. The rate ignores fees, and fees can easily outweigh a one-point difference on a medium-term loan. An arrangement fee deducted from the advance means you pay interest on money you never received; one added to the principal means the fee itself accrues interest for the whole term. Only the cost-of-credit figure captures both.",
+  ],
+  [
+    "What is APR and can I trust it?",
+    "APR expresses interest plus compulsory fees as one annualised rate, so differently structured offers can be compared on a single number. It is more reliable than the headline rate, with three caveats: optional add-ons can fall outside it, advertised rates are often 'representative' so the rate you are offered may be higher, and it assumes the loan runs full term so it says nothing about early settlement.",
+  ],
+  [
+    "What debt-to-income ratio do lenders want?",
+    "Total monthly debt payments divided by gross monthly income. Someone earning 5,000 with 1,000 of commitments is at 20%, and adding a 750 instalment takes them to 35%. Lenders commonly become uncomfortable in the high thirties to low forties, though it varies by lender and product. Note it uses gross income, so it overstates what you can comfortably service from take-home pay.",
+  ],
+  [
+    "Should I take a longer term to lower my payment?",
+    "It works, and it is not a better deal — it is the same deal spread thinner. Reducing the rate lowers both the monthly payment and the total; extending the term lowers the payment and raises the total, often substantially. A longer term can be the right call when cash flow is genuinely tight, but it should be a deliberate trade rather than the lever you reach for first.",
+  ],
+  [
+    "What fees should I ask about before signing?",
+    "Arrangement or processing fees and whether they come off the advance or are added to the principal, early settlement penalties, late payment charges, any insurance bundled into the agreement, and charges for administrative changes such as moving the payment date. Ask for the total repayable and the amount you will actually receive, which forces all of it into the open.",
+  ],
+  [
+    "What is the fastest way to pay off a loan early?",
+    "Rounding the instalment up sends the surplus to principal automatically every month. Applying irregular income such as a bonus is more powerful, and worth far more early in the term than late, because it cancels all the future interest that principal would have carried. With several debts, directing everything spare at the highest rate minimises total interest.",
+  ],
+  [
+    "Will overpaying always save me money?",
+    "Usually, but check two things first. Some agreements charge an early settlement penalty that can outweigh the interest saved on a loan already well advanced. And confirm the lender applies overpayments to the principal immediately rather than holding them against future instalments — if they do the latter, the balance does not fall and no interest is saved.",
+  ],
+  [
+    "I was approved for more than I expected. Should I take it?",
+    "An approval reflects the lender's appetite for risk, not your household budget, and it is assessed against gross income rather than what reaches your account. The more useful test is what remains after the new instalment and every other commitment, and whether that residual still absorbs an unexpected cost without new borrowing.",
+  ],
+];
+
 export default function LoanCalculator() {
   const [amount, setAmount] = useState("");
   const [rate, setRate] = useState("");
@@ -321,9 +360,23 @@ export default function LoanCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
         <h1>
-          Free Loan Calculator Online — Monthly Payment, Interest &amp; Fees
+          Loan Calculator — Compare Offers by True Cost of Credit
         </h1>
         <p>
           Calculate your monthly loan payment, total interest paid, processing
@@ -386,523 +439,258 @@ export default function LoanCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Loan Calculator?</h2>
+        <h2>The Advertised Rate Is Not the Price of the Loan</h2>
         <p>
-          A loan calculator computes your monthly payment (EMI), total interest
-          paid, and full repayment cost for any loan based on the amount
-          borrowed, interest rate, and loan term. Whether you are considering a
-          personal loan, home loan, car loan, education loan, or business loan,
-          this free loan calculator online gives you the exact numbers before
-          you sign anything — so you can compare offers, plan your budget, and
-          avoid borrowing more than you can comfortably repay.
-        </p>
-        <p>
-          This tool also functions as a loan calculator with fees — enter the
-          optional processing fee percentage and see the total payable amount
-          including the upfront charge. The result panel shows an interest
-          burden gauge, a principal vs. interest breakdown, and the exact cost
-          of borrowing down to the last decimal. For EMI-focused calculations
-          without the fee field, our dedicated{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          provides the same core computation with a streamlined interface.
-        </p>
-
-        <h2>How Is Loan Interest Calculated?</h2>
-        <p>
-          Most loans use the reducing balance method, where interest is charged
-          on the outstanding principal after each payment — not on the original
-          borrowed amount. This means you pay more interest in the early months
-          (when the balance is large) and progressively less as you pay down the
-          principal. The standard EMI formula that implements this is:
+          Loans are marketed on the interest rate because it is one number and
+          it is easy to compare. It is also not what the loan costs you. The
+          figure that matters is the total cost of credit: everything you hand
+          back, minus everything you actually received.
         </p>
         <pre>
-          EMI = [P × R × (1 + R)<sup>N</sup>] / [(1 + R)<sup>N</sup> – 1]
+          Cost of credit = (Instalment × Number of payments) − Cash actually
+          received
         </pre>
-        <ul>
-          <li>
-            <strong>P</strong> = Loan principal (amount borrowed)
-          </li>
-          <li>
-            <strong>R</strong> = Monthly interest rate (annual rate ÷ 12 ÷ 100)
-          </li>
-          <li>
-            <strong>N</strong> = Total number of monthly payments
-          </li>
-        </ul>
         <p>
-          This is the formula banks use worldwide. Enter your values above and
-          the calculator applies it instantly — no manual math needed.
+          That second term is where offers diverge. A loan advertised as
+          300,000 does not necessarily put 300,000 in your account, and a loan
+          with a lower rate can easily cost more than one with a higher rate.
         </p>
 
-        <h2>
-          Loan Cost Comparison — How Rate and Term Change Your Total Interest
-        </h2>
+        <h2>A Worked Comparison Where the Lower Rate Loses</h2>
         <p>
-          The table below shows what a 1,000,000 loan looks like at different
-          interest rates and terms. Use it to see how much the total interest
-          paid changes with each variable — this is essentially a total interest
-          paid on loan calculator in table form:
+          Two offers, both 300,000 over four years.
         </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Rate
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Term
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Monthly EMI
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total Interest
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total Repayment
-                </th>
+              <tr>
+                <th></th>
+                <th>Offer A</th>
+                <th>Offer B</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["8%", "3 years", "31,334", "128,024", "1,128,024"],
-                ["8%", "5 years", "20,276", "216,560", "1,216,560"],
-                ["12%", "3 years", "33,214", "195,704", "1,195,704"],
-                ["12%", "5 years", "22,244", "334,640", "1,334,640"],
-                ["15%", "3 years", "34,665", "247,940", "1,247,940"],
-                ["15%", "5 years", "23,790", "427,400", "1,427,400"],
-                ["18%", "5 years", "25,393", "523,580", "1,523,580"],
-              ].map(([r, t, emi, interest, total], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {r}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {t}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {emi}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {interest}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {total}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>Advertised rate</td>
+                <td>9.5%</td>
+                <td>10.5%</td>
+              </tr>
+              <tr>
+                <td>Arrangement fee</td>
+                <td>3%, deducted from the advance</td>
+                <td>None</td>
+              </tr>
+              <tr>
+                <td>Cash you receive</td>
+                <td>291,000</td>
+                <td>300,000</td>
+              </tr>
+              <tr>
+                <td>Monthly instalment</td>
+                <td>about 7,537</td>
+                <td>about 7,681</td>
+              </tr>
+              <tr>
+                <td>Total repaid</td>
+                <td>about 361,773</td>
+                <td>about 368,689</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Cost of credit</strong>
+                </td>
+                <td>
+                  <strong>about 70,773</strong>
+                </td>
+                <td>
+                  <strong>about 68,689</strong>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
+
         <p>
-          Notice how extending a 12% loan from 3 years to 5 years drops the
-          monthly EMI by about 10,970 but adds 138,936 in total interest. That
-          is the fundamental trade-off — lower monthly payments cost more over
-          the full term.
+          Offer A wins on the rate, wins on the monthly payment, wins on total
+          repaid — and still costs more, because 9,000 was taken out before the
+          money arrived. It also leaves you 9,000 short of what you needed to
+          borrow.
+        </p>
+        <p>
+          Any of the first three lines read alone points at the wrong offer.
+          Only the last line answers the question.
         </p>
 
-        <h2>Step-by-Step Loan Calculation Example</h2>
+        <h2>Where Fees Hide</h2>
         <p>
-          A personal loan of 500,000 at 14% annual interest for 3 years with a
-          2% processing fee:
+          Fees do the same damage in two different ways, and the second is
+          easier to miss.
+        </p>
+        <p>
+          <strong>Deducted from the advance.</strong> You borrow 300,000, receive
+          291,000, and repay interest on the full 300,000. You are paying
+          interest on money you never had.
+        </p>
+        <p>
+          <strong>Added to the principal.</strong> You need 300,000, so the
+          lender writes the loan for 309,000 and you receive the amount you
+          asked for. The instalment is higher and the fee itself accrues
+          interest for the whole term.
+        </p>
+        <p>
+          Either way the cost-of-credit calculation catches it, which is the
+          argument for using that figure rather than any of the headline
+          numbers. Other charges worth asking about explicitly: early
+          settlement penalties, late payment fees, mandatory insurance bundled
+          into the agreement, and any charge for a payment date change.
+        </p>
+
+        <h2>What APR Does and Does Not Tell You</h2>
+        <p>
+          An annual percentage rate exists precisely to solve the problem above.
+          It expresses the interest and the compulsory fees as a single
+          annualised rate, so that two offers can be compared on one number even
+          when they are structured differently. Where regulation requires it to
+          be quoted, comparing APRs is more reliable than comparing headline
+          rates.
+        </p>
+        <p>
+          Its limits are worth knowing. What counts as a compulsory charge is
+          defined by regulation, so optional add-ons can sit outside the figure.
+          Advertised APRs are often described as representative, meaning only a
+          proportion of successful applicants need to receive it — the rate you
+          are actually offered after a credit assessment can be higher. And the
+          calculation assumes the loan runs its full term, so it does not
+          describe the cost if you settle early.
+        </p>
+        <p>
+          Use APR to shortlist, and the cost of credit on the actual offer you
+          are given to decide.
+        </p>
+
+        <h2>Term Versus Rate</h2>
+        <p>
+          Two levers change the instalment and they behave very differently.
+          Negotiating the rate down reduces both the monthly payment and the
+          total. Extending the term reduces the monthly payment and increases
+          the total, often substantially.
+        </p>
+        <p>
+          Borrowers under pressure tend to reach for the term, because it is the
+          lever a lender will always agree to. It is worth being clear that
+          those two conversations are not equivalent: a longer term is not a
+          better deal, it is the same deal spread thinner. Our{" "}
+          <Link href="/emi-calculator/" className="my-link">
+            EMI calculator
+          </Link>{" "}
+          shows the interest cost of each additional year directly.
+        </p>
+
+        <h2>How Much You Can Borrow Versus How Much You Should</h2>
+        <p>
+          Lenders assess affordability with a debt-to-income ratio — the share of
+          gross monthly income consumed by debt repayments.
+        </p>
+        <pre>
+          Debt-to-income = Total monthly debt payments ÷ Gross monthly income ×
+          100
+        </pre>
+        <p>
+          Someone earning 5,000 a month with 1,000 of existing commitments is at
+          20%. Adding a 750 instalment takes them to 35%. Lenders commonly get
+          uncomfortable somewhere in the high thirties to low forties, though
+          the threshold varies by lender and by product.
+        </p>
+        <p>
+          Two cautions about that number. It uses gross income, so it overstates
+          what you can comfortably service — the payments come out of take-home
+          pay, not gross. And an approval reflects the lender&apos;s appetite for
+          risk, not your household budget. The more useful personal test is what
+          remains after the new instalment and all your other commitments, and
+          whether that still absorbs an unexpected cost.
+        </p>
+
+        <h2>Paying It Off Sooner</h2>
+        <p>
+          Three approaches work, in ascending order of effect.
         </p>
         <ul className="custom-list">
           <li>
-            <strong>Principal:</strong> 500,000
+            <strong>Round the payment up.</strong> Paying 8,000 against a 7,681
+            instalment sends the surplus straight to principal every month. It
+            is small, automatic, and requires no decision after the first one.
           </li>
           <li>
-            <strong>Monthly rate:</strong> 14 ÷ 12 ÷ 100 = 0.01167
+            <strong>Apply irregular income.</strong> A bonus or a tax refund put
+            against the balance removes all the future interest that principal
+            would have carried, which is why the same amount is worth far more
+            early in the term than late.
           </li>
           <li>
-            <strong>Term:</strong> 36 months
-          </li>
-          <li>
-            <strong>Monthly EMI ≈ 17,087</strong>
-          </li>
-          <li>
-            <strong>Total repayment:</strong> 17,087 × 36 = 615,132
-          </li>
-          <li>
-            <strong>Total interest paid:</strong> 615,132 − 500,000 = 115,132
-          </li>
-          <li>
-            <strong>Processing fee:</strong> 500,000 × 2% = 10,000
-          </li>
-          <li>
-            <strong>Total payable (with fee):</strong> 615,132 + 10,000 ={" "}
-            <strong>625,132</strong>
+            <strong>Clear the most expensive debt first.</strong> With several
+            debts, paying minimums on all and directing everything spare at the
+            highest rate minimises total interest. Clearing the smallest balance
+            first is easier to sustain psychologically and costs more; either is
+            defensible provided the choice is deliberate.
           </li>
         </ul>
         <p>
-          The processing fee adds 10,000 to the true cost that does not show up
-          in the EMI — which is why this loan calculator with fees matters for
-          comparing offers from different lenders.
-        </p>
-
-        <h2>How Much Loan Can I Afford on My Salary?</h2>
-        <p>
-          A practical way to determine how much loan you can afford is to use
-          the debt-to-income (DTI) ratio. Financial advisors generally recommend
-          that your total monthly debt payments — including the new loan EMI —
-          should not exceed 35% to 40% of your gross monthly income.
+          Before overpaying, confirm there is no early settlement penalty and
+          check whether the lender applies overpayments to the principal
+          immediately or holds them. Both details determine whether the strategy
+          works at all.
         </p>
         <p>
-          For example, if your monthly salary is 80,000, your maximum total EMI
-          burden should be roughly 28,000 to 32,000. If you already pay 10,000
-          per month on an existing car loan, the maximum EMI for a new loan
-          would be 18,000 to 22,000. Enter different loan amounts into the
-          calculator above until the EMI falls within this range.
-        </p>
-        <p>
-          To know your exact take-home salary after taxes — which determines
-          what you can actually afford — use our{" "}
-          <Link href="/income-tax-calculator/" className="my-link">
-            income tax calculator
+          For property borrowing, where the term is far longer and the interest
+          front-loading much more pronounced, use the{" "}
+          <Link href="/home-mortgage-calculator/" className="my-link">
+            mortgage calculator
           </Link>
-          . And to see how a specific home loan fits your budget, our{" "}
-          <Link href="/home-mortgage-calculator/" className="my-link">
-            home mortgage calculator
-          </Link>{" "}
-          includes down payment and property cost inputs.
-        </p>
-
-        <h2>What Is a Good Debt-to-Income Ratio?</h2>
-        <p>
-          Your debt-to-income (DTI) ratio is the percentage of your gross
-          monthly income that goes toward debt payments. Lenders use it to
-          assess your borrowing capacity:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  DTI Range
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Assessment
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  What It Means
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                [
-                  "Under 20%",
-                  "Excellent",
-                  "Strong borrowing capacity, comfortable repayment",
-                ],
-                [
-                  "20–35%",
-                  "Good",
-                  "Manageable debt load, most lenders approve",
-                ],
-                [
-                  "35–43%",
-                  "Stretched",
-                  "Approval possible but limited room for new borrowing",
-                ],
-                [
-                  "Above 43%",
-                  "Risky",
-                  "Most lenders will decline; existing debts need reduction",
-                ],
-              ].map(([range, assess, meaning], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {range}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {assess}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {meaning}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p>
-          Calculate your DTI by dividing your total monthly debt payments by
-          your gross monthly income, then multiplying by 100. If the result is
-          above 35%, consider paying off existing debts before taking a new
-          loan. Our{" "}
-          <Link href="/rent-calculator/" className="my-link">
-            rent calculator
-          </Link>{" "}
-          can help you assess whether housing costs are consuming too much of
-          your income relative to the 28% to 35% housing guideline.
-        </p>
-
-        <h2>How to Pay Off a Loan Faster</h2>
-        <p>
-          Paying off a loan ahead of schedule saves you interest and frees up
-          cash flow. Here are the most effective strategies:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Make extra payments toward principal.</strong> Even small
-            additional amounts applied directly to the principal reduce the
-            balance faster, which means less interest accrues in subsequent
-            months. Some borrowers add one extra EMI per year — effectively
-            turning a 5-year loan into a roughly 4-year loan.
-          </li>
-          <li>
-            <strong>Round up your EMI.</strong> If your EMI is 17,087, pay
-            18,000 instead. The extra 913 per month goes straight to principal
-            and shortens the term without a noticeable budget impact.
-          </li>
-          <li>
-            <strong>Use windfalls for lump-sum prepayments.</strong> Bonuses,
-            tax refunds, or unexpected income can significantly reduce your
-            outstanding balance when applied as prepayments.
-          </li>
-          <li>
-            <strong>Refinance at a lower rate.</strong> If interest rates have
-            dropped since you took the loan, refinancing can lower your EMI and
-            total interest. Use this calculator to compare the new terms before
-            committing.
-          </li>
-          <li>
-            <strong>Choose a shorter term when possible.</strong> If you can
-            handle a higher EMI, switching from a 5-year to a 3-year term can
-            save 30% to 50% in total interest — the comparison table above shows
-            exactly how much.
-          </li>
-        </ul>
-        <p>
-          While this calculator shows the standard repayment schedule, the extra
-          payment strategy is easy to model: reduce the principal by your
-          planned extra payments, then recalculate with the remaining balance
-          and remaining term to see the new EMI. Our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          is a quick way to run these what-if scenarios.
-        </p>
-
-        <h2>Types of Loans You Can Calculate</h2>
-        <p>This calculator works for any loan that uses fixed EMI repayment:</p>
-        <ul className="custom-list">
-          <li>
-            <strong>Personal loans</strong> — unsecured loans for any purpose,
-            typically 10% to 24% interest, 1 to 5 year terms.
-          </li>
-          <li>
-            <strong>Home loans / mortgages</strong> — secured against property,
-            lower rates (7% to 12%), 10 to 30 year terms. For a more detailed
-            home-specific calculation with down payment, use our{" "}
-            <Link href="/home-mortgage-calculator/" className="my-link">
-              home mortgage calculator
-            </Link>
-            .
-          </li>
-          <li>
-            <strong>Car loans</strong> — secured against the vehicle, moderate
-            rates, 3 to 7 year terms.
-          </li>
-          <li>
-            <strong>Education loans</strong> — often include a moratorium period
-            before EMI starts.
-          </li>
-          <li>
-            <strong>Business loans</strong> — rates and terms vary widely by
-            lender and business profile.
-          </li>
-          <li>
-            <strong>Gold loans, two-wheeler loans, property loans</strong> — all
-            follow the same EMI formula and work with this calculator.
-          </li>
-        </ul>
-
-        <h2>Understanding Processing Fees and Their Impact</h2>
-        <p>
-          Many lenders charge a one-time processing fee — typically 1% to 3% of
-          the loan amount — for handling your application. This fee does not
-          change your monthly EMI, but it increases the true cost of borrowing.
-          For a 1,000,000 loan with a 2% processing fee, you pay 20,000 upfront
-          on top of the interest — money that never reduces your principal.
-        </p>
-        <p>
-          When comparing two loan offers, always compare the total payable
-          amount (EMI payments + processing fee), not just the interest rate. A
-          loan at 11% with a 2.5% fee may cost more in total than a loan at
-          11.5% with a 0.5% fee. This calculator shows both figures so you can
-          make an informed comparison.
-        </p>
-
-        <h2>Key Factors That Affect Your Loan EMI</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Interest rate</strong> — the single biggest cost factor.
-            Even 0.5% less can save thousands over a multi-year term. Always
-            negotiate.
-          </li>
-          <li>
-            <strong>Loan amount</strong> — borrowing more means higher EMIs.
-            Calculate the minimum you actually need rather than the maximum you
-            qualify for.
-          </li>
-          <li>
-            <strong>Loan term</strong> — longer terms reduce EMI but increase
-            total interest dramatically. The comparison table above makes this
-            trade-off concrete.
-          </li>
-          <li>
-            <strong>Credit score</strong> — higher scores qualify for lower
-            rates, directly reducing your EMI and total cost. Improving your
-            score before applying is one of the most effective ways to save
-            money on a loan.
-          </li>
-          <li>
-            <strong>Loan type</strong> — secured loans (backed by collateral
-            like property or a vehicle) almost always offer lower rates than
-            unsecured personal loans.
-          </li>
-        </ul>
-
-        <h2>Tips to Get a Better Loan Deal</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Compare at least 3 to 4 lenders</strong> — rates and fees
-            vary significantly. Use this calculator to run each offer and
-            compare total payable amounts side by side.
-          </li>
-          <li>
-            <strong>Improve your credit score first</strong> — paying off credit
-            card balances and correcting report errors before applying can
-            unlock meaningfully better rates.
-          </li>
-          <li>
-            <strong>Negotiate the processing fee</strong> — many lenders will
-            reduce or waive it for strong applicants or during promotional
-            periods.
-          </li>
-          <li>
-            <strong>Choose the shortest term you can afford</strong> — use the
-            calculator to find the sweet spot where the EMI is challenging but
-            manageable.
-          </li>
-          <li>
-            <strong>Read the prepayment terms</strong> — some loans charge a
-            penalty for early repayment. Avoid these if you plan to pay off the
-            loan faster.
-          </li>
-          <li>
-            <strong>Check your affordability</strong> — make sure the EMI does
-            not push your debt-to-income ratio above 35%. Our{" "}
-            <Link href="/income-tax-calculator/" className="my-link">
-              income tax calculator
-            </Link>{" "}
-            shows your after-tax income for a realistic affordability check.
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {[
-          [
-            "How is loan interest calculated?",
-            "Most loans use the reducing balance method. Interest is charged on the outstanding principal each month — not on the original amount. As you pay down the principal through EMIs, the interest portion decreases and the principal portion increases. The EMI formula (shown above) implements this automatically.",
-          ],
-          [
-            "How much loan can I afford on my salary?",
-            "A safe guideline is to keep your total monthly debt payments (including the new loan EMI) below 35% to 40% of your gross monthly income. If you earn 80,000 per month and already pay 10,000 on existing debts, your new loan EMI should stay under 18,000 to 22,000. Enter different amounts in the calculator until the EMI fits.",
-          ],
-          [
-            "What is a good debt-to-income ratio?",
-            "Under 20% is excellent, 20% to 35% is good, 35% to 43% is stretched, and above 43% is risky — most lenders will decline applications at this level. Calculate yours by dividing total monthly debt payments by gross monthly income.",
-          ],
-          [
-            "How do I pay off a loan faster?",
-            "Make extra payments toward principal whenever possible, round up your EMI amount, apply windfalls (bonuses, tax refunds) as lump-sum prepayments, and consider refinancing if rates have dropped. Even one extra EMI payment per year can shorten a 5-year loan by nearly a year.",
-          ],
-          [
-            "Does the processing fee affect my EMI?",
-            "No — the processing fee is a one-time upfront charge and does not change your monthly EMI. However, it increases the total cost of the loan. This calculator shows both the EMI-based total repayment and the grand total including the fee so you can see the complete picture.",
-          ],
-          [
-            "Can I use this for a home loan?",
-            "Yes. Enter the loan amount (home price minus down payment), interest rate, and term. For a more detailed mortgage-specific calculation that includes down payment percentage and property cost, use our home mortgage calculator.",
-          ],
-          [
-            "What happens if I miss an EMI payment?",
-            "Late payment fees are charged immediately, the missed amount plus penalty is added to your balance, and your credit score takes a hit. Repeated misses can lead to loan default proceedings. If you foresee difficulty, contact your lender early to discuss restructuring options.",
-          ],
-          [
-            "Is a shorter or longer loan term better?",
-            "Shorter terms cost less in total interest but require higher monthly payments. Longer terms are easier on your monthly budget but cost significantly more over the full duration. The best choice depends on what EMI you can comfortably afford without straining your finances.",
-          ],
-          [
-            "Is this loan calculator free to use?",
-            "Yes — completely free with no sign-up, no limits, and no hidden charges. Calculate any loan amount, rate, and term combination as many times as you need. Results include EMI, total interest, total repayment, processing fee impact, and an interest burden gauge.",
-          ],
-        ].map(([q, a], i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              />
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          A loan is one of the biggest financial commitments you can make.
-          Running the numbers through this calculator before you borrow — not
-          after — puts you in control of the decision. Compare rates, test
-          different terms, factor in processing fees, and check your
-          debt-to-income ratio before committing. The more clearly you see the
-          numbers, the better your borrowing decision will be.
-        </p>
-        <p>
-          For related financial planning, our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          provides a streamlined monthly payment computation, our{" "}
-          <Link href="/home-mortgage-calculator/" className="my-link">
-            home mortgage calculator
-          </Link>{" "}
-          adds down payment and property cost context for home buyers, and our{" "}
+          . To see how a loan balance sits against everything else you own, the{" "}
           <Link href="/net-worth-calculator/" className="my-link">
             net worth calculator
           </Link>{" "}
-          shows how your loan fits into your complete financial picture —
-          because every liability on one side of the balance sheet affects the
-          other.
+          puts it in context.
         </p>
+        <h2>Loan Comparison Questions</h2>
+
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+          <div className="faq-item" key={i}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
+              {q}
+              <i
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
+              />
+            </h3>
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
+          </div>
+          );
+        })}
+
       </div>
 
       {/* ---- SIDEBAR ---- */}

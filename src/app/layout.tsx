@@ -1,39 +1,51 @@
 import "./globals.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import type { Metadata } from "next";
 import Script from "next/script";
 
 import Link from "next/link";
 import Header from "./components/Header";
+import Breadcrumbs from "./components/Breadcrumbs";
 import CookieConsentWrapper from "./components/CookieConsentWrapper";
 
 export const metadata: Metadata = {
-  title: "Numbers on Your Tip | Free Online Calculators & Tools",
-  description:
-    "Explore 40+ free online calculators and tools — health, finance, daily use & utilities. Get instant, accurate results right in your browser.",
-  alternates: {
-    canonical: "https://numbersonyourtip.com/",
+  metadataBase: new URL("https://numbersonyourtip.com"),
+  title: {
+    default: "Numbers on Your Tip | Free Online Calculators & Tools",
+    template: "%s | Numbers on Your Tip",
   },
-  keywords:
-    "online calculators, BMI calculator, EMI calculator, age calculator, calorie calculator, body fat calculator, GPA calculator, time calculator, currency converter, free calculators",
+  description:
+    "Explore 48 free online calculators and tools — health, finance, daily use & utilities. Get instant, accurate results right in your browser.",
+  applicationName: "Numbers on Your Tip",
+  authors: [{ name: "Ashar Pervaiz" }],
+  creator: "Ashar Pervaiz",
+  publisher: "Numbers on Your Tip",
   openGraph: {
-    title: "Numbers on Your Tip | Free Online Calculators & Tools",
-    description:
-      "Free online calculators for BMI, EMI, age, calories, body fat, GPA, time, currency conversion and more.",
     type: "website",
-    url: "https://numbersonyourtip.com",
     siteName: "Numbers on Your Tip",
+    locale: "en_US",
+    // NO title, description, url here — pages must set them
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "Numbers on Your Tip | Free Online Calculators & tools for Everyday Use",
-    description:
-      "Explore 40+ free online calculators and tools — health, finance, daily use & utilities. Get instant, accurate results right in your browser.",
+    // NO title, description here — pages must set them
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   verification: {
     google: "g4Na71reWnkqSwlrZGdq44S53pf-c_9vcQ5m7bSL5Ls",
   },
+  // NO alternates.canonical here — pages must set their own
+  // NO keywords here — either drop entirely or set per-page
 };
 
 export default function RootLayout({
@@ -47,15 +59,32 @@ export default function RootLayout({
     name: "Numbers on Your Tip",
     alternateName: "numbersonyourtip.com",
     url: "https://numbersonyourtip.com/",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate:
-          "https://numbersonyourtip.com/search?q={search_term_string}",
-      },
-      "query-input": "required name=search_term_string",
+  };
+
+  const organizationLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Numbers on Your Tip",
+    alternateName: "numbersonyourtip.com",
+    url: "https://numbersonyourtip.com/",
+    logo: "https://numbersonyourtip.com/brand-logo.png",
+    founder: {
+      "@type": "Person",
+      name: "Ashar Pervaiz",
+      url: "https://numbersonyourtip.com/author/ashar-pervaiz/",
+      sameAs: [
+        "https://asharpervaiz.dev/",
+        "https://www.linkedin.com/in/ashar-pervaiz-b3a718256",
+      ],
     },
+    sameAs: [
+      "https://www.facebook.com/share/1WXWd29Bkp/",
+      "https://www.instagram.com/numbersonyourtip/",
+      "https://www.youtube.com/@Numbersonyourtip",
+      "https://www.tiktok.com/@numberstip",
+      "https://www.threads.com/@numbersonyourtip",
+      "https://medium.com/@numbersonyourtip",
+    ],
   };
 
   const siteNavigationLd = {
@@ -84,7 +113,7 @@ export default function RootLayout({
         "@type": "SiteNavigationElement",
         position: 4,
         name: "Our Blogs",
-        url: "https://numbersonyourtip.com/blogs/",
+        url: "https://numbersonyourtip.com/blog/",
       },
       {
         "@type": "SiteNavigationElement",
@@ -132,10 +161,22 @@ export default function RootLayout({
           name="dmca-site-verification"
           content="SVBqMmxLeFQ5YnVYbk1peFpRak9YcHJlZHoxb1RIbk1lSGxZZjRSTWdVUT01"
         />
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1466808362272721"
+          crossOrigin="anonymous"
+        ></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationLd),
           }}
         />
         <script
@@ -162,10 +203,8 @@ export default function RootLayout({
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
         <Header />
-        <main
-          className="container mobile-padding"
-          style={{ flex: 1, padding: "40px 0" }}
-        >
+        <main className="container mobile-padding" style={{ flex: 1 }}>
+          <Breadcrumbs />
           {children}
         </main>
         <footer style={{ background: "#001f54", color: "#c7c7c7" }}>
@@ -202,6 +241,28 @@ export default function RootLayout({
                 Smart, fast & private calculators & tools for daily life,
                 fitness, finance and education.
               </p>
+              <ul className="footer-social" aria-label="Follow Numbers On Your Tip">
+                {[
+                  ["Facebook", "fa-brands fa-facebook-f", "https://www.facebook.com/share/1WXWd29Bkp/"],
+                  ["Instagram", "fa-brands fa-instagram", "https://www.instagram.com/numbersonyourtip/"],
+                  ["YouTube", "fa-brands fa-youtube", "https://www.youtube.com/@Numbersonyourtip"],
+                  ["TikTok", "fa-brands fa-tiktok", "https://www.tiktok.com/@numberstip"],
+                  ["Threads", "fa-brands fa-threads", "https://www.threads.com/@numbersonyourtip"],
+                  ["Medium", "fa-brands fa-medium", "https://medium.com/@numbersonyourtip"],
+                ].map(([name, icon, href]) => (
+                  <li key={name}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer me"
+                      aria-label={`Numbers On Your Tip on ${name}`}
+                      title={name}
+                    >
+                      <i className={icon} aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Column 2: Finance */}
@@ -691,6 +752,14 @@ export default function RootLayout({
                     Domain Name Checker
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/internet-speed-test/"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Internet Speed Test
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -731,6 +800,14 @@ export default function RootLayout({
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     Matrix Calculator
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/mixed-number-calculator/"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Mixed Number Calculator
                   </Link>
                 </li>
               </ul>

@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import DaysBetweenCalculator from "../components/DaysBetweenCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Days Between Dates Calculator | How Many Days Until or Since Any Date",
+  title: "Days Between Dates Calculator",
   description:
-    "Free days between dates calculator — find exact days, weeks, months, and years between any two dates. Quick reference for 30, 60, 90, and 180 days from today.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Count days between two dates, days since a past date, or what date falls 30, 60 or 90 days from today — and why counting both ends changes the answer.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/days-between-calculator/",
+    canonical: "/days-between-calculator/",
+  },
+  openGraph: {
+    title: "Days Between Dates Calculator",
+    description:
+      "Days since, days until, and what date falls N days out — plus the off-by-one problem that trips up deadlines.",
+    url: "/days-between-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Days Between Dates Calculator",
+    description:
+      "Days between any two dates, days since, days until, and dates N days from today.",
   },
 };
 

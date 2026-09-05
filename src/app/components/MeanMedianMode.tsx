@@ -340,6 +340,49 @@ function StatsResultPanel({ result }: { result: StatsResult | null }) {
 /* ─────────────────────────────────────────
    Main Page
 ───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "Should I use the mean or the median?",
+    "Compare them first. If they are close, the data is roughly symmetric and the mean is fine — it uses every value. If they are far apart, the data is skewed and the mean is describing the tail rather than the typical case. With salaries of 24, 26, 27, 28, 30, 32 and 210, the mean is 53.9 and the median is 28, and six of the seven people earn below the mean.",
+  ],
+  [
+    "Why are incomes and house prices always reported as medians?",
+    "Because those distributions are skewed right — a small number of very large values pull the mean upward. The median depends on the position of values rather than their size, so extremes cannot drag it. In a right-skewed distribution the mean describes a person who does not exist, which is why statistical agencies publish medians.",
+  ],
+  [
+    "What does it mean if the mean is much higher than the median?",
+    "The data is skewed right, with a few unusually large values stretching the upper tail. The reverse — mean well below median — indicates left skew, with a few unusually small values. When the two are close, the distribution is roughly symmetric. Comparing them is a free check on the shape of your data without plotting anything.",
+  ],
+  [
+    "What if my data has no mode?",
+    "That happens whenever no value repeats, as in 1, 2, 3, 4, 5. Some conventions call this no mode and others call every value a mode; either way the measure is telling you nothing useful about that data. It is not an error, just a signal that mode is the wrong summary for this set.",
+  ],
+  [
+    "What does it mean if my data has two modes?",
+    "A bimodal result usually means two different groups have been combined into one dataset — two shifts, two age brackets, two product lines. Reporting a single average across them describes neither group. The honest response is generally to separate the groups and summarise each rather than to pick one mode.",
+  ],
+  [
+    "Can I calculate an average of non-numeric data?",
+    "Only the mode. Mean and median both need values you can add or rank, while mode only requires being able to tell whether two values are the same. There is no mean favourite colour and no median blood type, but there is a most common one. For survey answers, sizes and categories the mode is the only average defined.",
+  ],
+  [
+    "What is the difference between range and standard deviation?",
+    "Range is the largest value minus the smallest, so it uses exactly two numbers and is entirely set by the extremes. Standard deviation measures how far values sit from the mean on average, using every value. Adding a single 100 to the set 2, 3, 3, 4, 5 moves the range from 3 to 98 and the standard deviation from 1.02 to 36.01, while the median moves only from 3 to 3.5.",
+  ],
+  [
+    "Why report standard deviation instead of variance?",
+    "They measure the same thing, but variance is in squared units. If your data is in kilograms, the variance is in kilograms squared, which has no useful interpretation. Taking the square root returns it to the original units, so a standard deviation can be compared directly against the mean and against individual values.",
+  ],
+  [
+    "Can I average two averages together?",
+    "Only if both groups are the same size. A class of 10 averaging 70 and a class of 30 averaging 90 do not combine to 80 — the correct figure weights by group size, giving (10 × 70 + 30 × 90) ÷ 40 = 85. The naive answer is five marks out here, and the error grows as the groups become more unequal.",
+  ],
+  [
+    "How many values do I need for an average to mean anything?",
+    "There is no fixed threshold, but sensitivity falls sharply as the count rises: a mean of three numbers moves substantially when any one changes, while a mean of three hundred barely notices. Nothing in the calculation itself warns you which you have, so always report the count alongside the average — a figure with no sample size behind it cannot be evaluated by whoever reads it.",
+  ],
+];
+
 export default function MeanMedianModeCalculator() {
   const [input, setInput] = useState("");
   const [submitted, setSubmitted] = useState("");
@@ -362,9 +405,23 @@ export default function MeanMedianModeCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
         <h1>
-          Mean, Median, Mode Calculator — Instant Statistics for Any Dataset
+          Mean, Median and Mode Calculator — With Range and Std Dev
         </h1>
         <p>
           Enter any list of numbers separated by commas or spaces to instantly
@@ -400,586 +457,322 @@ export default function MeanMedianModeCalculator() {
 
         {/* ── SEO CONTENT ── */}
 
-        <section>
-          <h2>What Are Mean, Median, and Mode?</h2>
-          <p>
-            Mean, median, and mode are the three central measures of tendency in
-            descriptive statistics — each summarizing a dataset with a single
-            representative value, but from a different angle. Together they give
-            you a complete picture of where your data clusters and how it is
-            distributed.
-          </p>
-          <p>
-            These three measures are foundational to every branch of statistics,
-            from academic research and scientific analysis to business
-            reporting, financial modeling, and everyday data tasks. Whether you
-            are a student working through homework problems, an analyst
-            processing survey responses, or a teacher grading an exam, this
-            calculator computes all three instantly along with range, sum,
-            variance, and standard deviation. If you are working specifically
-            with academic grades, our{" "}
-            <Link href="/gpa-calculator/" className="my-link">
-              GPA calculator
-            </Link>{" "}
-            handles weighted grade-point averages, which are a specialized form
-            of weighted mean.
-          </p>
-        </section>
+        <h2>When the Three Averages Disagree, That Is the Finding</h2>
+        <p>
+          Mean, median and mode are usually taught as three ways of doing the
+          same job. They are better understood as three different questions, and
+          the interesting cases are the ones where they give different answers.
+        </p>
+        <p>
+          Take seven salaries at a small company, in thousands: 24, 26, 27, 28,
+          30, 32 and 210.
+        </p>
 
-        <section>
-          <h2>Mean — The Arithmetic Average</h2>
-          <p>
-            The mean (also called the arithmetic mean or average) is calculated
-            by adding all values in a dataset and dividing by the count of
-            values.
-          </p>
-          <h3>Mean Formula</h3>
-          <pre>Mean = Sum of all values ÷ Number of values</pre>
-          <p>
-            Example: For the dataset 4, 8, 6, 10, 2 — the sum is 30 and the
-            count is 5, so the mean is 30 ÷ 5 = <strong>6.0</strong>.
-          </p>
-          <p>
-            The mean is the most widely used measure of central tendency and is
-            ideal when data is symmetrically distributed without extreme
-            outliers. However, it is sensitive to outliers — a single very large
-            or very small value can pull the mean far from where most data
-            points sit. In such cases, the median is often a more informative
-            measure. GPA is a practical example of a weighted mean — each course
-            grade is weighted by credit hours. Our{" "}
-            <Link href="/gpa-calculator/" className="my-link">
-              GPA calculator
-            </Link>{" "}
-            applies this weighted formula automatically.
-          </p>
-        </section>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Measure</th>
+                <th>Value</th>
+                <th>The question it answers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mean</td>
+                <td>53.9</td>
+                <td>If the total were shared equally, what would each get?</td>
+              </tr>
+              <tr>
+                <td>Median</td>
+                <td>28</td>
+                <td>What does the person in the middle earn?</td>
+              </tr>
+              <tr>
+                <td>Mode</td>
+                <td>None</td>
+                <td>What is the most common value? Here, nothing repeats.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-        <section>
-          <h2>Median — The Middle Value</h2>
-          <p>
-            The median is the middle value when a dataset is arranged in
-            ascending order. It divides the dataset into two equal halves — 50%
-            of values fall below it, and 50% fall above.
-          </p>
-          <h3>Median Formula</h3>
-          <ul className="custom-list">
-            <li>
-              <strong>Odd count:</strong> The median is the middle value. For 5
-              values sorted as 2, 4, 6, 8, 10 — the median is <strong>6</strong>
-              .
-            </li>
-            <li>
-              <strong>Even count:</strong> The median is the average of the two
-              middle values. For 4 values sorted as 2, 4, 8, 10 — the median is
-              (4 + 8) ÷ 2 = <strong>6</strong>.
-            </li>
-          </ul>
-          <p>
-            The median is resistant to outliers, making it a better central
-            measure for skewed distributions. This is why real estate reports
-            and income statistics typically use median rather than mean — a
-            handful of extremely high-value homes or salaries would distort the
-            mean significantly.
-          </p>
-        </section>
+        <p>
+          Six of the seven people earn less than the mean. It is a perfectly
+          correct arithmetic average and a poor description of a typical salary
+          at that company, because one value is pulling it upward on its own.
+          The median is unmoved by that value: shifting the top salary to 500
+          would change the mean to nearly 95 and leave the median at exactly 28.
+        </p>
+        <p>
+          This is what people mean by saying the median is robust. It depends on
+          the position of values rather than their size, so extremes cannot drag
+          it.
+        </p>
 
-        <section>
-          <h2>Mode — The Most Frequent Value</h2>
-          <p>
-            The mode is the value (or values) that appear most often in a
-            dataset. Unlike mean and median, the mode is the only measure of
-            central tendency that can be applied to non-numeric (categorical)
-            data.
-          </p>
-          <h3>Types of Mode</h3>
-          <ul className="custom-list">
-            <li>
-              <strong>No mode:</strong> Every value appears exactly once (e.g.
-              1, 2, 3, 4, 5).
-            </li>
-            <li>
-              <strong>Unimodal:</strong> One value appears more than any other.
-              Dataset 2, 3, 3, 5, 7 has mode <strong>3</strong>.
-            </li>
-            <li>
-              <strong>Bimodal:</strong> Two values tie for most frequent.
-              Dataset 1, 2, 2, 3, 5, 5, 6 has modes <strong>2 and 5</strong>.
-            </li>
-            <li>
-              <strong>Multimodal:</strong> Three or more values tie for most
-              frequent.
-            </li>
-          </ul>
-          <p>
-            The mode is especially useful in business and social science. A
-            clothing retailer cares most about the modal shoe size (the most
-            commonly purchased) rather than the mean or median.
-          </p>
-        </section>
+        <h2>The Gap Between Mean and Median Is Itself a Measurement</h2>
+        <p>
+          Comparing the two tells you about the shape of the data without
+          plotting anything.
+        </p>
 
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>If</th>
+                <th>The distribution is</th>
+                <th>Typically because</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mean much higher than median</td>
+                <td>Skewed right</td>
+                <td>
+                  A few very large values — incomes, house prices, response times
+                </td>
+              </tr>
+              <tr>
+                <td>Mean much lower than median</td>
+                <td>Skewed left</td>
+                <td>
+                  A few very small values — exam scores where a handful did badly
+                </td>
+              </tr>
+              <tr>
+                <td>Mean and median close</td>
+                <td>Roughly symmetric</td>
+                <td>No dominant tail in either direction</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          It is worth running this check before deciding which figure to report.
+          If the two are close, use the mean — it uses every value and is easier
+          to work with algebraically. If they are far apart, the mean is
+          describing the tail rather than the typical case.
+        </p>
+        <p>
+          This is also why income and house price statistics are almost always
+          published as medians. It is not a stylistic choice; the mean of a
+          right-skewed distribution describes a person who does not exist.
+        </p>
+
+        <h2>Which One Should You Actually Report?</h2>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Use the</th>
+                <th>When</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mean</td>
+                <td>
+                  Data is roughly symmetric and you need every value to count
+                </td>
+                <td>Average test score in a normal class</td>
+              </tr>
+              <tr>
+                <td>Median</td>
+                <td>There are outliers or the data is skewed</td>
+                <td>Typical salary, house price, or page load time</td>
+              </tr>
+              <tr>
+                <td>Mode</td>
+                <td>
+                  Values are categories, or you want the most common outcome
+                </td>
+                <td>Most-ordered item, most frequent shoe size</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Reporting more than one is usually better than choosing. Stating a
+          mean of 53.9 alongside a median of 28 tells the reader more than either
+          number alone, and it tells them immediately that something in the data
+          is unusual.
+        </p>
+
+        <h2>Mode Is the Only One That Works on Non-Numbers</h2>
+        <p>
+          Mean and median both require values you can add or rank. Mode only
+          requires that you can tell whether two values are the same, which
+          makes it the only average available for categorical data.
+        </p>
+        <p>
+          There is no mean favourite colour and no median blood type. There is a
+          most common one, and that is the mode. For survey answers, product
+          choices, error codes or sizes, it is not a lesser option — it is the
+          only one defined.
+        </p>
+
+        <h3>No Mode, Two Modes, or All of Them</h3>
+        <p>
+          Mode has edge cases the other two do not, and they are worth
+          recognising rather than treating as errors.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>No mode.</strong> In 1, 2, 3, 4, 5 every value appears once.
+            Some conventions say there is no mode; others say every value is one.
+            Either way the measure is telling you nothing useful about this data.
+          </li>
+          <li>
+            <strong>Two modes.</strong> In 1, 1, 2, 2, 3 both 1 and 2 appear
+            twice. A bimodal result often means two different groups have been
+            combined into one dataset — two shifts, two age groups, two product
+            lines — and the honest response is usually to separate them rather
+            than to report one average.
+          </li>
+          <li>
+            <strong>A mode that is not central at all.</strong> Nothing requires
+            the most frequent value to sit near the middle. It can be the lowest
+            or highest value in the set, which is why mode alone is a poor
+            summary of numeric data.
+          </li>
+        </ul>
+
+        <h2>Centre Without Spread Is Half the Story</h2>
+        <p>
+          Two datasets can share a mean and describe completely different
+          situations. Spread is what separates them, and the two common measures
+          behave very differently.
+        </p>
+        <p>
+          <strong>Range</strong> is the largest value minus the smallest. It uses
+          exactly two numbers and ignores everything in between, which makes it
+          entirely determined by extremes.
+        </p>
+        <p>
+          <strong>Standard deviation</strong> measures how far values sit from
+          the mean on average, using every value in the set. It is in the same
+          units as the data, which is why it is usually reported instead of
+          variance — variance is the same quantity in squared units, useful in
+          the algebra and awkward to interpret.
+        </p>
+        <p>
+          Adding one outlier shows the difference between all four measures at
+          once. Start with 2, 3, 3, 4, 5 and add a single value of 100:
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Measure</th>
+                <th>Before</th>
+                <th>After adding 100</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mean</td>
+                <td>3.4</td>
+                <td>19.5</td>
+              </tr>
+              <tr>
+                <td>Median</td>
+                <td>3</td>
+                <td>3.5</td>
+              </tr>
+              <tr>
+                <td>Range</td>
+                <td>3</td>
+                <td>98</td>
+              </tr>
+              <tr>
+                <td>Standard deviation</td>
+                <td>1.02</td>
+                <td>36.01</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          One value out of six multiplied the mean by more than five and the
+          range by more than thirty, while the median moved by half a point. If
+          your summary statistics change dramatically when a single observation
+          is added, that observation deserves examination before the statistics
+          are reported.
+        </p>
+
+        <h2>Two Ways an Average Goes Wrong</h2>
+        <p>
+          <strong>Averaging averages.</strong> Two class averages cannot be
+          averaged unless the classes are the same size. A class of 10 averaging
+          70 and a class of 30 averaging 90 do not combine to 80. The correct
+          figure weights by group size: (10 × 70 + 30 × 90) ÷ 40 = 85. The naive
+          answer is five marks out, and the error grows as the groups become
+          more unequal.
+        </p>
+        <p>
+          <strong>Averaging too few values.</strong> A mean of three numbers is
+          extremely sensitive to each one; a mean of three hundred is not.
+          Nothing in the calculation warns you which you are looking at, so
+          report the count alongside the average. A single figure with no sample
+          size behind it cannot be evaluated by anyone reading it.
+        </p>
+        <p>
+          For descriptive statistics on values you have already computed, the{" "}
+          <Link href="/percentage-calculator/" className="my-link">
+            percentage calculator
+          </Link>{" "}
+          handles proportional comparisons, and the{" "}
+          <Link href="/matrix-calculator/" className="my-link">
+            matrix calculator
+          </Link>{" "}
+          covers linear algebra rather than descriptive measures.
+        </p>
         <section>
-          <h2>Mean vs Median vs Mode — Which Should You Use?</h2>
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-                border: "1px solid #1b3067",
-              }}
-            >
-              <thead>
-                <tr
-                  style={{
-                    backgroundColor: "#1b3067",
-                    color: "#ffffff",
-                    textAlign: "left",
+          <h2>Questions About Averages and Spread</h2>
+          {FAQ_DATA.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleFAQ(i);
+                    }
                   }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
                 >
-                  <th
-                    style={{
-                      padding: "15px",
-                      borderBottom: "2px solid #ffffff",
-                    }}
-                  >
-                    Measure
-                  </th>
-                  <th
-                    style={{
-                      padding: "15px",
-                      borderBottom: "2px solid #ffffff",
-                    }}
-                  >
-                    Best Used When
-                  </th>
-                  <th
-                    style={{
-                      padding: "15px",
-                      borderBottom: "2px solid #ffffff",
-                    }}
-                  >
-                    Weakness
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style={{ backgroundColor: "#fff" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <strong>Mean</strong>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Data is roughly symmetric, no extreme outliers
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Distorted by outliers
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f8f9fc" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <strong>Median</strong>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Data is skewed or has outliers (income, home prices)
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Ignores actual values outside the center
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#fff" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    <strong>Mode</strong>
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Categorical data, identifying the most common value
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    May not exist or be unique; ignores other values
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>
-            In practice, comparing all three measures reveals the shape of your
-            distribution. When mean ≈ median ≈ mode, the data is roughly
-            symmetrical. When the mean is much higher than the median, the data
-            is right-skewed (pulled by a few large values). When the mean is
-            much lower than the median, the data is left-skewed.
-          </p>
-        </section>
-
-        <section>
-          <h2>Range, Variance, and Standard Deviation</h2>
-          <p>
-            Central tendency tells you where data clusters. Measures of spread
-            tell you how much the data varies around that center. This
-            calculator also computes:
-          </p>
-
-          <h3>Range</h3>
-          <pre>Range = Maximum value − Minimum value</pre>
-          <p>
-            The simplest measure of spread. A range of 0 means all values are
-            identical; a large range indicates high variability. It is easy to
-            understand but sensitive to outliers since it only considers the two
-            most extreme values.
-          </p>
-
-          <h3>Variance (σ²)</h3>
-          <pre>Variance = Σ(x − mean)² ÷ n</pre>
-          <p>
-            Variance measures the average squared deviation from the mean.
-            Squaring ensures positive values and gives extra weight to values
-            far from the mean. This calculator uses the population variance
-            formula (dividing by n), appropriate when your dataset represents
-            the entire population rather than a sample.
-          </p>
-
-          <h3>Standard Deviation (σ)</h3>
-          <pre>Standard Deviation = √Variance</pre>
-          <p>
-            Standard deviation is the square root of variance, expressed in the
-            same units as the original data. It is the most commonly used
-            measure of spread. For a normally distributed dataset, roughly 68%
-            of values fall within one standard deviation of the mean, and about
-            95% fall within two standard deviations.
-          </p>
-        </section>
-
-        <section>
-          <h2>Worked Examples</h2>
-
-          <h3>Example 1: Exam Scores</h3>
-          <p>A class of 7 students scored: 72, 85, 90, 68, 90, 77, 85</p>
-          <ul className="custom-list">
-            <li>Sorted: 68, 72, 77, 85, 85, 90, 90</li>
-            <li>
-              Mean = 567 ÷ 7 = <strong>81.0</strong>
-            </li>
-            <li>
-              Median = 4th value = <strong>85</strong>
-            </li>
-            <li>
-              Modes = 85 and 90 (both appear twice) →{" "}
-              <strong>Bimodal: 85, 90</strong>
-            </li>
-            <li>
-              Range = 90 − 68 = <strong>22</strong>
-            </li>
-          </ul>
-          <p>
-            The median (85) is slightly higher than the mean (81) because the
-            lower score of 68 pulls the mean down. In this case, the median
-            better represents the typical student's performance. If these
-            students need to convert their scores to a grade-point scale, our{" "}
-            <Link href="/gpa-calculator/" className="my-link">
-              GPA calculator
-            </Link>{" "}
-            handles that conversion, and our{" "}
-            <Link href="/gpa-percentage/" className="my-link">
-              GPA to percentage converter
-            </Link>{" "}
-            translates between the two systems.
-          </p>
-
-          <h3>Example 2: Monthly Sales ($000s)</h3>
-          <p>Sales over 6 months: 42, 38, 45, 200, 41, 39</p>
-          <ul className="custom-list">
-            <li>Sorted: 38, 39, 41, 42, 45, 200</li>
-            <li>
-              Mean = 405 ÷ 6 = <strong>67.5</strong>
-            </li>
-            <li>
-              Median = (41 + 42) ÷ 2 = <strong>41.5</strong>
-            </li>
-            <li>
-              Mode = <strong>No mode</strong> (all values unique)
-            </li>
-          </ul>
-          <p>
-            The outlier month (200) inflates the mean to 67.5, which is far
-            above five of the six data points. The median (41.5) is a far more
-            accurate representation of typical monthly sales. When reporting
-            these figures as growth rates or ratios, our{" "}
-            <Link href="/percentage-calculator/" className="my-link">
-              percentage calculator
-            </Link>{" "}
-            can help compute percentage changes between months.
-          </p>
-
-          <h3>Example 3: Shoe Sizes Sold</h3>
-          <p>A store sold sizes: 8, 9, 9, 10, 9, 8, 10, 9, 7, 9</p>
-          <ul className="custom-list">
-            <li>
-              Mean = 88 ÷ 10 = <strong>8.8</strong>
-            </li>
-            <li>
-              Median = (9 + 9) ÷ 2 = <strong>9.0</strong>
-            </li>
-            <li>
-              Mode = <strong>9</strong> (appears 5 times)
-            </li>
-          </ul>
-          <p>
-            For restocking decisions, the mode (9) is the most useful number —
-            it tells the store exactly which size is most in demand, regardless
-            of the average.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Enter Data Into This Calculator</h2>
-          <p>
-            This calculator accepts numbers in flexible formats — no need to
-            reformat your data before pasting it in:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <strong>Comma-separated:</strong> 4, 8, 15, 16, 23, 42
-            </li>
-            <li>
-              <strong>Space-separated:</strong> 4 8 15 16 23 42
-            </li>
-            <li>
-              <strong>Mixed delimiters:</strong> 4, 8 15, 16 23 42
-            </li>
-            <li>
-              <strong>Multi-line:</strong> paste a column of numbers directly
-              from a spreadsheet
-            </li>
-            <li>
-              <strong>Decimals:</strong> 3.14, 2.71, 1.41, 1.73 — all supported
-            </li>
-            <li>
-              <strong>Negative numbers:</strong> -5, -3, 0, 2, 7 — fully
-              supported
-            </li>
-          </ul>
-          <p>
-            Results update automatically as you type. The sorted list, frequency
-            bar chart (for datasets up to 30 values), and all statistics are
-            computed in real time. For large datasets, copy and paste directly
-            from Excel, Google Sheets, or a CSV file. If your data includes
-            values in different units that need converting first, our{" "}
-            <Link href="/unit-conversion-calculator/" className="my-link">
-              unit conversion calculator
-            </Link>{" "}
-            can handle length, mass, temperature, and volume conversions before
-            you run the statistics.
-          </p>
-        </section>
-
-        <section>
-          <h2>Mean, Median, Mode in Real-World Applications</h2>
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-              }}
-            >
-              <thead>
-                <tr
-                  style={{
-                    backgroundColor: "var(--card-bg, #f5f5f5)",
-                    textAlign: "left",
-                  }}
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
                 >
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Field
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Common Use
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Preferred Measure
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  [
-                    "Economics",
-                    "Household income distribution",
-                    "Median (skewed by high earners)",
-                  ],
-                  [
-                    "Education",
-                    "Student test score reporting",
-                    "Mean + standard deviation",
-                  ],
-                  [
-                    "Real Estate",
-                    "Home price reporting",
-                    "Median (outliers distort mean)",
-                  ],
-                  ["Medicine", "Clinical trial results", "Mean ± std dev"],
-                  ["Retail", "Most popular product size/color", "Mode"],
-                  [
-                    "Finance",
-                    "Average return over time",
-                    "Mean (symmetric returns)",
-                  ],
-                  [
-                    "Sports",
-                    "Player performance benchmarking",
-                    "Mean + median",
-                  ],
-                  ["Weather", "Temperature averages", "Mean"],
-                ].map(([field, use, measure], i) => (
-                  <tr
-                    key={i}
-                    style={{
-                      backgroundColor: i % 2 === 0 ? "#fff" : "#f8f9fc",
-                    }}
-                  >
-                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                      {field}
-                    </td>
-                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                      {use}
-                    </td>
-                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                      {measure}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p>
-            In academic contexts, understanding how your mean exam score
-            translates to a GPA matters as much as the raw number. Use our{" "}
-            <Link href="/gpa-percentage/" className="my-link">
-              GPA to percentage converter
-            </Link>{" "}
-            to bridge between percentage-based grading systems and the 4.0 GPA
-            scale. For time-based analysis — calculating average durations,
-            response times, or intervals — our{" "}
-            <Link href="/time-calculator/" className="my-link">
-              time calculator
-            </Link>{" "}
-            handles hours, minutes, and seconds arithmetic.
-          </p>
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </section>
 
-        <section>
-          <h2>Common Mistakes When Calculating Mean, Median, and Mode</h2>
-          <ul className="custom-list">
-            <li>
-              <strong>Forgetting to sort before finding the median.</strong> The
-              median requires values in ascending (or descending) order. Picking
-              the "middle" value from an unsorted list gives the wrong answer.
-              This calculator sorts automatically.
-            </li>
-            <li>
-              <strong>Confusing "no mode" with "mode is zero."</strong> When
-              every value appears once, there is no mode — the dataset is
-              amodal. A mode of 0 means zero is the most frequently occurring
-              value, which is a completely different situation.
-            </li>
-            <li>
-              <strong>Using mean for skewed data.</strong> Reporting mean income
-              or mean home price in a skewed market misrepresents the typical
-              experience. Always check whether mean and median diverge
-              significantly — if they do, the median is usually the better
-              summary.
-            </li>
-            <li>
-              <strong>
-                Mixing up population and sample standard deviation.
-              </strong>{" "}
-              If your data is a sample from a larger population, the correct
-              formula divides by (n−1), not n. This calculator uses population
-              standard deviation (dividing by n). For sample calculations,
-              adjust manually.
-            </li>
-            <li>
-              <strong>
-                Comparing means from different-sized groups without weighting.
-              </strong>{" "}
-              Averaging two group means without accounting for group size
-              produces a misleading result. This is known as Simpson's paradox
-              in extreme cases.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Frequently Asked Questions</h2>
-          {[
-            [
-              "What is the difference between mean and average?",
-              "They are the same thing. 'Mean' is the precise mathematical term; 'average' is the everyday word for it. Both refer to the sum of all values divided by the count of values. In statistics, 'average' can technically refer to any measure of central tendency (mean, median, or mode), but in common usage it almost always means the arithmetic mean.",
-            ],
-            [
-              "Can a dataset have more than one mode?",
-              "Yes. A dataset is unimodal when one value appears most often, bimodal when two values tie, and multimodal when three or more values tie for most frequent. When all values appear the same number of times (usually once), there is no mode. This calculator shows all modes when multiple exist.",
-            ],
-            [
-              "When is the median better than the mean?",
-              "The median is preferred when a dataset is skewed or contains outliers. Classic examples: income data (a few very high earners inflate the mean), home prices (luxury properties distort the average), and response times (occasional very long waits skew the mean). In these cases, the median gives a more representative center.",
-            ],
-            [
-              "What does standard deviation tell you?",
-              "Standard deviation measures how spread out the values in a dataset are around the mean. A low standard deviation means values are clustered close to the mean; a high standard deviation means they are spread out widely. For a normally distributed dataset, about 68% of values fall within one standard deviation of the mean.",
-            ],
-            [
-              "What is the difference between population and sample standard deviation?",
-              "Population standard deviation (σ) divides by n and is used when your dataset is the entire population. Sample standard deviation (s) divides by n−1 and is used when your data is a sample drawn from a larger population. This calculator uses population standard deviation. For sample statistics, multiply the displayed variance by n/(n−1) and take the square root.",
-            ],
-            [
-              "How do I find the median of an even set of numbers?",
-              "Sort the numbers in ascending order, find the two middle values, then take their average. For example, with 8 numbers the middle positions are 4th and 5th. If those values are 12 and 16, the median is (12 + 16) ÷ 2 = 14. This calculator handles even and odd counts automatically.",
-            ],
-            [
-              "Can I paste data from Excel or Google Sheets?",
-              "Yes. Copy a column of numbers from Excel or Google Sheets and paste directly into the input box. The calculator accepts numbers separated by commas, spaces, or newlines, so a pasted column works immediately without reformatting.",
-            ],
-            [
-              "What is the relationship between mean and GPA?",
-              "GPA is a weighted mean — each course grade is multiplied by its credit hours before averaging. A simple mean treats all values equally, while GPA gives more weight to higher-credit courses. Use this calculator for simple means and our GPA calculator for credit-weighted academic averages.",
-            ],
-            [
-              "Is this calculator free to use?",
-              "Yes — completely free with no sign-up, no download, and no usage limits. Results appear instantly as you type, and the full statistics panel shows mean, median, mode, range, sum, count, min, max, variance, standard deviation, sorted values, and a frequency chart.",
-            ],
-          ].map(([q, a], i) => (
-            <div className="faq-item" key={i}>
-              <h3 onClick={() => toggleFAQ(i)}>
-                {q}
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-                />
-              </h3>
-              {openFAQ === i && <p>{a}</p>}
-            </div>
-          ))}
-        </section>
-
-        <section>
-          <h2>Final Thoughts</h2>
-          <p>
-            Mean, median, and mode each reveal a different truth about your
-            data. No single measure tells the whole story — comparing all three,
-            alongside standard deviation and range, gives you a genuinely
-            complete picture of any dataset. Use this calculator for quick
-            statistics on any list of numbers, and pair it with our{" "}
-            <Link href="/gpa-calculator/" className="my-link">
-              GPA calculator
-            </Link>{" "}
-            for academic averages, our{" "}
-            <Link href="/percentage-calculator/" className="my-link">
-              percentage calculator
-            </Link>{" "}
-            for ratio-based analysis, or our{" "}
-            <Link href="/age-calculator/" className="my-link">
-              age calculator
-            </Link>{" "}
-            if you need to compute time-based differences in your dataset.
-          </p>
-        </section>
       </div>
 
       {/* ════════ RIGHT — sticky sidebar ════════ */}

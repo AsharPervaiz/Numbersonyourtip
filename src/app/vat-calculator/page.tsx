@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import VATCalculator from "../components/VATCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Free VAT Calculator Online | Add or Remove VAT From Any Price Instantly",
+  title: "VAT Calculator — Add or Reverse VAT Online",
   description:
-    "Free VAT calculator — add VAT to a net price or reverse-calculate VAT from a gross amount. Supports any rate (5%, 15%, 18%, 20%, 25%). Instant breakdown with visual gauge.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Add VAT to a net price or reverse it out of a gross total at any rate, with the VAT fractions, rounding rules and the zero-rated versus exempt distinction.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/vat-calculator/",
+    canonical: "/vat-calculator/",
+  },
+  openGraph: {
+    title: "VAT Calculator — Add or Reverse VAT Online",
+    description:
+      "Why removing VAT is a division and not a subtraction, plus the fractions that let you check any receipt in your head.",
+    url: "/vat-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "VAT Calculator — Add or Reverse VAT Online",
+    description:
+      "Add VAT, reverse VAT out of a gross total, and extract the VAT element at any rate.",
   },
 };
 

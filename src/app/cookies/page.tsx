@@ -3,9 +3,12 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cookies Policy | Numbers On Your Tip",
+  title: "Cookies Policy",
   description:
-    "Learn about the Cookies Policy of Numbers On Your Tip. Understand how we use cookies and tracking technologies to improve your experience on our online calculators and tools.",
+    "Which cookies Numbers On Your Tip sets, what each one is for, and how to control them in your browser.",
+  alternates: {
+    canonical: "/cookies/",
+  },
 };
 
 export default function Cookies() {

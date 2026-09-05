@@ -47,6 +47,45 @@ const TYPE_ICONS: Record<string, string> = {
   SRV: "fa-server",
 };
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "Why has my DNS change not taken effect yet?",
+    "Because resolvers are still serving a cached copy. When you edit a record the authoritative server updates immediately, but every resolver that already cached the old answer keeps it until its TTL expires. A TTL of 86400 means some networks may hand out the previous value for up to a day. Nothing is broken and nothing is half-finished — you are looking at a cache.",
+  ],
+  [
+    "How do I make a DNS change take effect faster?",
+    "Lower the TTL well before you make the change, not at the same time. Resolvers holding the old record are also holding the old TTL, so dropping it to five minutes an hour before the switch achieves nothing. Reduce it a day or more ahead, make the change, then raise it again afterwards. For yourself, flushing your local cache or querying a public resolver bypasses the stale copy.",
+  ],
+  [
+    "Does DNS really propagate across the internet?",
+    "No, and the word is misleading. Nothing travels outward. The authoritative answer changes in one place at one moment, and every other resolver continues serving what it already had until that copy expires. This is why a colleague can see the new site while you see the old one, or why your phone is correct and your laptop is not.",
+  ],
+  [
+    "What is the difference between an A record and a CNAME?",
+    "An A record maps a name directly to an IPv4 address. A CNAME says to go and look up a different name instead, and whatever that resolves to becomes the answer. CNAMEs are used to point a subdomain at a hosted service so the provider can change the underlying address without you editing anything.",
+  ],
+  [
+    "What are SPF, DKIM and DMARC and where do they live?",
+    "All three are published as TXT records. SPF lists which servers may send mail using your domain. DKIM publishes a public key so recipients can verify a message was genuinely sent by an authorised system and not altered. DMARC ties the two together and tells recipients what to do with failures — nothing, quarantine, or reject — and requests reports on who is sending as you.",
+  ],
+  [
+    "Can I have two SPF records?",
+    "No. A domain should publish exactly one. Two SPF records do not combine — the check fails instead, which can send legitimate mail to spam. If you need to authorise several senders, merge them into a single record rather than adding another one.",
+  ],
+  [
+    "Why did my mail stop being delivered after I added DMARC?",
+    "Most likely you published a strict policy before confirming every legitimate sender passes. Marketing platforms, invoicing systems and helpdesk tools all send on your behalf, and a reject policy applied too early silently discards mail you wanted delivered. Start with a monitoring policy, read the reports until all real senders pass, then tighten it.",
+  ],
+  [
+    "My lookup returned nothing. Does that mean the domain is broken?",
+    "Not necessarily. There is a difference between the domain not existing at all — a typo or an expired registration — and the domain existing with no records of the type you asked for. Asking for MX records on a domain that only hosts a website correctly returns nothing. Also check the NS records: if the nameservers are not the provider you have been editing, your changes have been going to a zone nobody consults.",
+  ],
+  [
+    "Does a correct DNS record mean my site is working?",
+    "No. DNS answers where something is, not whether it is running. An A record can point perfectly at a server that is switched off, and MX records prove mail is configured rather than that any mailbox exists or the server is accepting connections. A lookup rules out one class of problem; it does not confirm the service behind it.",
+  ],
+];
+
 export default function DNSLookup() {
   const [domain, setDomain] = useState("");
   const [recordType, setRecordType] = useState("A");
@@ -175,11 +214,25 @@ export default function DNSLookup() {
 
   return (
     <div className="single-page-padding">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div>
-        <h1>Free DNS Lookup Tool – Check A, MX, TXT, NS &amp; CNAME Records</h1>
+        <h1>DNS Lookup — Check A, MX, TXT, NS and CNAME Records</h1>
         <p>
           Instantly look up DNS records for any domain — A, AAAA, MX, TXT, NS,
-          CNAME, SOA, and CAA. This free DNS lookup tool queries Google's public
+          CNAME, SOA, and CAA. This free DNS lookup tool queries the public
           DNS resolver directly from your browser with no sign-up, no API key,
           and no rate limits.
         </p>
@@ -231,7 +284,7 @@ export default function DNSLookup() {
           )}
           {!loading && error && (
             <div className="empty-hint">
-              <i className="fa-solid fa-triangle-exclamation"></i> Couldn't
+              <i className="fa-solid fa-triangle-exclamation"></i> Couldn&apos;t
               complete the lookup{errorDetail ? `: ${errorDetail}` : "."} Please
               try again.
             </div>
@@ -328,443 +381,287 @@ export default function DNSLookup() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a DNS Lookup Tool?</h2>
+        <h2>Each Record Type Answers a Different Question</h2>
         <p>
-          A DNS lookup tool queries the Domain Name System directly and shows
-          you the raw records a domain publishes — the IP addresses it points
-          to, the mail servers that handle its email, the nameservers that
-          manage it, and any text-based configuration it exposes. Instead of
-          relying on your computer's cached DNS, this tool sends a fresh query
-          to Google's public DNS resolver (dns.google) and shows you exactly
-          what comes back in real time.
-        </p>
-        <p>
-          This is the same information your browser silently looks up every time
-          you visit a website, except here it is surfaced directly so you can
-          verify configuration, debug propagation issues, audit email
-          authentication records, or confirm that DNS changes have actually
-          taken effect. Whether you are a web developer, sysadmin, SEO
-          professional, or site owner troubleshooting a problem, DNS lookup is
-          one of the most fundamental diagnostic tools available.
+          A domain does not have one DNS entry; it has a set of them, and each
+          one exists to answer a specific question a different piece of software
+          is asking. Knowing which question you have tells you which record to
+          look up.
         </p>
 
-        <h2>Why Would You Need to Check DNS Records?</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Verifying domain setup</strong> — Confirm A or CNAME records
-            point to the correct server after pointing a domain at new hosting,
-            a CDN, or a landing page builder.
-          </li>
-          <li>
-            <strong>Email deliverability</strong> — Check that MX records
-            resolve correctly and that SPF, DKIM, and DMARC TXT records are
-            published as expected. Missing or misconfigured{" "}
-            <Link href="/email-validator/" className="my-link">
-              email authentication
-            </Link>
-            records are one of the top reasons legitimate emails land in spam.
-          </li>
-          <li>
-            <strong>Debugging propagation</strong> — See what a public resolver
-            currently returns while waiting for DNS changes to propagate
-            globally after a hosting migration or nameserver change.
-          </li>
-          <li>
-            <strong>Migrating providers</strong> — Confirm nameserver (NS)
-            records have switched over after moving a domain to a new registrar
-            or DNS host.
-          </li>
-          <li>
-            <strong>Security audits</strong> — Review CAA records to see which
-            certificate authorities are authorized to issue SSL/TLS certificates
-            for a domain.
-          </li>
-          <li>
-            <strong>Competitive research</strong> — Look up a competitor's DNS
-            to see which hosting provider, CDN, or email service they use — all
-            publicly available information in DNS.
-          </li>
-          <li>
-            <strong>General troubleshooting</strong> — Diagnose "site not
-            loading" or "email not arriving" issues that trace back to DNS
-            misconfiguration.
-          </li>
-        </ul>
-
-        <h2>DNS Record Types Explained</h2>
-        <p>
-          This tool supports all eight major DNS record types. The table below
-          explains what each one does and when you would look it up:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Record
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Purpose
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Example Use Case
-                </th>
+              <tr>
+                <th>Record</th>
+                <th>The question it answers</th>
+                <th>Look here when</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                [
-                  "A",
-                  "Maps domain to an IPv4 address",
-                  "Verify your site points to the correct server IP",
-                ],
-                [
-                  "AAAA",
-                  "Maps domain to an IPv6 address",
-                  "Check if a domain supports IPv6",
-                ],
-                [
-                  "CNAME",
-                  "Alias pointing to another domain",
-                  "Confirm a subdomain routes through a CDN",
-                ],
-                [
-                  "MX",
-                  "Specifies mail servers for the domain",
-                  "Debug email delivery failures",
-                ],
-                [
-                  "TXT",
-                  "Free-form text for verification and auth",
-                  "Check SPF, DKIM, DMARC records",
-                ],
-                [
-                  "NS",
-                  "Lists authoritative nameservers",
-                  "Confirm nameserver migration completed",
-                ],
-                [
-                  "SOA",
-                  "Zone admin info (primary NS, serial, refresh)",
-                  "Verify zone updates propagated",
-                ],
-                [
-                  "CAA",
-                  "Restricts which CAs can issue SSL certs",
-                  "Audit SSL certificate authorization",
-                ],
-              ].map(([rec, purpose, use], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {rec}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {purpose}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {use}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>A</td>
+                <td>Which IPv4 address serves this name?</td>
+                <td>A site loads from the wrong server, or not at all</td>
+              </tr>
+              <tr>
+                <td>AAAA</td>
+                <td>Which IPv6 address serves this name?</td>
+                <td>
+                  A site works for some visitors and not others on modern
+                  networks
+                </td>
+              </tr>
+              <tr>
+                <td>MX</td>
+                <td>Which server handles mail for this domain?</td>
+                <td>Mail is not arriving, or a mail move has stalled</td>
+              </tr>
+              <tr>
+                <td>NS</td>
+                <td>Which nameservers are authoritative for this domain?</td>
+                <td>
+                  Edits at your DNS host appear to have no effect anywhere
+                </td>
+              </tr>
+              <tr>
+                <td>TXT</td>
+                <td>What arbitrary text has the owner published?</td>
+                <td>
+                  Checking domain verification, SPF, DKIM or DMARC entries
+                </td>
+              </tr>
+              <tr>
+                <td>CNAME</td>
+                <td>Which other name should be looked up instead?</td>
+                <td>A subdomain points at a hosted service</td>
+              </tr>
+              <tr>
+                <td>SOA</td>
+                <td>Who is the primary source, and what are the timers?</td>
+                <td>Diagnosing zone-level or replication problems</td>
+              </tr>
+              <tr>
+                <td>CAA</td>
+                <td>
+                  Which certificate authorities may issue for this domain?
+                </td>
+                <td>A certificate request is being refused</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>DNS Response Status Codes</h2>
         <p>
-          Every DNS query returns a status code alongside the results.
-          Understanding these codes helps you diagnose issues quickly:
+          The NS row is the one to check first when something makes no sense at
+          all. If the nameservers listed are not the provider you have been
+          editing, every change you have made has been going to a zone nobody
+          consults.
         </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+
+        <h2>TTL Is Why Your Change Has Not Appeared</h2>
+        <p>
+          Every record carries a time to live: the number of seconds a resolver
+          may keep the answer before asking again. It is the single most useful
+          number in a DNS result and the most frequently ignored.
+        </p>
+        <p>
+          When you edit a record, the authoritative server updates immediately.
+          Every resolver that already cached the old answer keeps serving it
+          until its copy expires. A TTL of 86400 seconds means some networks may
+          continue handing out the previous value for up to a day.
+        </p>
+        <p>
+          The practical consequence is a planning one. If you know a change is
+          coming, lower the TTL well in advance — long enough before the change
+          that the old, long TTL has expired everywhere. Dropping it to a few
+          minutes an hour before you switch achieves nothing, because the
+          resolvers still holding the old record are also holding the old TTL.
+        </p>
+
+        <h2>Nothing Actually Propagates</h2>
+        <p>
+          &quot;DNS propagation&quot; describes the delay accurately and the
+          mechanism misleadingly. No update travels outward through the
+          internet. The authoritative answer changes in one place at one moment,
+          and everywhere else simply continues serving what it already had until
+          that copy expires.
+        </p>
+        <p>
+          This explains behaviour that otherwise looks random. A colleague sees
+          the new site while you see the old one, because your resolvers cached
+          at different times. Your phone on mobile data is correct while your
+          laptop on the office network is not, for the same reason. Nothing is
+          broken and nothing is half-finished — you are looking at two caches
+          with different expiry times.
+        </p>
+        <p>
+          It also explains why the usual advice works. Flushing your local cache
+          or querying a public resolver directly bypasses whichever cache is
+          holding the stale copy. It does not speed anything up for anyone else.
+        </p>
+
+        <h2>The Three Records That Decide Whether Your Mail Is Trusted</h2>
+        <p>
+          Mail authentication is published entirely as TXT records, and each of
+          the three stops a different problem.
+        </p>
+        <p>
+          <strong>SPF</strong> lists which servers are permitted to send mail
+          using your domain. A receiving server checks the sending address
+          against that list. One domain should publish exactly one SPF record —
+          two is a configuration error that causes checks to fail rather than to
+          combine.
+        </p>
+        <p>
+          <strong>DKIM</strong> adds a cryptographic signature to outgoing mail,
+          with the public key published in DNS. The recipient verifies that the
+          message was genuinely sent by an authorised system and was not altered
+          on the way.
+        </p>
+        <p>
+          <strong>DMARC</strong> ties the two together and states what a
+          recipient should do when a message fails: take no action, quarantine
+          it, or reject it outright. It also requests reports, which are how you
+          discover who is sending mail as your domain.
+        </p>
+        <p>
+          A common and expensive mistake is publishing DMARC with a strict
+          policy before confirming that all legitimate senders pass. Marketing
+          platforms, invoicing systems and helpdesk tools all send on your
+          behalf, and a strict policy applied too early silently rejects mail you
+          wanted delivered. If mail is bouncing at one provider, these records
+          are worth checking before you blame the recipient list — our{" "}
+          <Link href="/email-validator/" className="my-link">
+            email validator
+          </Link>{" "}
+          covers the address side of the same problem.
+        </p>
+
+        <h2>Reading a Lookup That Comes Back Empty</h2>
+        <p>
+          An empty result is not one condition, and the difference matters.
+        </p>
+
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Code
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Name
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  What It Means
-                </th>
+              <tr>
+                <th>Result</th>
+                <th>Means</th>
+                <th>Likely cause</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                [
-                  "0",
-                  "NOERROR",
-                  "Query succeeded — records may or may not exist for that type",
-                ],
-                [
-                  "2",
-                  "SERVFAIL",
-                  "Nameserver failed to process — often a server-side issue",
-                ],
-                [
-                  "3",
-                  "NXDOMAIN",
-                  "Domain does not exist — not registered or expired",
-                ],
-                [
-                  "5",
-                  "REFUSED",
-                  "Nameserver refused the query — usually a policy restriction",
-                ],
-              ].map(([code, name, meaning], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {code}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {name}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {meaning}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>No such domain</td>
+                <td>The name does not exist at all</td>
+                <td>A typo, or an expired or unregistered domain</td>
+              </tr>
+              <tr>
+                <td>Domain exists, no records of this type</td>
+                <td>The name is real but has nothing of what you asked for</td>
+                <td>
+                  Normal — for example a domain with a website but no mail
+                </td>
+              </tr>
+              <tr>
+                <td>Answer differs from what you configured</td>
+                <td>You are being served a cached copy</td>
+                <td>The old TTL has not yet expired</td>
+              </tr>
+              <tr>
+                <td>Nameservers are not your provider</td>
+                <td>Your edits are going to an unused zone</td>
+                <td>Nameservers never switched at the registrar</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>How to Use This DNS Lookup Tool</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Step 1:</strong> Type a domain name — for example,
-            example.com or mail.example.com for a subdomain.
-          </li>
-          <li>
-            <strong>Step 2:</strong> Select the record type you want to check.
-          </li>
-          <li>
-            <strong>Step 3:</strong> Press Enter or click Search to run the
-            lookup.
-          </li>
-          <li>
-            <strong>Step 4:</strong> View results. Each record shows its type,
-            TTL, and data value. Click any record to copy its value.
-          </li>
-          <li>
-            <strong>Step 5:</strong> Use "Export all DNS data" to download every
-            record type as a single JSON file for documentation or audits.
-          </li>
-        </ul>
-
-        <h2>Understanding TTL (Time to Live)</h2>
         <p>
-          Every DNS record has a TTL value, shown in seconds next to each
-          result. TTL tells DNS resolvers how long they can cache that record
-          before re-querying the authoritative nameserver. A TTL of 3600 means
-          one hour of caching; 300 means five minutes.
-        </p>
-        <p>
-          When you update a DNS record, the change does not appear everywhere
-          instantly. Resolvers worldwide may still serve the old cached version
-          until their local TTL expires. This is why freshly changed records can
-          take minutes to 48 hours to propagate, depending on the previous TTL.
-          Checking against a public resolver like this tool is the fastest way
-          to see whether Google's DNS has picked up your change.
-        </p>
-        <p>
-          If you plan to make DNS changes, lowering the TTL to 300 seconds a day
-          or two beforehand ensures faster propagation when the actual update is
-          made.
+          The second row catches people out most often. Asking for MX records on
+          a domain that only hosts a website returns nothing, and that is the
+          correct answer rather than a fault.
         </p>
 
-        <h2>Common DNS Troubleshooting Scenarios</h2>
-
-        <h3>Website Not Loading After Changing Hosting</h3>
+        <h2>What a Lookup Cannot Tell You</h2>
         <p>
-          Look up the A record. If it still shows your old hosting provider's
-          IP, the DNS change has not propagated yet — check the TTL to estimate
-          when it will. If the A record shows the new IP but the site does not
-          load, the issue is at the hosting level, not DNS.
-        </p>
-
-        <h3>Email Not Being Delivered</h3>
-        <p>
-          Check MX records first — they must point to your email provider's
-          servers. Then check TXT records for SPF, DKIM, and DMARC. If any of
-          these are missing or incorrectly formatted, receiving servers may
-          reject or spam-folder your outgoing mail.
-        </p>
-
-        <h3>SSL Certificate Not Issuing</h3>
-        <p>
-          If your hosting provider cannot issue an SSL certificate, check the
-          CAA record. If a CAA record exists and does not include your
-          certificate authority (e.g., letsencrypt.org), issuance will be
-          blocked. Either add the correct CA or remove the CAA restriction.
-        </p>
-
-        <h3>Subdomain Not Resolving</h3>
-        <p>
-          Enter the full subdomain (e.g., blog.example.com) and look up its A or
-          CNAME record. If NOERROR returns with zero records, the subdomain has
-          not been created in DNS yet — add the record at your DNS provider.
-        </p>
-
-        <h2>Email Authentication Records — SPF, DKIM, and DMARC</h2>
-        <p>
-          Three TXT-based DNS records form the backbone of email authentication.
-          If you manage a domain that sends email, these are critical for
-          deliverability:
+          DNS answers where things are, not whether they work. A perfect set of
+          records is entirely compatible with a site that is down.
         </p>
         <ul className="custom-list">
           <li>
-            <strong>SPF (Sender Policy Framework)</strong> — Lists the servers
-            authorized to send email for your domain. Missing or overly broad
-            SPF records are one of the most common causes of email going to
-            spam.
+            An A record pointing at a server says nothing about whether that
+            server is running or responding.
           </li>
           <li>
-            <strong>DKIM (DomainKeys Identified Mail)</strong> — Adds a
-            cryptographic signature to outgoing emails. The receiving server
-            uses a public key published in your DNS to verify the message was
-            not tampered with.
+            MX records prove mail is configured, not that any particular mailbox
+            exists or that the server is accepting connections.
           </li>
           <li>
-            <strong>DMARC (Domain-based Message Authentication)</strong> — Tells
-            receiving servers what to do when SPF or DKIM checks fail. DMARC
-            also enables reporting so you can see who is sending email using
-            your domain.
+            Records are public by design, so a lookup reveals only what the
+            owner chose to publish. Internal names and private infrastructure do
+            not appear.
+          </li>
+          <li>
+            You see the answer your resolver holds, which may not be the current
+            authoritative one. Two people running the same query can legitimately
+            get different results.
           </li>
         </ul>
         <p>
-          Use the TXT record lookup in this tool to verify all three are
-          correctly published for your domain.
-        </p>
-
-        <h2>How DNS Works — A Quick Overview</h2>
-        <p>
-          The Domain Name System is the internet's phone book. When you type a
-          URL into your browser, your device does not know where to find that
-          website. It asks a DNS resolver to translate the human-readable domain
-          name (like example.com) into a machine-readable{" "}
+          To check what your own connection looks like from outside, the{" "}
           <Link href="/ip-detector/" className="my-link">
-            IP address
+            IP detector
           </Link>{" "}
-          (like 93.184.216.34). The resolver checks its cache first; if it does
-          not have the answer, it queries the authoritative nameservers for that
-          domain and returns the result.
-        </p>
-        <p>
-          This entire process — DNS resolution — happens in milliseconds and is
-          invisible to the user. But when it breaks or is misconfigured,
-          websites go down, emails stop arriving, and SSL certificates fail to
-          issue. That is when a DNS lookup tool becomes essential for
-          pinpointing what went wrong.
-        </p>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {[
-          [
-            "Is this DNS lookup tool free to use?",
-            "Yes, completely free with no sign-up, no API key, and no query limits. The lookup runs directly between your browser and Google's public DNS resolver — nothing is logged or stored on our end.",
-          ],
-          [
-            "Why does this tool show different results than my own computer?",
-            "Your computer or ISP may have an older, cached version of a domain's DNS records. This tool queries Google's public DNS resolver fresh, which can show updated records before your local cache expires. If results differ, check the TTL to see how long the old record will persist.",
-          ],
-          [
-            "What does NXDOMAIN mean?",
-            "NXDOMAIN means the domain does not exist in DNS — it is not registered, its registration expired, or it was never created as a subdomain. This is different from a domain having no records of a particular type, which returns NOERROR with zero results.",
-          ],
-          [
-            "Why are there no results for a record type I expected?",
-            "Not every domain publishes every record type. A domain might have A records but no AAAA, or no CAA records if it has not restricted certificate issuance. NOERROR with zero records means that type is simply not configured.",
-          ],
-          [
-            "Can I look up DNS records for a subdomain?",
-            "Yes. Enter the full subdomain — for example, mail.example.com or blog.example.com — and it will be queried like any other domain.",
-          ],
-          [
-            "What is the difference between A and CNAME records?",
-            "An A record points a domain directly to an IP address. A CNAME record points to another domain name, which is then resolved to get the final IP. CNAMEs are useful for pointing subdomains at CDNs or SaaS services without hardcoding an IP that might change.",
-          ],
-          [
-            "How long does DNS propagation take?",
-            "It depends on the TTL of the old record. A TTL of 3600 (1 hour) means most resolvers pick up the change within an hour. A TTL of 86400 (24 hours) may take a full day. Most changes propagate within 1 to 4 hours in practice. Lowering TTL before making changes speeds up propagation.",
-          ],
-          [
-            "What is the Export All DNS Data button?",
-            "It queries every supported record type for the current domain in one batch and downloads the combined results as a JSON file. This is useful for documentation, security audits, or keeping a snapshot before making DNS changes.",
-          ],
-          [
-            "Does this tool store or track the domains I look up?",
-            "No. The DNS query goes directly from your browser to Google's public DNS resolver at dns.google. No data passes through our server and nothing is logged or stored.",
-          ],
-        ].map(([q, a], i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          DNS is the invisible infrastructure that makes the internet work. When
-          everything is configured correctly, nobody thinks about it. When
-          something breaks — a site goes down, email stops arriving, an SSL
-          certificate fails to issue — DNS is almost always the first place to
-          look. This tool gives you instant, reliable visibility into any
-          domain's DNS configuration so you can diagnose issues, verify changes,
-          and move on.
-        </p>
-        <p>
-          Looking for other tools? Explore our{" "}
+          shows the address and network you appear to be using, and our{" "}
           <Link
-            href="https://numbersonyourtip.com/emi-calculator/"
+            href="/blog/online-privacy-security-basics/"
             className="my-link"
           >
-            EMI calculator
+            guide to what your IP address and DNS reveal
           </Link>{" "}
-          for loan planning, our{" "}
-          <Link
-            href="https://numbersonyourtip.com/calorie-calculator/"
-            className="my-link"
-          >
-            calorie calculator
-          </Link>{" "}
-          for daily nutrition targets, or our{" "}
-          <Link
-            href="https://numbersonyourtip.com/bmi-calculator/"
-            className="my-link"
-          >
-            BMI calculator
-          </Link>{" "}
-          to check your body mass index.
+          covers the privacy side.
         </p>
+      <h2>DNS Questions</h2>
+
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
       </div>
     </div>
   );

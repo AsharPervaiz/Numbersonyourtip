@@ -2,13 +2,23 @@ import { Metadata } from "next";
 import PercentageCalculator from "../components/PercentageCalculator";
 
 export const metadata: Metadata = {
-  title:
-    "Percentage Calculator | Free Online Percent, Increase & Decrease Calculator",
+  title: "Percentage Calculator — Of, Change, Reverse",
   description:
-    "Free percentage calculator online. Find what X% of Y is, percentage increase or decrease, reverse percentage & percentage of marks — instant results.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Find a percentage of a number, a percentage change, or the original value before a change — plus the difference between percent and percentage points.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/percentage-calculator/",
+    canonical: "/percentage-calculator/",
+  },
+  openGraph: {
+    title: "Percentage Calculator — Of, Change, Reverse",
+    description:
+      "Four percentage questions and the formula each one needs, and why 4% to 6% is a 50% rise.",
+    url: "/percentage-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Percentage Calculator — Of, Change, Reverse",
+    description:
+      "Percentage of, percentage change, reverse percentages and percentage points.",
   },
 };
 

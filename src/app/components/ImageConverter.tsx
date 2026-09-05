@@ -26,6 +26,45 @@ type ConvertedItem = {
   ext: string;
 };
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "Which image format should I use?",
+    "WebP for most web images, since it is generally smaller than both JPG and PNG at comparable quality and supports transparency. JPG for photographs where compatibility matters. PNG for logos, screenshots and anything with sharp edges or flat colour. GIF only for simple animation. The deciding factor is usually whether the image is photographic or graphic.",
+  ],
+  [
+    "Why is my photo so much bigger as a PNG?",
+    "Because lossless compression works by finding repetition, and photographs have almost none — every patch of sky is subtly different. A screenshot of mostly identical white pixels compresses brilliantly; a photograph stays close to its raw size. PNG is the right choice for graphics and the wrong one for photos.",
+  ],
+  [
+    "What is the difference between lossy and lossless?",
+    "Lossy formats permanently discard data the eye is unlikely to notice, which is how a photograph shrinks dramatically with no visible change. Lossless formats keep everything and reproduce the original exactly, at a much larger size. The discarded data is genuinely gone — converting a lossy file back to a lossless format recovers nothing.",
+  ],
+  [
+    "Does converting between formats reduce quality?",
+    "Converting to a lossy format does, and it compounds each time. JPG to WebP to JPG again produces visible degradation even though every individual step looked acceptable, because each compression is applied to an image already carrying the previous one's artefacts. Keep a lossless original and generate lossy versions from it rather than converting converted files.",
+  ],
+  [
+    "Why did my logo get a white background after converting?",
+    "Because JPG has no concept of transparency, so converting flattens the transparent area onto a solid colour. The symptom is a logo that looks fine on a white page and appears in a white box on a coloured one. It cannot be undone from the JPG — use PNG or WebP, both of which preserve transparency.",
+  ],
+  [
+    "Why does text look blurry after I converted a screenshot?",
+    "Lossy compression handles hard edges badly, and text is nothing but hard edges. Saving a screenshot as JPG produces faint smudging around every character, and the artefacts are permanent. Screenshots belong in PNG or lossless WebP.",
+  ],
+  [
+    "What is the difference between converting, compressing and resizing?",
+    "Converting changes how the pixels are stored, compressing changes the quality setting within a format, and resizing changes the pixel dimensions. When a file is too large, resize first, then pick the right format, then compress if needed — reducing a 4000-pixel image to the 1200 pixels it actually displays at removes most of the size before any quality trade-off.",
+  ],
+  [
+    "Are my images uploaded anywhere?",
+    "No. Conversion happens in your browser using the canvas API, so the file never leaves your device. That matters for anything you would not send to a third party — unpublished work, client material, or documents containing personal information.",
+  ],
+  [
+    "Does converting remove photo metadata?",
+    "Yes. Converted images do not retain camera metadata such as GPS coordinates, device model and timestamps. That is usually an advantage, since location data embedded in a photo is a common unintended disclosure when sharing images. If you need that information kept, retain the original file alongside the converted one.",
+  ],
+];
+
 export default function ImageConverter() {
   const [fromFormat, setFromFormat] = useState("png");
   const [toFormat, setToFormat] = useState("webp");
@@ -467,6 +506,21 @@ export default function ImageConverter() {
   }
 `}</style>
 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+
       <div className="single-page-padding">
         <div>
           <h1>
@@ -670,829 +724,212 @@ export default function ImageConverter() {
 
         {/* ===== SEO CONTENT ===== */}
 
+        <h2>Choosing a Format Is Choosing What to Lose</h2>
+        <p>
+          Every image format makes a trade between file size, visual fidelity
+          and features. There is no best one — there is a best one for a
+          particular image and a particular use, and the differences are large
+          enough to matter.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Format</th>
+                <th>Compression</th>
+                <th>Transparency</th>
+                <th>Best for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>JPG</td>
+                <td>Lossy</td>
+                <td>No</td>
+                <td>Photographs, and anything with smooth gradients</td>
+              </tr>
+              <tr>
+                <td>PNG</td>
+                <td>Lossless</td>
+                <td>Yes</td>
+                <td>Logos, screenshots, flat colour, sharp edges</td>
+              </tr>
+              <tr>
+                <td>WebP</td>
+                <td>Either</td>
+                <td>Yes</td>
+                <td>The web generally — smaller than both at similar quality</td>
+              </tr>
+              <tr>
+                <td>GIF</td>
+                <td>Lossless, 256 colours</td>
+                <td>On or off only</td>
+                <td>Simple animation, and little else now</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The distinction that decides most conversions is lossy versus
+          lossless. Lossy formats permanently discard image data that the eye is
+          unlikely to notice, which is how a photograph shrinks dramatically with
+          no visible change. Lossless formats keep everything, so they reproduce
+          the original exactly and stay much larger.
+        </p>
+
+        <h2>Why a Photo in PNG Is Enormous</h2>
+        <p>
+          Lossless compression finds repetition. A screenshot of a document is
+          mostly identical white pixels with sharp black shapes, which compresses
+          brilliantly. A photograph has almost no exact repetition — every patch
+          of sky is subtly different — so there is little for the algorithm to
+          find, and the file stays close to its raw size.
+        </p>
+        <p>
+          This is why the same picture saved as PNG can be several times the size
+          of the JPG version at no visible advantage. It is also why the reverse
+          mistake is worse: a logo or screenshot saved as JPG develops faint
+          smudging around every sharp edge, because lossy compression handles
+          hard transitions badly. Those artefacts are permanent.
+        </p>
+
+        <h2>Converting Lossy to Lossy Loses Twice</h2>
+        <p>
+          Each save to a lossy format discards data, and the loss compounds
+          because the second compression is applied to an image that already
+          carries the first one&apos;s artefacts.
+        </p>
+        <p>
+          Converting JPG to WebP, then back to JPG, then to WebP again produces
+          visible degradation even though every individual step looked fine.
+          Keep an original in a lossless format and generate lossy versions from
+          it each time, rather than converting a converted file.
+        </p>
+        <p>
+          Converting lossy to lossless does not recover anything. A JPG saved as
+          PNG produces a much larger file containing exactly the same visible
+          damage, since the discarded data is gone rather than hidden.
+        </p>
+
+        <h2>Transparency Survives Only Some Conversions</h2>
+        <p>
+          JPG has no concept of transparency. Converting a logo with a
+          transparent background to JPG fills that background with something —
+          usually white or black — and once flattened it cannot be restored.
+        </p>
+        <p>
+          The symptom is a logo that looks correct on a white page and appears in
+          a white box the moment it is placed on a coloured one. If your image
+          has transparency and you need it, PNG and WebP preserve it and JPG does
+          not.
+        </p>
+
+        <h2>When to Convert, and When Not To</h2>
+        <ul className="custom-list">
+          <li>
+            <strong>Photographs for the web</strong> — WebP first, JPG as a
+            fallback where compatibility matters. Both are good at photographic
+            content and WebP is generally smaller.
+          </li>
+          <li>
+            <strong>Logos and icons</strong> — PNG or WebP for transparency and
+            crisp edges. Never JPG.
+          </li>
+          <li>
+            <strong>Screenshots</strong> — PNG or lossless WebP. Text becomes
+            unpleasant to read after lossy compression.
+          </li>
+          <li>
+            <strong>Anything you will edit again</strong> — keep the original
+            untouched and convert copies. The original is the only thing that
+            still has all the data.
+          </li>
+          <li>
+            <strong>Images already the right format and size</strong> — leave
+            them. Re-saving a JPG at the same settings still loses a little for
+            no benefit.
+          </li>
+        </ul>
+
+        <h2>Format, Size and Dimensions Are Three Separate Things</h2>
+        <p>
+          These get conflated constantly, and each is a different tool.
+        </p>
+        <p>
+          Converting changes the <em>encoding</em> — how the pixels are stored.
+          Compressing changes the <em>quality setting</em> within a format, using
+          our{" "}
+          <Link href="/image-compressor/" className="my-link">
+            image compressor
+          </Link>
+          . Resizing changes the <em>pixel dimensions</em>, which is what the{" "}
+          <Link href="/image-resizer/" className="my-link">
+            image resizer
+          </Link>{" "}
+          does.
+        </p>
+        <p>
+          When a file is too large, the order that works is usually resize first,
+          then choose the right format, then compress if it is still too big.
+          Resizing a 4000-pixel-wide photo down to the 1200 pixels it will
+          actually display at removes most of the file size before any quality
+          trade-off is needed at all.
+        </p>
+
+        <h2>Conversion Happens in Your Browser</h2>
+        <p>
+          This tool converts images locally rather than uploading them to a
+          server, which matters for anything you would not want to send to a
+          third party — documents containing personal information, unpublished
+          work, or client material under confidentiality.
+        </p>
+        <p>
+          One consequence worth knowing: converted images do not retain camera
+          metadata such as GPS coordinates and device details. That is usually an
+          advantage, since location data embedded in a photo is a common and
+          unintended disclosure, but if you need that information preserved you
+          should keep the original file.
+        </p>
         <section>
-          <h2>What Is an Online Image Converter?</h2>
-          <p>
-            An online image converter is a free web-based tool that lets you
-            change an image from one file format to another — for example,
-            converting PNG to JPG, JPG to WebP, or HEIC to PNG — without
-            downloading any software or creating an account. Everything happens
-            directly inside your browser, which means your files never leave
-            your device.
-          </p>
-          <p>
-            Whether you're a web developer trying to reduce page load times, a
-            photographer dealing with Apple's HEIC format, or someone who just
-            needs to share a photo in a format that actually opens on another
-            device, an image converter saves you time and headaches every single
-            day.
-          </p>
-        </section>
+          <h2>Image Format Questions</h2>
 
-        <section>
-          <h2>Supported Image Formats</h2>
-          <p>
-            Our free converter supports all the image formats that actually
-            matter in 2026. Here's what you can convert from and to:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <b>JPG / JPEG</b> – The most widely used photo format on the web
-              and in cameras.
-            </li>
-            <li>
-              <b>PNG</b> – Best for images with transparent backgrounds, logos,
-              and graphics.
-            </li>
-            <li>
-              <b>WebP</b> – Google's modern format that gives you smaller file
-              sizes without visible quality loss.
-            </li>
-            <li>
-              <b>SVG</b> – Scalable vector format, perfect for{" "}
-              <Link href="https://iconoop.com" className="my-link">
-                icons
-              </Link>{" "}
-              and simple illustrations.
-            </li>
-            <li>
-              <b>AVIF</b> – A next-generation format that compresses even better
-              than WebP.
-            </li>
-            <li>
-              <b>HEIC</b> – The default photo format on iPhones running iOS 11
-              and later.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Why Do People Need to Convert Image Formats?</h2>
-          <p>
-            Not all image formats work everywhere. A HEIC photo taken on your
-            iPhone might not open on your Windows PC. A PNG file might be{" "}
-            <Link href="/image-compressor/" className="my-link">
-              too large
-            </Link>{" "}
-            to email. A WebP image might not display in an older app. These are
-            real, everyday problems — and converting the image format is the
-            quickest fix.
-          </p>
-
-          <h3>✔ Reduce File Size Without Losing Quality</h3>
-          <p>
-            Converting a PNG to WebP or AVIF can cut your file size by 25–50%
-            with almost no visible difference in quality. This is huge for
-            website performance. Smaller images load faster, which directly
-            improves your Google PageSpeed score and user experience. If your
-            site uses a lot of images, switching to WebP alone can shave seconds
-            off your page load time.
-          </p>
-
-          <h3>✔ Fix Compatibility Issues Across Devices and Platforms</h3>
-          <p>
-            HEIC files are great on Apple devices but completely unreadable on
-            most Windows PCs and many Android apps without additional software.
-            Converting HEIC to JPG takes about five seconds with our tool and
-            makes your photos instantly shareable on any device, operating
-            system, or messaging app.
-          </p>
-
-          <h3>✔ Preserve or Add Transparency</h3>
-          <p>
-            JPG does not support transparent backgrounds. If you have a logo or
-            design element that needs a transparent background, you need PNG or
-            WebP. Converting JPG to PNG lets you work with transparency, which
-            is essential for overlaying images on colored backgrounds without an
-            ugly white box around them.
-          </p>
-
-          <h3>✔ Prepare Images for Social Media, Email, or Print</h3>
-          <p>
-            Different platforms have different requirements. Instagram
-            recommends JPG. Some email clients strip WebP images. Print shops
-            often require high-quality PNG. Our converter helps you get the
-            right format for wherever your image is going — without touching any
-            software.
-          </p>
-
-          <h3>✔ Meet Upload Requirements for Websites and Apps</h3>
-          <p>
-            Many platforms — from Shopify stores to government portals — accept
-            only specific file formats. If you're trying to upload a PNG and the
-            site only accepts JPG, you don't need to figure out Photoshop. Just
-            convert it here in seconds.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Convert an Image Online — Step by Step</h2>
-          <p>
-            Converting an image with our tool takes less than 30 seconds. Here's
-            exactly how it works:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <b>Step 1:</b> Choose your output format from the dropdown on the
-              right. For example, select WebP to optimize for your website.
-            </li>
-            <li>
-              <b>Step 2:</b> Click "Upload Images" or drag and drop your file
-              into the upload area. You can upload up to 3 images at once.
-            </li>
-            <li>
-              <b>Step 3:</b> Hit the "Convert" button. The conversion happens
-              instantly inside your browser — nothing is uploaded to any server.
-            </li>
-            <li>
-              <b>Step 4:</b> Download your converted image with a single click.
-              Done.
-            </li>
-          </ul>
-          <p>
-            The entire process is completely free. No sign-up, no watermark, no
-            file size limit messages, and no waiting for an email with a
-            download link.
-          </p>
-        </section>
-
-        <section>
-          <h2>
-            How to Convert HEIC to JPG for Free (Without Installing Software)
-          </h2>
-          <p>
-            HEIC (High Efficiency Image Container) is the default camera format
-            on iPhones since iOS 11. Apple introduced it because HEIC files are
-            about half the size of JPG files at the same quality — great for
-            saving storage space on your phone.
-          </p>
-          <p>
-            The problem is that HEIC is an Apple-native format. If you send a
-            HEIC photo to someone using Windows, an Android phone, or try to
-            upload it to most websites, it either won't open or will show an
-            error. That's why converting HEIC to JPG is one of the most common
-            image conversion tasks in the world right now.
-          </p>
-          <p>
-            To convert HEIC to JPG using our free tool: select JPG as the output
-            format from the dropdown, upload your HEIC image, and click Convert.
-            Your converted JPG will be ready to download in seconds — completely
-            in your browser, with no software installation required. You can
-            also convert HEIC to PNG if you need transparency support, or HEIC
-            to WebP if you're optimizing images for a website.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Convert PNG to JPG (and When You Should)</h2>
-          <p>
-            PNG files are lossless, which means they don't lose any quality when
-            saved. That's great for logos and graphics, but it also means PNG
-            files are often much larger than necessary for photos. A photo saved
-            as PNG might be 4–5 MB, while the same photo as a JPG is 400–500 KB
-            with barely any visible difference.
-          </p>
-          <p>
-            Converting PNG to JPG makes sense when you need to share a photo by
-            email, upload it to a platform with file size limits, or use it on a
-            web page where load speed matters. Our converter handles PNG to JPG
-            in under a second — just select JPG as the output, upload your PNG,
-            and download the result.
-          </p>
-          <p>
-            One important thing to keep in mind: JPG does not support
-            transparency. If your PNG has a transparent background — for
-            example, a logo with no background — converting it to JPG will fill
-            that transparent area with white. If you need to keep the
-            transparency, convert to WebP or keep it as PNG instead.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Convert Images to WebP — The Best Format for Websites</h2>
-          <p>
-            WebP is a modern image format developed by Google. It produces
-            images that are typically 25–35% smaller than comparable JPG files
-            and 25–50% smaller than PNG files, without any noticeable drop in
-            quality. Google officially recommends WebP for web images, and it's
-            supported by all modern browsers including Chrome, Firefox, Safari,
-            and Edge.
-          </p>
-          <p>
-            If you run a website or blog, switching your images from JPG or PNG
-            to WebP is one of the fastest ways to improve your site's loading
-            speed. Faster loading means lower bounce rates, better user
-            experience, and higher rankings in Google search results.
-          </p>
-          <p>
-            To convert any image to WebP: select WebP as the output format,
-            upload your JPG, PNG, or other image, and click Convert. Your WebP
-            file will be ready to download and use immediately. No plugins, no
-            paid software, no complicated settings.
-          </p>
-        </section>
-
-        <section>
-          <h2>WebP vs JPG vs PNG — Which Image Format Should You Use?</h2>
-          <p>
-            This is probably the most common question when it comes to image
-            formats. Here's a plain-English breakdown:
-          </p>
-
-          <h3>JPG — Best for Photographs</h3>
-          <p>
-            JPG is the most universally supported image format. Every device,
-            browser, app, and platform in the world can open a JPG file. It's
-            excellent for photographs and realistic images because it handles
-            gradients and complex color transitions well. The downside is that
-            JPG uses lossy compression — every time you save a JPG, it loses a
-            tiny bit of quality. It also doesn't support transparency.
-          </p>
-          <p>
-            Use JPG when: you're sharing photos with people on different
-            devices, uploading to social media, or working with platforms that
-            specifically require JPG.
-          </p>
-
-          <h3>PNG — Best for Graphics and Transparency</h3>
-          <p>
-            PNG uses lossless compression, meaning no quality is lost when
-            saving. It also supports transparent backgrounds through an alpha
-            channel, making it ideal for logos, UI elements, watermarks, and any
-            graphic that needs to sit cleanly over different backgrounds. PNGs
-            tend to be larger than JPGs for photographic content, so they're not
-            ideal for photos where file size is a concern.
-          </p>
-          <p>
-            Use PNG when: you need transparency, you're working with logos or
-            icons, or image quality is more important than file size.
-          </p>
-
-          <h3>WebP — Best for Websites and Fast Loading</h3>
-          <p>
-            WebP gives you the best of both worlds. It supports both lossy and
-            lossless compression, supports transparency like PNG, and produces
-            significantly smaller files than both JPG and PNG. It was designed
-            specifically for the web. By 2026, essentially all modern browsers
-            and devices support WebP.
-          </p>
-          <p>
-            Use WebP when: you're uploading images to a website, an online
-            store, a blog, or any place where page load speed matters.
-          </p>
-
-          <h3>AVIF — The Next-Generation Format</h3>
-          <p>
-            AVIF is newer than WebP and compresses even better — sometimes 50%
-            smaller than WebP at the same quality. It's based on the AV1 video
-            codec and is supported by Chrome, Firefox, and most modern browsers.
-            If you want the absolute smallest file sizes with excellent quality,
-            AVIF is the format of the future.
-          </p>
-          <p>
-            Use AVIF when: you're highly performance-focused and your users are
-            on modern browsers.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Reduce Image File Size Without Losing Quality</h2>
-          <p>
-            One of the best ways to reduce image file size without visibly
-            reducing quality is to convert to a more efficient format. Here's a
-            practical guide:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <b>Convert PNG photos to JPG or WebP.</b> If you have a photo (not
-              a logo) saved as PNG, converting it to JPG or WebP can reduce file
-              size by 60–80% with no visible quality loss.
-            </li>
-            <li>
-              <b>Convert JPG to WebP.</b> For web images, WebP typically saves
-              25–35% file size compared to JPG at the same quality setting.
-            </li>
-            <li>
-              <b>Convert JPG to AVIF.</b> AVIF can go even further, often
-              achieving 40–50% smaller file sizes than JPG.
-            </li>
-            <li>
-              <b>Avoid converting PNG logos to JPG.</b> If your PNG has a
-              transparent background, converting to JPG will add a white
-              background and may look wrong. Stick to PNG or WebP for logos.
-            </li>
-          </ul>
-          <p>
-            Our converter processes everything locally in your browser, so you
-            can convert as many images as you want for free, with no file size
-            restrictions. We automatically apply a high-quality compression
-            setting (0.92 quality) that balances size and sharpness well for
-            most use cases.
-          </p>
-        </section>
-
-        <section>
-          <h2>Popular Image Conversions</h2>
-          <ul className="custom-list">
-            <li>
-              <b>PNG to JPG</b> — Reduce file size for photos while keeping them
-              universally compatible.
-            </li>
-            <li>
-              <b>JPG to PNG</b> — Switch to lossless format or add transparency
-              support.
-            </li>
-            <li>
-              <b>PNG to WebP</b> — Optimize graphics and logos for faster
-              website loading.
-            </li>
-            <li>
-              <b>JPG to WebP</b> — Shrink photo file sizes for better web
-              performance.
-            </li>
-            <li>
-              <b>HEIC to JPG</b> — Make iPhone photos compatible with Windows,
-              Android, and websites.
-            </li>
-            <li>
-              <b>HEIC to PNG</b> — Convert iPhone photos to a lossless format
-              with transparency support.
-            </li>
-            <li>
-              <b>WebP to JPG</b> — Convert modern format back to universal JPG
-              for older software or printing.
-            </li>
-            <li>
-              <b>WebP to PNG</b> — Restore full lossless quality from WebP.
-            </li>
-            <li>
-              <b>JPG to AVIF</b> — Get next-gen compression for high-traffic
-              websites.
-            </li>
-            <li>
-              <b>PNG to AVIF</b> — Shrink large images for modern browsers.
-            </li>
-            <li>
-              <b>Image to SVG</b> — Embed raster images inside SVG format for
-              web use.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>
-            Why Convert Images in the Browser Instead of Uploading to a Server?
-          </h2>
-          <p>
-            Most image converter tools you'll find online work by uploading your
-            image to their server, processing it there, then sending it back for
-            you to download. That approach has real problems: it's slower, your
-            files are exposed to a third-party server, and many tools impose
-            daily limits, file size caps, or require you to create an account.
-          </p>
-          <p>
-            Our converter does things differently. The entire conversion happens
-            directly inside your web browser using the HTML5 Canvas API. Your
-            image is never sent anywhere — it stays entirely on your device.
-            This means:
-          </p>
-          <ul className="custom-list">
-            <li>Your images remain completely private — we never see them.</li>
-            <li>
-              Conversion is faster because there's no upload/download round
-              trip.
-            </li>
-            <li>There are no file size limits imposed by server bandwidth.</li>
-            <li>It works even with a slow or unstable internet connection.</li>
-            <li>There's no daily conversion limit or account required.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Is It Safe to Convert Images Online?</h2>
-          <p>
-            With our tool, yes — 100%. Because conversion happens entirely in
-            your browser and files are never uploaded to a server, there's no
-            privacy risk. Your images don't pass through any third-party
-            infrastructure, aren't stored anywhere, and aren't accessible to
-            anyone but you.
-          </p>
-          <p>
-            This is especially important if you're converting documents,
-            sensitive photos, ID scans, or any image that contains personal
-            information. With server-based converters, you're trusting that
-            company's privacy policy and security practices. With a
-            browser-based converter like ours, there's nothing to trust because
-            nothing leaves your device.
-          </p>
-        </section>
-
-        <section>
-          <h2>Understanding Image File Formats in Detail</h2>
-
-          <h3>JPG / JPEG — Joint Photographic Experts Group</h3>
-          <p>
-            JPG has been the dominant photo format since the 1990s. It uses
-            lossy compression, which means the file discards some image data to
-            achieve smaller sizes. For most photos, this compression is nearly
-            invisible to the human eye. JPG supports millions of colors and
-            handles photographic content — landscapes,{" "}
-            <Link href="/image-resizer/" className="my-link">
-              portraits
-            </Link>
-            , product photos — extremely well. It does not support transparency
-            or animation. JPG is the safe, universal choice when you just need
-            the image to open everywhere.
-          </p>
-
-          <h3>PNG — Portable Network Graphics</h3>
-          <p>
-            PNG was created as an open-source alternative to GIF. It uses
-            lossless compression, meaning every pixel is stored exactly as-is
-            with no quality degradation. PNG supports full transparency through
-            an alpha channel, making it ideal for logos, UI elements,
-            watermarks, and any graphic that needs to sit cleanly over different
-            backgrounds. PNGs tend to be larger than JPGs for photographic
-            content, so they're not ideal for photos where file size is a
-            concern.
-          </p>
-
-          <h3>WebP — Web Picture Format</h3>
-          <p>
-            Google introduced WebP as a superior alternative to both JPG and PNG
-            for web use. It supports both lossy and lossless compression modes,
-            alpha transparency, and even animation. In lossy mode, WebP
-            typically achieves 25–34% better compression than JPG at equivalent
-            visual quality. In lossless mode, WebP files are about 26% smaller
-            than PNG files. By 2026, WebP is supported by all major browsers and
-            should be your default format for any image going onto a website.
-          </p>
-
-          <h3>SVG — Scalable Vector Graphics</h3>
-          <p>
-            SVG is fundamentally different from the other formats on this list.
-            While JPG, PNG, WebP, and AVIF are all raster formats (made of
-            pixels), SVG is a vector format — it stores images as mathematical
-            shapes and paths rather than pixels. This means SVGs can be scaled
-            to any size without becoming blurry or pixelated. SVG is ideal for
-            logos, icons, and illustrations where sharpness at every size
-            matters. Note: our tool converts raster images into SVG by embedding
-            the raster image inside an SVG wrapper, which is useful for web
-            embedding but doesn't convert the image to true vector paths.
-          </p>
-
-          <h3>AVIF — AV1 Image File Format</h3>
-          <p>
-            AVIF is one of the newest mainstream image formats, finalized in
-            2019 and based on the AV1 video codec. AVIF provides superior
-            compression compared to both JPG and WebP — often 40–50% smaller
-            file sizes at equivalent visual quality. It also supports HDR, wide
-            color gamut, transparency, and both lossy and lossless compression.
-            Browser support in 2026 covers Chrome, Firefox, Safari, and Edge.
-            AVIF is the best choice if maximum compression efficiency is your
-            goal.
-          </p>
-
-          <h3>HEIC — High Efficiency Image Container</h3>
-          <p>
-            HEIC is the file format Apple uses to store photos on iPhones and
-            iPads running iOS 11 or later. HEIC files are roughly half the size
-            of JPEG files at the same visual quality, which is why Apple adopted
-            it. The downside is compatibility — HEIC isn't natively supported on
-            most non-Apple devices. Windows 10 and 11 need a paid extension to
-            view HEIC files natively, and most online upload forms don't accept
-            HEIC. This is why converting HEIC to JPG or PNG is one of the most
-            common image tasks people search for online.
-          </p>
-        </section>
-
-        <section>
-          <h2>Tips for Getting the Best Results When Converting Images</h2>
-          <ul className="custom-list">
-            <li>
-              <b>Always start with the highest quality original.</b> Image
-              converters can't add detail that isn't there. If you start with a
-              heavily compressed, low-resolution JPG, the converted file won't
-              look better — it'll just be in a different format.
-            </li>
-            <li>
-              <b>Don't convert between lossy formats repeatedly.</b> Converting
-              JPG → WebP → JPG → WebP repeatedly degrades quality slightly each
-              time. Pick your final format and convert once from the original.
-            </li>
-            <li>
-              <b>
-                Use WebP or AVIF for web, PNG for graphics, JPG for broad
-                compatibility.
-              </b>{" "}
-              This simple rule covers the majority of use cases.
-            </li>
-            <li>
-              <b>Check transparency before converting to JPG.</b> If your image
-              has a transparent background and you convert to JPG, the
-              transparent areas become white. Use PNG or WebP if you need to
-              keep the transparency.
-            </li>
-            <li>
-              <b>Batch convert when possible.</b> Our tool lets you upload and
-              convert up to 3 images at once, which saves time when you have
-              multiple files to process.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Common Image Conversion Scenarios and Solutions</h2>
-
-          <h3>Scenario 1: "My iPhone photos won't open on my Windows PC"</h3>
-          <p>
-            This happens because iPhone cameras default to saving photos in HEIC
-            format, which Windows doesn't support natively. The fix is simple:
-            use our converter to change your HEIC files to JPG. Select JPG as
-            the output format, upload your HEIC photos, and download the
-            converted files. They'll open instantly on any Windows PC, Android
-            device, or any other platform.
-          </p>
-
-          <h3>
-            Scenario 2: "My website is loading slowly because of large image
-            files"
-          </h3>
-          <p>
-            If your web pages feel slow, images are usually the biggest culprit.
-            Converting your images from PNG or JPG to WebP can dramatically
-            reduce file sizes. A 1 MB JPG can often become a 600–700 KB WebP
-            with no visible quality difference. If you want to go further, try
-            AVIF for even smaller files. Both formats are supported by all
-            modern browsers and will make a real difference in your PageSpeed
-            score.
-          </p>
-
-          <h3>
-            Scenario 3: "I need to upload a logo with a transparent background
-            but the site only accepts PNG"
-          </h3>
-          <p>
-            If you have your logo as a WebP or SVG file and the upload form only
-            accepts PNG, just convert it here — select PNG as the output format
-            and upload your source file. The transparent background will be
-            preserved in the converted PNG, so your logo will look exactly right
-            on any colored background.
-          </p>
-
-          <h3>
-            Scenario 4: "I have a PNG file that's 8 MB but the email limit is 5
-            MB"
-          </h3>
-          <p>
-            Large PNG files are often photos saved in the wrong format. Convert
-            the PNG to JPG or WebP and you'll likely see the file size drop to
-            1–2 MB immediately. If it's a photo (not a logo with transparency),
-            JPG or WebP will give you essentially the same visual quality at a
-            fraction of the file size.
-          </p>
-
-          <h3>
-            Scenario 5: "I need to submit a document scan but they only accept
-            JPG"
-          </h3>
-          <p>
-            If you have a scan saved as PNG or WebP, converting it to JPG takes
-            a few seconds with our tool. Select JPG from the dropdown, upload
-            your scan, and download the converted file. It'll meet the JPG-only
-            requirement without any loss in readability.
-          </p>
-        </section>
-
-        <section>
-          <h2>FAQ – Free Online Image Converter</h2>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(0)}>
-              Is this image converter completely free to use?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 0 && (
-              <p>
-                Yes, 100% free with no hidden costs. You can convert as many
-                images as you need without paying anything, creating an account,
-                or watching ads. There are no daily limits or premium tiers —
-                the full tool is free for everyone.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(1)}>
-              Are my images safe? Does anything get uploaded to a server?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 1 && (
-              <p>
-                Your images are completely safe. The entire conversion process
-                happens inside your web browser using the HTML5 Canvas API.
-                Nothing is uploaded to any server, and nothing is stored
-                anywhere. This makes our tool safe to use even with sensitive or
-                private photos.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(2)}>
-              Will converting reduce my image quality?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 2 && (
-              <p>
-                Our converter uses a quality setting of 0.92 (out of 1.0), which
-                is high enough that quality loss is essentially invisible in
-                most cases. Converting to PNG or SVG is lossless — no quality is
-                lost at all. The one case where quality can drop more noticeably
-                is if you start with an already heavily compressed source image.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(3)}>
-              Can I convert multiple images at once?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 3 && (
-              <p>
-                Yes — you can upload and convert up to 3 images in a single
-                batch. Just select multiple files when uploading or drag and
-                drop multiple images into the upload area. Each image will be
-                converted individually and available for separate download.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(4)}>
-              How do I convert HEIC to JPG without installing software?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 4 && (
-              <p>
-                You don't need any software. Just select JPG as the output
-                format in our converter, upload your HEIC file from your iPhone
-                or Mac, and click Convert. The resulting JPG file will download
-                to your device instantly — no app installation, no account, no
-                software required.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(5)}>
-              What's the difference between PNG and JPG?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 5 && (
-              <p>
-                PNG uses lossless compression and supports transparent
-                backgrounds, making it ideal for logos, icons, and graphics. JPG
-                uses lossy compression and doesn't support transparency, but
-                produces much smaller file sizes for photographs. For photos
-                where file size matters, use JPG. For logos, illustrations, or
-                anything needing transparency, use PNG or WebP.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(6)}>
-              Why should I convert images to WebP?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 6 && (
-              <p>
-                WebP is Google's modern image format designed specifically for
-                the web. WebP images are typically 25–35% smaller than JPG and
-                up to 50% smaller than PNG at the same visual quality. Smaller
-                images load faster, which improves your Google PageSpeed score,
-                reduces bandwidth usage, and provides a better experience for
-                your visitors. All major modern browsers support WebP, making it
-                the best general-purpose format for websites.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(7)}>
-              Is there a file size limit for converting images?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 7 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 7 && (
-              <p>
-                Because conversion happens in your browser rather than on a
-                server, there's no externally imposed file size limit. Very
-                large images (50 MB+) may take a moment longer to process
-                depending on your device's speed, but the tool will handle them.
-                Most typical image files — photos, graphics, screenshots —
-                convert in under two seconds.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(8)}>
-              Does this tool work on iPhone and Android?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 8 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 8 && (
-              <p>
-                Yes. Our image converter is fully mobile-friendly and works on
-                iPhone, iPad, Android phones and tablets, as well as Mac,
-                Windows, and Linux desktops. Since it's browser-based, all you
-                need is a modern browser — Chrome, Safari, Firefox, or Edge —
-                and it works exactly the same on every device.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(9)}>
-              Can I convert an image to SVG?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 9 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 9 && (
-              <p>
-                Yes, our tool can convert any raster image (JPG, PNG, WebP,
-                HEIC, AVIF) to SVG format. Keep in mind that this embeds the
-                raster image inside an SVG container — it doesn't trace the
-                image into vector paths like dedicated vectorization tools do.
-                The resulting SVG is useful for web embedding and can be scaled
-                without becoming blurry, but it still contains pixel data
-                internally.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(10)}>
-              What's AVIF and should I use it instead of WebP?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 10 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 10 && (
-              <p>
-                AVIF (AV1 Image File Format) is a next-generation image format
-                that offers even better compression than WebP — often 40–50%
-                smaller file sizes than JPG at the same quality. It's supported
-                by Chrome, Firefox, and Safari. If you're running a{" "}
-                <Link href="/" className="my-link">
-                  high-traffic website
-                </Link>{" "}
-                and care deeply about performance, AVIF is worth switching to.
-                For general use, WebP is still the safer and more compatible
-                choice since it has broader support across older browsers and
-                tools.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(11)}>
-              Does this converter support HEIC files from iPhone?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 11 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 11 && (
-              <p>
-                Yes, HEIC is fully supported. You can upload HEIC photos
-                directly from your iPhone or Mac and convert them to JPG, PNG,
-                WebP, or AVIF. This is the easiest way to make your iPhone
-                photos compatible with Windows computers, Android devices, and
-                websites that don't accept HEIC format — all without installing
-                any software.
-              </p>
-            )}
-          </div>
+          {FAQ_DATA.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleFAQ(i);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </section>
 
         <section>

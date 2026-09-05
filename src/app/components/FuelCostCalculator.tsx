@@ -270,6 +270,45 @@ function FuelResultPanel({ result }: { result: FuelResult | null }) {
 /* ─────────────────────────────────────────
    Main Calculator Page
 ───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do I convert miles per gallon to litres per 100 km?",
+    "Divide 235.2 by the figure if it is US MPG, or 282.5 if it is imperial MPG. A car rated 30 MPG in the US is 235.2 ÷ 30 = 7.8 L/100 km. The two constants differ because a US gallon is about 3.785 litres and an imperial gallon about 4.546, so the same car scores roughly 20% higher on the British scale without being any more efficient.",
+  ],
+  [
+    "Why is a lower L/100 km number better but a higher MPG number better?",
+    "Because they measure opposite things. MPG asks how far you get from a fixed amount of fuel, so more is better. L/100 km asks how much fuel a fixed distance takes, so less is better. A car at 5 L/100 km is thriftier than one at 9. Reading the two scales the same way is the most common mistake when comparing European and American specifications.",
+  ],
+  [
+    "How do I calculate the fuel cost of a trip?",
+    "Work out the fuel needed, then multiply by the price. In metric, that is distance in km × L/100 km ÷ 100 × price per litre. A 450 km drive at 7.5 L/100 km with fuel at 1.60 needs 33.75 litres and costs 54. Keep distance and efficiency in the same family — miles with MPG, kilometres with L/100 km — since converting only one of them produces an answer out by about a factor of 1.6.",
+  ],
+  [
+    "How do I work out my cost per mile or per kilometre?",
+    "Cost per mile is the price per gallon divided by MPG. Cost per kilometre is the L/100 km figure divided by 100, multiplied by the price per litre. At 7.5 L/100 km and 1.60 a litre that is 0.12 per km. Holding that one figure turns any journey into a single multiplication, which makes decisions like a detour to a cheaper shop concrete rather than a guess.",
+  ],
+  [
+    "How much gas money should I give someone for a ride?",
+    "Divide the total fuel cost for the journey by the number of people, so a 54 trip with four aboard is 13.50 each. Whether the driver takes a share is worth agreeing beforehand — they are also absorbing tyres, servicing and depreciation, so some groups split the fuel between passengers only. For one-way trips, cost each leg separately rather than halving the total.",
+  ],
+  [
+    "Why does my car never match its advertised fuel economy?",
+    "Manufacturer figures come from standardised test cycles designed to compare cars on equal terms, not to predict your driving. Higher speeds cost disproportionately more because air resistance climbs steeply, short trips consume more per kilometre while the engine is cold, and stop-start traffic loses energy to the brakes at every halt. Roof racks and low tyre pressure add to it.",
+  ],
+  [
+    "How do I measure my real fuel consumption?",
+    "Fill the tank completely, note the odometer, drive normally, then fill completely again and record the litres or gallons it took. Divide the fuel by the distance covered to get your actual figure. Two or three tanks measured this way gives a number worth budgeting from, and it is usually meaningfully worse than the brochure.",
+  ],
+  [
+    "How far do I need to drive for a more efficient car to pay for itself?",
+    "Work out the saving per 100 km — the difference in consumption multiplied by the fuel price — then divide the extra purchase cost by it. Going from 8 to 6 L/100 km at 1.60 a litre saves 3.20 every 100 km, so a 3,000 price difference breaks even at about 94,000 km. At 20,000 km a year that is nearly five years; at 40,000 it is under two and a half.",
+  ],
+  [
+    "What does a commute actually cost over a year?",
+    "Multiply the round-trip distance by working days per month, then by your cost per unit distance. A 24 km round trip over 21 days at 0.12 per km is about 60 a month, or roughly 726 a year in fuel alone. That figure excludes insurance, tax, servicing, tyres and depreciation, which are also real costs of the same journey.",
+  ],
+];
+
 export default function FuelCostCalculator() {
   const [distance, setDistance] = useState("");
   const [fuelPrice, setFuelPrice] = useState("");
@@ -384,9 +423,23 @@ export default function FuelCostCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
         <h1>
-          Fuel Cost Calculator — Trip Fuel Cost, Gas Split &amp; Cost Per KM
+          Fuel Cost Calculator — MPG, L/100km, Trip Cost and Splits
         </h1>
         <p>
           Calculate exactly how much gas you will need for your trip, the total
@@ -608,472 +661,271 @@ export default function FuelCostCalculator() {
           <FuelResultPanel result={panelResult} />
         </div>
 
-        {/* ── SEO CONTENT ── */}
+        {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Fuel Cost Calculator?</h2>
+        <h2>Your Car&apos;s Efficiency Is Quoted in One of Four Units</h2>
         <p>
-          A fuel cost calculator tells you exactly how much money you will spend
-          on petrol, diesel, CNG, or electricity for any trip — whether it is
-          your daily office commute, a weekend road trip, or a cross-country
-          drive. Instead of guessing at the pump, you enter your trip distance,
-          current fuel price, and your vehicle's fuel efficiency to get an
-          instant, accurate cost breakdown including total fuel needed, total
-          cost, cost per kilometre, toll charges, and a per-passenger gas cost
-          split.
-        </p>
-        <p>
-          This tool works as a fuel cost calculator for trip planning, a monthly
-          fuel cost calculator for commute budgeting, a cost per mile calculator
-          for gas expenses, and a gas cost split calculator when carpooling —
-          all in one. It is the most complete free fuel cost tool available
-          online. If you are managing broader personal finances alongside fuel
-          expenses, our{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          shows how transportation costs fit into your overall financial
-          picture.
+          Fuel cost arithmetic is simple. Getting the units straight is not, and
+          that is where almost every wrong answer comes from. Four systems are
+          in common use, two of them share a name, and they are not
+          interchangeable.
         </p>
 
-        <h2>How to Calculate Fuel Cost for a Trip</h2>
-        <p>
-          Wondering how to calculate fuel cost for a trip? It involves three
-          pieces of information: the distance you will travel, the price of fuel
-          per litre (or gallon), and your vehicle's fuel efficiency. The
-          formulas are straightforward:
-        </p>
-        <pre>
-          Fuel Needed (litres) = Distance (km) × Consumption (L/100km) ÷ 100
-          {"\n"}
-          Fuel Cost = Fuel Needed × Price per Litre{"\n"}
-          Total Trip Cost = Fuel Cost + Toll Charges
-        </pre>
-        <p>
-          For example, if you are driving 300 km in a car that uses 7 litres per
-          100 km and fuel costs ₹100 per litre:
-        </p>
-        <pre>
-          Fuel Needed = 300 × 7 ÷ 100 = 21 litres{"\n"}
-          Fuel Cost = 21 × 100 = ₹2,100{"\n"}
-          Round Trip Cost = ₹2,100 × 2 = ₹4,200
-        </pre>
-        <p>
-          This answers the common question "how much gas will I need for my
-          trip" — enter your distance and vehicle efficiency above and the
-          calculator handles the math instantly.
-        </p>
-
-        <h2>Cost Per Mile Calculator — Gas Expense Per KM or Mile</h2>
-        <p>
-          Cost per kilometre (or cost per mile) is one of the most useful
-          numbers for comparing vehicles, planning a commute budget, or figuring
-          out how much gas money to give someone for a ride. The formula:
-        </p>
-        <pre>
-          Cost Per KM = (Fuel Price per Litre × Consumption L/100km) ÷ 100
-        </pre>
-        <p>
-          Example: Fuel at ₹105/litre with a car consuming 8 L/100km gives a
-          cost of (105 × 8) ÷ 100 = ₹8.40 per kilometre. For miles, the
-          calculator converts automatically — just select the miles unit. The
-          result panel shows your cost per km or mile for every calculation.
-        </p>
-
-        <h2>Monthly Fuel Cost Calculator — Commute Budgeting</h2>
-        <p>
-          To use this as a commute gas cost calculator for monthly budgeting,
-          multiply your daily round-trip commute distance by your working days
-          per month, then enter that total distance above. For example, if your
-          office is 25 km away and you work 22 days a month, your monthly
-          commute distance is 25 × 2 × 22 = 1,100 km. At 8 L/100km and
-          ₹105/litre, that is 88 litres × ₹105 = ₹9,240 per month in fuel alone.
-        </p>
-        <p>
-          Knowing your monthly fuel cost helps you budget alongside other
-          recurring expenses. Our{" "}
-          <Link href="/salary-hike-calculator/" className="my-link">
-            salary hike calculator
-          </Link>{" "}
-          can show you what percentage raise you would need to offset rising
-          fuel costs, and our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          reveals how a car loan payment adds to your monthly transportation
-          cost on top of fuel.
-        </p>
-
-        <h2>
-          Gas Cost Split Calculator — How Much Gas Money Should I Give Someone?
-        </h2>
-        <p>
-          One of the most common fuel questions is "how much gas money should I
-          give someone?" when getting a ride. The answer is simple: calculate
-          the total fuel cost for the distance travelled, then divide by the
-          number of passengers. This calculator does exactly that — enter the
-          number of passengers in the optional field, and the per-passenger cost
-          appears automatically in the results.
-        </p>
-        <p>
-          For example, a 200 km trip costing ₹1,680 in fuel split 4 ways is ₹420
-          per person. If there are tolls, those are split equally too. This gas
-          cost split feature makes it easy to fairly divide expenses for road
-          trips, daily carpools, or any shared ride. For splitting non-fuel
-          expenses like restaurant bills, our{" "}
-          <Link href="/discount-calculator/" className="my-link">
-            discount calculator
-          </Link>{" "}
-          can help with tip and discount calculations.
-        </p>
-
-        <h2>Fuel Cost Formula for MPG (Miles Per Gallon)</h2>
-        <p>
-          If your vehicle measures efficiency in miles per gallon — common in
-          the US and UK — the formula adjusts:
-        </p>
-        <pre>
-          Gallons Needed = Distance (miles) ÷ MPG{"\n"}
-          Fuel Cost = Gallons Needed × Price per Gallon
-        </pre>
-        <p>
-          Example: A 400-mile road trip in a car that gets 32 MPG at $3.50 per
-          gallon: 400 ÷ 32 = 12.5 gallons × $3.50 = $43.75 total fuel cost. Cost
-          per mile = $0.11. This is what makes this a cost per mile calculator
-          for gas — select MPG from the dropdown and enter miles as your
-          distance unit.
-        </p>
-
-        <h2>Understanding Fuel Efficiency — L/100km vs km/L vs MPG</h2>
-        <p>Our calculator supports all three formats used worldwide:</p>
-        <ul className="custom-list">
-          <li>
-            <strong>L/100km (litres per 100 kilometres)</strong> — used in
-            Europe, Australia, India, Pakistan, and most of Asia. Lower is
-            better. Typical car: 6–10 L/100km.
-          </li>
-          <li>
-            <strong>km/L (kilometres per litre)</strong> — common in India and
-            South Asia. Higher is better. Bikes: 40–70 km/L; cars: 10–20 km/L.
-          </li>
-          <li>
-            <strong>MPG (miles per gallon)</strong> — standard in the US and UK.
-            Higher is better. Most US cars: 25–40 MPG; trucks/SUVs: 15–25 MPG.
-          </li>
-        </ul>
-
-        <h2>Typical Fuel Efficiency by Vehicle Type</h2>
-        <p>
-          Not sure what efficiency to enter? Use these real-world averages as a
-          starting point:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Vehicle Type
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  km/L
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  L/100km
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  MPG (approx)
-                </th>
+              <tr>
+                <th>Unit</th>
+                <th>Reads as</th>
+                <th>Used mainly in</th>
+                <th>Higher number means</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["Motorcycle / Bike", "30–70", "1.4–3.3", "70–165"],
-                ["Small Hatchback (Petrol)", "14–20", "5–7", "33–47"],
-                ["Sedan / Mid-size Car", "10–16", "6–10", "24–38"],
-                ["SUV / Crossover", "8–13", "8–12", "19–31"],
-                ["Diesel Car", "14–22", "4.5–7", "33–52"],
-                ["Pickup Truck / Large SUV", "6–10", "10–16", "14–24"],
-                ["Hybrid Car", "18–28", "3.5–5.5", "42–66"],
-                [
-                  "Electric Vehicle",
-                  "5–7 km/kWh",
-                  "14–20 kWh/100km",
-                  "100+ MPGe",
-                ],
-              ].map(([type, kmL, lkm, mpg], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {type}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {kmL}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {lkm}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {mpg}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>MPG (US)</td>
+                <td>Miles per US gallon</td>
+                <td>United States</td>
+                <td>Better efficiency</td>
+              </tr>
+              <tr>
+                <td>MPG (imperial)</td>
+                <td>Miles per imperial gallon</td>
+                <td>United Kingdom</td>
+                <td>Better efficiency</td>
+              </tr>
+              <tr>
+                <td>L/100 km</td>
+                <td>Litres to cover 100 km</td>
+                <td>Europe, much of Asia</td>
+                <td>
+                  <em>Worse</em> efficiency
+                </td>
+              </tr>
+              <tr>
+                <td>km/L</td>
+                <td>Kilometres per litre</td>
+                <td>India, Japan, parts of Africa</td>
+                <td>Better efficiency</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <h2>Fuel Cost Comparison — Comparing Two Cars</h2>
         <p>
-          Thinking about buying a new car and want to use this as a fuel cost
-          comparison calculator for two cars? Run the calculator twice — once
-          for each vehicle — using the same trip distance and fuel price but
-          each car's actual efficiency. The difference in total cost per month
-          or per year reveals whether the more efficient (but possibly more
-          expensive) car saves enough in fuel to justify the price difference.
+          Two traps follow from that table. The first is that L/100 km runs
+          backwards relative to every other unit — a car at 5 L/100 km is
+          thriftier than one at 9, which catches people comparing a European
+          spec sheet against an American one.
         </p>
         <p>
-          For example, compare a sedan at 12 km/L versus an SUV at 8 km/L over a
-          1,000 km monthly commute at ₹105/litre: the sedan uses 83 litres
-          (₹8,750) while the SUV uses 125 litres (₹13,125) — a difference of
-          ₹4,375 per month or ₹52,500 per year. Over a 5-year ownership period,
-          the sedan saves ₹262,500 in fuel alone. If the more efficient car is
-          financing through a loan, check the actual monthly payment with our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          to see whether the fuel savings offset the higher EMI.
+          The second is the gallon. A US gallon is about 3.785 litres and an
+          imperial gallon about 4.546, so the same car is quoted at roughly 20%
+          higher MPG in Britain than in America without being any more
+          efficient. A car rated 30 MPG in the US is about 36 MPG in the UK.
+          Comparing a US figure against a UK figure as though they were the same
+          unit makes the British car look substantially better when it may be
+          the identical model.
         </p>
 
-        <h2>Is It Cheaper to Drive or Fly?</h2>
+        <h3>Converting Between Them</h3>
+        <pre>
+          L/100 km = 235.2 ÷ MPG (US){"\n"}L/100 km = 282.5 ÷ MPG (imperial)
+          {"\n"}km/L = 100 ÷ L/100 km{"\n"}MPG (imperial) = MPG (US) × 1.201
+        </pre>
         <p>
-          The "cost to drive vs fly" question depends on distance, number of
-          passengers, and current prices. Here is a general framework:
+          A car rated 30 MPG (US) is 235.2 ÷ 30 = 7.8 L/100 km, which is 100 ÷
+          7.8 = 12.8 km/L. All four describe the same car.
         </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
+
+        <h2>Trip Cost, Whichever Unit You Have</h2>
+        <p>
+          The structure is the same in every system: work out how much fuel the
+          distance needs, then multiply by what fuel costs. Only the middle step
+          changes.
+        </p>
+        <pre>
+          From L/100 km: Fuel = Distance in km × L/100 km ÷ 100{"\n"}From km/L:
+          Fuel = Distance in km ÷ km/L{"\n"}From MPG: Fuel = Distance in miles ÷
+          MPG{"\n"}Then: Cost = Fuel × Price per litre or gallon
+        </pre>
+        <p>
+          A 450 km drive in a car returning 7.5 L/100 km, with fuel at 1.60 a
+          litre: 450 × 7.5 ÷ 100 = 33.75 litres, and 33.75 × 1.60 = 54.00.
+        </p>
+        <p>
+          The one rule that prevents most errors is to keep distance and
+          efficiency in the same family. Miles go with MPG, kilometres go with
+          L/100 km or km/L. Converting the distance and the efficiency in
+          opposite directions produces an answer that is out by roughly a factor
+          of 1.6 and still looks plausible.
+        </p>
+
+        <h2>Cost Per Mile Is the Number Worth Knowing</h2>
+        <p>
+          Trip cost answers one journey. Cost per unit distance answers every
+          journey, and it takes one division:
+        </p>
+        <pre>
+          Cost per km = (L/100 km ÷ 100) × Price per litre{"\n"}Cost per mile =
+          Price per gallon ÷ MPG
+        </pre>
+        <p>
+          At 7.5 L/100 km and 1.60 a litre, that is 0.075 × 1.60 = 0.12 per
+          kilometre. Once you hold that single figure, any journey is a
+          multiplication you can do in your head: a 40 km round trip is 4.80,
+          and a 300 km weekend drive is 36.
+        </p>
+        <p>
+          It also reframes decisions that are otherwise argued about vaguely.
+          A twenty-kilometre detour to a cheaper supermarket costs about 2.40 in
+          fuel before anything else is counted, which is a concrete number to
+          weigh against the saving rather than a feeling.
+        </p>
+
+        <h2>What a Commute Costs Over a Year</h2>
+        <p>
+          Commuting cost surprises people because the per-trip figure is small
+          and the repetition is not.
+        </p>
+        <pre>
+          Monthly = Round trip distance × Working days per month × Cost per unit
+          distance
+        </pre>
+        <p>
+          A 24 km round trip, 21 working days a month, at 0.12 per kilometre
+          comes to 504 km and about 60 a month — roughly 726 a year in fuel
+          alone. That figure is the honest input to any decision about moving
+          closer, changing car, or negotiating a day at home. Note that it
+          excludes insurance, tax, servicing, tyres and depreciation, all of
+          which are real costs of the same journey.
+        </p>
+
+        <h2>Splitting Fuel Money Fairly</h2>
+        <p>
+          Shared journeys tend to be settled by guesswork or by whoever
+          remembers. The fair figure is easy to establish.
+        </p>
+        <pre>Each person pays = Total fuel cost ÷ Number of people</pre>
+        <p>
+          A 54 trip cost with four people aboard is 13.50 each. Whether the
+          driver pays a share is the part worth agreeing in advance: they are
+          also absorbing wear, tyres and depreciation, so many groups split
+          fuel among the passengers only. Neither convention is more correct,
+          but deciding it before the journey avoids the conversation at the end
+          of it.
+        </p>
+        <p>
+          For one-way trips where only some people travel both legs, work out
+          the cost of each leg separately rather than halving the total. Our{" "}
+          <Link href="/bill-split-calculator/" className="my-link">
+            bill split calculator
+          </Link>{" "}
+          handles uneven shares for the rest of a trip.
+        </p>
+
+        <h2>Why the Real Figure Is Always Worse Than the Sticker</h2>
+        <p>
+          Manufacturer economy figures come from standardised test cycles, which
+          exist so that different cars can be compared on equal terms. They are
+          not predictions of what you will get, and the gap is systematic rather
+          than random.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>Speed.</strong> Air resistance rises sharply with velocity,
+            so motorway cruising at higher speeds costs disproportionately more
+            fuel than the same distance driven more slowly.
+          </li>
+          <li>
+            <strong>Short journeys.</strong> A cold engine runs richer until it
+            warms. A run of two-kilometre trips can consume far more per
+            kilometre than one long drive covering the same total.
+          </li>
+          <li>
+            <strong>Stop-start traffic.</strong> Energy spent accelerating a
+            mass is lost to the brakes every time you stop, which is why urban
+            figures trail motorway ones in conventional cars.
+          </li>
+          <li>
+            <strong>Load and roof racks.</strong> Weight matters, but an empty
+            roof rack is worse than its mass suggests because it spoils the
+            airflow across the whole car.
+          </li>
+          <li>
+            <strong>Tyre pressure.</strong> Under-inflated tyres increase
+            rolling resistance measurably, and it is the one item on this list
+            that costs nothing to fix.
+          </li>
+        </ul>
+        <p>
+          The practical response is to calculate with your own observed
+          consumption rather than the brochure figure. Fill the tank, note the
+          odometer, drive normally, then fill again and divide. Two or three
+          tanks of that gives a number worth budgeting from.
+        </p>
+
+        <h2>Does a More Efficient Car Pay for Itself?</h2>
+        <p>
+          The comparison people skip is how far you have to drive to recover a
+          higher purchase price. The answer is a division.
+        </p>
+        <pre>
+          Saving per 100 km = (Old L/100 km − New L/100 km) × Price per litre
+          {"\n"}Break-even distance = Extra purchase cost ÷ Saving per 100 km ×
+          100
+        </pre>
+        <p>
+          Replacing a car using 8 L/100 km with one using 6, at 1.60 a litre,
+          saves 2 litres or 3.20 every 100 km. If the more efficient car costs
+          3,000 more, the break-even is 3,000 ÷ 3.20 × 100, which is about
+          94,000 km.
+        </p>
+        <p>
+          Whether that is a good trade depends entirely on your annual mileage.
+          At 20,000 km a year it takes nearly five years to break even on fuel
+          alone; at 40,000 it takes under two and a half. The efficiency
+          difference is only half the calculation, and the half people quote is
+          usually not the deciding one.
+        </p>
+        <h2>Fuel Cost Questions</h2>
+
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
                 }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
               >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Scenario
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Driving Usually Wins
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Flying Usually Wins
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["Solo traveller", "Under 300 km", "Over 500 km"],
-                ["Couple", "Under 500 km", "Over 800 km"],
-                [
-                  "Family of 4",
-                  "Under 800 km (1 fuel cost vs 4 tickets)",
-                  "Over 1,200 km",
-                ],
-                [
-                  "Time-sensitive",
-                  "Very short distances only",
-                  "Almost always — time value matters",
-                ],
-                [
-                  "With heavy luggage",
-                  "Almost always — no baggage fees",
-                  "Only if baggage is light",
-                ],
-              ].map(([scenario, drive, fly], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {scenario}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {drive}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {fly}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p>
-          Use this calculator to find your actual driving cost (including
-          tolls), then compare it to flight ticket prices for your route. For
-          families, driving often wins because you split one fuel bill across
-          everyone while each person pays a separate flight ticket.
-        </p>
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
 
-        <h2>How to Reduce Your Fuel Cost</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Drive at a steady speed</strong> — fuel consumption
-            increases sharply above 90–100 km/h. Every 10 km/h over 100 adds
-            roughly 8–10% to your fuel bill.
-          </li>
-          <li>
-            <strong>Keep tyres properly inflated</strong> — underinflated tyres
-            increase rolling resistance and can cost 3–5% in extra fuel per
-            trip.
-          </li>
-          <li>
-            <strong>Avoid aggressive acceleration and hard braking</strong> —
-            smooth driving improves efficiency by up to 15% in city traffic.
-          </li>
-          <li>
-            <strong>Remove unnecessary weight</strong> — an extra 50 kg reduces
-            efficiency by roughly 1–2%.
-          </li>
-          <li>
-            <strong>Use air conditioning wisely</strong> — AC increases
-            consumption by 5–15% depending on the vehicle and temperature.
-          </li>
-          <li>
-            <strong>Service your vehicle regularly</strong> — a dirty air filter
-            or old spark plugs can reduce mileage by up to 10%.
-          </li>
-          <li>
-            <strong>Carpool and split costs</strong> — use the passenger split
-            feature above to see how much everyone saves by sharing a ride.
-          </li>
-        </ul>
-
-        <h2>Petrol vs Diesel vs CNG vs Electric — Cost Per KM Comparison</h2>
-        <p>
-          The cheapest fuel per kilometre depends on your vehicle's efficiency
-          and current prices. As a general guide: CNG offers the lowest cost per
-          km (often 40–60% cheaper than petrol) but requires a CNG-compatible
-          vehicle. Diesel is typically 20–30% cheaper per km than petrol for
-          high-mileage drivers. Electric vehicles have the lowest energy cost
-          per km but higher upfront prices. Use this calculator as a gas vs
-          electric car cost comparison tool by running both scenarios and
-          comparing the monthly totals — then factor in the car payment using
-          our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          to see the complete ownership cost.
-        </p>
-
-        <h2>Road Trip Fuel Budgeting Tips</h2>
-        <ul className="custom-list">
-          <li>Always calculate both one-way and return costs before leaving</li>
-          <li>Add 10–15% buffer for unexpected detours and traffic</li>
-          <li>
-            Check fuel prices along your route — prices vary by city and station
-          </li>
-          <li>
-            Fill up before entering expressways where stations may charge more
-          </li>
-          <li>
-            Highway driving is 15–20% more fuel-efficient than city driving
-          </li>
-          <li>
-            Split tolls and fuel evenly using the per-passenger feature above
-          </li>
-        </ul>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {[
-          [
-            "How do I calculate fuel cost for a road trip?",
-            "Enter your trip distance, select one-way or round trip, enter the current fuel price per litre, and your vehicle's consumption in L/100km or km/L. The calculator instantly shows total fuel needed, fuel cost, cost per km, and total trip expense including tolls. This is the fastest way to answer 'how much gas will I need for my trip.'",
-          ],
-          [
-            "How do I calculate fuel cost per kilometre?",
-            "Use this formula: Cost Per KM = (Fuel Price × Consumption L/100km) ÷ 100. At ₹105/litre with 8 L/100km, cost per km = ₹8.40. For cost per mile, select miles as the distance unit and MPG as the efficiency unit — the calculator converts automatically.",
-          ],
-          [
-            "How much gas money should I give someone for a ride?",
-            "Calculate the total fuel cost for the distance they drove, then divide by the number of people in the car (including the driver). Enter the distance and passengers above and the per-person cost appears automatically. For a 100 km ride at ₹8/km cost, each of 3 passengers would pay roughly ₹267.",
-          ],
-          [
-            "What is a good fuel efficiency for a car?",
-            "A fuel-efficient petrol car achieves 14–20 km/L (5–7 L/100km). Diesel cars generally get 14–22 km/L. SUVs use more at 8–12 L/100km. Anything under 6 L/100km is excellent for petrol. Hybrids achieve 18–28 km/L, and EVs are even more efficient.",
-          ],
-          [
-            "How do I calculate monthly fuel cost for commuting?",
-            "Multiply your one-way commute by 2 (return), then by working days per month (typically 22). Enter that total distance in this calculator. For example, 20 km each way × 2 × 22 = 880 km/month. At 7 L/100km and ₹105/litre, monthly fuel cost = ₹6,468.",
-          ],
-          [
-            "How do I convert MPG to L/100km?",
-            "Divide 235.214 by your US MPG value. For example, 30 MPG = 235.214 ÷ 30 = 7.84 L/100km. For UK MPG (imperial gallons), divide 282.48 by your MPG. This calculator handles all three units automatically — select from the dropdown.",
-          ],
-          [
-            "Is it cheaper to drive or fly?",
-            "For a solo traveller, flying is often cheaper over 500 km. For a family of 4, driving frequently wins because you split one fuel cost across everyone while each person pays a separate flight ticket. Use this calculator to find your driving cost, then compare to flight prices for your route.",
-          ],
-          [
-            "How do I compare fuel costs between two cars?",
-            "Run the calculator twice — same distance and fuel price, but enter each car's efficiency. The difference in total cost shows you the monthly or yearly savings of the more efficient vehicle. This makes it a fuel cost comparison calculator for any two vehicles you are considering.",
-          ],
-          [
-            "How much does the average person spend on fuel per month?",
-            "It varies widely. In the US, average monthly gas spending is $150–$250. In India, a typical car commuter in a metro city spends ₹4,000–₹10,000 per month. Use this calculator with your actual commute distance and fuel price for a personal estimate.",
-          ],
-          [
-            "Is this fuel cost calculator free to use?",
-            "Yes — completely free, no sign-up, no limits. Calculate fuel costs for any trip, any vehicle type, any fuel unit. Results include total cost, fuel needed, cost per km/mile, toll charges, and per-passenger split.",
-          ],
-        ].map(([q, a], i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          Whether you are planning a one-time road trip, budgeting your daily
-          commute, figuring out how much gas money to give a friend, or
-          comparing two vehicles side by side, this fuel cost calculator gives
-          you the exact numbers in seconds. Enter your trip details above and
-          stop guessing at the pump.
-        </p>
-        <p>
-          For related financial planning, our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          shows your car loan payment, our{" "}
-          <Link href="/salary-hike-calculator/" className="my-link">
-            salary hike calculator
-          </Link>{" "}
-          helps you evaluate whether a raise covers rising commute costs, and
-          our{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          puts your vehicle and transportation expenses in the context of your
-          complete financial picture.
-        </p>
       </div>
 
       {/* ── SIDEBAR ── */}

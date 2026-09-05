@@ -274,40 +274,40 @@ function addDaysToDate(d: Date, n: number): string {
 
 const FAQ_DATA = [
   {
-    q: "How do I calculate the number of days between two dates?",
-    a: "Enter the start date and end date above. The calculator subtracts the earlier from the later and shows the exact number of calendar days between them, along with weeks, months, years, hours, and minutes. It correctly accounts for different month lengths and leap years.",
+    q: "How many days between two dates — do I count both ends?",
+    a: "It depends what you are counting, and both answers are defensible. From 1 March to 8 March the difference is seven days, while the number of dates in that range counting both ends is eight. This calculator reports the difference, so 1 January to 3 January is 2. Hotel nights and notice periods usually use the difference; leave and absence usually count both ends.",
   },
   {
-    q: "Can I find out how many days since a specific date?",
-    a: "Yes. Enter the past date as the start date and today's date as the end date. The result shows exactly how many days have passed since that date — useful for tracking anniversaries, milestones, or elapsed time.",
+    q: "What date is 90 days from today?",
+    a: "The Quick Reference table on this page shows it, along with 30, 60, 120, 180 and 365 days, recalculated against the current date each time the page loads. Counting forward manually is error-prone because months have unequal lengths — 90 days from a date in August lands in November, and getting there mentally means tracking which months have 30 days and which have 31.",
   },
   {
-    q: "How do I calculate how many days until my birthday?",
-    a: "Enter today's date as the start date and your next birthday as the end date. The calculator shows the exact countdown in days, weeks, and months.",
+    q: "How do I count how many days since a past date?",
+    a: "Enter the past date as the start and today as the end. The result is the elapsed number of days, which is the same calculation as any other span — the calculator does not care whether the dates are in the past, the future, or one of each. It always returns the distance between them.",
   },
   {
-    q: "What is 30 / 60 / 90 / 180 days from today?",
-    a: "The 'Quick Reference — Days From Today' table on this page shows the exact calendar date for 30, 60, 90, 120, 180, and 365 days from today. These update dynamically so they are always current.",
+    q: "Why is five working days not the same as five days?",
+    a: "Because weekends fall inside the span, and how many depends on which day you start. Five working days from a Monday is the following Monday, seven calendar days later. Five working days from a Thursday is the Thursday after next, eleven calendar days later. Public holidays extend it further and differ by country and region, so a general tool cannot count them for you.",
   },
   {
-    q: "Does this count the start date or the end date?",
-    a: "This calculator counts the span between the two dates without double-counting either day. From January 1 to January 3 is 2 days — the distance between them.",
+    q: "Is 30 days the same as one month?",
+    a: "No, and the difference shows up in contracts. Thirty days from 31 January is 2 March in an ordinary year, while one month from the same date is 28 February. Months vary between 28 and 31 days, so any conversion from days to months is an approximation. Weeks are the only larger unit that is exact, at precisely seven days.",
   },
   {
-    q: "How do I count business days between two dates?",
-    a: "This calculator counts all calendar days including weekends. To estimate business days, subtract approximately 2 out of every 7 days (weekends). For a 90-day span, roughly 64 are business days. For exact business day counts, you would also need to exclude your country's public holidays.",
+    q: "What happens when you add a month to 31 January?",
+    a: "There is no exact answer, because 31 February does not exist. Different systems resolve it differently — some clamp to the last day of the target month, giving 28 or 29 February, and others roll forward into March. If a payment schedule or renewal date depends on month ends, state which rule applies rather than assuming both parties use the same one.",
   },
   {
-    q: "How many days are in a year?",
-    a: "A common year has 365 days. A leap year has 366. For fractional year calculations, this tool uses 365.25 — the average that accounts for the leap year cycle.",
+    q: "What is the actual leap year rule?",
+    a: "A year divisible by 4 is a leap year, unless it is divisible by 100, unless it is also divisible by 400. So 1900 was not a leap year and 2000 was — the exception that caught a great deal of software. The next century year to break the pattern is 2100. Any span crossing 29 February contains one extra day, which counting handles automatically and estimating by multiplying years by 365 does not.",
   },
   {
-    q: "Can I calculate days between past and future dates?",
-    a: "Yes. This calculator works for any two dates — both in the past, both in the future, or one of each. The result is always the absolute number of days between them.",
+    q: "Why do two people get different answers for the same dates?",
+    a: "Usually date format or time zone. 03/04/2026 is 3 April in most of the world and 4 March in the United States, so the same written date produces different spans. A deadline at midnight is also a different moment in different places, and a date recorded in one zone can shift by a day when read in another. Write the month as a word when a date crosses borders.",
   },
   {
-    q: "Is this days between dates calculator free?",
-    a: "Yes — completely free with no sign-up and no limits. Calculate the days between any two dates, any number of times. Results include days, weeks, months, years, hours, and minutes.",
+    q: "How do I convert a day count into weeks, months or years?",
+    a: "Weeks are exact — divide by seven. Months and years are approximations, because months run from 28 to 31 days and years from 365 to 366. This calculator uses 365.25 for fractional years, which is the average across the leap cycle. For anything where the exact date matters, such as a contractual deadline, work in days or name the end date outright.",
   },
 ];
 
@@ -317,6 +317,12 @@ export default function DaysBetweenDatesCalculator() {
   const [panelResult, setPanelResult] = useState<DaysResult | null>(null);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const toggleFAQ = (i: number) => setOpenFAQ(openFAQ === i ? null : i);
+  const handleFAQKey = (e: React.KeyboardEvent, i: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleFAQ(i);
+    }
+  };
 
   const compute = (): DaysResult | null => {
     if (!startDate || !endDate) return null;
@@ -375,7 +381,7 @@ export default function DaysBetweenDatesCalculator() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
 
-        <h1>Days Between Dates Calculator</h1>
+        <h1>Days Between Dates — Count Days Since, Until or From a Date</h1>
         <p>
           Calculate the exact number of days, weeks, months, and years between
           any two dates — instantly and for free. Use it to find how many days
@@ -440,76 +446,77 @@ export default function DaysBetweenDatesCalculator() {
           <DaysResultPanel result={panelResult} />
         </div>
 
-        {/* ── SEO CONTENT ── */}
+        {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Days Between Dates Calculator?</h2>
+        <h2>Three Different Questions, One Calculator</h2>
         <p>
-          A days between dates calculator tells you the exact number of calendar
-          days that separate two dates. It is one of the most versatile everyday
-          tools — useful for calculating age in days, tracking project
-          timelines, figuring out how many days until an event, measuring how
-          many days since something happened, or planning deadlines and
-          countdowns.
-        </p>
-        <p>
-          Unlike a simple calendar count, this calculator also converts the
-          total days into weeks, months, years, hours, and minutes — giving you
-          every unit you might need. For time-based arithmetic (adding hours and
-          minutes together), our{" "}
-          <Link href="/time-calculator/" className="my-link">
-            time calculator
-          </Link>{" "}
-          handles that separately. And for finding your exact age in years,
-          months, and days, our{" "}
-          <Link href="/age-calculator/" className="my-link">
-            age calculator
-          </Link>{" "}
-          is purpose-built for that.
+          People arrive at a date calculator wanting one of three things, and
+          although they all involve counting days, they are not the same
+          calculation.
         </p>
 
-        <h2>Quick Reference — 30, 60, 90, and 180 Days From Today</h2>
-        <p>
-          One of the most commonly searched date questions is "what is 90 days
-          from today?" or "what date is 30 days from now?" or "14 days from
-          today" or "2 weeks from today" The table below updates dynamically so
-          the answers are always current:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Days From Today
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Date
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Weeks
-                </th>
+              <tr>
+                <th>You want to know</th>
+                <th>You supply</th>
+                <th>Typical phrasing</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>How much time has passed</td>
+                <td>A past date</td>
+                <td>How many days since I started, since we met, since launch</td>
+              </tr>
+              <tr>
+                <td>How much time is left</td>
+                <td>A future date</td>
+                <td>How many days until the exam, the wedding, the deadline</td>
+              </tr>
+              <tr>
+                <td>What date falls N days out</td>
+                <td>A start date and a number of days</td>
+                <td>90 days from today, 30 days after invoice, 14 days notice</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The third is the one people most often work out by hand and get wrong,
+          because it requires stepping across month boundaries of unequal length.
+          Counting forward 90 days from a date in August lands in November, and
+          getting there mentally means knowing whether each intervening month has
+          30 or 31 days.
+        </p>
+
+        <h3>What Date Falls 30, 60, 90 or 180 Days From Today?</h3>
+        <p>
+          These are the counts that appear most often in notice periods, refund
+          windows and probation terms. The table recalculates against the current
+          date every time the page loads, so the answers below are for today
+          rather than for whenever this was written.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Days from today</th>
+                <th>Date</th>
+                <th>Equivalent in weeks</th>
               </tr>
             </thead>
             <tbody>
               {[30, 60, 90, 120, 180, 365].map((n) => (
                 <tr key={n}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                  <td>
                     <strong>{n} days</strong>
                   </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {addDaysToDate(today, n)}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                  <td>{addDaysToDate(today, n)}</td>
+                  <td>
                     {Math.floor(n / 7)} weeks{" "}
                     {n % 7 > 0 ? `& ${n % 7} days` : ""}
                   </td>
@@ -518,188 +525,231 @@ export default function DaysBetweenDatesCalculator() {
             </tbody>
           </table>
         </div>
+
         <p>
-          For any other number of days, enter today as the start date and the
-          target date above to get the exact count.
+          For any other interval, enter today as the start date above and the
+          target date as the end date.
         </p>
 
-        <h2>How to Calculate Days Between Two Dates</h2>
-        <p>The formula is straightforward:</p>
-        <pre>Days Between = End Date − Start Date</pre>
+
+        <h2>The Off-by-One Problem</h2>
         <p>
-          In practice, this involves accounting for varying month lengths (28,
-          29, 30, or 31 days), leap years, and exact calendar positions — which
-          is why a calculator is more reliable than manual counting. For
-          example, the days between 15 March 2023 and 28 September 2024:
+          Ask how many days there are between 1 March and 8 March and you can
+          justify two answers. The difference is seven days. The number of dates
+          in the range, counting both ends, is eight. Neither is wrong; they
+          answer different questions.
+        </p>
+        <pre>
+          Difference between the dates = 7{"\n"}Days in the range including both
+          ends = 8{"\n"}Days in the range including one end = 7
+        </pre>
+        <p>
+          This matters far more than it sounds, because the convention differs by
+          context and money often depends on it.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Context</th>
+                <th>Usual convention</th>
+                <th>Consequence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hotel nights</td>
+                <td>Exclusive — count nights, not dates</td>
+                <td>
+                  Checking in on the 1st and out on the 8th is seven nights
+                </td>
+              </tr>
+              <tr>
+                <td>Contract notice periods</td>
+                <td>Often exclusive of the day of service</td>
+                <td>The clock usually starts the following day</td>
+              </tr>
+              <tr>
+                <td>Leave and absence</td>
+                <td>Inclusive of both first and last day</td>
+                <td>
+                  Monday to Friday off is five days, not four
+                </td>
+              </tr>
+              <tr>
+                <td>Age and anniversaries</td>
+                <td>Exclusive — elapsed time, not dates touched</td>
+                <td>You are not one day old on the day you are born</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          When a deadline matters, the safest habit is to state the end date
+          explicitly rather than the number of days. &quot;Due by 30
+          September&quot; cannot be misread; &quot;due in 30 days&quot; depends
+          on whether today counts.
+        </p>
+
+        <h2>Calendar Days Are Not Working Days</h2>
+        <p>
+          A great many delivery promises, refund windows and legal deadlines are
+          quoted in working days, which do not map onto calendar days at any
+          fixed ratio.
+        </p>
+        <p>
+          Five working days from a Monday is the following Monday — seven
+          calendar days. Five working days from a Thursday is the Thursday after
+          next — eleven calendar days, because two weekends fall inside it. The
+          same promise means different things depending on the day it was made,
+          which is why a refund quoted as five working days can arrive anywhere
+          from a week to a fortnight later.
+        </p>
+        <p>
+          Public holidays extend it further and are not consistent between
+          countries or even between regions of one country. Any working-day
+          calculation that crosses a holiday period needs the specific calendar
+          for the specific place, which no general tool can supply.
+        </p>
+
+        <h2>Days Are Exact. Months and Years Are Not.</h2>
+        <p>
+          A day is a fixed unit, so a count of days between two dates is an exact
+          answer. Convert that to months or years and it stops being exact,
+          because those units vary in length.
         </p>
         <ul className="custom-list">
           <li>
-            Total: <strong>563 days</strong>
+            Months run from 28 to 31 days. There is no fixed number of days in a
+            month, so &quot;three months&quot; and &quot;90 days&quot; are
+            different periods that happen to be close.
           </li>
-          <li>Weeks: 80 weeks and 3 days</li>
-          <li>Months: approximately 18.5</li>
-          <li>Years: approximately 1.54</li>
-          <li>Hours: 13,512</li>
+          <li>
+            Years run to 365 or 366 days, so any conversion using 365 drifts by a
+            day every four years.
+          </li>
+          <li>
+            Weeks are the only larger unit that is exact, at precisely seven
+            days, which is why week counts never disagree.
+          </li>
         </ul>
-
-        <h2>Common Uses</h2>
-
-        <h3>How Many Days Until My Birthday or Christmas?</h3>
         <p>
-          Enter today as the start date and your next birthday (or December 25)
-          as the end date for an instant countdown in days, weeks, and months.
-          This is the fastest way to answer "how many days until Christmas" or
-          "how many days until my birthday" without counting on a calendar.
+          The practical consequence appears in contracts. A payment term of 30
+          days from 31 January falls on 2 March in a normal year. A term of one
+          month from the same date falls on 28 February. Those are different
+          dates from what looks like the same instruction, and which applies
+          depends on the wording.
+        </p>
+        <p>
+          Month-end arithmetic has a second trap. Adding one month to 31 January
+          has no exact answer, because 31 February does not exist. Different
+          systems resolve it differently — some clamp to the last day of the
+          target month, others roll into March. If a schedule depends on
+          month-end dates, spell out which rule applies rather than assuming.
         </p>
 
-        <h3>How Many Days Since a Date?</h3>
+        <h2>Leap Years, and the Rule Most People Half-Know</h2>
         <p>
-          Enter any past date as the start date and today as the end date to
-          find exactly how many days have elapsed. Use this to track how many
-          days since a wedding, a job start date, a significant life event, or
-          any milestone. Reaching 1,000 days or 10,000 days is a popular
-          celebration milestone. To convert that elapsed time into your exact
-          age, use our{" "}
+          The familiar version is that every fourth year has an extra day. The
+          full rule has two exceptions, and it exists because a solar year is
+          slightly less than 365.25 days.
+        </p>
+        <pre>
+          Divisible by 4 → leap year{"\n"}unless divisible by 100 → not a leap
+          year{"\n"}unless also divisible by 400 → leap year after all
+        </pre>
+        <p>
+          So 1900 was not a leap year and 2000 was, which is the case that
+          catches people and caught a great deal of software. The next century
+          year to break the pattern is 2100, which will not be a leap year
+          despite being divisible by four.
+        </p>
+        <p>
+          For everyday spans this matters in one specific way: any period
+          crossing 29 February contains one more day than the same span in an
+          ordinary year. Counting days between two dates handles this
+          automatically. Estimating by multiplying years by 365 does not.
+        </p>
+
+        <h2>Where Date Arithmetic Quietly Goes Wrong</h2>
+        <ul className="custom-list">
+          <li>
+            <strong>Ambiguous formats.</strong> 03/04/2026 is 3 April in most of
+            the world and 4 March in the United States. When a date crosses
+            borders, write the month as a word or use the year-month-day order.
+          </li>
+          <li>
+            <strong>Time zones.</strong> A deadline at midnight is a different
+            moment in different places, and a date recorded in one zone can shift
+            by a day when read in another. Deadlines that matter should name a
+            time zone.
+          </li>
+          <li>
+            <strong>Daylight saving.</strong> Two days a year are not 24 hours
+            long. This does not affect whole-day counts, and it does affect
+            anything measured in hours across the changeover.
+          </li>
+          <li>
+            <strong>Two-digit years.</strong> Still common in handwritten and
+            legacy records, and still ambiguous about the century.
+          </li>
+          <li>
+            <strong>Estimating rather than counting.</strong> Multiplying years
+            by 365 to get a day count ignores leap days, so the error grows by
+            one day roughly every four years.
+          </li>
+        </ul>
+        <p>
+          For an exact age in years, months and days rather than a raw day count,
+          use the{" "}
           <Link href="/age-calculator/" className="my-link">
             age calculator
           </Link>
-          .
-        </p>
-
-        <h3>Project and Contract Deadlines</h3>
-        <p>
-          Professionals managing contracts, projects, or legal timelines
-          frequently need to count exact days between signing dates, milestone
-          dates, and delivery deadlines. A days calculator removes ambiguity and
-          eliminates counting errors. If you need to track the financial side of
-          those deadlines — EMI payments, loan terms — our{" "}
-          <Link href="/loan-calculator/" className="my-link">
-            loan calculator
-          </Link>{" "}
-          and{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          work in months and can complement your day-count planning.
-        </p>
-
-        <h3>Health and Pregnancy Tracking</h3>
-        <p>
-          Count days from a last menstrual period, conception date, or symptom
-          onset. Days-based tracking is standard in medicine for gestational
-          age, treatment cycles, and dosage scheduling. For body-related
-          calculations, our{" "}
-          <Link href="/bmi-calculator/" className="my-link">
-            BMI calculator
-          </Link>{" "}
-          can help with weight classification alongside your health timeline.
-        </p>
-
-        <h2>Business Days vs. Calendar Days</h2>
-        <p>
-          This calculator counts all calendar days between two dates, including
-          weekends and public holidays. Many people search for a "business days
-          between two dates calculator" or a "working days calculator" — here is
-          how to estimate business days from the calendar day count:
-        </p>
-        <ul className="custom-list">
-          <li>
-            Out of every 7 calendar days, approximately 5 are business days
-            (Monday through Friday).
-          </li>
-          <li>
-            <strong>30 calendar days</strong> ≈ 21–22 business days
-          </li>
-          <li>
-            <strong>60 calendar days</strong> ≈ 42–44 business days
-          </li>
-          <li>
-            <strong>90 calendar days</strong> ≈ 64–65 business days
-          </li>
-          <li>
-            <strong>180 calendar days</strong> ≈ 128–130 business days
-          </li>
-          <li>
-            <strong>365 calendar days</strong> ≈ 260–262 business days
-          </li>
-        </ul>
-        <p>
-          These are approximations — exact working day counts depend on your
-          country's public holidays, which vary by year and jurisdiction. For
-          most purposes (age, event countdowns, contract durations, milestone
-          tracking), total calendar days is the correct measure.
-        </p>
-
-        <h2>How Days Are Converted to Other Units</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Weeks:</strong> Total days ÷ 7. The remainder shows extra
-            days beyond complete weeks.
-          </li>
-          <li>
-            <strong>Months:</strong> Total days ÷ 30.4375 (average days per
-            Gregorian month, accounting for leap years). More accurate than
-            dividing by 30.
-          </li>
-          <li>
-            <strong>Years:</strong> Total days ÷ 365.25 (accounting for the leap
-            year cycle). Gives a decimal year representation.
-          </li>
-          <li>
-            <strong>Hours:</strong> Total days × 24.
-          </li>
-          <li>
-            <strong>Minutes:</strong> Total hours × 60.
-          </li>
-        </ul>
-
-        <h2>Leap Years and Why They Matter</h2>
-        <p>
-          A leap year has 366 days instead of 365, with February having 29 days.
-          Leap years occur every 4 years — except for century years not
-          divisible by 400. This calculator handles leap years correctly by
-          counting exact calendar days rather than multiplying by a fixed
-          number, so the result is always precise regardless of how many leap
-          years fall within your date range.
-        </p>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {FAQ_DATA.map(({ q, a }, i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              />
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          Whether you are counting down to a wedding, tracking how many days
-          since a milestone, figuring out what date falls 90 days from today, 6
-          months from today or verifying a contract deadline, this calculator
-          gives you the exact answer in seconds with every unit you might need.
-        </p>
-        <p>
-          For related tools, our{" "}
-          <Link href="/age-calculator/" className="my-link">
-            age calculator
-          </Link>{" "}
-          gives your exact age in years, months, and days, our{" "}
+          . For durations measured in hours and minutes instead of dates, the{" "}
           <Link href="/time-calculator/" className="my-link">
             time calculator
           </Link>{" "}
-          handles hours and minutes arithmetic, and our{" "}
-          <Link href="/loan-calculator/" className="my-link">
-            loan calculator
+          handles that arithmetic, and our{" "}
+          <Link href="/blog/how-to-calculate-exact-age/" className="my-link">
+            guide to calculating exact age
           </Link>{" "}
-          shows how time affects financial commitments like EMIs and total
-          interest.
+          works through the borrowing rules step by step.
         </p>
+        <h2>Date Counting Questions</h2>
+
+        {FAQ_DATA.map(({ q, a }, i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => handleFAQKey(e, i)}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
       </div>
 
       {/* ── SIDEBAR ── */}

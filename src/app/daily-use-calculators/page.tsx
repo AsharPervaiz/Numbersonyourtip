@@ -1,15 +1,29 @@
 import Link from "next/link";
 
-import SimpleCalculator from "../components/SimpleCalculator";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { IconCircle, Icons } from "../components/MenuIcons";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Daily Use Calculators | Numbers On Your Tip",
+  title: "Daily Use Calculators — Dates, Percentages, GPA",
   description:
-    "Read the Terms and Conditions for Numbers On Your Tip. Learn about usage rules, limitations, privacy, and your rights while using our online calculators and tools.",
+    "Age, days between dates, time, percentages, discounts, GPA, unit conversion and bill splitting — with the five traps that cause most wrong answers.",
+  alternates: {
+    canonical: "/daily-use-calculators/",
+  },
+  openGraph: {
+    title: "Free Daily Use Calculators | Numbers On Your Tip",
+    description:
+      "Four kinds of everyday question, and the predictable ways each one goes wrong.",
+    url: "/daily-use-calculators/",
+    type: "website",
+  },
+  twitter: {
+    title: "Daily Use Calculators",
+    description:
+      "Age, dates, GPA, percentages, unit conversion, and more — free everyday tools.",
+  },
 };
 
 export default function Dailycals() {
@@ -19,11 +33,21 @@ export default function Dailycals() {
     SECTION 2 – TWO COLUMN
 =========================== */}
       <div className="section-two">
-        <div className="section-two-inner">
+        <div className="section-two-inner single-col">
           {/* Left Content */}
           <section>
             {" "}
             <h1 className="more-tools">Daily Use Calculators</h1>
+            <p style={{ maxWidth: "640px", marginBottom: "28px", lineHeight: 1.7 }}>
+              The small, everyday calculations that come up constantly — your
+              exact age, the days between two dates, a GPA conversion, a
+              quick percentage, converting between units, or splitting a
+              dinner bill fairly. This page groups the tools people reach for
+              most often day to day, alongside a few finance calculators
+              (net worth, discounts, salary hikes) that fit the same
+              &quot;quick answer, right now&quot; use case. Every tool is free, works
+              on mobile, and needs no sign-up.
+            </p>
             <div
               className="icon-grid1"
               style={{
@@ -61,57 +85,6 @@ export default function Dailycals() {
                         gap: "8px", // space between icon & text
                       }}
                     >
-                      <IconCircle color="blue">
-                        <Icons.Bmi />
-                      </IconCircle>{" "}
-                      <h4> BMI Calculator </h4>
-                    </div>
-                  ),
-                  href: "/bmi-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="teal">
-                        <Icons.BodyFat />
-                      </IconCircle>{" "}
-                      <h4>Body Fat Calculator</h4>
-                    </div>
-                  ),
-                  href: "/body-fat-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="coral">
-                        <Icons.Calorie />
-                      </IconCircle>{" "}
-                      <h4>Calorie Calculator</h4>
-                    </div>
-                  ),
-                  href: "/calorie-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
                       <IconCircle color="amber">
                         <Icons.Percentage />
                       </IconCircle>{" "}
@@ -137,23 +110,7 @@ export default function Dailycals() {
                   ),
                   href: "/days-between-calculator/",
                 },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="pink">
-                        <Icons.EMI />
-                      </IconCircle>{" "}
-                      <h4>EMI Calculator</h4>
-                    </div>
-                  ),
-                  href: "/emi-calculator/",
-                },
+
                 {
                   name: (
                     <div
@@ -188,125 +145,7 @@ export default function Dailycals() {
                   ),
                   href: "/gpa-percentage/",
                 },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="teal">
-                        <Icons.Mortgage />
-                      </IconCircle>{" "}
-                      <h4>Mortgage Calculator</h4>
-                    </div>
-                  ),
-                  href: "/home-mortgage-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="coral">
-                        <Icons.IncomeTax />
-                      </IconCircle>{" "}
-                      <h4>Income Tax Calculator</h4>
-                    </div>
-                  ),
-                  href: "/income-tax-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="amber">
-                        <Icons.Loan />
-                      </IconCircle>{" "}
-                      <h4>Loan Calculator</h4>
-                    </div>
-                  ),
-                  href: "/loan-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="green">
-                        <Icons.Dose />
-                      </IconCircle>{" "}
-                      <h4>Dose Calculator</h4>
-                    </div>
-                  ),
-                  href: "/dose-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="pink">
-                        <Icons.DoseStock />
-                      </IconCircle>{" "}
-                      <h4>Dose Stock Calculator</h4>
-                    </div>
-                  ),
-                  href: "/dose-stock-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="purple">
-                        <Icons.IV />
-                      </IconCircle>{" "}
-                      <h4>IV Drip Calculator</h4>
-                    </div>
-                  ),
-                  href: "/iv-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="blue">
-                        <Icons.Rent />
-                      </IconCircle>{" "}
-                      <h4>Rent Calculator</h4>
-                    </div>
-                  ),
-                  href: "/rent-calculator/",
-                },
+
                 {
                   name: (
                     <div
@@ -341,57 +180,7 @@ export default function Dailycals() {
                   ),
                   href: "/unit-conversion-calculator/",
                 },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="amber">
-                        <Icons.VAT />
-                      </IconCircle>{" "}
-                      <h4>VAT Calculator</h4>
-                    </div>
-                  ),
-                  href: "/vat-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="purple">
-                        <Icons.Pharmaco />
-                      </IconCircle>{" "}
-                      <h4>Pharmaco kinetics Calculator</h4>
-                    </div>
-                  ),
-                  href: "/pharmacokinetics-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="green">
-                        <Icons.Dynamics />
-                      </IconCircle>{" "}
-                      <h4>Pharmaco dynamics Calculator</h4>
-                    </div>
-                  ),
-                  href: "/pharmacodynamics-calculator/",
-                },
+
                 {
                   name: (
                     <div
@@ -494,40 +283,6 @@ export default function Dailycals() {
                   ),
                   href: "/fuel-cost-calculator/",
                 },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="green">
-                        <Icons.MeanMode />
-                      </IconCircle>{" "}
-                      <h4>Mean Median Mode Calculator</h4>
-                    </div>
-                  ),
-                  href: "/mean-median-mode-calculator/",
-                },
-                {
-                  name: (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px", // space between icon & text
-                      }}
-                    >
-                      <IconCircle color="coral">
-                        <Icons.Matrix />
-                      </IconCircle>{" "}
-                      <h4>Matrix Calculator</h4>
-                    </div>
-                  ),
-                  href: "/matrix-calculator/",
-                },
 
                 // ... add more as needed
               ].map((item, index) => (
@@ -551,27 +306,199 @@ export default function Dailycals() {
                       cursor: "pointer",
                     }}
                   >
-                    <p
+                    <div
                       className="card-title"
                       style={{ fontWeight: 600, fontSize: "14px", margin: 0 }}
                     >
                       {item.name}
-                    </p>
+                    </div>
                   </div>
                 </Link>
               ))}
             </div>
+            <h2>Four Kinds of Everyday Question</h2>
+            <p>
+              The tools on this page cover the arithmetic that comes up away
+              from work and away from anything technical — dates, time, grades,
+              shopping and splitting costs. They group into four kinds of
+              question.
+            </p>
+
+            <div className="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kind</th>
+                    <th>Tools</th>
+                    <th>The awkward part</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Dates and time</td>
+                    <td>
+                      <Link className="my-link" href="/age-calculator/">
+                        Age
+                      </Link>
+                      ,{" "}
+                      <Link
+                        className="my-link"
+                        href="/days-between-calculator/"
+                      >
+                        days between
+                      </Link>
+                      ,{" "}
+                      <Link className="my-link" href="/time-calculator/">
+                        time
+                      </Link>
+                    </td>
+                    <td>Units of unequal length, and base 60</td>
+                  </tr>
+                  <tr>
+                    <td>Proportions</td>
+                    <td>
+                      <Link className="my-link" href="/percentage-calculator/">
+                        Percentage
+                      </Link>
+                      ,{" "}
+                      <Link className="my-link" href="/discount-calculator/">
+                        discount
+                      </Link>
+                    </td>
+                    <td>Knowing which number is the base</td>
+                  </tr>
+                  <tr>
+                    <td>Grades</td>
+                    <td>
+                      <Link className="my-link" href="/gpa-calculator/">
+                        GPA
+                      </Link>
+                      ,{" "}
+                      <Link className="my-link" href="/gpa-percentage/">
+                        GPA to percentage
+                      </Link>
+                    </td>
+                    <td>Credit weighting, and which scale you are on</td>
+                  </tr>
+                  <tr>
+                    <td>Sharing and converting</td>
+                    <td>
+                      <Link className="my-link" href="/bill-split-calculator/">
+                        Bill split
+                      </Link>
+                      ,{" "}
+                      <Link
+                        className="my-link"
+                        href="/unit-conversion-calculator/"
+                      >
+                        unit conversion
+                      </Link>
+                    </td>
+                    <td>Applying tax and tip fairly; the temperature offset</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Five Traps That Account for Most Wrong Answers</h2>
+            <p>
+              Everyday arithmetic goes wrong in a small number of predictable
+              ways, and each of these is covered in detail on the page it
+              belongs to.
+            </p>
+            <ul className="custom-list">
+              <li>
+                <strong>Decimal hours read as minutes.</strong> A 7.5-hour shift
+                is 7 hours 30 minutes, not 7 hours 50. Entering 8 hours 10
+                minutes as 8.10 rather than 8.17 understates every shift.
+              </li>
+              <li>
+                <strong>Counting both ends of a date range.</strong> From 1
+                March to 8 March is seven days of difference and eight dates.
+                Which one applies depends on whether you are counting hotel
+                nights or days of leave.
+              </li>
+              <li>
+                <strong>Averaging averages.</strong> Two class averages, two
+                exam percentages or two semester GPAs cannot simply be averaged
+                unless the groups are the same size. Add the raw amounts and
+                divide once.
+              </li>
+              <li>
+                <strong>Assuming discounts add.</strong> Thirty percent off then
+                twenty percent off is forty-four percent off, not fifty.
+                Multiply the multipliers rather than adding the rates.
+              </li>
+              <li>
+                <strong>Reversing a percentage by adding it back.</strong> A
+                price of 63 after 30% off was 90, not 81.90. Undoing a
+                percentage is always a division.
+              </li>
+            </ul>
+
+            <h2>Where the Answers Feed Into Each Other</h2>
+            <p>
+              Several of these tools are more useful in combination than alone.
+            </p>
+            <pre>
+              Date of birth → Age calculator → exact age for a form or
+              eligibility{"\n"}Two dates → Days between → a deadline or a notice
+              period{"\n"}Course grades → GPA calculator → GPA to percentage →
+              an application figure{"\n"}Bill total → Bill split → each
+              person&apos;s share including tip
+            </pre>
+            <p>
+              The grade chain is the one worth following carefully. Work out the
+              credit-weighted GPA first, then convert it — and convert against
+              the scale your transcript actually uses, since a weighted average
+              above 4.0 cannot be converted with the usual multiplier.
+            </p>
+
+            <h2>Why These Answers Are Exact</h2>
+            <p>
+              This section differs from the health and finance tools in a way
+              worth stating. Those produce estimates: a calorie target depends on
+              an activity level you chose, and a loan repayment depends on rates
+              behaving as entered. The tools here mostly do not estimate at all.
+            </p>
+            <p>
+              A day count between two dates is exact. A percentage of a number is
+              exact. A conversion between metres and feet uses a factor that is
+              exact by international definition rather than measured. Where these
+              tools return a wrong answer, it is because the wrong question was
+              asked — the wrong base for a percentage, the wrong scale for a GPA,
+              the wrong counting convention for a date range — rather than
+              because the arithmetic is approximate.
+            </p>
+            <p>
+              The three genuine exceptions are worth naming. Converting days into
+              months or years is approximate, because months and years vary in
+              length. Currency conversion uses a rate that changes rather than a
+              fixed factor. And any figure you enter carries its own precision,
+              which no calculation can improve on. Everything else on this page
+              is arithmetic you could check by hand, and each page shows the
+              working so you can.
+            </p>
+            <section className="related-guides">
+              <h2>The Edge Cases Behind the Everyday Tools</h2>
+              <p>Two guides cover the edge cases behind the everyday tools above:</p>
+              <ul>
+                <li>
+                  <Link href="/blog/how-to-calculate-exact-age/" className="related-card">
+                    <span className="related-title">How To Calculate Exact Age?</span>
+                    <span className="related-blurb">Borrowing across months, and how a 29 February birthday is handled legally.</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog/what-is-numbers-on-your-tip/" className="related-card">
+                    <span className="related-title">What Is Numbers on Your Tip?</span>
+                    <span className="related-blurb">What this site is, how it is funded, and what happens to what you type.</span>
+                  </Link>
+                </li>
+              </ul>
+            </section>
+
           </section>
-          {/* Right Calculator */}
-          <div
-            style={{
-              position: "sticky",
-              top: "70px",
-              alignSelf: "start",
-            }}
-          >
-            <SimpleCalculator />
-          </div>
         </div>
       </div>
 

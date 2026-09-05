@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import ImageResizer from "../components/ImageResizer";
 
 export const metadata: Metadata = {
-  title: "Image Resizer Online Free – Resize Images Without Losing Quality",
+  title: "Image Resizer — Change Dimensions",
   description:
-    "Resize images online for free. Change image dimensions, reduce file size, and optimize photos without losing quality. Fast and easy image resizer tool.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Resize images by pixel dimensions with the aspect ratio locked, and understand why DPI changes nothing on screen and enlarging cannot add detail.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/image-resizer/",
+    canonical: "/image-resizer/",
+  },
+  openGraph: {
+    title: "Image Resizer — Change Dimensions",
+    description:
+      "Pixels, file size and display size are three different numbers. Here is which one you actually need.",
+    url: "/image-resizer/",
+    type: "article",
+  },
+  twitter: {
+    title: "Image Resizer — Change Dimensions",
+    description:
+      "Resize images in your browser, with the sizes that different uses actually need.",
   },
 };
 

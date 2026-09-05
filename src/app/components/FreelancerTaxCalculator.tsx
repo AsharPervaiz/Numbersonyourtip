@@ -306,6 +306,45 @@ function FreelancerTaxResultPanel({ result }: { result: TaxResult | null }) {
   );
 }
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "How much should a freelancer set aside for taxes?",
+    "Apply your combined tax and contribution rate to profit, not to invoices. Someone whose costs run around 20% of revenue facing a combined rate near 30% needs roughly 24% of each payment. Taking a flat percentage of gross over-reserves rather than under-reserves, which is the safer error. Set the reserve high in year one and adjust down once you have a completed return to work from.",
+  ],
+  [
+    "Is freelance tax charged on my invoices or my profit?",
+    "On profit. Revenue minus platform fees minus allowable business expenses gives the figure that is taxed. This is why the invoiced total is the least useful number despite being the one people quote — 60,000 invoiced can be 46,000 taxable once fees and costs come out, and the tax follows the smaller figure.",
+  ],
+  [
+    "Why do freelancers pay more tax than employees on the same income?",
+    "Mostly because of social contributions. In employment those are typically split, with the employee paying a visible portion and the employer paying a further portion that never appears on the payslip. Self-employed, you generally stand in both positions and pay both parts. Nothing has been added — a cost that was previously invisible has become yours.",
+  ],
+  [
+    "How much should I charge as a freelancer compared with a salary?",
+    "More than the daily equivalent, and by a wider margin than most people assume. Alongside the doubled social contributions there is no paid leave, no sick pay, no employer pension contribution and no notice period, plus unbillable time spent finding work and doing admin. Comparing a day rate against a salary without pricing those in flatters the freelance side considerably.",
+  ],
+  [
+    "What can I claim as a freelance business expense?",
+    "Costs incurred for the business rather than for private benefit. Software, professional insurance, business equipment and platform fees are usually straightforward. Phone, internet, home workspace and vehicles need apportioning between business and personal use. Ordinary clothing and commuting to a regular workplace are typically not allowable, and nothing is claimable without a record of what it was for.",
+  ],
+  [
+    "How do I claim something I use for both work and personal life?",
+    "Claim a defensible proportion rather than all or nothing. A phone used roughly two-thirds for work supports claiming two-thirds of the bill, as long as you can explain how you reached that fraction. What fails scrutiny is not an aggressive percentage but an undocumented one, so record the basis at the time rather than reconstructing it later.",
+  ],
+  [
+    "Do platform fees reduce my tax?",
+    "Yes, in the sense that they are business costs and normally deductible, so they reduce taxable profit as well as reducing what lands in your account. Watch for currency conversion in particular, which is charged as a margin on the exchange rate rather than as a visible fee — comparing the rate you received against the mid-market rate for that day is the only way to see what it cost.",
+  ],
+  [
+    "Why is my first tax bill so much larger than expected?",
+    "Because many systems ask for the balance of your first year and an advance instalment toward the second at close to the same time, which can mean paying well over one year's tax within a few months. It is a timing effect rather than an extra charge, but it is a real cash demand, and a reserve sized against a single year's liability will not cover it.",
+  ],
+  [
+    "Do I need to charge VAT or GST on my freelance work?",
+    "Only above your jurisdiction's registration threshold, or if you register voluntarily. Below it you generally invoice without adding consumption tax. The threshold, the rate and the rules on cross-border services all vary by country and change over time, so confirm the current position with your own tax authority rather than assuming another country's rules apply.",
+  ],
+];
+
 /* ─────────────────────────────────────────
    Main Calculator Page
 ───────────────────────────────────────── */
@@ -414,9 +453,23 @@ export default function FreelancerTaxCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
         <h1>
-          Free Freelance Tax Calculator — Self-Employment Tax With Deductions
+          Freelance Tax Calculator — From Invoice to Take-Home
         </h1>
         <p>
           Estimate your freelance take-home pay after platform fees, business
@@ -578,464 +631,283 @@ export default function FreelancerTaxCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Freelance Tax Calculator?</h2>
+        <h2>Four Numbers, and Only the Last One Is Yours</h2>
         <p>
-          A freelance tax calculator helps independent workers, remote
-          professionals, side hustlers, and self-employed individuals figure out
-          exactly how much money they actually take home after paying platform
-          fees, deducting business expenses, and setting aside taxes. Unlike
-          salaried employees whose taxes are withheld automatically, freelancers
-          are responsible for calculating and paying their own taxes — which
-          makes a dedicated freelance income tax estimator like this essential
-          for financial planning.
-        </p>
-        <p>
-          This tool functions as a self-employment tax calculator with
-          deductions, a side hustle tax calculator for part-time freelancers,
-          and a freelancer quarterly tax calculator for those who need to
-          estimate quarterly payments — all in one. It also doubles as a
-          freelancer effective tax rate calculator, showing the actual
-          percentage of your gross income that goes to tax after all deductions
-          are applied. If you earn a regular salary alongside freelance work and
-          want to see how your employer-side income is taxed, our{" "}
-          <Link href="/income-tax-calculator/" className="my-link">
-            income tax calculator
-          </Link>{" "}
-          handles salaried tax computations.
+          The figure on your invoice and the figure you can spend are separated
+          by three deductions, and freelancers who plan against the first number
+          rather than the last are the ones who get caught out in their first
+          tax year.
         </p>
 
-        <h2>How Freelancer Tax Is Calculated</h2>
-        <p>
-          Freelancer tax calculation works in a clear sequence. First, your
-          gross income is reduced by any platform commission (Upwork, Fiverr,
-          etc.). Then legitimate business expenses are deducted to arrive at
-          your taxable income. Your tax rate is applied to that taxable income
-          to find the tax amount. What remains is your actual take-home pay —
-          the real money you keep. Here is the formula:
-        </p>
-        <pre>
-          Income After Platform Fee = Gross Income − Platform Fee{"\n"}
-          Taxable Income = Income After Fee − Business Expenses{"\n"}
-          Tax Amount = Taxable Income × Tax Rate ÷ 100{"\n"}
-          Net Take-Home = Taxable Income − Tax Amount
-        </pre>
-
-        <h2>
-          Worked Example — How Much of Your Freelance Income Goes to Taxes
-        </h2>
-        <p>
-          A freelance web developer earns $5,000 per month on Upwork with a 10%
-          platform fee, $400 in monthly business expenses (software, internet,
-          coworking), and a combined federal + self-employment tax rate of 30%:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Gross income:</strong> $5,000
-          </li>
-          <li>
-            <strong>Platform fee (10%):</strong> −$500
-          </li>
-          <li>
-            <strong>Income after fee:</strong> $4,500
-          </li>
-          <li>
-            <strong>Business expenses:</strong> −$400
-          </li>
-          <li>
-            <strong>Taxable income:</strong> $4,100
-          </li>
-          <li>
-            <strong>Tax (30%):</strong> −$1,230
-          </li>
-          <li>
-            <strong>Net take-home:</strong> <strong>$2,870</strong> (57.4% of
-            gross)
-          </li>
-          <li>
-            <strong>Effective tax rate:</strong> 24.6% of gross income
-          </li>
-        </ul>
-        <p>
-          This means $2,130 of every $5,000 earned goes to platform fees,
-          expenses, and taxes — which is why knowing the exact breakdown
-          matters. Without tracking deductions, this freelancer would owe tax on
-          $4,500 instead of $4,100, paying $120 more in tax every single month.
-          Over a year, that is $1,440 in unnecessary tax. To track how your
-          freelance savings are building over time, our{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          shows your complete financial picture.
-        </p>
-
-        <h2>What Is the Self-Employment Tax Rate?</h2>
-        <p>
-          The self-employment tax rate varies by country. In many countries,
-          freelancers pay both income tax and an additional self-employment or
-          social security contribution. Here is a reference table for the most
-          common countries:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Country
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Self-Employment / Social Tax
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Income Tax Range
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Combined Rate to Enter
-                </th>
+              <tr>
+                <th>Stage</th>
+                <th>What comes off</th>
+                <th>Example on 60,000 invoiced</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                [
-                  "United States",
-                  "15.3% (Social Security + Medicare)",
-                  "10%–37%",
-                  "25%–45%",
-                ],
-                ["United Kingdom", "Class 4 NI: 6%–2%", "20%–45%", "26%–47%"],
-                [
-                  "Canada",
-                  "CPP: ~11.9% (self-employed portion)",
-                  "15%–33%",
-                  "27%–45%",
-                ],
-                ["India", "None (no SE tax)", "0%–30% (slab-based)", "0%–30%"],
-                [
-                  "Pakistan (PSEB)",
-                  "Potentially exempt on IT exports",
-                  "0%–35%",
-                  "0% if exempt, else 15%–35%",
-                ],
-                ["UAE / Dubai", "None", "0%", "0%"],
-                ["Germany", "~20% social contributions", "14%–45%", "34%–65%"],
-                ["Australia", "Medicare levy: 2%", "0%–45%", "2%–47%"],
-              ].map(([country, se, income, combined], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {country}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {se}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {income}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {combined}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>Invoiced</td>
+                <td>Nothing yet</td>
+                <td>60,000</td>
+              </tr>
+              <tr>
+                <td>Received</td>
+                <td>Platform and payment fees</td>
+                <td>54,000</td>
+              </tr>
+              <tr>
+                <td>Taxable profit</td>
+                <td>Allowable business expenses</td>
+                <td>46,000</td>
+              </tr>
+              <tr>
+                <td>Take-home</td>
+                <td>Income tax and social contributions</td>
+                <td>What is genuinely yours</td>
+              </tr>
             </tbody>
           </table>
         </div>
+
         <p>
-          Enter the "Combined Rate" column value in the Tax Rate field above for
-          a realistic estimate. Always consult a local tax advisor for your
-          specific situation, as rates change and individual circumstances vary.
+          Two things about that table are worth pausing on. Expenses reduce the
+          amount you are taxed on but they are still money you spent — a
+          deduction is a discount on tax, never a refund of the cost. And tax is
+          charged on profit, not on turnover, which is why the invoiced figure
+          is the least useful number in the sequence despite being the one
+          people quote.
         </p>
 
-        <h2>Platform Fees — What Each Platform Takes</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Upwork</strong> — 10% flat rate on all earnings
-          </li>
-          <li>
-            <strong>Fiverr</strong> — 20% on every order
-          </li>
-          <li>
-            <strong>Freelancer.com</strong> — 10% or a flat fee, whichever is
-            higher
-          </li>
-          <li>
-            <strong>Toptal</strong> — fee built into client billing, varies by
-            contract
-          </li>
-          <li>
-            <strong>PeoplePerHour</strong> — up to 20% depending on earnings
-            tier
-          </li>
-          <li>
-            <strong>Direct clients (no platform)</strong> — 0% — enter 0 in the
-            platform fee field
-          </li>
-        </ul>
-
-        <h2>What Business Expenses Can Freelancers Deduct?</h2>
+        <h2>How Much to Set Aside, and From What</h2>
         <p>
-          One of the biggest advantages of self-employment is the ability to
-          deduct legitimate business expenses before tax is calculated. This
-          directly lowers your taxable income and reduces how much tax you owe.
-          Common deductible expenses include:
+          The single most useful habit in freelancing is moving a fixed
+          proportion of every payment into a separate account the moment it
+          arrives. What trips people up is applying that percentage to the wrong
+          base.
         </p>
-        <ul className="custom-list">
-          <li>Internet and phone bills used for work</li>
-          <li>
-            Software subscriptions (Adobe, Notion, Figma, Slack, GitHub, etc.)
-          </li>
-          <li>Laptop, computer, monitor, or equipment purchases</li>
-          <li>Home office space (a portion of rent or utilities)</li>
-          <li>Professional courses, certifications, books, and training</li>
-          <li>Accounting and bookkeeping software or accountant fees</li>
-          <li>Travel costs for client meetings or conferences</li>
-          <li>Marketing, advertising, and portfolio website hosting</li>
-          <li>Health insurance premiums (in some countries)</li>
-          <li>Retirement contributions (often tax-deductible)</li>
-        </ul>
+        <pre>
+          Set aside = (Payment received − expenses attributable to it) × your
+          combined tax and contribution rate
+        </pre>
         <p>
-          Track every expense throughout the year — even small ones add up. A
-          freelancer spending $400/month on deductible tools and services saves
-          $1,440/year in tax at a 30% rate. That is money you keep simply by
-          recording what you already spend. If you want to see what percentage
-          of your income goes to various expenses, our{" "}
-          <Link href="/bill-split-calculator/" className="my-link">
-            bill split calculator
+          Taking a flat percentage of gross invoices over-reserves if your
+          expenses are substantial, and under-reserves nothing — so as a
+          starting position it errs safely. The more precise approach is to work
+          from your expected profit margin. A freelancer whose costs run at
+          around 20% of revenue and who faces a combined rate near 30% needs
+          roughly 24% of each payment, not 30%.
+        </p>
+        <p>
+          Set the reserve high in your first year and adjust downward once you
+          have a completed return to work from. The failure mode is not
+          reserving too much; it is discovering in month eleven that the reserve
+          is short.
+        </p>
+
+        <h2>Platform Fees Come Off First</h2>
+        <p>
+          Marketplace and payment fees are deducted before the money reaches
+          you, which makes them easy to forget when quoting.
+        </p>
+        <p>
+          Two mechanics matter. A percentage commission scales with the invoice,
+          so a large project loses proportionally the same as a small one. A
+          fixed per-transaction fee does the opposite — it is negligible on a
+          5,000 invoice and material on a 50 one, which is a reason to bill
+          monthly rather than per small task where the client allows it.
+        </p>
+        <p>
+          Currency conversion is the fee freelancers most often miss, because it
+          is charged as an exchange-rate margin rather than as a line item. Paid
+          in a foreign currency into a local account, you can lose a few percent
+          without ever seeing a fee on the statement. Comparing the rate you
+          received against the mid-market rate for that day is the only way to
+          see it.
+        </p>
+        <p>
+          Fees charged to you are business costs and are normally deductible, so
+          they reduce taxable profit as well as reducing what you receive.
+        </p>
+
+        <h2>What Actually Counts as an Expense</h2>
+        <p>
+          The governing principle in most systems is the same even where the
+          detail differs: a cost is deductible if it was incurred for the
+          purposes of the business and not for private benefit. Clear-cut cases
+          are easy.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Usually straightforward</th>
+                <th>Needs apportioning</th>
+                <th>Usually not allowed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Software subscriptions used for work</td>
+                <td>Phone and internet used for both</td>
+                <td>Ordinary clothing, even if worn to meetings</td>
+              </tr>
+              <tr>
+                <td>Professional insurance and fees</td>
+                <td>A room at home used partly for work</td>
+                <td>Commuting to a regular place of work</td>
+              </tr>
+              <tr>
+                <td>Equipment bought solely for the business</td>
+                <td>A vehicle used for business and personal trips</td>
+                <td>Entertaining clients, in many jurisdictions</td>
+              </tr>
+              <tr>
+                <td>Platform and payment processing fees</td>
+                <td>Training that partly renews existing skills</td>
+                <td>Anything without a record of what it was for</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The middle column is where most disputes arise, and the answer is
+          almost always a defensible split rather than all or nothing. A phone
+          used roughly two-thirds for work supports claiming two-thirds of the
+          bill, provided you can explain how you arrived at the fraction. What
+          fails is not an aggressive proportion but an undocumented one.
+        </p>
+        <p>
+          Larger equipment is often treated differently from consumables, spread
+          across several years rather than deducted in full immediately. If you
+          have bought something substantial, check how your system treats
+          capital items before assuming the whole cost lands in this year.
+        </p>
+
+        <h2>The Tax Employees Do Not See</h2>
+        <p>
+          Freelancers frequently compare their rate against a salaried
+          equivalent and conclude they are being taxed unusually heavily. Often
+          they are, and the reason is structural rather than punitive.
+        </p>
+        <p>
+          In employment, social contributions are typically split — the employee
+          pays a portion visible on the payslip, and the employer pays a further
+          portion that never appears there at all. Working for yourself, you
+          generally stand in both positions and pay both parts. Nothing has been
+          added; a cost that was previously invisible has become yours.
+        </p>
+        <p>
+          This is the main reason a freelance day rate has to exceed the daily
+          equivalent of a salary to leave you level. Alongside the doubled
+          contributions there is no paid leave, no sick pay, no employer pension
+          contribution and no notice period. Comparing a freelance rate against
+          a salary without pricing those in flatters the freelance side
+          considerably.
+        </p>
+
+        <h2>Paying Through the Year</h2>
+        <p>
+          Most systems expect tax on self-employment income during the year
+          rather than in one payment afterwards, usually as instalments based on
+          the previous year&apos;s liability or on your own estimate.
+        </p>
+        <p>
+          The first year is the difficult one and it catches almost everyone.
+          You may face the balance for your first year and an advance instalment
+          toward the second at close to the same time, which can mean paying
+          substantially more than one year&apos;s tax within a few months. This
+          is a timing effect rather than an extra charge, but it is a real cash
+          demand, and the reserve that felt generous against a single year&apos;s
+          liability can prove inadequate against it.
+        </p>
+        <p>
+          Where income is uneven, base instalments on a realistic projection
+          rather than annualising a strong quarter. Overpaying ties up cash you
+          could be using; underpaying can attract interest or penalties.
+        </p>
+
+        <h2>Rates Differ, the Method Does Not</h2>
+        <p>
+          Thresholds, contribution rules, registration limits and allowances
+          vary substantially between countries and change from year to year. The
+          sequence does not: revenue, minus fees, minus allowable expenses, gives
+          profit; profit drives income tax and social contributions; what remains
+          is yours.
+        </p>
+        <p>
+          Two features worth checking for in your own system, because both
+          change the arithmetic materially. Some jurisdictions offer a
+          presumptive or simplified scheme for smaller professional incomes,
+          where tax is computed on a deemed percentage of turnover instead of
+          actual profit — simpler to administer, and better or worse depending
+          on your real cost base. And most have a registration threshold for
+          consumption taxes such as VAT or GST, above which you must charge it
+          on your invoices; our{" "}
+          <Link href="/vat-calculator/" className="my-link">
+            VAT calculator
           </Link>{" "}
-          can help divide shared costs like coworking or team tools.
+          handles that side.
         </p>
-
-        <h2>How Much to Set Aside for Taxes as a Freelancer</h2>
         <p>
-          The most common mistake new freelancers make is spending all their
-          income and then facing a large tax bill they cannot pay. The solution
-          is to set aside a percentage of every payment into a separate tax
-          savings account. Here is a practical framework:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Low tax bracket (under 20% effective rate):</strong> Set
-            aside 20% to 25% of gross income.
-          </li>
-          <li>
-            <strong>Moderate tax bracket (20%–30% effective rate):</strong> Set
-            aside 25% to 30%.
-          </li>
-          <li>
-            <strong>High tax bracket (above 30% effective rate):</strong> Set
-            aside 30% to 35%.
-          </li>
-          <li>
-            <strong>If unsure:</strong> 30% is the safest default in most
-            countries. It is better to save too much and get a refund than to
-            save too little and owe a large bill.
-          </li>
-        </ul>
-        <p>
-          Use this calculator to find your actual effective tax rate — the gauge
-          in the results panel shows it instantly. Once you know your effective
-          rate, adjust your set-aside percentage accordingly. If you have a
-          salary hike from a side employer alongside freelance work, our{" "}
-          <Link href="/salary-hike-calculator/" className="my-link">
-            salary hike calculator
-          </Link>{" "}
-          can show how the raise affects your overall tax bracket.
-        </p>
-
-        <h2>Freelancer Quarterly Tax Payments</h2>
-        <p>
-          In the United States, United Kingdom, Canada, Australia, and many
-          other countries, freelancers are required to make quarterly estimated
-          tax payments rather than waiting until year-end. Missing quarterly
-          deadlines can result in penalties and interest charges even if you
-          eventually pay the full amount. This calculator works as a freelancer
-          quarterly tax calculator — select "Quarterly" from the period
-          dropdown, enter your quarterly gross income, and see exactly how much
-          to pay each quarter.
-        </p>
-        <p>Typical quarterly payment deadlines (US):</p>
-        <ul className="custom-list">
-          <li>
-            <strong>Q1 (Jan–Mar):</strong> Due April 15
-          </li>
-          <li>
-            <strong>Q2 (Apr–Jun):</strong> Due June 15
-          </li>
-          <li>
-            <strong>Q3 (Jul–Sep):</strong> Due September 15
-          </li>
-          <li>
-            <strong>Q4 (Oct–Dec):</strong> Due January 15 (following year)
-          </li>
-        </ul>
-
-        <h2>Side Hustle Tax — Do I Pay Tax on Part-Time Freelance Income?</h2>
-        <p>
-          Yes. If you have a regular job and earn freelance income on the side,
-          that side hustle income is taxable in virtually every country. Even a
-          few hundred dollars per month from Fiverr gigs, tutoring, or weekend
-          consulting counts as self-employment income. The advantage of using
-          this calculator as a side hustle tax calculator is that you can
-          estimate the tax on just your freelance portion — enter only the side
-          income, deductions, and your marginal tax rate to see what you owe on
-          top of your regular salary taxes. Our{" "}
+          Use this calculator to model the shape of your position and to set a
+          reserve, then confirm the specifics against your own tax authority or
+          an accountant before filing. For salaried income the{" "}
           <Link href="/income-tax-calculator/" className="my-link">
             income tax calculator
           </Link>{" "}
-          handles the salaried portion separately.
-        </p>
-
-        <h2>Why Freelancers Must Plan Taxes in Advance</h2>
-        <p>
-          Unlike employees, freelancers do not have an employer withholding
-          taxes from each payment. If you spend everything you earn, you face a
-          large unexpected tax bill at year-end. Setting aside money from every
-          payment into a dedicated tax account — ideally automatically via a
-          recurring transfer — means the money is already waiting when tax time
-          arrives. This simple habit eliminates the most common financial stress
-          freelancers face.
-        </p>
-
-        <h2>Tips to Reduce Your Freelancer Tax Bill Legally</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Register as a business entity</strong> — LLCs, sole traders,
-            or S-corps often have tax advantages over reporting as personal
-            income.
-          </li>
-          <li>
-            <strong>Track every business expense</strong> — no matter how small.
-            Use accounting software like QuickBooks, Wave, or FreshBooks to
-            automate it.
-          </li>
-          <li>
-            <strong>Make quarterly estimated payments</strong> — to avoid
-            penalties and spread the burden evenly throughout the year.
-          </li>
-          <li>
-            <strong>Contribute to a retirement account</strong> — contributions
-            to SEP IRAs, Solo 401(k)s, or pension funds are often
-            tax-deductible, reducing your taxable income.
-          </li>
-          <li>
-            <strong>Hire a freelancer-specialist accountant</strong> — the fee
-            is itself deductible, and a good accountant typically saves you more
-            than they cost.
-          </li>
-          <li>
-            <strong>Invoice strategically</strong> — in some countries,
-            deferring an invoice to the next tax year can lower your current
-            year's tax bracket.
-          </li>
-          <li>
-            <strong>Claim the home office deduction</strong> — if you work from
-            home, a portion of your rent, electricity, and internet is
-            deductible.
-          </li>
-        </ul>
-        <p>
-          Every deduction you claim reduces how much of your freelance income
-          goes to taxes. Even $200/month in additional tracked deductions saves
-          $720/year at a 30% rate. If you are managing loans alongside freelance
-          work, our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
+          applies instead, and our guide to{" "}
+          <Link
+            href="/blog/marginal-vs-effective-tax-rate/"
+            className="my-link"
+          >
+            marginal versus effective tax rates
           </Link>{" "}
-          shows your monthly debt payments so you can plan cash flow around both
-          tax and loan obligations.
+          explains why your headline band is not the rate you actually pay.
         </p>
+        <h2>Freelance Tax Questions</h2>
 
-        <h2>Frequently Asked Questions</h2>
-
-        {[
-          [
-            "How do I calculate tax as a freelancer?",
-            "Start with your gross freelance income, subtract platform fees and deductible business expenses to get your taxable income, then multiply by your combined tax rate (income tax + self-employment tax). The result is your tax amount. Subtract that from taxable income to get your net take-home pay. This calculator handles all of this automatically.",
-          ],
-          [
-            "How much should I set aside for taxes as a freelancer?",
-            "A safe rule is 25% to 30% of every payment you receive. This covers income tax and self-employment contributions in most countries. Use this calculator to find your actual effective tax rate, then adjust your set-aside accordingly. If your effective rate is 22%, saving 25% gives you a comfortable buffer.",
-          ],
-          [
-            "How much tax do freelancers pay?",
-            "It depends on your country and income level. In the US, freelancers pay 15.3% self-employment tax plus federal income tax (10%–37%), for a combined rate of roughly 25%–45%. In the UK, it is income tax (20%–45%) plus National Insurance. In the UAE, there is no personal income tax. The comparison table above shows rates for eight countries.",
-          ],
-          [
-            "What is the self-employment tax rate?",
-            "In the United States, the self-employment tax rate is 15.3% — that covers 12.4% for Social Security and 2.9% for Medicare. This is in addition to federal and state income tax. Most other countries have similar social contribution requirements under different names.",
-          ],
-          [
-            "Do I need to pay tax on Upwork or Fiverr earnings?",
-            "Yes. Income earned through any freelancing platform is taxable in virtually every country. The platform does not withhold or pay your taxes — that is your responsibility. The platform fee they charge is a business expense you can typically deduct from your taxable income.",
-          ],
-          [
-            "Can I deduct my laptop and software?",
-            "In most countries, yes. If you use your laptop, software subscriptions, internet, or other tools primarily for freelance work, these are legitimate deductible business expenses. Keep receipts and records to support your deductions.",
-          ],
-          [
-            "What is the effective tax rate?",
-            "The effective tax rate is the actual percentage of your total gross income that goes to tax after all deductions are applied. It is almost always lower than your stated tax bracket because deductions reduce your taxable income. This calculator shows your effective rate automatically in the results gauge.",
-          ],
-          [
-            "Do I need to make quarterly tax payments?",
-            "In the US, UK, Canada, Australia, and many other countries, yes — freelancers must make quarterly estimated payments. Missing deadlines results in penalties. Select 'Quarterly' in this calculator to estimate each quarterly payment amount.",
-          ],
-          [
-            "Are freelancers in Pakistan or UAE exempt from tax?",
-            "In the UAE, there is currently no personal income tax. In Pakistan, freelancers registered with the Pakistan Software Export Board (PSEB) may qualify for tax exemptions on IT export remittances. Tax laws change regularly — always verify with a local tax advisor or the FBR website.",
-          ],
-          [
-            "Is this freelance tax calculator free?",
-            "Yes — completely free with no sign-up, no data stored, and no limits. Calculate for any income amount, any platform fee, any deduction, and any tax rate. Works for monthly, quarterly, or annual periods in USD, GBP, EUR, INR, PKR, and AED.",
-          ],
-        ].map(([q, a], i) => (
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
           <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
               {q}
               <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
               />
             </h3>
-            {openFAQ === i && <p>{a}</p>}
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
           </div>
-        ))}
+          );
+        })}
 
-        <h2>Final Thoughts</h2>
-        <p>
-          Freelancing gives you freedom, but that freedom comes with the
-          responsibility of managing your own taxes. Knowing how much of your
-          freelance income goes to taxes — and planning for it — is the
-          difference between financial stress and financial control. Use this
-          calculator before every quarter to estimate your payments, track your
-          deductions, and see your real take-home pay.
-        </p>
-        <p>
-          For related tools, our{" "}
-          <Link href="/income-tax-calculator/" className="my-link">
-            income tax calculator
-          </Link>{" "}
-          handles salaried tax computations, our{" "}
-          <Link href="/salary-hike-calculator/" className="my-link">
-            salary hike calculator
-          </Link>{" "}
-          shows how a raise changes your take-home, our{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          tracks your overall financial progress, and our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          helps plan loan payments alongside your tax obligations.
-        </p>
       </div>
 
       {/* ---- SIDEBAR ---- */}

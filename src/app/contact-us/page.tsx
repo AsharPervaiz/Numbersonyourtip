@@ -3,9 +3,24 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Numbers On Your Tip",
+  title: "Contact Us",
   description:
-    "Contact Numbers On Your Tip for questions, feedback, or support. We’re here to help with our calculators, tools, and website-related inquiries. Reach out via email and we’ll respond within 24–48 hours.",
+    "Questions, corrections or feedback about any calculator on Numbers On Your Tip. Email us and we reply within 24 to 48 hours.",
+  alternates: {
+    canonical: "/contact-us/",
+  },
+  openGraph: {
+    title: "Contact Numbers On Your Tip",
+    description:
+      "Questions, feedback, or support requests? Reach out and we'll respond within 24–48 hours.",
+    url: "/contact-us/",
+    type: "website",
+  },
+  twitter: {
+    title: "Contact Numbers On Your Tip",
+    description:
+      "Send questions, feedback, or support requests — we reply within 24–48 hours.",
+  },
 };
 
 export default function AboutUs() {

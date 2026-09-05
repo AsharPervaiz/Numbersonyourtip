@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import PasswordGenerator from "../components/PasswordGenerator";
 
 export const metadata: Metadata = {
-  title: "Password Generator | Create Strong & Secure Passwords Instantly",
+  title: "Password Generator — Strong Passwords",
   description:
-    "Free Password Generator to create strong, secure, and random passwords. Customize length, include uppercase, lowercase, numbers, and symbols. Ideal for accounts, security, and privacy.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Generate strong random passwords in your browser, with the length and character options that actually matter and where to keep what you generate.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/password-generator/",
+    canonical: "/password-generator/",
+  },
+  openGraph: {
+    title: "Password Generator — Strong Passwords",
+    description:
+      "What makes a password genuinely strong, and the habits that undo strong generation.",
+    url: "/password-generator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Password Generator — Strong Passwords",
+    description:
+      "Create strong random passwords locally, with guidance on length and storage.",
   },
 };
 

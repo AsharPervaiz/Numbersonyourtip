@@ -288,6 +288,45 @@ function MortgageResultPanel({ result }: { result: MortgageResult | null }) {
 /* ─────────────────────────────────────────
    Main Calculator Page — UNCHANGED content & field styles
 ───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "What costs are missing from the calculated mortgage payment?",
+    "The calculation covers principal and interest only. Property taxes, buildings insurance, mortgage insurance where required, any service or ground charges, and maintenance all sit outside it. Maintenance is the one most often forgotten because it does not arrive monthly — it arrives as a boiler or a roof — so setting a fixed amount aside each month is the only way to treat it as the recurring cost it is.",
+  ],
+  [
+    "Why is so little of my early payment reducing the balance?",
+    "Because interest is charged on what you still owe, and at the start you owe the full amount. On 250,000 at 6% over thirty years, the first payment of about 1,499 is 1,250 interest and 249 principal. After ten years of payments totalling nearly 180,000, under 41,000 of the debt has been cleared. This is also why overpaying early is far more effective than overpaying late.",
+  ],
+  [
+    "How much interest will I pay over a full mortgage?",
+    "Often more than the property cost. Borrowing 250,000 at 6% over thirty years repays about 539,595 in total, of which roughly 289,595 is interest. The figure is highly sensitive to both rate and term, which is why comparing total repayable rather than monthly payment changes how offers rank.",
+  ],
+  [
+    "Is a 15-year mortgage better than a 30-year one?",
+    "It costs far less and commits you to more. On 250,000 at 6%, fifteen years costs about 2,110 a month against 1,499, and saves roughly 159,860 in interest. The shorter term locks in the higher payment with no option to drop back. Many borrowers take the longer term and overpay voluntarily instead, keeping the flexibility while capturing most of the saving — provided they actually make the overpayments.",
+  ],
+  [
+    "Should I choose a fixed or variable rate?",
+    "Frame it as what a rate rise would do to you rather than as a forecast. If a payment increase of a few hundred a month would be an annoyance you absorb, a variable rate is a reasonable risk. If it would break your budget, a fixed rate is buying certainty, which is worth a small premium regardless of where rates go. On a fixed deal, arrange the next one before it expires to avoid reverting to a higher standard rate.",
+  ],
+  [
+    "How much deposit should I put down?",
+    "Enough to cross a loan-to-value band if you are close to one, since lenders price by band and the rate improvement can be worth more than the reduction in borrowing. A larger deposit also avoids mortgage insurance where it applies and protects you against negative equity. Against that, emptying your savings entirely is its own risk — the month after completion is the worst time to have no accessible cash.",
+  ],
+  [
+    "What should I stress-test before committing?",
+    "Model the payment at a rate two or three points above today's. If that version is unaffordable, the current payment is only affordable for now, which is a different thing. Also total every ownership cost rather than the mortgage payment alone, and budget purchase costs — legal fees, surveys, taxes and moving — separately, since they are a lump sum rather than a monthly commitment.",
+  ],
+  [
+    "Why did I get so little equity back when I sold early?",
+    "Because early payments are mostly interest. Five years into a thirty-year mortgage on 250,000 at 6%, about 89,933 has been paid and roughly 17,364 of the balance cleared. Add selling costs and any fall in value, and an early sale can return less than the deposit that went in. It is the main financial argument against buying for a short stay.",
+  ],
+  [
+    "Does overpaying a mortgage always help?",
+    "Usually substantially, because it removes all the future interest that principal would have carried, and the effect is largest in the early years. Check the early repayment terms before you sign rather than when you first want to overpay — some deals cap annual overpayments or charge a penalty, and whether the lender applies the money to the balance immediately determines whether you save anything at all.",
+  ],
+];
+
 export default function HomeMortgageCalculator() {
   const [homePrice, setHomePrice] = useState("");
   const [downPayment, setDownPayment] = useState("");
@@ -364,8 +403,22 @@ export default function HomeMortgageCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
-        <h1>Home Mortgage Calculator</h1>
+        <h1>Mortgage Calculator — Payment, Total Interest and True Cost</h1>
 
         <p>
           Estimate your monthly house payment, total interest cost, and full
@@ -422,533 +475,301 @@ export default function HomeMortgageCalculator() {
           <MortgageResultPanel result={panelResult} />
         </div>
 
-        {/* ---- SEO CONTENT — UNTOUCHED ---- */}
+        {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is a Home Mortgage?</h2>
+        <h2>The Mortgage Payment Is Not the Cost of the House</h2>
         <p>
-          A home mortgage is a secured loan used to purchase residential
-          property. The house itself acts as collateral, meaning the lender can
-          claim it if you default on payments. You repay the borrowed amount in
-          fixed monthly installments — each one covering a slice of the
-          principal plus the interest charged for that month.
-        </p>
-        <p>
-          Mortgages make homeownership accessible because they let you spread a
-          large purchase over 10, 15, 20, or even 30 years instead of paying the
-          entire price at once. The trade-off is interest: over long terms, the
-          interest you pay can rival or even exceed the original loan amount.
-          That is exactly why running the numbers through a mortgage calculator
-          before signing anything is so important.
+          The number a mortgage calculator returns covers principal and
+          interest. It is the largest part of what you pay to own a home and it
+          is nowhere near all of it, which is why buyers who budget against it
+          alone find their first year uncomfortable.
         </p>
 
-        <h2>How Does a Mortgage Payment Work?</h2>
-        <p>
-          Every monthly mortgage payment is split between principal and
-          interest, but the ratio shifts over time. In the early years, most of
-          your payment goes toward interest because the outstanding balance is
-          still large. As you chip away at the principal, the interest portion
-          shrinks and more of each payment reduces your balance. This process is
-          called amortization.
-        </p>
-        <p>
-          Beyond principal and interest, your actual housing cost may also
-          include property taxes, homeowner's insurance, and — if your down
-          payment is below a certain threshold — private mortgage insurance
-          (PMI). Lenders often bundle these into a single monthly payment
-          referred to as PITI: Principal, Interest, Taxes, and Insurance. This
-          calculator focuses on the principal and interest portion, which is the
-          core number you need to start planning.
-        </p>
-
-        <h2>Mortgage Payment Formula</h2>
-        <p>
-          Monthly mortgage payments follow the same EMI formula used by banks
-          worldwide. If you have used our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>
-          , you will recognize it:
-        </p>
-        <pre>
-          M = P × [ r(1 + r)<sup>n</sup> / (1 + r)<sup>n</sup> – 1 ]
-        </pre>
-        <ul>
-          <li>
-            <strong>M</strong> = Monthly mortgage payment
-          </li>
-          <li>
-            <strong>P</strong> = Loan principal (home price minus down payment)
-          </li>
-          <li>
-            <strong>r</strong> = Monthly interest rate (annual rate ÷ 12 ÷ 100)
-          </li>
-          <li>
-            <strong>n</strong> = Total number of monthly payments (years × 12)
-          </li>
-        </ul>
-        <p>
-          You do not need to calculate this by hand. Enter your numbers above
-          and the calculator does the rest instantly.
-        </p>
-
-        <h2>Step-by-Step Mortgage Calculation Example</h2>
-        <p>
-          Let's work through a realistic example so you can see how each input
-          changes the output.
-        </p>
-
-        <h3>Scenario: Buying a Home Worth 10,000,000</h3>
-        <ul>
-          <li>
-            <strong>Home Price:</strong> 10,000,000
-          </li>
-          <li>
-            <strong>Down Payment:</strong> 2,000,000 (20%)
-          </li>
-          <li>
-            <strong>Loan Amount:</strong> 8,000,000
-          </li>
-          <li>
-            <strong>Annual Interest Rate:</strong> 9%
-          </li>
-          <li>
-            <strong>Loan Term:</strong> 20 years (240 months)
-          </li>
-        </ul>
-        <p>
-          <strong>Monthly Payment ≈ 71,976</strong>
-        </p>
-        <p>
-          Over 20 years, the total repayment comes to approximately 17,274,240 —
-          meaning you pay about 9,274,240 in interest alone. That is more than
-          the original loan amount.
-        </p>
-        <p>
-          Now let's see what happens if you change just the term to 15 years
-          instead. The monthly payment rises to about 81,132, but total interest
-          drops to roughly 6,603,760 — saving you nearly 2,670,000 compared to
-          the 20-year option. That is the power of a shorter term: higher
-          monthly cost, but dramatically less interest overall.
-        </p>
-
-        <h2>How to Use This Mortgage Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            Enter the <strong>home price</strong> — the full listing or purchase
-            price of the property.
-          </li>
-          <li>
-            Enter your <strong>down payment</strong> — the amount you plan to
-            pay upfront. The calculator will show the percentage automatically.
-          </li>
-          <li>
-            Enter the <strong>annual interest rate</strong> quoted by your
-            lender.
-          </li>
-          <li>
-            Enter the <strong>loan term in years</strong> — for example, 15, 20,
-            or 30.
-          </li>
-          <li>
-            Click <strong>Calculate</strong> to see your monthly payment, total
-            interest, and total repayment amount.
-          </li>
-        </ul>
-        <p>
-          Run the calculator multiple times with different values. Adjust the
-          down payment or term to see how each change affects your monthly
-          budget and long-term cost.
-        </p>
-
-        <h2>Key Factors That Determine Your Mortgage Payment</h2>
-
-        <h3>Home Price</h3>
-        <p>
-          This is your starting point. A higher home price means a larger loan
-          (unless you offset it with a bigger down payment), which directly
-          increases monthly payments and total interest.
-        </p>
-
-        <h3>Down Payment</h3>
-        <p>
-          The more you pay upfront, the less you borrow — and the less interest
-          you pay over the life of the loan. A 20% down payment is the most
-          commonly cited benchmark because it often eliminates the need for
-          private mortgage insurance, but many buyers start with 10% or even 5%
-          if their lender allows it. Use the calculator to see exactly how
-          different down payment amounts change your monthly obligation.
-        </p>
-
-        <h3>Interest Rate</h3>
-        <p>
-          Even a half-percent difference in your mortgage rate has an outsized
-          impact over a long term. On an 8,000,000 loan over 20 years, the
-          difference between 8.5% and 9% adds roughly 2,300 per month. Over 240
-          months, that is more than 550,000 in extra interest. Always compare
-          rates from multiple lenders before committing.
-        </p>
-
-        <h3>Loan Term</h3>
-        <p>
-          Common terms are 15, 20, and 30 years. Shorter terms come with higher
-          monthly payments but save you a significant amount of interest. Longer
-          terms ease monthly cash flow but cost substantially more over the full
-          duration. The comparison table below makes this trade-off concrete.
-        </p>
-
-        <h2>15-Year vs. 20-Year vs. 30-Year Mortgage: A Comparison</h2>
-        <p>
-          The following table shows how the same 8,000,000 loan at 9% interest
-          behaves across three common mortgage terms.
-        </p>
-
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Loan Term
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Monthly Payment
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total Interest
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total Repayment
-                </th>
+              <tr>
+                <th>Cost</th>
+                <th>In the calculated payment?</th>
+                <th>Notes</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["15 years", "81,132", "6,603,760", "14,603,760"],
-                ["20 years", "71,976", "9,274,240", "17,274,240"],
-                ["30 years", "64,372", "15,173,920", "23,173,920"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p>
-          The 30-year term saves you about 16,760 per month compared to the
-          15-year option. But look at total interest: you pay 15,173,920 vs.
-          6,603,760 — that is 8,570,160 more for the convenience of lower
-          monthly payments. This is why financial advisors often recommend
-          choosing the shortest term your budget can handle.
-        </p>
-
-        <h2>Fixed-Rate vs. Adjustable-Rate Mortgages</h2>
-
-        <h3>Fixed-Rate Mortgage</h3>
-        <p>
-          Your interest rate stays the same for the entire loan term. This means
-          your monthly payment never changes, which makes budgeting
-          straightforward. Fixed rates are ideal when current rates are low and
-          you want to lock them in, or when you prefer certainty in your monthly
-          housing costs.
-        </p>
-
-        <h3>Adjustable-Rate Mortgage (ARM)</h3>
-        <p>
-          The interest rate adjusts periodically based on a benchmark index.
-          ARMs often start with a lower introductory rate (sometimes called a
-          "teaser rate") for the first few years, then adjust annually. This
-          means your monthly payment can rise or fall depending on market
-          conditions. ARMs can save money if rates stay flat or drop, but they
-          carry the risk of significant payment increases.
-        </p>
-        <p>
-          This calculator assumes a fixed rate. If your lender offers an
-          adjustable rate, use the initial rate to get a baseline estimate, but
-          keep in mind that your actual payments may change after the
-          introductory period ends.
-        </p>
-
-        <h2>How Much Down Payment Should You Make?</h2>
-        <p>
-          The down payment is one of the most impactful numbers in your mortgage
-          equation. Here is how different down payment percentages affect a
-          10,000,000 home at 9% over 20 years:
-        </p>
-
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Down Payment
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Loan Amount
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Monthly Payment
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Total Interest
-                </th>
+              <tr>
+                <td>Principal and interest</td>
+                <td>Yes</td>
+                <td>The figure this calculator produces</td>
               </tr>
-            </thead>
-            <tbody>
-              {[
-                ["5% (500,000)", "9,500,000", "85,472", "11,013,280"],
-                ["10% (1,000,000)", "9,000,000", "80,973", "10,433,520"],
-                ["20% (2,000,000)", "8,000,000", "71,976", "9,274,240"],
-                ["30% (3,000,000)", "7,000,000", "62,979", "8,114,960"],
-              ].map((row) => (
-                <tr key={row[0]}>
-                  {row.map((cell, i) => (
-                    <td
-                      key={i}
-                      style={{ padding: "10px", border: "1px solid #ddd" }}
-                    >
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              <tr>
+                <td>Property tax or council charges</td>
+                <td>No</td>
+                <td>
+                  Often collected alongside the mortgage, and it rises over time
+                </td>
+              </tr>
+              <tr>
+                <td>Buildings insurance</td>
+                <td>No</td>
+                <td>Usually a lender requirement, not optional</td>
+              </tr>
+              <tr>
+                <td>Mortgage insurance</td>
+                <td>No</td>
+                <td>
+                  Commonly required below a certain deposit, and may fall away
+                  later
+                </td>
+              </tr>
+              <tr>
+                <td>Service or ground charges</td>
+                <td>No</td>
+                <td>Applies to flats and managed developments</td>
+              </tr>
+              <tr>
+                <td>Maintenance and repairs</td>
+                <td>No</td>
+                <td>
+                  Irregular and unavoidable — the line renters never had to pay
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <p>
-          Going from 5% down to 20% down saves about 13,496 per month and nearly
-          1,739,040 in total interest. If you can save aggressively before
-          purchasing, the larger down payment pays for itself many times over.
-        </p>
 
-        <h2>Practical Tips to Lower Your Mortgage Cost</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Save for a larger down payment.</strong> Every additional
-            percent you put down reduces your loan principal, monthly payment,
-            and total interest.
-          </li>
-          <li>
-            <strong>Shop multiple lenders.</strong> Do not accept the first rate
-            you are offered. Even a 0.25% reduction in rate saves thousands over
-            a 20-year mortgage. Get quotes from at least three to four lenders.
-          </li>
-          <li>
-            <strong>Choose the shortest term you can afford.</strong> Use the
-            calculator to find the sweet spot where monthly payments are
-            challenging but manageable. The interest savings are dramatic.
-          </li>
-          <li>
-            <strong>Improve your credit score first.</strong> Lenders offer
-            better rates to borrowers with higher credit scores. Paying off
-            existing debts and correcting errors on your credit report before
-            applying can make a real difference.
-          </li>
-          <li>
-            <strong>Make extra principal payments.</strong> Even small
-            additional payments toward the principal each month shorten your
-            loan term and reduce total interest. Check with your lender that
-            there are no prepayment penalties.
-          </li>
-          <li>
-            <strong>Consider refinancing.</strong> If rates drop after you have
-            taken a mortgage, refinancing at the new rate can lower your monthly
-            payment and total cost. Use our{" "}
-            <Link href="/loan-calculator/" className="my-link">
-              loan calculator
-            </Link>{" "}
-            to estimate what the new terms would look like.
-          </li>
-        </ul>
-
-        <h2>Renting vs. Buying: When Does a Mortgage Make Sense?</h2>
         <p>
-          This is one of the most common questions homebuyers face. Renting
-          offers flexibility and no maintenance responsibility, but your monthly
-          rent builds zero equity. A mortgage payment, on the other hand,
-          gradually makes you the owner of an appreciating asset.
+          Maintenance is the one people leave out entirely, because it does not
+          arrive as a monthly bill. It arrives as a boiler, a roof, or a
+          rewiring, and setting aside a fixed amount each month is the only way
+          to make it behave like the recurring cost it actually is.
         </p>
         <p>
-          The breakeven point depends on how long you plan to stay. If you are
-          staying less than 3 to 5 years, renting often makes more financial
-          sense because closing costs and early-year interest outweigh equity
-          gained. If you plan to stay longer, owning typically wins — especially
-          in markets with rising property values.
-        </p>
-        <p>
-          Compare your current rent against a potential mortgage payment using
-          our{" "}
-          <Link href="/rent-calculator/" className="my-link">
-            rent calculator
+          When comparing owning against renting, the honest comparison is rent
+          against every row of that table, not against the mortgage payment
+          alone. Our guide on{" "}
+          <Link href="/blog/renting-vs-buying-a-home/" className="my-link">
+            renting versus buying
           </Link>{" "}
-          alongside this mortgage tool to see where the numbers land for your
-          situation.
+          works through both sides.
         </p>
 
-        <h2>Understanding Amortization: Where Your Money Goes Each Month</h2>
+        <h2>Five Years In, You Have Barely Started</h2>
         <p>
-          When you make your first mortgage payment, a surprisingly large
-          portion goes toward interest rather than reducing your balance. This
-          shifts gradually over the life of the loan. For example, on an
-          8,000,000 loan at 9% over 20 years:
+          Long mortgages are dominated by interest at the beginning, and the
+          scale of it surprises almost everyone.
+        </p>
+        <p>
+          Take 250,000 borrowed at 6% over thirty years. The monthly payment is
+          about 1,499. Of the very first payment, 1,250 is interest and 249
+          reduces the balance — roughly 83% of it is the cost of the money
+          rather than repayment of it.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>After</th>
+                <th>Total paid</th>
+                <th>Balance reduced by</th>
+                <th>Still owed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>5 years</td>
+                <td>about 89,933</td>
+                <td>about 17,364</td>
+                <td>about 232,636</td>
+              </tr>
+              <tr>
+                <td>10 years</td>
+                <td>about 179,866</td>
+                <td>about 40,786</td>
+                <td>about 209,214</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          A decade of payments totalling nearly 180,000 has cleared under 41,000
+          of debt. Nothing is wrong: interest is charged on the outstanding
+          balance, and the balance starts at its maximum. But it explains why
+          selling in the early years often returns less equity than owners
+          expect, and why overpaying early is so much more effective than
+          overpaying late.
+        </p>
+        <p>
+          Over the full thirty years this borrower repays about 539,595 against
+          250,000 borrowed — roughly 289,595 in interest, more than the house
+          cost.
+        </p>
+
+        <h2>The Term Decision Is the Expensive One</h2>
+        <p>
+          Term affects total cost far more than most borrowers realise, because
+          it changes both the payment and the number of times you make it.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Term on 250,000 at 6%</th>
+                <th>Monthly payment</th>
+                <th>Total interest</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>30 years</td>
+                <td>about 1,499</td>
+                <td>about 289,595</td>
+              </tr>
+              <tr>
+                <td>15 years</td>
+                <td>about 2,110</td>
+                <td>about 129,736</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          An extra 611 a month saves about 159,860 in interest. That is a
+          genuine trade rather than an obvious win: the shorter term commits you
+          to the higher payment permanently, with no option to drop back if
+          circumstances change.
+        </p>
+        <p>
+          A middle path that many borrowers prefer is to take the longer term
+          for the flexibility and overpay voluntarily when you can. You keep the
+          right to pay the lower amount in a difficult year, and in good years
+          you capture most of the interest saving. It requires the discipline to
+          actually make the overpayments, which is the part that decides whether
+          it works.
+        </p>
+
+        <h2>Fixed and Variable Are a Bet on Different Things</h2>
+        <p>
+          A fixed rate holds your payment steady for an agreed period. A
+          variable rate moves with the market, up as well as down.
+        </p>
+        <p>
+          The choice is usually framed as predicting rates, which almost nobody
+          does reliably. A more useful frame is what a rise would do to you. If
+          a payment increase of a few hundred a month would be absorbed with
+          mild annoyance, a variable rate is a reasonable risk. If it would
+          break the budget, the fixed rate is buying certainty rather than
+          chasing a forecast, and that is worth paying a small premium for
+          regardless of what rates then do.
+        </p>
+        <p>
+          On a fixed deal, note when it ends. Reverting to a lender&apos;s
+          standard rate at the end of a fixed period is a common cause of a
+          sudden payment jump, and it is entirely avoidable by arranging the next
+          deal before the current one expires.
+        </p>
+
+        <h2>How the Deposit Changes More Than the Loan Size</h2>
+        <p>
+          A larger deposit reduces the amount borrowed, which is the obvious
+          effect. Three less obvious ones usually matter more.
         </p>
         <ul className="custom-list">
           <li>
-            <strong>Month 1:</strong> About 60,000 of your 71,976 payment goes
-            to interest. Only about 11,976 reduces your principal.
+            Lenders price by loan-to-value band, so crossing a threshold can
+            move you into a materially better interest rate — sometimes worth
+            more than the reduction in borrowing itself.
           </li>
           <li>
-            <strong>Month 120 (Year 10):</strong> Roughly 38,000 goes to
-            interest and 33,976 goes toward principal — the balance is shifting.
+            Mortgage insurance is commonly required below a certain deposit and
+            is a pure cost that buys the lender protection, not you.
           </li>
           <li>
-            <strong>Month 240 (Final year):</strong> Almost the entire payment
-            goes to principal, with very little interest remaining.
+            More initial equity means a fall in property values is less likely
+            to leave you owing more than the property is worth, which is what
+            constrains your ability to move or remortgage.
           </li>
         </ul>
         <p>
-          This is why prepayments in the early years of a mortgage are so
-          powerful. Every extra payment applied to principal skips the interest
-          that would have accrued on that amount for the remaining years.
+          Against that, a deposit that empties your savings entirely is its own
+          risk. Buying a house is immediately followed by needing money for it,
+          and the worst time to have no accessible cash is the month after
+          completion.
         </p>
 
-        <h2>Common Mortgage Mistakes to Avoid</h2>
+        <h2>Before You Commit</h2>
         <ul className="custom-list">
           <li>
-            <strong>
-              Ignoring total cost and focusing only on monthly payment.
-            </strong>{" "}
-            A 30-year term looks affordable each month, but the total interest
-            can be staggering. Always look at both numbers.
+            Add up every row of the first table, not just the calculated
+            payment, and check that total against your take-home pay.
           </li>
           <li>
-            <strong>Skipping rate comparison.</strong> Many buyers take the rate
-            their bank offers without negotiating or checking competitors. This
-            can cost hundreds of thousands over the term.
+            Model the payment at a rate two or three points higher than today.
+            If that version is unaffordable, the current one is only affordable
+            for now.
           </li>
           <li>
-            <strong>Forgetting about additional costs.</strong> Property taxes,
-            homeowner's insurance, maintenance, and association fees are real
-            monthly expenses beyond your mortgage payment. Budget for them.
+            Budget the purchase costs separately — legal fees, surveys, taxes on
+            purchase, moving. They are a lump sum, not a monthly one.
           </li>
           <li>
-            <strong>Stretching beyond your comfort zone.</strong> Financial
-            advisors generally suggest your total housing costs should not
-            exceed 28% to 35% of your gross monthly income. Use our{" "}
-            <Link href="/income-tax-calculator/" className="my-link">
-              income tax calculator
-            </Link>{" "}
-            to determine your after-tax income and set a realistic mortgage
-            ceiling.
+            Keep an accessible reserve after the deposit rather than putting
+            every last amount into it.
           </li>
           <li>
-            <strong>Not planning for rate changes on ARMs.</strong> If you have
-            an adjustable-rate mortgage, model what happens when the rate
-            increases by 1–2% after the introductory period. Make sure you can
-            still afford the payment.
+            Check the early repayment terms before you sign, not when you first
+            want to overpay.
           </li>
         </ul>
+        <p>
+          To work out an honest purchase budget before looking at properties,
+          our guide on{" "}
+          <Link href="/blog/how-much-house-can-i-afford/" className="my-link">
+            how much house you can afford
+          </Link>{" "}
+          starts from income rather than from listings, and the{" "}
+          <Link href="/loan-calculator/" className="my-link">
+            loan calculator
+          </Link>{" "}
+          covers comparing offers where fees differ.
+        </p>
+        <h2>Mortgage Questions</h2>
 
-        <h2>Frequently Asked Questions</h2>
-
-        {[
-          [
-            "How much down payment do I need for a house?",
-            "It depends on the lender and the type of loan. A 20% down payment is the traditional benchmark and usually gets you the best terms, but many lenders accept 10% or even 5%. A smaller down payment means a larger loan, higher monthly payments, and more total interest — plus you may need to pay private mortgage insurance.",
-          ],
-          [
-            "Is a 15-year or 30-year mortgage better?",
-            "A 15-year mortgage has higher monthly payments but saves you a massive amount of interest over the life of the loan. A 30-year mortgage is easier on your monthly budget but costs far more in total. The best choice depends on your income stability and financial goals. Use the calculator above to compare both scenarios with your actual numbers.",
-          ],
-          [
-            "What is the difference between fixed and adjustable-rate mortgages?",
-            "A fixed-rate mortgage keeps the same interest rate for the entire term, so your payment never changes. An adjustable-rate mortgage (ARM) starts with a lower rate that adjusts periodically based on market conditions. Fixed rates offer predictability; ARMs can save money initially but carry the risk of higher payments later.",
-          ],
-          [
-            "Can I use this calculator for mortgage refinancing?",
-            "Yes. To estimate refinancing, enter your current outstanding loan balance as the home price, set the down payment to zero, and enter the new interest rate and term being offered. The result will show your new monthly payment and total cost under the refinanced terms.",
-          ],
-          [
-            "Does making extra payments reduce my mortgage term?",
-            "Yes. Extra payments applied directly to the principal reduce your outstanding balance faster. This shortens the loan term and decreases the total interest you pay. Even adding a small extra amount each month — or making one additional payment per year — can shave years off your mortgage and save a significant sum.",
-          ],
-          [
-            "What percentage of my income should go to a mortgage?",
-            "A widely followed guideline is that your total housing costs — including the mortgage payment, taxes, and insurance — should not exceed 28% to 35% of your gross monthly income. Going beyond this range can strain your finances and make it difficult to cover other expenses or save for emergencies.",
-          ],
-          [
-            "What is private mortgage insurance (PMI)?",
-            "PMI is an insurance policy that protects the lender if you default on the loan. It is typically required when your down payment is less than 20% of the home price. PMI adds to your monthly housing cost but can usually be removed once you have built enough equity in the home — usually when your loan-to-value ratio drops below 80%.",
-          ],
-          [
-            "Does this calculator include property taxes and insurance?",
-            "No. This calculator focuses on the principal and interest portion of your mortgage payment. Property taxes, homeowner's insurance, and PMI vary by location and policy, so you should estimate those separately and add them to your monthly budget.",
-          ],
-          [
-            "How do I know if I can afford a particular home?",
-            "Start by calculating your monthly take-home pay after taxes. Then subtract existing obligations like car payments, student loans, and living expenses. The amount remaining is what you can realistically put toward a mortgage. Use this calculator to find a home price and loan term where the monthly payment falls comfortably within that budget, leaving room for unexpected expenses.",
-          ],
-        ].map(([q, a], i) => (
+        {FAQ_DATA.map(([q, a], i) => (
           <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={openFAQ === i}
+              aria-controls={`faq-answer-${i}`}
+            >
               {q}
               <i
                 className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
+                aria-hidden="true"
               />
             </h3>
-            {openFAQ === i && <p>{a}</p>}
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${openFAQ === i ? "open" : ""}`}
+              aria-hidden={openFAQ !== i}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
           </div>
         ))}
 
-        <h2>Final Thoughts</h2>
-        <p>
-          A home mortgage is likely the largest financial commitment you will
-          ever make. Running the numbers before you commit is not optional — it
-          is essential. Use this mortgage calculator to compare terms, test
-          different down payment amounts, and understand exactly what your
-          monthly payment and total cost look like under each scenario.
-        </p>
-        <p>
-          Pair it with our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          for non-housing loans or the{" "}
-          <Link href="/net-worth-calculator/" className="my-link">
-            net worth calculator
-          </Link>{" "}
-          to see how your new property fits into your overall financial picture.
-          The more clearly you see the numbers, the more confidently you can
-          buy.
-        </p>
       </div>
 
       {/* ---- SIDEBAR ---- */}

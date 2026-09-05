@@ -271,6 +271,45 @@ function NetWorthResultPanel({ result }: { result: NWResult | null }) {
 /* ─────────────────────────────────────────
    Main Calculator Page
 ───────────────────────────────────────── */
+const FAQ_DATA: [string, string][] = [
+  [
+    "How do I calculate my net worth?",
+    "Add up everything you own at what it would realistically sell for today, add up everything you owe in full, and subtract the second from the first. The subtraction is the easy part — what decides whether the figure means anything is which items you include, what value you assign them, and whether the liability list is complete rather than selective.",
+  ],
+  [
+    "Should I include my house in my net worth?",
+    "Yes, at a realistic sale value, with the outstanding mortgage listed as a liability against it. The common objection is that you have to live somewhere so the equity is not spendable, which is fair — but the answer to that is to also track net worth excluding your home, not to leave the largest asset most people own out of the calculation entirely.",
+  ],
+  [
+    "Does my pension count towards net worth?",
+    "Yes. It is money you own, and excluding it makes years of long-term saving invisible in the one measure designed to capture exactly that. Being unable to access it for years is a liquidity question rather than an ownership one, which is what the separate liquid net worth figure is for.",
+  ],
+  [
+    "What value should I use for my car?",
+    "What it would sell for now, re-checked each time you update the figure. A vehicle carried at its purchase price is the single most common cause of an inflated net worth, because it depreciates every month while the spreadsheet stays where it was. The same principle applies to investments: current market value, never what you paid.",
+  ],
+  [
+    "Which debts do people forget to include?",
+    "Tax reserved but not yet paid, credit card balances they intend to clear this month, buy-now-pay-later and instalment plans, and money owed informally to family. Also common is listing the monthly mortgage payment instead of the outstanding balance — the payment is a cash flow, the balance is the liability.",
+  ],
+  [
+    "Should I count my furniture and belongings?",
+    "Generally no. Ordinary possessions would fetch very little in an actual sale, and valuing them at replacement cost inflates the total with money you could never realise. Include only items you would genuinely list and sell — a second vehicle, valuable equipment, or a collection with an established market.",
+  ],
+  [
+    "What is liquid net worth and why track it separately?",
+    "It counts only what could become cash quickly without a forced sale, minus short-term debts. Someone with 400,000 of net worth held almost entirely in a house and a pension may have very little liquid net worth. The total tells you whether you are building wealth; the liquid figure tells you whether you could absorb a job loss or a large bill without dismantling it.",
+  ],
+  [
+    "How often should I calculate it?",
+    "Quarterly or twice a year for most people, and annually if your position is stable. Monthly tracking mostly records market movement and rounding in your own valuation guesses, which is noise rather than information. Whatever interval you choose, keep the valuation method identical between periods — changing how you value the house produces a change that reflects nothing you did.",
+  ],
+  [
+    "Does paying off debt increase net worth as much as saving?",
+    "Exactly as much. Using 1,000 to reduce a debt lowers your liabilities by 1,000; putting 1,000 into savings raises your assets by the same. Both move net worth by the identical amount, which is why net worth is a better measure of financial progress than income or savings alone — it is the only single number that captures saving, investing and debt repayment together.",
+  ],
+];
+
 export default function NetWorthCalculator() {
   const [cashSavings, setCashSavings] = useState("");
   const [investments, setInvestments] = useState("");
@@ -396,8 +435,22 @@ export default function NetWorthCalculator() {
 
   return (
     <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div className="single-page-padding">
-        <h1>Free Net Worth Calculator Online - Assets Minus Liabilities</h1>
+        <h1>Net Worth Calculator — What to Count and What to Leave Out</h1>
         <p>
           Calculate your total net worth instantly by entering your assets and
           liabilities below.
@@ -524,500 +577,272 @@ export default function NetWorthCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>What Is Net Worth?</h2>
+        <h2>The Formula Is Trivial. The Inputs Are the Whole Problem.</h2>
+        <pre>Net worth = Everything you own − Everything you owe</pre>
         <p>
-          Net worth is the total value of everything you own minus everything
-          you owe. It is the single most important number in personal finance
-          because it captures your complete financial picture in one figure —
-          not just how much you earn, but how much you have actually accumulated
-          after debts. A positive net worth means your assets exceed your
-          liabilities, while a negative net worth means you currently owe more
-          than you own.
+          Nobody gets that subtraction wrong. What makes one person&apos;s net
+          worth figure useful and another&apos;s meaningless is the decisions
+          made before the subtraction: which items to include, what value to put
+          on them, and which debts get quietly left off the list.
         </p>
         <p>
-          This free net worth calculator with assets and liabilities does the
-          math instantly. Enter what you own (cash, investments, property,
-          vehicles, retirement savings) and what you owe (mortgage, car loan,
-          student loan, credit card debt, personal loans), and the calculator
-          shows your total net worth, debt-to-asset ratio, and a visual
-          breakdown of where you stand.
+          The whole of this page is about those decisions, because they are what
+          the calculation actually consists of.
         </p>
 
-        <h2>How to Calculate Net Worth — The Formula</h2>
+        <h2>What Value Do You Put on Things You Own?</h2>
         <p>
-          The net worth formula is one of the simplest and most powerful
-          equations in personal finance:
-        </p>
-        <pre>Net Worth = Total Assets − Total Liabilities</pre>
-        <p>
-          That is it — assets minus liabilities. Every asset adds to your net
-          worth, every liability subtracts from it. This calculator functions as
-          an assets minus liabilities calculator that handles the arithmetic,
-          comma formatting, and visual breakdown for you. Just fill in the
-          fields and click Calculate.
-        </p>
-        <p>
-          If you have active loans, knowing exactly what you owe each month
-          matters. Our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          shows your monthly installment for any loan, and our{" "}
-          <Link href="/loan-calculator/" className="my-link">
-            loan calculator
-          </Link>{" "}
-          breaks down total interest over the full term — both directly affect
-          the liability side of your net worth.
+          The rule that keeps the figure honest is to value everything at what
+          you could realistically sell it for today, not what you paid and not
+          what you feel it is worth.
         </p>
 
-        <h2>What Counts as an Asset?</h2>
-        <p>
-          An asset is anything with monetary value that belongs to you. This
-          calculator covers the six most common categories:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Cash and savings</strong> — bank account balances, fixed
-            deposits, emergency fund, cash on hand.
-          </li>
-          <li>
-            <strong>Investments</strong> — stocks, mutual funds, ETFs, bonds,
-            cryptocurrency, gold holdings.
-          </li>
-          <li>
-            <strong>Real estate</strong> — current market value of any property
-            you own (your home, rental properties, land). Use our{" "}
-            <Link href="/home-mortgage-calculator/" className="my-link">
-              home mortgage calculator
-            </Link>{" "}
-            to see how your mortgage payments are building equity in this asset
-            over time.
-          </li>
-          <li>
-            <strong>Vehicles</strong> — current resale value of cars,
-            motorcycles, boats. Remember vehicles depreciate — enter what they
-            are worth today, not what you paid.
-          </li>
-          <li>
-            <strong>Retirement savings</strong> — pension funds, provident fund,
-            401(k), IRA, or any retirement-designated accounts.
-          </li>
-          <li>
-            <strong>Other assets</strong> — jewelry, art, collectibles, business
-            ownership value, intellectual property, or any other items with
-            significant resale value.
-          </li>
-        </ul>
-
-        <h2>What Counts as a Liability?</h2>
-        <p>
-          A liability is any debt or financial obligation you are responsible
-          for paying. Common liabilities include:
-        </p>
-        <ul className="custom-list">
-          <li>
-            <strong>Mortgage balance</strong> — the remaining amount owed on
-            your home loan. This is typically the largest single liability for
-            homeowners.
-          </li>
-          <li>
-            <strong>Car loan</strong> — outstanding balance on vehicle
-            financing.
-          </li>
-          <li>
-            <strong>Student / education loans</strong> — remaining balance on
-            any education-related borrowing.
-          </li>
-          <li>
-            <strong>Credit card debt</strong> — total outstanding balances
-            across all credit cards. This is often the highest-interest debt and
-            should be prioritized for payoff.
-          </li>
-          <li>
-            <strong>Personal loans</strong> — any unsecured loans from banks or
-            lenders.
-          </li>
-          <li>
-            <strong>Other debts</strong> — medical bills, tax liabilities, money
-            owed to individuals, or any other financial obligations.
-          </li>
-        </ul>
-        <p>
-          Understanding how much each debt costs you monthly helps you plan
-          payoff strategies. Our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          computes the exact monthly payment for any loan amount and interest
-          rate, and our{" "}
-          <Link href="/income-tax-calculator/" className="my-link">
-            income tax calculator
-          </Link>{" "}
-          shows how much of your salary actually reaches your bank account after
-          tax deductions — important context for how quickly you can pay down
-          liabilities.
-        </p>
-
-        <h2>Total Net Worth vs. Liquid Net Worth</h2>
-        <p>
-          Your total net worth includes everything — illiquid assets like real
-          estate and retirement accounts that you cannot convert to cash
-          overnight. Your liquid net worth includes only assets you can access
-          quickly: cash, savings, and easily sellable investments.
-        </p>
-        <p>
-          To estimate your liquid net worth using this calculator, simply leave
-          the real estate, vehicles, retirement, and other illiquid asset fields
-          empty — enter only your cash, savings, and liquid investments. The
-          result is your liquid net worth, which tells you how much financial
-          flexibility you have right now without selling property or touching
-          retirement accounts. This is essentially a liquid net worth calculator
-          when used this way.
-        </p>
-
-        <h2>What Should My Net Worth Be at My Age?</h2>
-        <p>
-          One of the most searched financial questions is "what should my net
-          worth be at 30?" or "am I rich for my age?" While there is no single
-          correct answer — it depends on your income, cost of living, and
-          financial goals — widely cited benchmarks can serve as rough
-          guideposts:
-        </p>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #f5f5f5)",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Age
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Net Worth Target
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  What It Means
-                </th>
+              <tr>
+                <th>Asset</th>
+                <th>Value it at</th>
+                <th>The mistake to avoid</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                [
-                  "25",
-                  "0.5× annual salary",
-                  "Building foundations — student loans may keep this low",
-                ],
-                [
-                  "30",
-                  "1× annual salary",
-                  "First major milestone — savings and investments growing",
-                ],
-                [
-                  "35",
-                  "2× annual salary",
-                  "Compounding kicks in — home equity may contribute",
-                ],
-                [
-                  "40",
-                  "3× annual salary",
-                  "Mid-career accumulation — retirement savings maturing",
-                ],
-                [
-                  "45",
-                  "4× annual salary",
-                  "Strong position — investments driving growth",
-                ],
-                [
-                  "50",
-                  "6× annual salary",
-                  "Pre-retirement buildup — debt should be declining",
-                ],
-                [
-                  "55",
-                  "7× annual salary",
-                  "Approaching retirement — focus shifts to preservation",
-                ],
-                [
-                  "60",
-                  "8–10× annual salary",
-                  "Retirement-ready — assets should fund decades of living",
-                ],
-              ].map(([age, target, meaning], i) => (
-                <tr key={i}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {age}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {target}
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {meaning}
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>Cash and savings</td>
+                <td>The balance</td>
+                <td>None — this is the only unambiguous line</td>
+              </tr>
+              <tr>
+                <td>Investments</td>
+                <td>Current market value</td>
+                <td>Using the price you bought at</td>
+              </tr>
+              <tr>
+                <td>Property</td>
+                <td>A realistic sale price today</td>
+                <td>
+                  Using an optimistic listing price, or the purchase price from
+                  years ago
+                </td>
+              </tr>
+              <tr>
+                <td>Vehicles</td>
+                <td>Trade or private sale value now</td>
+                <td>
+                  Carrying it at purchase price while it depreciates every month
+                </td>
+              </tr>
+              <tr>
+                <td>Pensions</td>
+                <td>Current fund value on the statement</td>
+                <td>Omitting it because it is not accessible yet</td>
+              </tr>
+              <tr>
+                <td>Possessions</td>
+                <td>
+                  Usually nothing, unless individually valuable and genuinely
+                  saleable
+                </td>
+                <td>
+                  Adding up furniture and clothes to inflate the total
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
+
         <p>
-          These benchmarks are guidelines, not rules. A 30-year-old doctor with
-          significant student debt may have a negative net worth despite a high
-          income — and that is perfectly normal given the career trajectory.
-          What matters most is that your net worth trends upward consistently
-          year over year. Use this calculator as a net worth percentile by age
-          reference point, but focus on your own trajectory rather than
-          comparing to averages.
+          The last row is where people most often flatter themselves. A house
+          full of belongings might fetch very little in a hurried sale, and
+          counting it at replacement cost produces a number that cannot survive
+          contact with reality. Leave ordinary possessions out entirely and
+          include only items you would genuinely list and sell — a second
+          vehicle, valuable equipment, a collection with an established market.
         </p>
 
-        <h2>Net Worth Calculator for Couples</h2>
+        <h2>The Debts People Forget</h2>
         <p>
-          If you are calculating net worth as a couple, add both partners'
-          assets and liabilities into the same calculation. Include jointly held
-          assets (shared savings, co-owned property) as well as individually
-          held ones (personal investments, individual retirement accounts). On
-          the liability side, include all debts regardless of whose name they
-          are in — a couple's combined net worth reflects the household's true
-          financial position.
+          Assets get counted enthusiastically and liabilities get counted
+          selectively. A complete list includes several things that do not feel
+          like debt.
         </p>
-        <p>
-          For couples weighing the rent-vs-buy decision, our{" "}
-          <Link href="/rent-calculator/" className="my-link">
-            rent calculator
-          </Link>{" "}
-          shows how much of your combined income should go to housing, and our{" "}
-          <Link href="/home-mortgage-calculator/" className="my-link">
-            home mortgage calculator
-          </Link>{" "}
-          reveals what a mortgage payment would look like — both directly inform
-          whether buying a home (adding a real estate asset and a mortgage
-          liability) improves your combined net worth over time.
-        </p>
-
-        <h2>Key Factors That Affect Your Net Worth</h2>
-
-        <h3>Savings Rate</h3>
-        <p>
-          The more you save each month, the faster your cash and investments
-          grow. Even saving a small percentage of your income consistently can
-          make a significant difference over years. Knowing your after-tax
-          income is the starting point — our{" "}
-          <Link href="/income-tax-calculator/" className="my-link">
-            income tax calculator
-          </Link>{" "}
-          shows exactly how much reaches your bank account after deductions.
-        </p>
-
-        <h3>Investment Growth</h3>
-        <p>
-          Money invested in stocks, mutual funds, real estate, or retirement
-          accounts grows through returns and compounding. Investment portfolios
-          are often the biggest driver of net worth growth for long-term savers.
-          The difference between saving in a bank account (2–4% interest) and
-          investing in a diversified portfolio (7–10% historical average)
-          compounds dramatically over decades.
-        </p>
-
-        <h3>Debt Management</h3>
-        <p>
-          High-interest debts like credit cards reduce your net worth quickly.
-          Paying off debts aggressively — especially high-interest ones first —
-          directly increases your net worth dollar for dollar. Use our{" "}
-          <Link href="/loan-calculator/" className="my-link">
-            loan calculator
-          </Link>{" "}
-          to see the total interest cost of each debt and prioritize
-          accordingly.
-        </p>
-
-        <h3>Real Estate Equity</h3>
-        <p>
-          Property appreciates over time in most markets. Owning a home or
-          investment property is a common way people build significant net
-          worth, especially when the mortgage balance is being paid down
-          simultaneously. Every mortgage payment that reduces principal is
-          effectively converting a liability into equity — an asset.
-        </p>
-
-        <h2>Tips to Increase Your Net Worth</h2>
         <ul className="custom-list">
           <li>
-            <strong>Pay off high-interest credit card debt first</strong> —
-            credit card interest rates of 18–30% destroy net worth faster than
-            almost any investment can build it.
+            <strong>The full mortgage balance</strong>, not the monthly payment.
+            The payment is a cash flow; the balance is the liability.
           </li>
           <li>
-            <strong>Increase your savings rate</strong> — even 1–2% more of your
-            income per month compounds significantly over years.
+            <strong>Tax owed but not yet paid.</strong> Self-employed people
+            holding a reserve for a future bill are holding someone else&apos;s
+            money in their own account. It is an asset and a liability
+            simultaneously, and netting to zero is the correct treatment.
           </li>
           <li>
-            <strong>Invest consistently</strong> — regular contributions to
-            diversified investments (index funds, retirement accounts) benefit
-            from compounding and dollar-cost averaging.
+            <strong>Credit card balances in full</strong>, including amounts you
+            intend to clear this month. Money already spent is owed regardless
+            of when the statement arrives.
           </li>
           <li>
-            <strong>Avoid financing depreciating assets</strong> — taking a loan
-            for a car or electronics means paying interest on something that
-            loses value. Use our{" "}
-            <Link href="/emi-calculator/" className="my-link">
-              EMI calculator
-            </Link>{" "}
-            to see the real cost before borrowing.
+            <strong>Student loans</strong>, on whatever terms they carry. Where
+            repayment is income-contingent and the balance may eventually be
+            written off, some people exclude it — that is defensible, but the
+            treatment should be recorded and kept consistent between periods.
           </li>
           <li>
-            <strong>Build an emergency fund</strong> — 3 to 6 months of expenses
-            in liquid savings prevents you from going deeper into debt during
-            setbacks.
+            <strong>Buy-now-pay-later and instalment plans.</strong> Small
+            individually and frequently invisible in aggregate.
           </li>
           <li>
-            <strong>Renegotiate loan interest rates</strong> — refinancing a
-            mortgage or consolidating high-interest debt at a lower rate saves
-            money that goes directly to net worth growth.
-          </li>
-          <li>
-            <strong>Invest in your income</strong> — skills, certifications, and
-            career moves that increase your earning power accelerate every other
-            strategy on this list.
-          </li>
-          <li>
-            <strong>Track quarterly</strong> — recalculate your net worth every
-            3 months using this calculator to see if the trend is moving in the
-            right direction.
+            <strong>Money owed to family.</strong> Informal, undocumented, and
+            still owed.
           </li>
         </ul>
 
-        <h2>How to Use This Net Worth Calculator</h2>
-        <ul className="custom-list">
-          <li>
-            <strong>Step 1:</strong> Enter the current value of each asset
-            category — cash, investments, real estate, vehicles, retirement
-            savings, and anything else of value.
-          </li>
-          <li>
-            <strong>Step 2:</strong> Enter the outstanding balance of each
-            liability — mortgage, car loan, student loan, credit card debt,
-            personal loans, and any other debts.
-          </li>
-          <li>
-            <strong>Step 3:</strong> Click Calculate to see your total assets,
-            total liabilities, net worth, and debt-to-asset ratio with a visual
-            gauge and comparison bars.
-          </li>
-          <li>
-            <strong>Step 4:</strong> Experiment — try zeroing out a specific
-            debt to see how paying it off would change your net worth and debt
-            ratio.
-          </li>
-        </ul>
-
-        <h2>Why You Should Track Your Net Worth Regularly</h2>
+        <h2>The Four Items People Argue About</h2>
         <p>
-          Calculating your net worth once a year — or even quarterly — gives you
-          a clear picture of your financial health that income alone cannot
-          provide. Two people earning the same salary can have wildly different
-          net worths depending on their saving, investing, and borrowing habits.
-          Tracking net worth helps you spot where money is being lost to debt,
-          identify which assets are growing, and make better decisions about
-          spending, saving, and investing. Many people who start tracking their
-          net worth report it motivates them to save more and pay down debt
-          faster because the number makes progress tangible.
-        </p>
-
-        <h2>Frequently Asked Questions</h2>
-
-        {[
-          [
-            "What is the net worth formula?",
-            "Net Worth = Total Assets − Total Liabilities. Add up the value of everything you own, subtract everything you owe, and the result is your net worth. This calculator handles the math automatically — just enter your values and click Calculate.",
-          ],
-          [
-            "Is it bad to have a negative net worth?",
-            "A negative net worth means your debts currently exceed your assets. This is common early in life, especially after taking student loans or a mortgage. What matters most is that your net worth improves over time. If it is trending upward quarter over quarter, you are on the right track regardless of the current number.",
-          ],
-          [
-            "Should I include my home in my net worth?",
-            "Yes. Your home's current market value counts as an asset, and the remaining mortgage balance counts as a liability. The difference between the two — your home equity — contributes positively to your net worth. This is often the single largest asset for homeowners.",
-          ],
-          [
-            "What should my net worth be at 30?",
-            "A widely cited guideline suggests your net worth should roughly equal your annual salary by age 30. If you earn 60,000 per year, a net worth of 60,000 at 30 would put you on track. However, this varies greatly by profession, location, and debt load — a doctor or lawyer with large student loans may be negative at 30 despite high earning potential.",
-          ],
-          [
-            "What is the difference between net worth and liquid net worth?",
-            "Total net worth includes all assets — including illiquid ones like real estate, vehicles, and retirement accounts you cannot access immediately. Liquid net worth includes only cash, savings, and easily sellable investments. To calculate liquid net worth with this tool, leave the real estate, vehicles, retirement, and other illiquid fields empty.",
-          ],
-          [
-            "How do I calculate net worth as a couple?",
-            "Enter both partners' assets and liabilities into the same calculation. Include jointly held assets (shared bank accounts, co-owned property) and individually held ones (personal investments, retirement accounts). Include all debts from both partners to get the household's true combined net worth.",
-          ],
-          [
-            "How often should I calculate my net worth?",
-            "At minimum once a year. Quarterly tracking gives better insight and helps you make timely adjustments. Avoid checking monthly — net worth moves slowly and monthly fluctuations (especially in investment values) can be misleading.",
-          ],
-          [
-            "Do retirement savings count toward net worth?",
-            "Yes. Retirement accounts like pension funds, provident fund balances, 401(k), IRA, and any other retirement-designated investments all count as assets in your net worth calculation, even though you cannot access them without penalties before retirement age.",
-          ],
-          [
-            "Am I rich? How do I know if my net worth is good for my age?",
-            "Compare your net worth to the age-based benchmarks in the table above. Generally, having a net worth equal to 1× your annual salary at 30, 3× at 40, and 6× at 50 puts you in a strong position. But 'rich' is relative — focus on consistent growth and financial security rather than hitting an arbitrary number.",
-          ],
-          [
-            "Is this net worth calculator free to use?",
-            "Yes — completely free with no sign-up, no download, and no usage limits. Enter your assets and liabilities, click Calculate, and see your complete net worth breakdown instantly. Works on mobile and desktop.",
-          ],
-        ].map(([q, a], i) => (
-          <div className="faq-item" key={i}>
-            <h3 onClick={() => toggleFAQ(i)}>
-              {q}
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === i && <p>{a}</p>}
-          </div>
-        ))}
-
-        <h2>Final Thoughts</h2>
-        <p>
-          Your net worth is the truest measure of your financial progress — not
-          your salary, not your job title, not your lifestyle. Two people
-          earning the same income can have a 10× difference in net worth
-          depending on how they save, invest, and manage debt. Use this free net
-          worth calculator to see exactly where you stand today, then come back
-          quarterly to track how the number moves.
+          Most disagreements about net worth come down to the same handful of
+          items. There is a defensible answer to each.
         </p>
         <p>
-          To manage the liabilities side, our{" "}
-          <Link href="/emi-calculator/" className="my-link">
-            EMI calculator
-          </Link>{" "}
-          and{" "}
+          <strong>Your home.</strong> Count it, at a realistic sale value, with
+          the mortgage as a liability against it. The objection — that you have
+          to live somewhere, so you cannot spend it — is fair, and it is an
+          argument for also tracking net worth excluding the home rather than
+          for pretending the asset does not exist.
+        </p>
+        <p>
+          <strong>Your pension.</strong> Count it. It is money you own, and
+          leaving it out makes long-term saving invisible in the one measure
+          designed to capture it. That it is inaccessible for years is a
+          liquidity question, not an ownership one.
+        </p>
+        <p>
+          <strong>Your car.</strong> Count it, and re-value it honestly each
+          time. A vehicle carried at purchase price is the most common single
+          source of an inflated net worth figure, since it declines every month
+          while the spreadsheet does not.
+        </p>
+        <p>
+          <strong>Volatile holdings.</strong> Count them at today&apos;s market
+          value, accepting that this makes the total move with the market.
+          Choosing a favourable historic price instead means the figure is no
+          longer measuring anything.
+        </p>
+
+        <h2>Liquid Net Worth Is the More Revealing Number</h2>
+        <p>
+          The headline figure counts everything you own. Liquid net worth counts
+          only what could become cash quickly without a forced sale.
+        </p>
+        <pre>
+          Liquid net worth = Cash, savings and readily sellable investments −
+          Short-term debts
+        </pre>
+        <p>
+          Someone with 400,000 of net worth held almost entirely in a house and
+          a pension may have very little liquid net worth. That is not a problem
+          in itself, but it describes a specific vulnerability: a job loss or a
+          large unexpected cost has to be met from a small pool, and the only
+          alternatives are borrowing or selling something slowly.
+        </p>
+        <p>
+          Tracking both numbers tells you two different things. The total says
+          whether you are building wealth. The liquid figure says whether you
+          could absorb a shock without dismantling what you have built.
+        </p>
+
+        <h2>What the Number Is Actually For</h2>
+        <p>
+          A single net worth figure in isolation says almost nothing. Compared
+          against your own previous figures it becomes the clearest measure of
+          financial progress available, because it is the only one that captures
+          saving, investing, and debt repayment in a single number.
+        </p>
+        <p>
+          Income does not do this — a high earner spending everything shows no
+          progress at all. Savings alone do not either, since money moved into a
+          savings account while a credit card balance grows is not progress.
+          Paying down debt increases net worth exactly as much as saving the
+          same amount, which is why it belongs in the same measure.
+        </p>
+        <p>
+          One caveat about frequency. Calculating monthly mostly records market
+          movement and rounds in valuation guesses, which is noise rather than
+          information. Quarterly or twice a year is often enough to show the
+          trend, and once a year is enough if your position is stable. Whatever
+          interval you pick, keep the valuation method the same each time —
+          changing how you value the house between periods produces a change in
+          net worth that reflects nothing you did.
+        </p>
+
+        <h2>Couples and Joint Finances</h2>
+        <p>
+          For a household, the practical approach is to keep three columns:
+          each person&apos;s individual position and the joint one. Joint assets
+          and joint debts sit in the middle column, and the household total is
+          the sum.
+        </p>
+        <p>
+          Keeping individual figures visible rather than merging everything is
+          worth the small extra effort. It shows who is carrying which debts,
+          makes an imbalance in pension savings obvious while there is still
+          time to address it, and means neither person loses sight of their own
+          position. Merging into one number is simpler and hides all three
+          things.
+        </p>
+        <p>
+          For the components that feed this calculation, our{" "}
           <Link href="/loan-calculator/" className="my-link">
             loan calculator
           </Link>{" "}
-          show what your debts actually cost. For the income side, our{" "}
-          <Link href="/income-tax-calculator/" className="my-link">
-            income tax calculator
-          </Link>{" "}
-          reveals your real take-home pay. And for housing decisions that affect
-          both sides of the equation, our{" "}
-          <Link href="/home-mortgage-calculator/" className="my-link">
-            home mortgage calculator
-          </Link>{" "}
           and{" "}
-          <Link href="/rent-calculator/" className="my-link">
-            rent calculator
+          <Link href="/home-mortgage-calculator/" className="my-link">
+            mortgage calculator
           </Link>{" "}
-          help you make the choice that builds the most wealth over time.
+          project outstanding balances forward, and the guide on{" "}
+          <Link href="/blog/how-do-i-calculate-my-net-worth/" className="my-link">
+            calculating your net worth
+          </Link>{" "}
+          works through a full example line by line.
         </p>
+        <h2>Net Worth Questions</h2>
+
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
       </div>
 
       {/* ---- SIDEBAR ---- */}

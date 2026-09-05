@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import Link from "next/link";
 
 type ConversionType =
   | "uppercase"
@@ -106,52 +107,40 @@ export default function TextConverter() {
   /* ── FAQ data (also used for JSON-LD schema) ── */
   const faqs: [string, string][] = [
     [
-      "What is a text case converter and how does it work?",
-      "A text case converter changes the letter case or format of text — UPPERCASE, lowercase, Title Case, camelCase, PascalCase, snake_case, or kebab-case. Paste your text, pick a format, and the converter transforms it instantly without you retyping.",
-    ],
-    [
-      "What is title case and when should I use it?",
-      "Title case capitalizes the first letter of each major word — used for headlines, book titles, and article headings. It's the standard for AP, Chicago, and most editorial style guides. Example: 'A Guide to Better Writing' is in title case.",
+      "Why does automatic title case sometimes look wrong?",
+      "Because title case is not one rule. Style guides genuinely disagree about short prepositions, the word after a colon, the second half of hyphenated words and whether the final word is always capitalised. No automatic conversion matches every house style, so convert first and then correct the handful of words your own style treats differently.",
     ],
     [
       "What is the difference between title case and sentence case?",
-      "Title case capitalizes every major word (e.g. 'How to Learn JavaScript'). Sentence case only capitalizes the first word and proper nouns (e.g. 'How to learn JavaScript'). Sentence case reads more naturally in body copy; title case is standard for headings.",
+      "Sentence case capitalises the first word and proper nouns and nothing else. Title case capitalises the significant words throughout. Sentence case is easier to read and much harder to get wrong, which is why most modern interfaces use it for headings; title case reads as more formal and remains standard for book titles and article headlines.",
     ],
     [
-      "What is camelCase used for?",
-      "camelCase is the standard naming convention for variables and functions in JavaScript, Java, Swift, and TypeScript. The first word is lowercase and each following word starts with a capital letter — e.g. userName, calculateTotal, getUserById.",
+      "Can I undo a case conversion?",
+      "Not reliably. Converting to upper or lower case discards the original capitalisation permanently. Take a sentence to upper case and back to lower and every proper noun, acronym and sentence-initial capital is gone. Keep an unconverted copy before transforming anything you cannot easily retype.",
     ],
     [
-      "What is the difference between camelCase and PascalCase?",
-      "camelCase starts with a lowercase letter (userName), while PascalCase capitalizes every word including the first (UserName). camelCase is used for variables and functions; PascalCase is used for class names, React components, and type definitions.",
+      "What happens to acronyms when I convert case?",
+      "They are the most visible casualty. Lowercase a paragraph containing NASA, PDF or URL and no automatic conversion restores them — title case produces Nasa, Pdf and Url, which reads worse than either extreme. If your text contains acronyms, expect to fix them by hand after any conversion.",
     ],
     [
-      "What is snake_case used for?",
-      "snake_case uses lowercase words separated by underscores. It's standard in Python, Ruby, and Rust for variables and functions (user_name, calculate_total), and in databases for column names.",
+      "Why is text in all capitals harder to read?",
+      "Because capital letters share a uniform rectangular outline, while lower case letters have ascenders and descenders that give each word a distinctive shape readers recognise at a glance. Capitals work well for short labels and acronyms and become tiring across a paragraph.",
     ],
     [
-      "What is kebab-case and where is it used?",
-      "kebab-case uses lowercase words joined by hyphens (user-name). It's the standard for URLs, CSS class names, HTML attributes, and file names in web development. Search-engine-friendly URLs use kebab-case.",
+      "Is it safe to lowercase an email address?",
+      "The domain half is case-insensitive and safe to convert. The local part before the @ technically is not, although virtually every provider treats it as case-insensitive in practice. Lowercasing both sides before comparing is standard for matching, but store the address as the user typed it where you can.",
     ],
     [
-      "How do I uncapitalize text online?",
-      "Paste your text into this converter and select 'Lowercase' to instantly convert ALL CAPS or Mixed Case to all lowercase. Useful for fixing accidental Caps Lock text or normalizing shouty content.",
+      "Are there values I should never case-convert?",
+      "Yes — anything genuinely case-sensitive, including API keys, passwords, tokens and base64 strings. Normalising those silently breaks them, often in ways that surface much later. As a rule, never case-convert a value you did not generate yourself.",
     ],
     [
-      "How do I fix accidental caps lock text?",
-      "Paste the text into the input box, select 'Lowercase' to remove caps entirely, or 'Capitalize' to get proper title case back. The converter handles paragraphs of any length in one click.",
+      "Does case conversion work correctly in other languages?",
+      "Not always. Case rules are language-specific, and a simple transformation may not implement every language's behaviour correctly, particularly around accented characters and scripts with special casing rules. Check the output in any language you cannot read rather than assuming it converted properly.",
     ],
     [
-      "Is this text converter free and safe to use?",
-      "Yes — 100% free, no signup required, and all conversions happen in your browser. Your text never leaves your device or gets sent to a server.",
-    ],
-    [
-      "Does it work on mobile devices?",
-      "Yes. The tool works on phones, tablets, and desktops. Paste, tap the case type, tap Convert, then Copy.",
-    ],
-    [
-      "Can I convert long paragraphs at once?",
-      "Yes. Paste any length of text — sentences, paragraphs, or full articles — and the converter processes it in a single click.",
+      "Which case should I use for headings on my site?",
+      "Whichever you can apply consistently. The common real problem is not the choice but the mixture — some headings in title case, some in sentence case, one in capitals — which looks careless even when each individual choice was defensible. Decide once per element type, write it down, and apply it everywhere.",
     ],
   ];
 
@@ -291,645 +280,190 @@ export default function TextConverter() {
             </div>
           </div>
 
-          {/* ── SEO CONTENT — REWRITTEN ── */}
+        {/* ── SEO CONTENT ── */}
 
-          <h2>What Is a Text Case Converter?</h2>
-          <p>
-            A <strong>text case converter</strong> is a tool that changes the
-            letter case or format of a piece of text — UPPERCASE, lowercase,
-            Title Case, camelCase, PascalCase, snake_case, or kebab-case. It
-            saves you from retyping text or manually editing every word, and
-            it's essential for writers, developers, students, and anyone who
-            works with formatted text daily.
-          </p>
-          <p>
-            Our <strong>free online text case converter</strong> supports all
-            seven common formats in one tool. Paste your text, pick a case, hit
-            Convert, and copy the result. Everything happens in your browser —
-            your text never leaves your device.
-          </p>
+        <h2>Title Case Is Not One Rule</h2>
+        <p>
+          Most case conversions are mechanical. Upper, lower and toggle case
+          apply a fixed transformation to every character and there is nothing to
+          disagree about. Title case is different: it depends on which style
+          guide you follow, and the major guides genuinely disagree.
+        </p>
 
-          <h2>All 7 Text Cases Explained (With Examples)</h2>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
+        <div className="table-wrap">
+          <table>
             <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #0D2A5C)",
-                  color: "#fff",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Case Type
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Example
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Common Use
-                </th>
+              <tr>
+                <th>The question</th>
+                <th>One convention</th>
+                <th>Another convention</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>UPPERCASE</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  HELLO WORLD FROM CLAUDE
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Headings, emphasis, acronyms, warning labels
-                </td>
+                <td>Short prepositions such as &quot;with&quot;</td>
+                <td>Lowercase</td>
+                <td>Capitalise anything over three letters</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>lowercase</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  hello world from claude
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Code, URLs, email addresses, casual writing
-                </td>
+                <td>The word after a colon</td>
+                <td>Always capitalised</td>
+                <td>Only if it begins a full clause</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>Title Case</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Hello World From Claude
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Book titles, article headings, blog posts
-                </td>
+                <td>The second half of a hyphenated word</td>
+                <td>Capitalised</td>
+                <td>Lowercase unless it is a proper noun</td>
               </tr>
               <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>camelCase</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  helloWorldFromClaude
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  JavaScript / Java variables and functions
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>PascalCase</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  HelloWorldFromClaude
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Class names, React components, TypeScript types
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>snake_case</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  hello_world_from_claude
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Python / Ruby variables, database columns
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>kebab-case</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  hello-world-from-claude
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  URLs, CSS class names, HTML attributes, file names
-                </td>
+                <td>The last word of a title</td>
+                <td>Always capitalised, whatever it is</td>
+                <td>Treated like any other word</td>
               </tr>
             </tbody>
           </table>
+        </div>
 
-          <h2>How to Use This Text Case Converter</h2>
-          <ol className="custom-list">
-            <li>
-              <strong>Paste your text</strong> into the input box above.
-            </li>
-            <li>
-              <strong>Pick the target case</strong> from the radio options —
-              UPPERCASE, lowercase, Title Case, camelCase, PascalCase,
-              snake_case, or kebab-case.
-            </li>
-            <li>
-              Click <strong>Convert</strong> to transform the text instantly.
-            </li>
-            <li>
-              Click <strong>Copy</strong> to send the result straight to your
-              clipboard.
-            </li>
-          </ol>
-          <p>
-            The converter handles paragraphs, sentences, or single lines. For
-            programmer cases (camel, Pascal, snake, kebab), it automatically
-            splits text at spaces, hyphens, underscores, and even existing
-            camelCase boundaries — so <em>helloWorld</em>, <em>hello_world</em>,
-            and <em>hello world</em> all convert cleanly.
-          </p>
+        <p>
+          Because of this, no automatic title case is correct for every house
+          style. The useful approach is to convert first and then read the
+          result, correcting the few words your own style treats differently.
+          Consistency within one publication matters far more than matching any
+          particular guide.
+        </p>
 
-          <h2>Title Case Converter — What Is Title Case and When to Use It?</h2>
-          <p>
-            <strong>Title case</strong> capitalizes the first letter of every
-            major word in a heading. It's the standard for book titles, article
-            headings, blog posts, and formal document sections. Most style
-            guides (AP, Chicago, MLA) have their own rules for what counts as a
-            "major word", but our converter capitalizes the first letter of
-            every word — which matches how most CMS and publishing platforms
-            display headings.
-          </p>
-          <p>
-            <strong>When to use title case:</strong>
-          </p>
-          <ul className="custom-list">
-            <li>Article and blog post titles</li>
-            <li>Book, movie, and song titles</li>
-            <li>Chapter and section headings</li>
-            <li>Job titles on resumes and LinkedIn</li>
-            <li>Slide titles in presentations</li>
-          </ul>
+        <h2>What Each Case Is Actually For</h2>
+        <p>
+          <strong>Sentence case</strong> capitalises the first word and proper
+          nouns, and nothing else. It is the easiest to read and the hardest to
+          get wrong, which is why most modern interfaces and many publications
+          use it for headings.
+        </p>
+        <p>
+          <strong>Title case</strong> capitalises the significant words. It reads
+          as more formal and is standard for book titles, article headlines and
+          academic references.
+        </p>
+        <p>
+          <strong>Upper case</strong> works for short labels and acronyms. In
+          longer runs it is genuinely harder to read, because capital letters
+          share a uniform rectangular outline while lower case letters have
+          ascenders and descenders that give words a recognisable shape.
+        </p>
+        <p>
+          <strong>Lower case</strong> is useful for normalising data before
+          comparison, and for the deliberate informality some brands adopt.
+        </p>
 
-          <h2>Title Case vs Sentence Case — What's the Difference?</h2>
-          <p>These two often get confused. Here's the clean split:</p>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #0D2A5C)",
-                  color: "#fff",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Style
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Rule
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Example
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>Title Case</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Capitalize the first letter of every major word
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  How to Learn JavaScript in 30 Days
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>Sentence case</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Only capitalize the first word (and proper nouns)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  How to learn JavaScript in 30 days
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <p>
-            Title case is standard for headings and titles. Sentence case reads
-            more naturally in body copy, UI microcopy, and modern brand style
-            guides (Google, Airbnb, and Apple all use sentence case for most UI
-            text). Neither is wrong — pick one and stay consistent.
-          </p>
+        <h2>Converting Loses Information</h2>
+        <p>
+          This is the trap that catches people editing existing text. Converting
+          to upper or lower case discards the original capitalisation, and no
+          conversion back can restore it.
+        </p>
+        <p>
+          Take a sentence to upper case and back to lower and every proper noun,
+          every acronym and the sentence-initial capital are all gone. The text
+          reads as lower case throughout, and restoring it means retyping the
+          names by hand.
+        </p>
+        <p>
+          Acronyms are the most visible casualty. Convert a paragraph containing
+          NASA, PDF or URL to lower case and no automatic conversion will bring
+          them back — title case will produce Nasa, Pdf and Url, which is worse
+          than either extreme. Keep an unconverted copy before transforming
+          anything you cannot easily retype.
+        </p>
 
-          <h2>camelCase vs PascalCase — What's the Difference?</h2>
-          <p>
-            Both remove spaces and capitalize word boundaries. The only
-            difference is the first letter:
-          </p>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #0D2A5C)",
-                  color: "#fff",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Case
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Rule
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Example
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Used For
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>camelCase</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  First word lowercase, rest capitalized
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  userName, calculateTotal
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Variables, functions, methods (JavaScript, Java, Swift)
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>PascalCase</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Every word capitalized (including the first)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  UserName, CalculateTotal
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Class names, React components, TypeScript types
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <p>
-            Quick rule of thumb for developers: if it's something you can
-            instantiate or export as a component, use PascalCase. If it's a
-            variable or function, use camelCase.
-          </p>
+        <h2>Case in Data, Not Just Prose</h2>
+        <p>
+          Case conversion is used as often for tidying data as for writing, and
+          the considerations are different.
+        </p>
+        <ul className="custom-list">
+          <li>
+            <strong>Comparing values.</strong> Converting both sides to lower
+            case before comparing makes matching case-insensitive, which is
+            usually what you want for names and email addresses.
+          </li>
+          <li>
+            <strong>Email addresses.</strong> The domain half is case-insensitive
+            and safe to lowercase. The local part technically is not, though in
+            practice virtually every provider treats it as such.
+          </li>
+          <li>
+            <strong>Identifiers and codes.</strong> Some are genuinely
+            case-sensitive — API keys, passwords, base64 strings — and
+            normalising them silently breaks them. Never case-convert a value you
+            did not generate.
+          </li>
+          <li>
+            <strong>Accented characters.</strong> Case conversion of non-English
+            text follows language-specific rules that a simple transformation may
+            not implement correctly, so check results in any language you cannot
+            read.
+          </li>
+        </ul>
 
-          <h2>snake_case vs kebab-case — When to Use Each</h2>
-          <p>
-            Same idea (lowercase words joined by a separator) but the separator
-            matters because different environments treat them differently.
-          </p>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #0D2A5C)",
-                  color: "#fff",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Case
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Separator
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Example
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Standard In
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>snake_case</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Underscore <code>_</code>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  user_name, get_full_address
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Python, Ruby, Rust, SQL columns, environment variables
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>kebab-case</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Hyphen <code>-</code>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  user-name, get-full-address
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  URLs, CSS classes, HTML attributes, file names
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  <strong>SCREAMING_SNAKE_CASE</strong>
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Underscore + uppercase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  MAX_RETRIES, API_KEY
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Constants in most languages
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <p>
-            <strong>Important:</strong> never use kebab-case for JavaScript
-            variables (the hyphen is a minus operator). Never use spaces or
-            special characters in URLs — always kebab-case.
-          </p>
+        <h2>Choosing One and Sticking to It</h2>
+        <p>
+          The most common real-world problem is not choosing the wrong case but
+          mixing several. A page with some headings in title case, some in
+          sentence case and one in capitals looks careless even when every
+          individual choice was defensible.
+        </p>
+        <p>
+          Decide once, per element type: headings one way, buttons another,
+          navigation a third if you like — and then apply it everywhere. Readers
+          never notice consistent styling and always notice inconsistent
+          styling, which is the whole argument for writing the rule down.
+        </p>
+        <p>
+          To check length after converting, the{" "}
+          <Link href="/word-char-counter/" className="my-link">
+            word and character counter
+          </Link>{" "}
+          gives exact counts, which matters because case conversion never changes
+          character count even though capitals occupy more visual width.
+        </p>
+        <h2>Text Case Questions</h2>
 
-          <h2>Common Uses for the Text Case Converter</h2>
-          <ul className="custom-list">
-            <li>
-              <strong>Fix accidental Caps Lock text</strong> — paste the shouty
-              text, pick lowercase or Title Case, done.
-            </li>
-            <li>
-              <strong>Uncapitalize text</strong> — convert ALL CAPS blocks to
-              lowercase for a calmer tone.
-            </li>
-            <li>
-              <strong>Format blog post titles</strong> — paste a rough title,
-              apply Title Case, publish.
-            </li>
-            <li>
-              <strong>Convert variable names between languages</strong> —{" "}
-              <code>user_name</code> (Python) → <code>userName</code>{" "}
-              (JavaScript) → <code>UserName</code> (C#) in two clicks.
-            </li>
-            <li>
-              <strong>Generate SEO-friendly URL slugs</strong> — paste your page
-              title, apply kebab-case, done.
-            </li>
-            <li>
-              <strong>Prepare CSS class names</strong> — convert design labels
-              to kebab-case for stylesheets.
-            </li>
-            <li>
-              <strong>Normalize database column names</strong> — apply
-              snake_case to headings before importing to SQL.
-            </li>
-            <li>
-              <strong>Format social media captions</strong> — apply Title Case
-              for hashtags-turned-captions.
-            </li>
-            <li>
-              <strong>Prepare React component names</strong> — apply PascalCase
-              to feature descriptions.
-            </li>
-          </ul>
+          {faqs.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleFAQ(i);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                    aria-hidden="true"
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
 
-          <h2>Programming Language Case Conventions (Cheat Sheet)</h2>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginBottom: "20px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  backgroundColor: "var(--card-bg, #0D2A5C)",
-                  color: "#fff",
-                  textAlign: "left",
-                }}
-              >
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Language
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Variables / Functions
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Classes / Types
-                </th>
-                <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Constants
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  JavaScript / TypeScript
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  camelCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  SCREAMING_SNAKE_CASE
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Python
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  snake_case
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  SCREAMING_SNAKE_CASE
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Ruby
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  snake_case
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  SCREAMING_SNAKE_CASE
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Java
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  camelCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  SCREAMING_SNAKE_CASE
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  C#
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase (methods) / camelCase (locals)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Rust
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  snake_case
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  SCREAMING_SNAKE_CASE
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  Go
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  camelCase / PascalCase (exported)
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  PascalCase or camelCase
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  CSS
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  kebab-case
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>—</td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>—</td>
-              </tr>
-              <tr>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  HTML attributes
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  kebab-case
-                </td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>—</td>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>—</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h2>Why Use This Free Text Case Converter</h2>
-          <ul className="custom-list">
-            <li>
-              ✅ <strong>7 case types</strong> — UPPERCASE, lowercase, Title
-              Case, camelCase, PascalCase, snake_case, kebab-case
-            </li>
-            <li>
-              ✅ <strong>100% free</strong> — no signup, no login, no ads on the
-              tool
-            </li>
-            <li>
-              ✅ <strong>Fully client-side</strong> — your text never leaves
-              your browser
-            </li>
-            <li>
-              ✅ <strong>Handles messy input</strong> — spaces, dashes,
-              underscores, and existing case boundaries all recognized
-            </li>
-            <li>
-              ✅ <strong>One-click copy</strong> — result goes straight to your
-              clipboard
-            </li>
-            <li>
-              ✅ <strong>Works on mobile</strong> — phone, tablet, laptop,
-              desktop
-            </li>
-            <li>
-              ✅{" "}
-              <strong>
-                Perfect for developers, writers, students, and bloggers
-              </strong>
-            </li>
-          </ul>
-
-          <h2>Frequently Asked Questions</h2>
-
-          {faqs.map(([q, a], i) => (
-            <div className="faq-item" key={i}>
-              <h3 onClick={() => toggleFAQ(i)}>
-                {q}
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-                />
-              </h3>
-              {openFAQ === i && <p>{a}</p>}
-            </div>
-          ))}
-
-          <h2>Final Thoughts</h2>
-          <p>
-            Whether you're formatting a blog post title, generating a URL slug,
-            converting Python variables to JavaScript, or just fixing a
-            paragraph you accidentally typed with Caps Lock on, this{" "}
-            <strong>text case converter</strong> covers every common case format
-            in one place. Bookmark it for the next time you need to switch
-            between UPPERCASE and camelCase — or anything in between.
-          </p>
         </div>
       </div>
     </>

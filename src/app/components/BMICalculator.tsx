@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ReviewedBy from "./ReviewedBy";
 
 /* ─────────────────────────────────────────
    Types
@@ -318,10 +319,67 @@ export default function BMICalculator() {
     setResult(null);
   };
 
+  /* ── FAQ data (also used for JSON-LD schema) ── */
+  const faqs: [string, string][] = [
+    [
+      "How do I calculate BMI in kg and feet and inches?",
+      "Convert the height to inches first, multiply by 2.54 to get centimetres, then divide by 100 for metres. Someone 5 feet 7 inches is 67 inches, which is 170.2 cm or 1.702 m. Square that to get 2.897, then divide the weight in kilograms by it — 70 kg gives a BMI of 24.2. Mixing systems without converting is what produces impossible results like 3 or 300.",
+    ],
+    [
+      "Is there a separate BMI formula for women?",
+      "No. Adult BMI takes height and weight only, so a woman and a man of the same height and weight get the same number. Calculators marketed for women run identical arithmetic. What differs is the body behind the figure: women carry more essential fat as a matter of physiology, so at the same BMI a woman typically has a higher body fat percentage. A body fat estimate is more informative than BMI for that comparison.",
+    ],
+    [
+      "Does age change the BMI calculation?",
+      "Not for adults — age does not enter the formula at any point. It does change what the result means, because muscle mass tends to fall and fat mass to rise from middle age onward, often with no movement on the scale. Height loss in later life also inflates BMI without any change in body mass. For anyone under 18 the calculation is different: children are assessed on BMI-for-age percentiles against reference data for their exact age and sex.",
+    ],
+    [
+      "Why is the imperial formula multiplied by 703?",
+      "It is a unit conversion folded into a constant. Pounds per square inch and kilograms per square metre are different scales, and 703 is the factor that reconciles them so you can work in imperial units without converting height and weight separately. It carries no biological meaning.",
+    ],
+    [
+      "Is BMI accurate for someone who lifts weights?",
+      "Poorly. Muscle is denser than fat, so a well-trained person can land in the overweight or obese category while carrying very little fat. The less-discussed mirror image is just as misleading: someone with low muscle and high fat can sit comfortably in the normal band. In both cases a body fat estimate describes the situation and BMI does not.",
+    ],
+    [
+      "Why do some countries use lower BMI cut-offs?",
+      "Because the relationship between BMI and metabolic risk is not identical across populations. Health authorities in several Asian countries apply lower thresholds, since elevated risk tends to appear at a lower BMI than the general cut-offs imply. Someone reading as normal weight under the standard thresholds may fall into an elevated band under the adjusted ones, so use the cut-offs your own health service publishes.",
+    ],
+    [
+      "Is a BMI of 24.9 meaningfully different from 25.1?",
+      "No. Those two figures describe practically identical bodies and fall either side of a line drawn across a continuous scale for convenience. The categories are population thresholds derived from group-level health outcomes, not diagnostic boundaries for individuals. Read your result as a position on a gradient rather than as membership of a category.",
+    ],
+    [
+      "What should I measure alongside BMI?",
+      "Waist circumference, which takes about thirty seconds and captures something BMI cannot see — fat stored around the abdomen carries more metabolic risk than fat elsewhere. Waist divided by height, kept under about half, is an easily remembered check that works at any height without a lookup table.",
+    ],
+    [
+      "Can BMI be used during pregnancy?",
+      "No. Weight gain in pregnancy is expected and is monitored against pregnancy-specific guidance rather than the standard BMI categories, which would classify normal, healthy gain as a problem. Pre-pregnancy BMI is sometimes used by clinicians as a starting reference, but that is a different question from calculating BMI while pregnant.",
+    ],
+  ];
+
   return (
     <div className="page-layout">
+      {/* FAQ JSON-LD schema for rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+
       <div className="single-page-padding">
-        <h1>BMI Calculator — Check Your Body Mass Index Instantly</h1>
+        <h1>BMI Calculator — kg/cm, Feet and Inches, or Pounds</h1>
+
         <p>
           Enter your weight and height to calculate your BMI, see your WHO
           weight category, healthy weight range for your height, and where you
@@ -405,644 +463,254 @@ export default function BMICalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
+        <h2>Working It Out in Whatever Units You Have</h2>
+        <p>
+          Most people know their height in one system and their weight in
+          another — centimetres and kilograms, or feet and inches with a weight
+          in kilos, or pounds and inches. The formula only accepts one
+          combination at a time, so the arithmetic starts with a conversion more
+          often than not.
+        </p>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>What you know</th>
+                <th>What to do first</th>
+                <th>Then apply</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>kg and cm</td>
+                <td>Divide height by 100 to get metres</td>
+                <td>kg ÷ m²</td>
+              </tr>
+              <tr>
+                <td>kg and feet/inches</td>
+                <td>
+                  Convert height to inches, multiply by 2.54, divide by 100
+                </td>
+                <td>kg ÷ m²</td>
+              </tr>
+              <tr>
+                <td>lbs and inches</td>
+                <td>Nothing — use the imperial form</td>
+                <td>(lbs ÷ inches²) × 703</td>
+              </tr>
+              <tr>
+                <td>lbs and cm</td>
+                <td>Divide pounds by 2.205 to get kilograms</td>
+                <td>kg ÷ m²</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Someone who is 5 feet 7 inches and weighs 70 kg converts as 67 inches
+          × 2.54 = 170.2 cm = 1.702 m. Squaring gives 2.897, and 70 ÷ 2.897 =
+          24.2.
+        </p>
+        <p>
+          The 703 in the imperial version is not a mysterious constant. It is
+          simply the conversion factor that turns pounds per square inch into
+          kilograms per square metre, folded into one number so the formula can
+          be applied without leaving imperial units. Using the imperial formula
+          with a metric height, or the metric formula with pounds, produces
+          answers so far out that they are usually obvious — a BMI of 3 or of
+          300 means the units were mixed, not that anything is wrong with you.
+        </p>
+        <p>
+          Squaring the height is what makes small height errors matter. A
+          two-centimetre difference in a recorded height shifts BMI by roughly
+          half a point, which is enough to move somebody across a category
+          boundary if they were already sitting on one. Measure without shoes
+          rather than using a figure from memory.
+        </p>
+
+        <h2>Does Age or Sex Change the Calculation?</h2>
+        <p>
+          For adults, no. There is one adult BMI formula and it takes height and
+          weight only. A woman and a man of identical height and weight have
+          identical BMI, and so do a thirty-year-old and a seventy-year-old.
+          Calculators advertised as being for women, for men, or for a
+          particular age are running the same arithmetic as every other one.
+        </p>
+        <p>
+          What genuinely changes is what the number is worth once you have it.
+        </p>
+
+        <h3>Body Composition Differs by Sex</h3>
+        <p>
+          Women carry more essential fat than men as a matter of physiology, so
+          at the same BMI a woman typically has a higher body fat percentage
+          than a man. The category label does not adjust for this. A BMI of 23
+          describes a different body composition in the two cases even though the
+          number is identical, which is why a body fat estimate carries more
+          information than BMI for anyone comparing themselves against a
+          partner or a sibling.
+        </p>
+
+        <h3>Age Changes the Body Behind the Number</h3>
+        <p>
+          Muscle mass tends to decline from middle age onward while fat mass
+          rises, often with no movement on the scale at all. A man of 55 at the
+          same BMI he held at 25 is very likely carrying more fat and less
+          muscle. The figure has not moved; the body underneath it has. This is
+          why a stable BMI across decades should not be read as a stable body
+          composition, and why waist measurement becomes a more useful companion
+          metric with age.
+        </p>
+
+        <h3>Children Are a Different Calculation Entirely</h3>
+        <p>
+          For anyone under 18, a raw BMI number is not interpretable against
+          adult categories. Children are assessed on BMI-for-age percentiles,
+          which compare a child against reference data for their exact age and
+          sex, because normal body composition changes substantially through
+          growth. A BMI of 17 can be entirely healthy at one age and a concern
+          at another. Paediatric assessment belongs with a clinician using growth
+          charts, not with an adult calculator.
+        </p>
+
+        <h2>Where the Categories Come From, and What They Assume</h2>
+        <p>
+          The familiar cut-offs — 18.5, 25, 30 — are population thresholds drawn
+          from studies of health outcomes across large groups. They were never
+          intended as individual diagnoses, and they carry an assumption that is
+          easy to miss: that the relationship between BMI and body fat is
+          consistent across populations.
+        </p>
+        <p>
+          It is not. Health authorities in several Asian countries apply lower
+          thresholds, because metabolic risk in those populations tends to appear
+          at a lower BMI than the standard cut-offs suggest. Someone classified
+          as normal weight by the general thresholds may already be in an
+          elevated-risk band under the adjusted ones. If your own health service
+          publishes population-specific cut-offs, those are the ones that apply
+          to you.
+        </p>
+        <p>
+          Category boundaries are also hard lines drawn across a continuous
+          scale. A BMI of 24.9 and one of 25.1 sit in different named categories
+          and describe practically identical bodies. Treating the boundary as a
+          cliff rather than a marker on a gradient reads more into the number
+          than it can support.
+        </p>
+
+        <h2>The Four Situations Where BMI Misleads</h2>
+        <ul className="custom-list">
+          <li>
+            <strong>Substantial muscle mass.</strong> Muscle is denser than fat,
+            so a well-trained person can register as overweight or obese while
+            carrying very little fat. This is the best-known failure and the
+            reason BMI is a poor screening tool in athletic populations.
+          </li>
+          <li>
+            <strong>Low muscle with normal weight.</strong> The mirror image
+            attracts far less attention and is more common: someone whose BMI
+            sits comfortably in the normal band while carrying a high proportion
+            of fat and very little muscle. The category reads as reassuring and
+            the composition is not.
+          </li>
+          <li>
+            <strong>Older adults.</strong> Height loss with age inflates BMI
+            without any change in body mass, since the denominator shrinks.
+            Muscle loss compounds the effect in the opposite direction on
+            composition.
+          </li>
+          <li>
+            <strong>Pregnancy.</strong> BMI is not applicable during pregnancy.
+            Weight gain is expected and monitored against pregnancy-specific
+            guidance rather than against the standard categories.
+          </li>
+        </ul>
+
+        <h2>What to Measure Alongside It</h2>
+        <p>
+          BMI earns its place by being fast, free, and requiring nothing but a
+          scale and a tape. It stops being useful the moment it is asked to
+          stand alone.
+        </p>
+        <p>
+          Waist circumference is the most valuable companion and takes about
+          thirty seconds. Fat stored around the abdomen carries more metabolic
+          risk than fat elsewhere, and BMI cannot see the difference. Waist
+          divided by height, kept under about half, is a widely used and easily
+          remembered check that works across heights without needing a table.
+        </p>
+        <p>
+          For an estimate of composition rather than mass, the{" "}
+          <Link href="/body-fat-calculator/" className="my-link">
+            body fat calculator
+          </Link>{" "}
+          uses neck, waist and hip measurements to distinguish fat from lean
+          mass — the exact distinction BMI cannot make. If the goal is changing
+          the number rather than interpreting it, the{" "}
+          <Link href="/calorie-calculator/" className="my-link">
+            calorie calculator
+          </Link>{" "}
+          estimates daily energy needs as a starting point.
+        </p>
+
+        <h2>Using It Sensibly</h2>
+        <ul className="custom-list">
+          <li>
+            Treat it as a screening figure, not a diagnosis. It flags that a
+            conversation might be worth having, and nothing more.
+          </li>
+          <li>
+            Measure height properly rather than recalling it, since the
+            denominator is squared.
+          </li>
+          <li>
+            Read your result as a position on a gradient, not as membership of a
+            category.
+          </li>
+          <li>
+            Pair it with a waist measurement before drawing any conclusion.
+          </li>
+          <li>
+            If you train seriously, or are over about sixty, or are pregnant,
+            expect BMI to describe you poorly and use something else.
+          </li>
+        </ul>
         <section>
-          <h2>What Is BMI (Body Mass Index)?</h2>
-          <p>
-            BMI, or Body Mass Index, is a numerical value derived from your
-            weight and height that serves as a widely used screening tool for
-            assessing whether an adult is at a healthy weight. Developed by
-            Belgian mathematician Adolphe Quetelet in the 1830s and later
-            adopted by the World Health Organization as a global standard, BMI
-            is used by doctors, public health agencies, insurance companies, and
-            fitness professionals worldwide as a first-pass indicator of whether
-            a person's weight may pose a health risk.
-          </p>
-          <p>
-            BMI does not directly measure body fat — it is a weight-to-height
-            ratio that correlates reasonably well with more precise fat
-            measurement methods for most adults. For a direct estimate of how
-            much of your body is actually fat tissue, pair your BMI result with
-            our{" "}
-            <Link href="/body-fat-calculator/" className="my-link">
-              body fat calculator
-            </Link>
-            , which uses the validated U.S. Navy circumference method to
-            estimate body fat percentage with just a measuring tape.
-          </p>
-        </section>
+          <h2>BMI Questions People Ask</h2>
 
-        <section>
-          <h2>BMI Formula — How It Is Calculated</h2>
-          <p>
-            The BMI formula is the same worldwide and requires only two
-            measurements:
-          </p>
-
-          <h3>Metric Formula (kg and cm)</h3>
-          <pre>BMI = Weight (kg) ÷ Height (m²)</pre>
-          <p>
-            Example: A person weighing 70 kg at 175 cm (1.75 m) has a BMI of 70
-            ÷ (1.75 × 1.75) = <strong>22.9</strong> — Normal weight.
-          </p>
-
-          <h3>Imperial Formula (lbs and inches)</h3>
-          <pre>BMI = (Weight (lbs) × 703) ÷ Height (inches²)</pre>
-          <p>
-            Example: A person weighing 154 lbs at 5'9" (69 inches) has a BMI of
-            (154 × 703) ÷ (69 × 69) = <strong>22.7</strong> — Normal weight.
-          </p>
-          <p>
-            This calculator supports both metric and imperial inputs — no manual
-            unit conversion needed.
-          </p>
-        </section>
-
-        <section>
-          <h2>BMI Categories — WHO Classification Explained</h2>
-          <p>
-            The WHO classifies BMI into four standard categories for adults aged
-            18 and over. Here is what each range means for your health:
-          </p>
-
-          <h3>Underweight — BMI Below 18.5</h3>
-          <p>
-            A BMI under 18.5 suggests insufficient body weight relative to
-            height. Underweight adults face elevated risks of malnutrition,
-            weakened immune function, bone density loss, anemia, and hormonal
-            disruption. It is not always a sign of illness — some people are
-            naturally lean — but unintentional weight loss or BMI below 17
-            warrants medical assessment. A{" "}
-            <Link href="/calorie-calculator/" className="my-link">
-              calorie calculator
-            </Link>{" "}
-            can help underweight individuals estimate how many additional
-            calories they need to reach a healthy weight range.
-          </p>
-
-          <h3>Normal Weight — BMI 18.5 to 24.9</h3>
-          <p>
-            This range is associated with the lowest overall health risk for
-            most adults. People within this BMI range generally have lower rates
-            of cardiovascular disease, type 2 diabetes, sleep apnea, and certain
-            cancers. Maintaining BMI here through balanced nutrition and regular
-            activity is one of the best-evidenced strategies for long-term
-            health.
-          </p>
-
-          <h3>Overweight — BMI 25 to 29.9</h3>
-          <p>
-            A BMI in the overweight range signals that body weight is above the
-            optimal level. Health risks are real but moderate at this stage —
-            rising blood pressure, early insulin resistance, increased LDL
-            cholesterol, and greater joint stress. Research shows that losing
-            just 5 to 10% of body weight at this stage meaningfully improves
-            blood sugar, blood pressure, and cholesterol. Our{" "}
-            <Link href="/calorie-calculator/" className="my-link">
-              calorie calculator
-            </Link>{" "}
-            is the most practical starting point for setting a sustainable
-            deficit.
-          </p>
-
-          <h3>Obese — BMI 30 and Above</h3>
-          <p>
-            Obesity is further divided into Class I (30–34.9), Class II
-            (35–39.9), and Class III / severe obesity (40+). At these levels,
-            the risk of serious chronic conditions rises substantially: type 2
-            diabetes, coronary artery disease, stroke, sleep apnea, fatty liver
-            disease, and several cancers are all significantly more common. For
-            people in the obese range, tracking body composition alongside BMI
-            is valuable — our{" "}
-            <Link href="/body-fat-calculator/" className="my-link">
-              body fat calculator
-            </Link>{" "}
-            helps monitor the fat-to-muscle ratio as you work toward a healthier
-            weight.
-          </p>
-        </section>
-
-        <section>
-          <h2>BMI Chart for Adults — Full WHO Reference Table</h2>
-          <p>
-            Use this standard BMI chart to quickly identify your category and
-            associated health risk level:
-          </p>
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-                border: "1px solid #1b3067",
-              }}
-            >
-              <thead>
-                <tr
-                  style={{
-                    backgroundColor: "#1b3067",
-                    color: "#ffffff",
-                    textAlign: "left",
-                  }}
+          {faqs.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+              <div className="faq-item" key={i}>
+                <h3
+                  onClick={() => toggleFAQ(i)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
+                  role="button"
+                  tabIndex={0}
                 >
-                  <th
-                    style={{
-                      padding: "15px",
-                      borderBottom: "2px solid #ffffff",
-                    }}
-                  >
-                    BMI Range
-                  </th>
-                  <th
-                    style={{
-                      padding: "15px",
-                      borderBottom: "2px solid #ffffff",
-                    }}
-                  >
-                    Weight Category
-                  </th>
-                  <th
-                    style={{
-                      padding: "15px",
-                      borderBottom: "2px solid #ffffff",
-                    }}
-                  >
-                    Health Risk Level
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style={{ backgroundColor: "#fff" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Below 18.5
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Underweight
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Moderate (malnutrition risk)
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f8f9fc" }}>
-                  <td
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      color: "#1b3067",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    18.5 – 24.9
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Normal weight
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Lowest risk
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#fff" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    25.0 – 29.9
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Overweight
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Increased risk
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f8f9fc" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    30.0 – 34.9
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Obese — Class I
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    High risk
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#fff" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    35.0 – 39.9
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Obese — Class II
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Very high risk
-                  </td>
-                </tr>
-                <tr style={{ backgroundColor: "#f8f9fc" }}>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    40.0 and above
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Severe Obesity — Class III
-                  </td>
-                  <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                    Extremely high risk
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section>
-          <h2>Healthy Weight Range by Height — Quick Lookup Table</h2>
-          <p>
-            The table below shows the healthy weight range (BMI 18.5–24.9) for
-            common heights. Find your height and see how your current weight
-            compares.
-          </p>
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-              }}
-            >
-              <thead>
-                <tr
-                  style={{
-                    backgroundColor: "var(--card-bg, #f5f5f5)",
-                    textAlign: "left",
-                  }}
+                  {q}
+                  <i
+                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  />
+                </h3>
+                <div
+                  id={`faq-answer-${i}`}
+                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                  aria-hidden={!isOpen}
                 >
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Height
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Min Weight (BMI 18.5)
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Max Weight (BMI 24.9)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["155 cm / 5'1\"", "44.4 kg", "59.9 kg"],
-                  ["160 cm / 5'3\"", "47.4 kg", "63.7 kg"],
-                  ["165 cm / 5'5\"", "50.4 kg", "67.8 kg"],
-                  ["170 cm / 5'7\"", "53.5 kg", "71.9 kg"],
-                  ["175 cm / 5'9\"", "56.7 kg", "76.3 kg"],
-                  ["180 cm / 5'11\"", "59.9 kg", "80.7 kg"],
-                  ["185 cm / 6'1\"", "63.3 kg", "85.2 kg"],
-                  ["190 cm / 6'3\"", "66.8 kg", "89.9 kg"],
-                ].map(([h, min, max], i) => (
-                  <tr key={i}>
-                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                      {h}
-                    </td>
-                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                      {min}
-                    </td>
-                    <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                      {max}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p>
-            If your weight falls outside this range, the calculator above will
-            tell you exactly how many kilograms you need to gain or lose to
-            reach the normal BMI band for your specific height. For a more
-            detailed target, our{" "}
-            <Link href="/ideal-weight-calculator/" className="my-link">
-              ideal weight calculator
-            </Link>{" "}
-            uses multiple formulas to suggest a personalized goal weight.
-          </p>
+                  <div className="faq-answer-inner">
+                    <p>{a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </section>
 
-        <section>
-          <h2>BMI Calculation Examples</h2>
-
-          <h3>Example 1: Normal Weight</h3>
-          <p>A 25-year-old woman weighs 62 kg and is 168 cm tall.</p>
-          <ul className="custom-list">
-            <li>Height in meters: 1.68</li>
-            <li>
-              BMI = 62 ÷ (1.68 × 1.68) = 62 ÷ 2.822 = <strong>22.0</strong>
-            </li>
-            <li>Category: Normal weight</li>
-          </ul>
-          <p>
-            Her healthy weight range at 168 cm is approximately 52 to 70 kg. She
-            is right in the middle — no action needed.
-          </p>
-
-          <h3>Example 2: Overweight</h3>
-          <p>A 40-year-old man weighs 92 kg and is 178 cm tall.</p>
-          <ul className="custom-list">
-            <li>Height in meters: 1.78</li>
-            <li>
-              BMI = 92 ÷ (1.78 × 1.78) = 92 ÷ 3.168 = <strong>29.0</strong>
-            </li>
-            <li>Category: Overweight</li>
-          </ul>
-          <p>
-            His healthy range tops out at about 79 kg. He would need to lose
-            roughly 13 kg to reach the upper end of the normal range. Using our{" "}
-            <Link href="/calorie-calculator/" className="my-link">
-              calorie calculator
-            </Link>{" "}
-            to find his TDEE and creating a 400-calorie deficit would produce
-            that loss over approximately 8 to 9 months.
-          </p>
-
-          <h3>Example 3: Underweight</h3>
-          <p>A 19-year-old man weighs 54 kg and is 180 cm tall.</p>
-          <ul className="custom-list">
-            <li>Height in meters: 1.80</li>
-            <li>
-              BMI = 54 ÷ (1.80 × 1.80) = 54 ÷ 3.24 = <strong>16.7</strong>
-            </li>
-            <li>Category: Underweight</li>
-          </ul>
-          <p>
-            The minimum healthy weight at 180 cm is about 60 kg. He would need
-            to gain roughly 6 kg. A calorie surplus of 300 to 500 calories above
-            his TDEE, combined with resistance training, would support healthy
-            weight gain primarily through muscle rather than fat.
-          </p>
-        </section>
-
-        <section>
-          <h2>BMI vs. Body Fat Percentage — What Is the Difference?</h2>
-          <p>
-            BMI is a useful and fast screening tool, but it has one significant
-            limitation: it cannot tell the difference between fat and muscle. A
-            90 kg rugby player with 10% body fat and a 90 kg sedentary adult
-            with 35% body fat will have the exact same BMI — yet their health
-            profiles are entirely different.
-          </p>
-          <p>
-            Body fat percentage directly measures what fraction of your body is
-            fat tissue, making it a far more precise indicator of metabolic
-            health, insulin sensitivity, and cardiovascular risk. For a complete
-            health assessment, use our{" "}
-            <Link href="/body-fat-calculator/" className="my-link">
-              body fat calculator
-            </Link>{" "}
-            alongside this BMI tool. The combination of a normal BMI and a
-            healthy body fat percentage is a much stronger health signal than
-            either measurement alone.
-          </p>
-        </section>
-
-        <section>
-          <h2>Limitations of BMI — What It Cannot Tell You</h2>
-          <ul className="custom-list">
-            <li>
-              <strong>It cannot distinguish muscle from fat.</strong> Athletes
-              and heavily muscular individuals frequently register as
-              "overweight" or "obese" despite having very low body fat and
-              excellent cardiovascular fitness.
-            </li>
-            <li>
-              <strong>It misses normal-weight obesity.</strong> People with a
-              healthy BMI can carry dangerously high visceral fat — a condition
-              sometimes called "skinny fat." BMI would not flag this.
-            </li>
-            <li>
-              <strong>Age and sex affect accuracy.</strong> Older adults tend to
-              carry more fat at the same BMI as younger adults. Women naturally
-              carry more essential fat than men. BMI uses universal thresholds
-              that do not account for these differences.
-            </li>
-            <li>
-              <strong>Ethnicity matters.</strong> South Asian and East Asian
-              populations face elevated health risks at lower BMI values. Some
-              clinical guidelines recommend lower cut-offs for these groups —
-              overweight starting at BMI 23 rather than 25.
-            </li>
-            <li>
-              <strong>It does not apply to children.</strong> Pediatric BMI
-              requires age- and sex-specific percentile charts. The adult
-              categories in this calculator do not apply to anyone under 18.
-            </li>
-            <li>
-              <strong>It ignores fat distribution.</strong> Where you carry fat
-              matters as much as how much you carry. Visceral fat around the
-              abdomen is far more metabolically dangerous than subcutaneous fat
-              on the hips and thighs. Waist circumference and waist-to-hip ratio
-              are better predictors of cardiovascular risk than BMI alone.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>BMI for Different Ethnic Groups — Adjusted Cut-Offs</h2>
-          <p>
-            The standard WHO thresholds (overweight at 25, obese at 30) were
-            developed primarily using data from European populations. Research
-            over the past two decades has shown that metabolic risks —
-            particularly type 2 diabetes and cardiovascular disease — appear at
-            lower BMI values in South Asian, Southeast Asian, and East Asian
-            populations. Several countries and medical bodies now recommend
-            adjusted cut-offs:
-          </p>
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-              }}
-            >
-              <thead>
-                <tr
-                  style={{
-                    backgroundColor: "var(--card-bg, #f5f5f5)",
-                    textAlign: "left",
-                  }}
-                >
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Population
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Overweight Starts
-                  </th>
-                  <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    Obese Starts
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    WHO Standard (European)
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    25.0
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    30.0
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    South Asian / Southeast Asian
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    23.0
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    27.5
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    East Asian (Chinese, Japanese, Korean)
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    23.0–24.0
-                  </td>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    25.0–28.0
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>
-            If you belong to one of these groups, a BMI of 24 — technically
-            "normal" by standard WHO thresholds — may already carry meaningful
-            metabolic risk. Pairing your BMI with a{" "}
-            <Link href="/body-fat-calculator/" className="my-link">
-              body fat percentage measurement
-            </Link>{" "}
-            gives a more accurate picture of your actual health status.
-          </p>
-        </section>
-
-        <section>
-          <h2>How to Lower Your BMI — Evidence-Based Strategies</h2>
-          <p>
-            If your BMI falls in the overweight or obese range, the most
-            evidence-backed approach combines a moderate calorie deficit,
-            increased protein, resistance training, and cardiovascular exercise:
-          </p>
-          <ul className="custom-list">
-            <li>
-              <strong>Find your maintenance calories first.</strong> Use our{" "}
-              <Link href="/calorie-calculator/" className="my-link">
-                calorie calculator
-              </Link>{" "}
-              to estimate your TDEE. Subtracting 300 to 500 calories creates a
-              deficit that produces steady fat loss of roughly 0.3 to 0.5 kg per
-              week — fast enough to see progress, slow enough to preserve
-              muscle.
-            </li>
-            <li>
-              <strong>Prioritize protein.</strong> Eating 1.6 to 2.2 g of
-              protein per kg of body weight preserves lean muscle during fat
-              loss and keeps your metabolism from slowing significantly.
-            </li>
-            <li>
-              <strong>Lift weights.</strong> Resistance training prevents the
-              muscle loss that accompanies calorie restriction. More muscle
-              means a higher resting metabolic rate, which makes long-term
-              weight management easier.
-            </li>
-            <li>
-              <strong>Add cardio.</strong> Walking, cycling, swimming, and HIIT
-              all accelerate the calorie deficit and deliver cardiovascular
-              benefits independent of weight change.
-            </li>
-            <li>
-              <strong>Protect your sleep.</strong> Chronic sleep deprivation
-              elevates cortisol, increases appetite, and promotes fat storage.
-              Consistently getting 7 to 9 hours is one of the most impactful but
-              underrated factors in body composition.
-            </li>
-            <li>
-              <strong>Track body composition, not just the scale.</strong> As
-              you gain muscle and lose fat, weight may plateau — but your{" "}
-              <Link href="/body-fat-calculator/" className="my-link">
-                body fat percentage
-              </Link>{" "}
-              will fall and your health markers will improve. Use both tools
-              monthly.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Frequently Asked Questions About BMI</h2>
-
-          {[
-            [
-              "What is a healthy BMI for adults?",
-              "According to WHO guidelines, a healthy BMI for adults is between 18.5 and 24.9. Below 18.5 is underweight; 25 to 29.9 is overweight; 30 and above is obese. These thresholds apply to adults aged 18 and over. Note that some clinical guidelines recommend lower cut-offs for South and East Asian populations, where metabolic risks appear at lower BMI values.",
-            ],
-            [
-              "What BMI is considered obese?",
-              "A BMI of 30 or higher is classified as obese by the WHO. It is further divided into Class I (30–34.9), Class II (35–39.9), and Class III or severe obesity (40+). At each level, risks of type 2 diabetes, cardiovascular disease, and certain cancers increase progressively.",
-            ],
-            [
-              "Is BMI accurate for muscular people?",
-              "No. BMI cannot distinguish fat mass from muscle mass. Because muscle is denser than fat, athletes and those who do heavy physical training often register as overweight or obese despite having very low body fat. For these individuals, measuring actual body fat percentage is a far more meaningful health metric.",
-            ],
-            [
-              "Does BMI directly measure body fat percentage?",
-              "No. BMI is a weight-to-height ratio and does not measure fat directly. Two people with identical BMIs can have very different body fat levels depending on muscle mass, bone density, and fat distribution. Use our body fat calculator alongside this tool for a more complete picture.",
-            ],
-            [
-              "Can this BMI calculator be used for children?",
-              "No. This calculator is designed for adults aged 18 and over. BMI interpretation for children requires age- and sex-specific percentile charts because healthy body fat levels change throughout childhood. Consult a pediatrician for child BMI assessment.",
-            ],
-            [
-              "How can I lower my BMI?",
-              "Lowering BMI requires reducing body fat through a consistent calorie deficit. A deficit of 300 to 500 calories per day typically produces sustainable fat loss of 0.3 to 0.5 kg per week. Use our calorie calculator to find your TDEE and set an accurate target. Combining this with resistance training preserves muscle while losing fat.",
-            ],
-            [
-              "What is the difference between BMI and ideal weight?",
-              "BMI tells you whether your current weight falls in a healthy range relative to your height. Ideal weight calculators use specific formulas (Devine, Robinson, Miller, Hamwi) to suggest a single target weight based on your height and frame. BMI gives you a range; ideal weight gives you a point estimate. Both are useful together.",
-            ],
-            [
-              "Why do different ethnic groups have different BMI cut-offs?",
-              "Research shows that South Asian and East Asian populations develop metabolic diseases like type 2 diabetes at lower BMI values than European populations. This is related to differences in body composition — at the same BMI, these groups tend to have higher body fat percentages and more visceral fat. Adjusted cut-offs (overweight at 23 instead of 25) reflect this evidence.",
-            ],
-            [
-              "Is the BMI calculator free to use?",
-              "Yes — completely free with no sign-up, no download, and no usage limits. Results appear instantly as you type, and the detailed result panel shows your BMI score, WHO category, healthy weight range, global percentile, and world BMI distribution comparison.",
-            ],
-          ].map(([q, a], i) => (
-            <div className="faq-item" key={i}>
-              <h3 onClick={() => toggleFAQ(i)}>
-                {q}
-                <i
-                  className={`fa-solid fa-chevron-down ${openFAQ === i ? "rotate" : ""}`}
-                />
-              </h3>
-              {openFAQ === i && <p>{a}</p>}
-            </div>
-          ))}
-        </section>
-
-        <section>
-          <h2>Final Thoughts</h2>
-          <p>
-            BMI is a fast, useful, and free screening tool — but it is just the
-            starting point, not the final word on your health. Use this
-            calculator to check where you stand, then combine it with our{" "}
-            <Link href="/body-fat-calculator/" className="my-link">
-              body fat calculator
-            </Link>{" "}
-            for a more precise picture of your body composition, our{" "}
-            <Link href="/calorie-calculator/" className="my-link">
-              calorie calculator
-            </Link>{" "}
-            to set an actionable daily target.
-          </p>
-        </section>
+        <ReviewedBy medical />
       </div>
 
       {/* ════════ RIGHT — sticky sidebar ════════ */}
@@ -1059,7 +727,6 @@ export default function BMICalculator() {
             {[
               ["/body-fat-calculator/", "Body Fat Calculator"],
               ["/calorie-calculator/", "Calorie Calculator"],
-
               ["/dose-calculator/", "Dose Calculator"],
               ["/iv-calculator/", "IV Calculator"],
             ].map(([href, label]) => (

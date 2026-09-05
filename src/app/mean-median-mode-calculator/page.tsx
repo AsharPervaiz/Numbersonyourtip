@@ -1,16 +1,27 @@
 import { Metadata } from "next";
-import MeanMedianModeCalculator from "../components/MeanMedianMode";
+import MeanMedianMode from "../components/MeanMedianMode";
 
 export const metadata: Metadata = {
-  title: "Mean, Median, Mode Calculator | Instant Statistics for Any Dataset",
+  title: "Mean, Median and Mode Calculator",
   description:
-    "Calculate mean, median, mode, range, standard deviation, and variance for any dataset instantly. Paste numbers, get full statistics with frequency chart. Free, no sign-up.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Calculate mean, median, mode, range and standard deviation from any dataset — and work out which average actually describes your data and which one misleads.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/mean-median-mode-calculator/",
+    canonical: "/mean-median-mode-calculator/",
+  },
+  openGraph: {
+    title: "Mean, Median and Mode Calculator",
+    description:
+      "Mean, median, mode, range and standard deviation, plus what the gap between mean and median tells you.",
+    url: "/mean-median-mode-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "Mean, Median and Mode Calculator",
+    description:
+      "Mean, median, mode, range and standard deviation for any list of numbers.",
   },
 };
 
 export default function Page() {
-  return <MeanMedianModeCalculator />;
+  return <MeanMedianMode />;
 }

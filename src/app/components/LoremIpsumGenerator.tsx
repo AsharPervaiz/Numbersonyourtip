@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import Link from "next/link";
 
 const LOREM_WORDS = [
   "lorem",
@@ -87,6 +88,45 @@ const LOREM_WORDS = [
 
 const PRESETS = [50, 100, 200, 500, 1000];
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "Why use fake Latin instead of real text in a mockup?",
+    "Because real sentences get read. Put actual copy into a design review and people start debating the wording, questioning claims and fixing typos instead of looking at the layout. Text that has the shape of language without any meaning lets the eye register rhythm, line length and density while keeping the conversation about the design.",
+  ],
+  [
+    "Where does lorem ipsum come from?",
+    "From a first-century BC Latin philosophical text, scrambled at some point into near-Latin that no longer parses as language. The familiar opening is a fragment cut out of a longer sentence, which is why it starts in the middle of a word rather than at the beginning of one.",
+  ],
+  [
+    "What does lorem ipsum fail to show me?",
+    "Whether your actual copy is any good, how the layout handles a very short or empty entry, what happens when a real headline runs long, and how accented or non-Latin characters render. Those are exactly the cases that break designs after approval, so generate long and short versions deliberately rather than relying on a single tidy paragraph.",
+  ],
+  [
+    "Should I design with placeholder text or real content?",
+    "Placeholder early, real content before anything is signed off. Content and layout constrain each other, and a design built around three neat lines of Latin makes a promise about the copy that nobody agreed to. Switching to draft content while both sides can still move avoids the choice between breaking the design and cutting the writing to fit.",
+  ],
+  [
+    "How much placeholder text should I generate?",
+    "At least three versions: the length you expect, the longest a user could plausibly enter, and a one-word or empty case. Vary the length between repeated items too — a grid where every card holds identical text looks immaculate and never occurs in practice, while real content is ragged.",
+  ],
+  [
+    "Is lorem ipsum better than random English words?",
+    "For design review, usually yes, because recognisable language pulls attention toward meaning and pseudo-Latin does not. English placeholder text is better when you want a mockup to feel realistic to a client, or when you are testing how a specific language renders. The choice is about whether you want the words noticed or ignored.",
+  ],
+  [
+    "How do I stop placeholder text reaching a live page?",
+    "Search your project for a distinctive word from the passage before shipping — the standard opening words appear nowhere in real writing. Being obviously Latin is an advantage here: a stray paragraph is immediately visible to anyone who sees it, which realistic-looking English filler is not.",
+  ],
+  [
+    "Can I publish lorem ipsum on a website?",
+    "No. It carries no meaning, so a page built from it informs nobody, and search engines are specifically built to identify content of that kind. Placeholder text belongs to the period before real content exists, and replacing it is always the last step rather than an optional one.",
+  ],
+  [
+    "Does lorem ipsum work for testing input fields?",
+    "Poorly. It is deliberately plausible and well-behaved, which is the opposite of what breaks software. Testing an input wants empty strings, values one character over the limit, apostrophes, emoji and unbroken long words. Use a generator aimed at test data rather than at page layout.",
+  ],
+];
+
 export default function LoremGenerator() {
   const [wordCount, setWordCount] = useState("");
   const [generatedText, setGeneratedText] = useState("");
@@ -144,6 +184,20 @@ export default function LoremGenerator() {
 
   return (
     <div className="single-page-padding">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <div>
         <h1>Lorem Ipsum Generator</h1>
         <p>
@@ -235,376 +289,177 @@ export default function LoremGenerator() {
 
       {/* ===== SEO CONTENT ===== */}
 
-      <h2>What Is Lorem Ipsum?</h2>
+      <h2>Why Designers Use Fake Latin Instead of Real Words</h2>
       <p>
-        <strong>Lorem Ipsum</strong> is the most widely used placeholder text in
-        the world of design, publishing, and web development. It is a form of
-        dummy text that allows designers and developers to fill layout spaces
-        with readable content — without the distraction of meaningful language.
-        Instead of leaving blank white space or repeating "content here"
-        endlessly, Lorem Ipsum provides a visually balanced block of text that
-        closely mimics the appearance of real written content.
+        Lorem ipsum is deliberately unreadable, and that is the whole point.
+        Put real sentences into a mockup and everyone in the room starts
+        reading them — debating the wording, questioning a claim, correcting a
+        typo — instead of looking at the thing you asked them to look at.
       </p>
       <p>
-        The origins of Lorem Ipsum date back to classical Latin literature. It
-        is derived from <em>De Finibus Bonorum et Malorum</em>, a philosophical
-        work by Cicero written in 45 BC. The scrambled version we use today has
-        been the industry standard since the 1500s, when an unknown printer took
-        a galley of type and scrambled it to make a type specimen book. It has
-        survived not only five centuries but also the leap into digital
-        typesetting and modern web design.
+        Meaningless text that still has the shape of language lets the eye
+        register rhythm, line length and density without engaging with meaning.
+        It keeps a design review about the design.
+      </p>
+      <p>
+        The passage itself comes from a first-century BC Latin philosophical
+        text, scrambled at some point into near-Latin that no longer parses.
+        The familiar opening is a fragment of a longer sentence, cut
+        mid-word — which is why it begins in the middle of a word rather than
+        at the start of one.
       </p>
 
-      <h2>Why Do Designers and Developers Use Lorem Ipsum?</h2>
+      <h2>What It Is Good At, and What It Hides</h2>
+
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Shows you</th>
+              <th>Hides from you</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Line length and how comfortably text reads</td>
+              <td>Whether the actual copy is any good</td>
+            </tr>
+            <tr>
+              <td>Spacing, rhythm and vertical density</td>
+              <td>Whether headings are the right length</td>
+            </tr>
+            <tr>
+              <td>How a typeface behaves at a given size</td>
+              <td>How the layout handles a very short entry</td>
+            </tr>
+            <tr>
+              <td>Overall page balance and hierarchy</td>
+              <td>Accented characters and non-Latin scripts</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <p>
-        There's a very good reason Lorem Ipsum has remained relevant for over
-        500 years — it works. When you're designing a webpage, building a UI
-        component, or laying out a printed brochure, the last thing you want is
-        for real content to distract reviewers from evaluating the visual
-        structure. Lorem Ipsum keeps the focus on design, not words.
+        The right column is where designs fail after approval. A layout signed
+        off with neat Latin paragraphs meets a real headline that runs to four
+        lines, a product name with an umlaut, or a description field somebody
+        left almost empty — and none of those appeared in the mockup.
       </p>
-      <ul className="custom-list">
-        <li>
-          <strong>Realistic visual representation</strong> — It produces
-          natural-looking blocks of text that simulate how actual content will
-          flow in your layout.
-        </li>
-        <li>
-          <strong>UI/UX design mockups</strong> — Designers use it in Figma,
-          Adobe XD, Sketch, and other tools to prototype interfaces before
-          content is finalized.
-        </li>
-        <li>
-          <strong>Layout spacing and alignment testing</strong> — Ensures that
-          columns, margins, padding, and typography scale correctly before real
-          copy is inserted.
-        </li>
-        <li>
-          <strong>Client presentations</strong> — Prevents clients from focusing
-          on placeholder words instead of reviewing the actual design concept.
-        </li>
-        <li>
-          <strong>Development and QA testing</strong> — Developers use it to
-          populate database fields, test CMS templates, and validate component
-          rendering.
-        </li>
-        <li>
-          <strong>Print and publishing</strong> — Magazine editors, book
-          designers, and brochure creators use Lorem Ipsum to plan page layouts
-          before final copy arrives.
-        </li>
-        <li>
-          <strong>Industry standard</strong> — Universally recognized across
-          design and development tools, making collaboration seamless.
-        </li>
-      </ul>
 
-      <h2>Key Features of Our Lorem Ipsum Generator</h2>
-      <ul className="custom-list">
-        <li>
-          <strong>Exact Word Count Control</strong> — Generate precisely the
-          number of words you need, from a single sentence to thousands of
-          words.
-        </li>
-        <li>
-          <strong>Quick Presets</strong> — One-click buttons for 50, 100, 200,
-          500, and 1,000 words — no typing required.
-        </li>
-        <li>
-          <strong>Live Stats</strong> — See word count and character count
-          update instantly with every generation.
-        </li>
-        <li>
-          <strong>Classic Lorem Ipsum Structure</strong> — Always begins with
-          "Lorem ipsum" for the authentic, industry-standard format recognized
-          across all design tools.
-        </li>
-        <li>
-          <strong>Lightning Fast Generation</strong> — Produces your placeholder
-          text instantly with zero loading time or delay.
-        </li>
-        <li>
-          <strong>One-Click Copy</strong> — Copy all generated text to your
-          clipboard with a single button, ready to paste anywhere.
-        </li>
-        <li>
-          <strong>Fully Responsive Design</strong> — Works perfectly on desktop,
-          tablet, and mobile browsers with no app download required.
-        </li>
-        <li>
-          <strong>No Registration Needed</strong> — Completely free to use
-          without creating an account or entering any personal information.
-        </li>
-        <li>
-          <strong>Privacy Safe</strong> — No text or usage data is stored.
-          Everything runs locally in your browser session.
-        </li>
-      </ul>
-
-      <h2>Who Should Use a Lorem Ipsum Generator?</h2>
+      <h2>The Case Against Using It Too Long</h2>
       <p>
-        Our <strong>free Lorem Ipsum generator</strong> is built for anyone who
-        works with content, design, or code. Here's who benefits most:
+        The argument against placeholder text is not that it is unrealistic
+        but that it lets a design avoid the hardest question for too long.
+      </p>
+      <p>
+        Content and layout constrain each other. A design built around three
+        tidy lines of Latin is making a promise about the copy that nobody has
+        agreed to, and when real text arrives the design either breaks or the
+        writing gets cut to fit a box that was never built for it. Designing
+        with real content, even rough draft content, surfaces that negotiation
+        while both sides can still move.
+      </p>
+      <p>
+        The practical compromise most teams settle on is to use placeholder
+        text early, when the question is structural, and switch to real or
+        draft copy before anything is signed off. Lorem ipsum is a tool for the
+        first half of a project.
+      </p>
+
+      <h2>Generate the Awkward Cases Too</h2>
+      <p>
+        Whatever text you use, generate it at more than one length. Three
+        versions catch most layout failures:
       </p>
       <ul className="custom-list">
         <li>
-          <strong>Web Designers</strong> — Fill page templates and design
-          systems with realistic placeholder text during the prototyping phase.
+          <strong>The expected length</strong>, matching what you think the
+          real content will be.
         </li>
         <li>
-          <strong>Frontend Developers</strong> — Test HTML/CSS layouts,
-          responsive grids, and typography with properly sized dummy content.
+          <strong>The long case</strong>, at the maximum a user could plausibly
+          enter, to see what overflows.
         </li>
         <li>
-          <strong>Graphic Designers</strong> — Use in print projects like
-          brochures, posters, business cards, and magazines to simulate
-          real-world text placement.
-        </li>
-        <li>
-          <strong>Content Strategists</strong> — Plan content structure, word
-          count targets, and layout hierarchy before the writing begins.
-        </li>
-        <li>
-          <strong>WordPress &amp; CMS Developers</strong> — Populate themes,
-          page builders, and templates with dummy text to test visual rendering.
-        </li>
-        <li>
-          <strong>Students &amp; Educators</strong> — Use for typography
-          assignments, design exercises, and layout practice projects.
-        </li>
-        <li>
-          <strong>Email Marketers</strong> — Fill email templates with
-          placeholder text before final copy is ready for campaign deployment.
-        </li>
-      </ul>
-
-      <h2>How to Use the Lorem Ipsum Generator</h2>
-      <p>
-        Generating placeholder text with our tool takes just seconds. Here's
-        how:
-      </p>
-      <ul className="custom-list">
-        <li>
-          <strong>Step 1:</strong> Click a preset button (50, 100, 200, 500, or
-          1,000 words) for instant generation — or type any custom number into
-          the input field.
-        </li>
-        <li>
-          <strong>Step 2:</strong> Click the <em>"Generate"</em> button to
-          instantly produce your Lorem Ipsum text.
-        </li>
-        <li>
-          <strong>Step 3:</strong> Click <em>"Copy"</em> in the toolbar to copy
-          the text and paste it into your design tool, code editor, or document.
+          <strong>The short case</strong> — one word, or nothing at all. An
+          empty state looks just as wrong as an overflow and is tested far less
+          often.
         </li>
       </ul>
       <p>
-        No settings to configure. No account to create. Just instant, reliable
-        Lorem Ipsum placeholder text whenever you need it.
+        Vary the length between repeated items as well. A grid where every
+        card holds identical text looks immaculate and never occurs in
+        practice; real content is ragged, and the ragged version is the one
+        worth reviewing.
       </p>
 
-      <h2>
-        Lorem Ipsum Generator vs. Random Text Generator: Which Should You Use?
-      </h2>
+      <h2>Getting It Out Before Launch</h2>
       <p>
-        Both tools serve the same core purpose — filling space with placeholder
-        text — but they suit different use cases:
+        Placeholder text reaching a live page is common enough to be a
+        recognised category of mistake, and it is entirely preventable.
       </p>
-      <ul className="custom-list">
-        <li>
-          <strong>Lorem Ipsum Generator</strong> — Best for design mockups,
-          client presentations, and professional prototyping where the classic
-          dummy text format is expected and recognized.
-        </li>
-        <li>
-          <strong>Random English Text Generator</strong> — Better for SEO layout
-          testing, stakeholder reviews, and situations where clients or team
-          members need to read and understand the placeholder content.
-        </li>
-        <li>
-          <strong>Use Lorem Ipsum when</strong> — You want reviewers to focus on
-          visual design rather than text meaning.
-        </li>
-        <li>
-          <strong>Use Random English Text when</strong> — You need placeholder
-          content that feels natural and readable to non-technical audiences.
-        </li>
-      </ul>
+      <p>
+        Search your project for a distinctive word from the generated text
+        before shipping — the opening words of the standard passage are
+        unmistakable and appear nowhere in real writing. Because it is Latin
+        rather than plausible English, a stray paragraph is obvious to anyone
+        who sees it, which is a genuine advantage over realistic-looking
+        filler.
+      </p>
+      <p>
+        One thing it should never be used for: publishing. Placeholder text
+        carries no meaning, so a page built from it informs nobody, and search
+        engines are specifically designed to identify content of that kind.
+      </p>
+      <p>
+        For English placeholder words rather than pseudo-Latin, the{" "}
+        <Link href="/text-generator/" className="my-link">
+          random text generator
+        </Link>{" "}
+        produces text by exact word count, and the{" "}
+        <Link href="/word-char-counter/" className="my-link">
+          word and character counter
+        </Link>{" "}
+        measures whatever you generate against a limit.
+      </p>
+      <h2>Placeholder Text Questions</h2>
 
-      <h2>Frequently Asked Questions</h2>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(0)}>
-          What is Lorem Ipsum used for?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 0 && (
-          <p>
-            Lorem Ipsum is used as standard placeholder text in web design,
-            UI/UX prototyping, graphic design, publishing, and software
-            development. It allows teams to visualize layouts and design systems
-            before real content is written or approved.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(1)}>
-          Is Lorem Ipsum a real language?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 1 && (
-          <p>
-            No. Lorem Ipsum is pseudo-Latin text derived from Cicero's classical
-            Latin work <em>De Finibus Bonorum et Malorum</em>. The words have
-            been scrambled and altered so they no longer carry meaningful Latin
-            meaning — making them perfect as neutral placeholder text that
-            doesn't distract readers.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(2)}>
-          Is this Lorem Ipsum generator completely free?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 2 && (
-          <p>
-            Yes, it is 100% free with no limitations. No account registration,
-            no subscription, and no download required. Simply open the tool,
-            enter your desired word count, and generate Lorem Ipsum text
-            instantly.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(3)}>
-          How much Lorem Ipsum text can I generate at once?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 3 && (
-          <p>
-            Our generator can produce large volumes of Lorem Ipsum text in a
-            single request. Whether you need 10 words for a button label or
-            10,000 words for a full-page layout, the tool handles it instantly
-            without performance issues.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(4)}>
-          Where did Lorem Ipsum originally come from?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 4 && (
-          <p>
-            Lorem Ipsum originates from Cicero's philosophical text written in
-            45 BC. The version used today was popularized in the 1500s by a
-            printer who scrambled the original Latin passages to create a
-            neutral type specimen. It became the global standard for placeholder
-            text and has been used ever since in print, design, and digital
-            media.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(5)}>
-          Does Lorem Ipsum affect SEO?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 5 && (
-          <p>
-            Lorem Ipsum should never be published on a live website. Search
-            engines like Google can detect and penalize pages with low-quality
-            or nonsensical content. It is strictly a development and design tool
-            — always replace it with real content before publishing any page
-            publicly.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(6)}>
-          Can I use Lorem Ipsum in commercial design projects?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 6 && (
-          <p>
-            Yes. Lorem Ipsum text is in the public domain and free to use in any
-            personal, academic, or commercial project including client mockups,
-            agency presentations, product prototypes, and print design work.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(7)}>
-          Does the tool work on mobile and tablet devices?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 7 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 7 && (
-          <p>
-            Yes. The Lorem Ipsum generator is fully responsive and works on all
-            modern devices including iPhones, Android phones, iPads, and desktop
-            browsers. No installation or app download is needed.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(8)}>
-          Is my data safe when using this tool?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 8 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 8 && (
-          <p>
-            Absolutely. Our Lorem Ipsum generator does not collect, store, or
-            share any user data. No input is logged and no cookies are used to
-            track your activity. Your usage remains completely private and
-            anonymous.
-          </p>
-        )}
-      </div>
-
-      <div className="faq-item">
-        <h3 onClick={() => toggleFAQ(9)}>
-          What is the standard Lorem Ipsum paragraph?
-          <i
-            className={`fa-solid fa-chevron-down ${openFAQ === 9 ? "rotate" : ""}`}
-          ></i>
-        </h3>
-        {openFAQ === 9 && (
-          <p>
-            The standard Lorem Ipsum paragraph begins with "Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit..." and has been used as the
-            default placeholder text across the design industry for centuries.
-            Our tool generates this classic structure while allowing you to
-            control the exact word count you need.
-          </p>
-        )}
-      </div>
+      {FAQ_DATA.map(([q, a], i) => {
+        const isOpen = openFAQ === i;
+        return (
+          <div className="faq-item" key={i}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
+              {q}
+              <i
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
+              />
+            </h3>
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -2,12 +2,23 @@ import { Metadata } from "next";
 import BMICalculator from "../components/BMICalculator";
 
 export const metadata: Metadata = {
-  title: "BMI Calculator | Check Your Body Mass Index Instantly (Free)",
+  title: "BMI Calculator in kg, cm, Feet and Inches",
   description:
-    "Use our free BMI calculator to check your Body Mass Index, WHO weight category, healthy weight range, and global percentile. Supports metric and imperial units.",
-  metadataBase: new URL("https://numbersonyourtip.com"),
+    "Calculate BMI from kg and cm, kg and feet, or pounds and inches — plus what age, sex and population cut-offs actually change about the result.",
   alternates: {
-    canonical: "https://numbersonyourtip.com/bmi-calculator/",
+    canonical: "/bmi-calculator/",
+  },
+  openGraph: {
+    title: "BMI Calculator in kg, cm, Feet and Inches",
+    description:
+      "BMI in any unit combination, with the four situations where the number misleads and what to measure alongside it.",
+    url: "/bmi-calculator/",
+    type: "article",
+  },
+  twitter: {
+    title: "BMI Calculator in kg, cm, Feet and Inches",
+    description:
+      "BMI from any unit combination, and what the categories can and cannot tell you.",
   },
 };
 

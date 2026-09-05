@@ -4,6 +4,45 @@ import Link from "next/link";
 
 type Category = "Length" | "Mass" | "Temperature" | "Volume" | "Area" | "Time";
 
+const FAQ_DATA: [string, string][] = [
+  [
+    "Why can I not convert temperature by multiplying?",
+    "Because Celsius and Fahrenheit do not share a zero point, so the conversion needs an offset as well as a scale factor: °F = (°C × 9 ÷ 5) + 32. Every other conversion is a pure scaling, since zero kilograms is zero pounds. Temperature is the one case where the shortcut that works everywhere else gives a wrong answer.",
+  ],
+  [
+    "Is a 10 degree rise in Celsius an 18 or a 50 degree rise in Fahrenheit?",
+    "Eighteen. A difference in temperature converts using only the ratio, because the offset of 32 cancels when you subtract two converted values. The full formula with the offset applies to an absolute temperature — 10 °C is 50 °F. Confusing a reading with a change is the classic temperature conversion error.",
+  ],
+  [
+    "Are conversion factors exact or approximate?",
+    "The common ones are exact by definition. An inch is defined as precisely 2.54 centimetres, a pound as 0.45359237 kilograms and a foot as 0.3048 metres by international agreement, so the factors carry no error at all. Any imprecision in a converted figure comes from your original measurement or your rounding, never from the factor.",
+  ],
+  [
+    "How many decimal places should I keep?",
+    "Roughly as many significant figures as your input had, rounding only at the end. Measuring a room as 12 feet and converting gives 3.6576 metres, which claims precision to a tenth of a millimetre from a measurement good to about 15 centimetres. The honest answer is 3.7 metres. Rounding at each intermediate step compounds error, so keep full precision until the last operation.",
+  ],
+  [
+    "Why do US and UK gallons give different answers?",
+    "They are genuinely different units. A US gallon is about 3.785 litres and an imperial gallon about 4.546 — roughly 20% apart. This is why fuel economy in miles per gallon is not comparable between the two systems, and why the same car is quoted at a higher MPG in Britain without being any more efficient.",
+  ],
+  [
+    "Are fluid ounces the same as ounces?",
+    "No. A fluid ounce measures volume and an ounce measures weight, so they are only interchangeable for a substance whose density happens to make them equal. A cup of flour and a cup of water occupy the same volume and weigh very different amounts, which is why recipes measured by weight are more reliable than those measured by cup.",
+  ],
+  [
+    "Which ton is a ton?",
+    "It depends where you are. A metric tonne is 1,000 kilograms, a short ton is 2,000 pounds and a long ton is 2,240 pounds — spread across roughly a 10% range. Any figure in tons that matters should say which one, since none of them is a safe default.",
+  ],
+  [
+    "Should I convert through an intermediate unit?",
+    "Only if no direct factor exists. Each conversion step introduces rounding, so chaining through an intermediate unit accumulates error that a direct conversion avoids. Where you do have to chain, keep full precision throughout and round once at the end rather than after each step.",
+  ],
+  [
+    "How do I check a conversion is the right way round?",
+    "Ask whether the answer should be bigger or smaller before looking at the digits. Converting to a smaller unit always produces a larger number and vice versa — a metre is 100 centimetres but only 0.001 kilometres. Checking direction first catches inverted factors immediately, which is the most common conversion mistake.",
+  ],
+];
+
 export default function UnitConversionCalculator() {
   const [category, setCategory] = useState<Category>("Length");
   const [fromUnit, setFromUnit] = useState("");
@@ -140,12 +179,24 @@ export default function UnitConversionCalculator() {
   };
 
   return (
-    <>
-      {/* ---- PAGE LAYOUT WRAPPER ---- */}
-      <div className="page-layout single-page-padding">
-        {/* ---- MAIN CONTENT ---- */}
-        <div className="single-page-padding">
-          <h1>Unit Conversion Calculator</h1>
+    <div className="page-layout">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ_DATA.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
+      {/* ---- MAIN CONTENT ---- */}
+      <div className="single-page-padding">
+        <h1>Unit Conversion Calculator — Length, Weight, Temperature</h1>
 
           <p>
             Select a category, enter your value, and convert any unit instantly.
@@ -271,293 +322,198 @@ export default function UnitConversionCalculator() {
             {result && <div className="calc-result">Result: {result}</div>}
           </div>
 
-          <h2>What Is a Unit Conversion Calculator?</h2>
+          <h2>Almost Every Conversion Is One Multiplication</h2>
           <p>
-            A <strong>unit conversion calculator</strong> is an online tool that
-            instantly converts a measurement from one unit to another within the
-            same category — such as <strong>meters to feet</strong>,{" "}
-            <strong>Celsius to Fahrenheit</strong>, or{" "}
-            <strong>kilograms to pounds</strong>. Our free converter supports
-            six major measurement systems: Length, Mass, Temperature, Volume,
-            Area, and Time — covering both the{" "}
-            <strong>metric (SI) system</strong> and the{" "}
-            <strong>imperial system</strong> used in the U.S. and UK.
+            Length, mass, volume, area, speed and energy all work the same way.
+            Each unit has a fixed ratio to every other unit measuring the same
+            quantity, so converting means multiplying by that ratio once.
+          </p>
+          <pre>Value in new unit = Value in old unit × Conversion factor</pre>
+          <p>
+            The only decision is which way round to apply it. Going to a smaller
+            unit produces a bigger number, and going to a larger unit produces a
+            smaller one. If a metre becomes 0.001 kilometres, the answer must be
+            smaller; if it becomes 100 centimetres, it must be bigger. Checking the
+            direction before reading the digits catches most errors immediately.
           </p>
 
-          <h2>Unit Conversion Categories — What You Can Convert</h2>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Multiply by</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Inches</td>
+                  <td>Centimetres</td>
+                  <td>2.54 (exact)</td>
+                </tr>
+                <tr>
+                  <td>Miles</td>
+                  <td>Kilometres</td>
+                  <td>1.609344 (exact)</td>
+                </tr>
+                <tr>
+                  <td>Pounds</td>
+                  <td>Kilograms</td>
+                  <td>0.45359237 (exact)</td>
+                </tr>
+                <tr>
+                  <td>US gallons</td>
+                  <td>Litres</td>
+                  <td>3.785411784 (exact)</td>
+                </tr>
+                <tr>
+                  <td>Imperial gallons</td>
+                  <td>Litres</td>
+                  <td>4.54609 (exact)</td>
+                </tr>
+                <tr>
+                  <td>Feet</td>
+                  <td>Metres</td>
+                  <td>0.3048 (exact)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-          <h3>1. Length Conversion (Meters, Feet, Miles & More)</h3>
           <p>
-            Convert between <strong>kilometers to miles</strong>,{" "}
-            <strong>meters to feet</strong>, centimeters to inches, yards to
-            meters, and more. <strong>Length unit conversion</strong> is
-            critical for construction, travel, navigation, sports, and
-            scientific research. Common conversions: 1 mile = 1.60934 km, 1 foot
-            = 0.3048 meters, 1 inch = 2.54 cm.
+            These factors are exact by definition rather than measured
+            approximations — the inch was defined as precisely 2.54 centimetres by
+            international agreement, so the conversion carries no error at all. Any
+            imprecision in your answer comes from your input or your rounding, not
+            from the factor.
           </p>
 
-          <h3>2. Mass Conversion (kg to lbs, Grams to Ounces & More)</h3>
+          <h2>Temperature Is the Exception</h2>
           <p>
-            Easily convert <strong>kilograms to pounds</strong>, grams to
-            ounces, milligrams to grams, and more.{" "}
-            <strong>Weight and mass conversion</strong> is widely used in
-            cooking, fitness, medicine, and shipping. Common conversions: 1 kg =
-            2.20462 lbs, 1 pound = 453.59 grams, 1 ounce = 28.35 grams.
-          </p>
-
-          <h3>3. Temperature Conversion (Celsius, Fahrenheit & Kelvin)</h3>
-          <p>
-            Convert <strong>Celsius to Fahrenheit</strong>, Fahrenheit to
-            Celsius, and both to Kelvin for scientific use. Temperature
-            conversion is essential for weather interpretation, cooking, lab
-            work, and international travel. Key formulas: °F = (°C × 1.8) + 32;
-            K = °C + 273.15.
-          </p>
-
-          <h3>4. Volume Conversion (Liters, Gallons, mL & More)</h3>
-          <p>
-            Convert <strong>liters to gallons</strong>, milliliters to cups,
-            cubic meters to liters, and more. Volume conversion is used daily in
-            cooking, chemistry, fuel measurement, and industrial processes.
-            Common conversions: 1 gallon = 3.78541 liters, 1 liter = 1000 mL.
-          </p>
-
-          <h3>5. Area Conversion (sq ft to sq m, Acres, Hectares & More)</h3>
-          <p>
-            Convert <strong>square feet to square meters</strong>, acres to
-            hectares, square kilometers to square miles, and more. Area
-            conversion is essential in real estate, agriculture, architecture,
-            and land surveying. Common conversions: 1 acre = 4046.86 sq meters,
-            1 hectare = 10,000 sq meters.
-          </p>
-
-          <h3>6. Time Conversion (Seconds, Minutes, Hours, Days & Weeks)</h3>
-          <p>
-            Convert <strong>hours to minutes</strong>, seconds to hours, days to
-            weeks, and more. Time conversion is used in project management,
-            programming, scientific calculations, and everyday scheduling.
-            Common conversions: 1 hour = 3600 seconds, 1 day = 86,400 seconds, 1
-            week = 604,800 seconds.
-          </p>
-
-          <h2>How Unit Conversion Works — The Formula</h2>
-          <p>
-            Every <strong>unit conversion</strong> is based on a fixed
-            mathematical ratio called a conversion factor. To convert a value,
-            multiply it by the conversion factor of the source unit and divide
-            by the conversion factor of the target unit:
+            Every other conversion is a pure scaling, because zero means the same
+            thing in both units — zero kilograms is zero pounds. Temperature scales
+            do not share a zero point, so they need an offset as well as a scale
+            factor.
           </p>
           <pre>
-            Converted Value = (Input × Factor of From Unit) ÷ Factor of To Unit
+            °F = (°C × 9 ÷ 5) + 32{"\n"}°C = (°F − 32) × 5 ÷ 9{"\n"}K = °C + 273.15
           </pre>
           <p>
-            Temperature conversions use dedicated formulas rather than simple
-            ratios, since Celsius, Fahrenheit, and Kelvin scales have different
-            zero points. Our calculator applies all standard conversion factors
-            automatically, giving you precise results to four decimal places.
+            The offset is why you cannot convert a temperature by multiplying
+            alone, and why the shortcut that works everywhere else fails here. It
+            also produces a genuinely useful consequence: a{" "}
+            <em>difference</em> in temperature converts without the offset. A rise
+            of 10 °C is a rise of 18 °F, not 50 °F, because the 32 cancels when you
+            subtract two converted values.
           </p>
-
-          <h2>Metric vs. Imperial System — Key Differences</h2>
           <p>
-            The <strong>metric system (SI)</strong> is the international
-            standard used in science and by most countries worldwide. It is
-            based on powers of 10, making conversions between units
-            straightforward (e.g., 1 km = 1,000 m). The{" "}
-            <strong>imperial system</strong> is used primarily in the United
-            States and includes units like miles, pounds, gallons, and
-            Fahrenheit. Converting between metric and imperial units —such as{" "}
-            <strong>miles to kilometers</strong> or{" "}
-            <strong>pounds to kilograms</strong> — is one of the most common
-            real-world uses of a unit converter.
+            Mixing those two up is the classic temperature error. Converting a
+            thermostat setting uses the full formula; converting how much the
+            temperature changed uses only the ratio.
+          </p>
+          <p>
+            Kelvin behaves differently again, having a true zero, so it scales
+            proportionally with Celsius and needs only the offset of 273.15.
           </p>
 
-          <h2>Common Unit Conversions Quick Reference</h2>
+          <h2>Do Not Report More Precision Than You Had</h2>
+          <p>
+            A conversion cannot add accuracy that the original measurement did not
+            contain, and calculators encourage exactly that by returning many
+            decimal places.
+          </p>
+          <p>
+            Measuring a room as 12 feet — to the nearest foot — and converting gives
+            3.6576 metres. Reporting that figure claims precision to a tenth of a
+            millimetre from a measurement good to about 15 centimetres. The honest
+            answer is 3.7 metres, or 3.66 at most.
+          </p>
+          <p>
+            The working rule is to keep roughly as many significant figures as your
+            input had, and to round only at the very end. Rounding at each
+            intermediate step compounds the error, particularly in a chain of two
+            or three conversions.
+          </p>
+
+          <h2>Where Unit Errors Do Real Damage</h2>
           <ul className="custom-list">
             <li>
-              <strong>1 kilometer</strong> = 0.621371 miles
+              <strong>Two different gallons.</strong> A US gallon is about 3.785
+              litres and an imperial gallon about 4.546 — a difference of roughly
+              20%. Fuel economy figures quoted in miles per gallon are not
+              comparable between the two systems without saying which is meant.
             </li>
             <li>
-              <strong>1 mile</strong> = 1.60934 kilometers
+              <strong>Weight and mass in recipes.</strong> Fluid ounces measure
+              volume and ounces measure weight, and they are not interchangeable.
+              A cup of flour and a cup of water weigh very different amounts.
             </li>
             <li>
-              <strong>1 kilogram</strong> = 2.20462 pounds
+              <strong>Ambiguous tons.</strong> Metric tonnes, short tons and long
+              tons all exist and differ by up to about 10%.
             </li>
             <li>
-              <strong>1 pound</strong> = 0.453592 kilograms
+              <strong>Converting twice.</strong> Chaining conversions through an
+              intermediate unit accumulates rounding at each step. Convert directly
+              where a factor exists.
             </li>
             <li>
-              <strong>0°C (Celsius)</strong> = 32°F (Fahrenheit) = 273.15 K
-            </li>
-            <li>
-              <strong>1 liter</strong> = 0.264172 gallons
-            </li>
-            <li>
-              <strong>1 acre</strong> = 0.404686 hectares
-            </li>
-            <li>
-              <strong>1 foot</strong> = 0.3048 meters
-            </li>
-            <li>
-              <strong>1 inch</strong> = 2.54 centimeters
-            </li>
-            <li>
-              <strong>1 hour</strong> = 3,600 seconds
+              <strong>Assuming a system from a country.</strong> Several countries
+              use metric officially and imperial conversationally, so a figure
+              given without units cannot be inferred from where it came from.
             </li>
           </ul>
+          <p>
+            For fuel economy specifically, where the two gallons and the reversed
+            L/100 km scale all collide, our{" "}
+            <Link href="/fuel-cost-calculator/" className="my-link">
+              fuel cost calculator
+            </Link>{" "}
+            handles the conversions directly. For currency, which is a rate rather
+            than a fixed factor, use the{" "}
+            <Link href="/currency-converter/" className="my-link">
+              currency converter
+            </Link>
+            .
+          </p>
+          <h2>Unit Conversion Questions</h2>
 
-          <h2>Who Uses a Unit Conversion Calculator?</h2>
-          <ul className="custom-list">
-            <li>
-              <strong>Students & teachers</strong> — for physics, chemistry,
-              math, and engineering homework
-            </li>
-            <li>
-              <strong>Travelers</strong> — converting miles to km, °F to °C, or
-              local currency units
-            </li>
-            <li>
-              <strong>Cooks & bakers</strong> — switching between cups, liters,
-              grams, and ounces in recipes
-            </li>
-            <li>
-              <strong>Engineers & architects</strong> — converting area, length,
-              and volume across systems
-            </li>
-            <li>
-              <strong>Fitness enthusiasts</strong> — converting kg to lbs for
-              bodyweight or equipment
-            </li>
-            <li>
-              <strong>Real estate professionals</strong> — converting square
-              feet to square meters or acres to hectares
-            </li>
-          </ul>
-
-          <h2>Frequently Asked Questions About Unit Conversion</h2>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(0)}>
-              How do I convert kilometers to miles?
+          {FAQ_DATA.map(([q, a], i) => {
+            const isOpen = openFAQ === i;
+            return (
+          <div className="faq-item" key={i}>
+            <h3
+              onClick={() => toggleFAQ(i)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleFAQ(i);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              aria-controls={`faq-answer-${i}`}
+            >
+              {q}
               <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 0 ? "rotate" : ""}`}
-              ></i>
+                className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                aria-hidden="true"
+              />
             </h3>
-            {openFAQ === 0 && (
-              <p>
-                To convert kilometers to miles, multiply the number of
-                kilometers by 0.621371. For example, 10 km × 0.621371 ={" "}
-                <strong>6.21 miles</strong>. To go the other way, multiply miles
-                by 1.60934 to get kilometers. Use the Length category in our
-                calculator above for instant results.
-              </p>
-            )}
+            <div
+              id={`faq-answer-${i}`}
+              className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="faq-answer-inner">
+                <p>{a}</p>
+              </div>
+            </div>
           </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(1)}>
-              How do I convert Celsius to Fahrenheit?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 1 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 1 && (
-              <p>
-                The formula to convert Celsius to Fahrenheit is: °F = (°C × 1.8)
-                + 32. For example, 25°C = (25 × 1.8) + 32 ={" "}
-                <strong>77°F</strong>. To convert Fahrenheit back to Celsius: °C
-                = (°F − 32) ÷ 1.8. Select Temperature in the calculator above
-                for any conversion instantly.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(2)}>
-              How many grams are in a pound?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 2 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 2 && (
-              <p>
-                There are <strong>453.592 grams</strong> in one pound. To
-                convert pounds to grams, multiply the pound value by 453.592. To
-                convert grams to pounds, divide by 453.592. Use the Mass
-                category in our unit converter for quick, accurate results.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(3)}>
-              Does this calculator support both metric and imperial units?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 3 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 3 && (
-              <p>
-                Yes. Our unit conversion calculator fully supports both the
-                metric (SI) system — meters, kilograms, liters, Celsius — and
-                the imperial system — miles, pounds, gallons, Fahrenheit. All
-                six categories allow cross-system conversions in a single click.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(4)}>
-              How many liters are in a gallon?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 4 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 4 && (
-              <p>
-                One US gallon equals <strong>3.78541 liters</strong>. To convert
-                gallons to liters, multiply by 3.78541. To convert liters to
-                gallons, divide by 3.78541. Note: the UK (imperial) gallon is
-                larger at 4.54609 liters. Use the Volume category in our
-                calculator for instant conversions.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(5)}>
-              How do I convert square feet to square meters?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 5 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 5 && (
-              <p>
-                To convert square feet to square meters, multiply by 0.092903.
-                For example, 500 sq ft × 0.092903 ={" "}
-                <strong>46.45 square meters</strong>. To convert square meters
-                back to square feet, multiply by 10.7639. Use the Area category
-                above for real estate and construction conversions.
-              </p>
-            )}
-          </div>
-
-          <div className="faq-item">
-            <h3 onClick={() => toggleFAQ(6)}>
-              Is this unit converter free to use?
-              <i
-                className={`fa-solid fa-chevron-down ${openFAQ === 6 ? "rotate" : ""}`}
-              ></i>
-            </h3>
-            {openFAQ === 6 && (
-              <p>
-                Yes — completely free with no sign-up, no downloads, and no
-                limits. Our online unit conversion calculator works on any
-                device including mobile phones, tablets, and desktops. Results
-                are displayed instantly to four decimal places using
-                internationally standardized conversion factors.
-              </p>
-            )}
-          </div>
+            );
+          })}
         </div>
         {/* ---- SIDEBAR ---- */}
         <aside className="sidebar">
@@ -636,6 +592,5 @@ export default function UnitConversionCalculator() {
           </div>
         </aside>
       </div>
-    </>
   );
 }
