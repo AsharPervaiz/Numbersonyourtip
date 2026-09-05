@@ -467,6 +467,11 @@ export default function WhatIsNumbersOnYourTip() {
                       "/fuel-cost-calculator/",
                       "Trip fuel cost based on distance, mileage, and fuel price",
                     ],
+                    [
+                      "Gold Calculator",
+                      "/gold-calculator/",
+                      "Gold and silver value by karat and weight, with resale and zakat",
+                    ],
                   ].map(([name, href, desc], i) => (
                     <tr
                       key={i}

@@ -384,6 +384,14 @@ export default function RootLayout({
                     Fuel Cost Calculator
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/gold-calculator/"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Gold Calculator
+                  </Link>
+                </li>
               </ul>
             </div>
 

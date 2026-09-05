@@ -64,7 +64,7 @@ export default function ZakatOnGold() {
 
       <div className="blog-content">
         <img
-          src="/blog19.webp"
+          src="/blog19.1.webp"
           className="image-blog"
           alt="Zakat on gold — nisab measured in pure gold weight, and how karat changes the threshold"
         />
@@ -105,7 +105,7 @@ export default function ZakatOnGold() {
               }}
             >
               <i className="custom-meta-icon fa-solid fa-calendar" />
-              03 Sep 2026
+              05 Sep 2026
             </span>
           </small>
         </div>
@@ -330,6 +330,14 @@ export default function ZakatOnGold() {
               rather than carrying a remembered figure from a previous year.
             </p>
           </section>
+
+          {/* Sits on the hinge of the article: everything above is
+              measurement, everything below is a question of law. */}
+          <img
+            src="/blog19.2.webp"
+            className="image-blog"
+            alt="Gold bangles and a chain on a jeweller's scale, the weight that a zakat calculation starts from"
+          />
 
           <section style={{ marginBottom: "48px" }}>
             <h2>Jewellery You Actually Wear Is Where the Schools Diverge</h2>

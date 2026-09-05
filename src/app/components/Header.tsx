@@ -375,6 +375,29 @@ export default function Header() {
                 </svg>
               ),
             },
+            {
+              name: "Salary Hike Calculator",
+              desc: "New Salary After Appraisal",
+              href: "/salary-hike-calculator/",
+              iconColor: "purple",
+              icon: (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 4h-6a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h8" />
+                  <path d="M18 20v-17" />
+                  <path d="M15 6l3 -3l3 3" />
+                </svg>
+              ),
+            },
           ],
         },
         {
@@ -441,29 +464,6 @@ export default function Header() {
                   <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
                   <path d="M7 6h1v4" />
                   <path d="m16.71 13.88.7.71-2.82 2.82" />
-                </svg>
-              ),
-            },
-            {
-              name: "Salary Hike Calculator",
-              desc: "New Salary After Appraisal",
-              href: "/salary-hike-calculator/",
-              iconColor: "purple",
-              icon: (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 4h-6a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h8" />
-                  <path d="M18 20v-17" />
-                  <path d="M15 6l3 -3l3 3" />
                 </svg>
               ),
             },

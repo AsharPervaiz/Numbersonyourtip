@@ -258,8 +258,8 @@ const blogs: Post[] = [
     category: "Finance",
     image: "/blog19.webp",
     author: "Ashar Pervaiz",
-    date: "3 September 2026",
-    dateISO: "2026-09-03",
+    date: "5 September 2026",
+    dateISO: "2026-09-05",
     slug: "/blog/zakat-on-gold-nisab-and-karat/",
     words: 3139,
     excerpt:

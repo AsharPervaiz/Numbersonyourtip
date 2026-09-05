@@ -14,7 +14,7 @@ export const metadata: Metadata = {
       "The nisab threshold is measured in pure gold, not gross weight. What each karat has to weigh to reach it, why two nisab figures circulate, and where the schools differ.",
     url: "/blog/zakat-on-gold-nisab-and-karat/",
     type: "article",
-    publishedTime: "2026-09-03T00:00:00.000Z",
+    publishedTime: "2026-09-05T00:00:00.000Z",
     authors: ["Ashar Pervaiz"],
     section: "Finance",
   },
