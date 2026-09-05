@@ -1,0 +1,68 @@
+name: Build and deploy to cPanel
+
+# Every push to main rebuilds the site and syncs it into public_html.
+# "Run workflow" in the Actions tab does the same thing on demand.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# If you push twice quickly, cancel the older run so two deploys can never
+# upload to the same directory at once.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        # next.config.ts sets output: "export", so this writes a plain folder
+        # of HTML/CSS/JS to out/ — there is no server to start.
+        env:
+          NEXT_PUBLIC_EXCHANGE_API_KEY: ${{ secrets.NEXT_PUBLIC_EXCHANGE_API_KEY }}
+        run: npm run build
+
+      - name: Fail if the build looks wrong
+        # Cheap sanity checks so a broken build can never overwrite the live
+        # site. Add pages here if you want more coverage.
+        run: |
+          test -f out/index.html            || { echo "::error::out/index.html missing"; exit 1; }
+          test -f out/.htaccess             || { echo "::error::out/.htaccess missing — blog URLs would 404"; exit 1; }
+          test -f out/sitemap.xml           || { echo "::error::out/sitemap.xml missing"; exit 1; }
+          test -f out/gold-calculator/index.html || { echo "::error::a tool page is missing"; exit 1; }
+          echo "pages built: $(find out -name index.html | wc -l)"
+
+      - name: Upload to cPanel over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./out/
+          # Change this if the domain is served from somewhere else — an addon
+          # domain or subdomain uses its own folder, not public_html.
+          server-dir: ./public_html/
+          # Only changed files go up. The action keeps a state file on the
+          # server to work out the difference, so a normal deploy moves a
+          # handful of files rather than all 800+.
+          dangerous-clean-slate: false
+          # Never upload local-only junk if it ever appears in out/.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
