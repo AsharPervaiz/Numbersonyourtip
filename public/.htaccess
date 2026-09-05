@@ -1,5 +1,16 @@
 RewriteEngine On
 
+# --- Force HTTPS ---
+# The live site already redirects http to https, but that rule was not in this
+# file, so it lived either in the copy on the server or in a cPanel setting.
+# Deploying would overwrite the server copy, so the rule is declared here to
+# make sure it survives. Harmless if cPanel is also forcing HTTPS at the
+# vhost level. Both conditions must hold, so this cannot loop behind a proxy
+# that terminates TLS upstream.
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
 # --- Force trailing slash for blog URLs, but ignore real files and directories ---
 RewriteCond %{REQUEST_URI} ^/blog/[^/]+$ 
 RewriteCond %{REQUEST_FILENAME} !-f
