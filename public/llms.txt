@@ -100,6 +100,7 @@ Contact: https://numbersonyourtip.com/contact-us/
 ## Blog: Networking guides
 - /blog/online-privacy-security-basics/ - what your IP address, DNS, email and passwords actually reveal, and how to check each one
 - /blog/zakat-on-gold-nisab-and-karat/ - zakat on gold: nisab is a weight of pure gold, what each karat must weigh to reach it, the two nisab conversions, and where the schools differ
+- /blog/shrinkflation-and-unit-price/ - shrinkflation: why a tenth smaller is an eleventh dearer, when a discount fails to offset a shrink, and how to compare packs labelled in different units
 
 ## Blog: About the site
 - /blog/what-is-numbers-on-your-tip/ - what the site is, who it is for, and how it stays free

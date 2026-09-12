@@ -37,3 +37,4 @@ RewriteRule ^blog/marginal-vs-effective-tax-rate/?$ /marginal-vs-effective-tax-r
 RewriteRule ^blog/why-was-my-bonus-taxed-so-much/?$ /why-was-my-bonus-taxed-so-much/ [L]
 RewriteRule ^blog/online-privacy-security-basics/?$ /online-privacy-security-basics/ [L]
 RewriteRule ^blog/zakat-on-gold-nisab-and-karat/?$ /zakat-on-gold-nisab-and-karat/ [L]
+RewriteRule ^blog/shrinkflation-and-unit-price/?$ /shrinkflation-and-unit-price/ [L]

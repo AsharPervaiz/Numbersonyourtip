@@ -265,6 +265,19 @@ const blogs: Post[] = [
     excerpt:
       "The nisab threshold is a weight of pure gold, so alloyed jewellery has to weigh more to reach it — plus why two nisab figures circulate and where the schools differ.",
   },
+  {
+    id: "20",
+    title: "Shrinkflation and the True Unit Price",
+    category: "Daily Use",
+    image: "/blog20.webp",
+    author: "Ashar Pervaiz",
+    date: "12 September 2026",
+    dateISO: "2026-09-12",
+    slug: "/blog/shrinkflation-and-unit-price/",
+    words: 2296,
+    excerpt:
+      "A pack that quietly loses a tenth of its contents costs 11.11% more per gram, not 10% — and a discount can be smaller than the shrink it follows.",
+  },
 ];
 
 const GROUP_NOTES: [string, string][] = [

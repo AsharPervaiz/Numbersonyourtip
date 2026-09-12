@@ -186,6 +186,11 @@ export const PAGES: Record<string, Entry> = {
     parent: "/blog/",
     canonical: "/blog/zakat-on-gold-nisab-and-karat/",
   },
+  "/shrinkflation-and-unit-price/": {
+    label: "Shrinkflation and the True Unit Price",
+    parent: "/blog/",
+    canonical: "/blog/shrinkflation-and-unit-price/",
+  },
 
   // --- standalone pages --------------------------------------------------
   "/about-us/": { label: "About Us" },
