@@ -271,7 +271,6 @@ const FAQ_DATA: [string, string][] = [
 export default function DoseCalculator() {
   const [weight, setWeight] = useState("");
   const [dosePerKg, setDosePerKg] = useState("");
-  const [result, setResult] = useState<number | null>(null);
 
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
@@ -290,51 +289,29 @@ export default function DoseCalculator() {
 
   const [panelResult, setPanelResult] = useState<DoseResult | null>(null);
 
-  const calculateDose = () => {
-    let w = Number(weight) || 0;
-    const doseKg = Number(dosePerKg) || 0;
+  const compute = (): DoseResult | null => {
+    const wRaw = Number(weight);
+    const doseKg = Number(dosePerKg);
+    if (!wRaw || wRaw <= 0 || !doseKg || doseKg <= 0) return null;
 
-    if (doseUnit === "mg/lb") {
-      w = w * 0.45359237;
-    }
-
+    const w = doseUnit === "mg/lb" ? wRaw * 0.45359237 : wRaw;
     const singleDose = w * doseKg;
-    setResult(singleDose);
+    if (!isFinite(singleDose) || singleDose <= 0) return null;
+
+    return { singleDose, weightKg: wRaw, dosePerKg: doseKg, doseUnit };
   };
 
   useEffect(() => {
-    const wRaw = Number(weight);
-    const doseKg = Number(dosePerKg);
-
-    if (!wRaw || wRaw <= 0 || !doseKg || doseKg <= 0) {
-      setPanelResult(null);
-      return;
-    }
-
-    let w = wRaw;
-    if (doseUnit === "mg/lb") {
-      w = w * 0.45359237;
-    }
-
-    const singleDose = w * doseKg;
-    if (!isFinite(singleDose) || singleDose <= 0) {
-      setPanelResult(null);
-      return;
-    }
-
-    setPanelResult({
-      singleDose,
-      weightKg: wRaw,
-      dosePerKg: doseKg,
-      doseUnit,
-    });
+    setPanelResult(compute());
   }, [weight, dosePerKg, doseUnit]);
+
+  /* ---- Calculate button ---- */
+  const calculateDose = () => setPanelResult(compute());
 
   const handleClear = () => {
     setWeight("");
     setDosePerKg("");
     setDoseUnit("mg/kg");
-    setResult(null);
     setPanelResult(null);
   };
 
@@ -359,7 +336,6 @@ export default function DoseCalculator() {
       {/* ---- MAIN CONTENT ---- */}
       <div className="single-page-padding">
         <h1>Dosage Calculator — Dose by Weight in mg/kg or mg/lb</h1>
-
 
         <p>
           Enter the patient&apos;s body weight and the prescribed dose rate to
@@ -443,12 +419,6 @@ export default function DoseCalculator() {
               Clear
             </button>
           </div>
-
-          {result !== null && (
-            <div className="calc-result">
-              <p>Single Dose: {result.toFixed(2)} mg</p>
-            </div>
-          )}
         </div>
 
         {/* Mobile-only result panel */}
@@ -461,10 +431,10 @@ export default function DoseCalculator() {
         <h2>One Prescription, Three Different Numbers</h2>
         <p>
           A weight-based prescription contains more numbers than it appears to.
-          Read the line &quot;amoxicillin 40 mg/kg/day in three divided doses&quot;
-          and there are three separate quantities in play: the rate (40
-          mg/kg/day), the total daily dose in milligrams, and the amount that
-          actually goes into the spoon or syringe each time. Confusing the
+          Read the line &quot;amoxicillin 40 mg/kg/day in three divided
+          doses&quot; and there are three separate quantities in play: the rate
+          (40 mg/kg/day), the total daily dose in milligrams, and the amount
+          that actually goes into the spoon or syringe each time. Confusing the
           second for the third gives a patient three times their intended dose
           and is one of the most reproducible errors in medication maths.
         </p>
@@ -555,9 +525,7 @@ export default function DoseCalculator() {
         </p>
 
         <h2>From mg/kg to the Amount in the Syringe</h2>
-        <p>
-          Once the weight is settled, the total dose is a multiplication:
-        </p>
+        <p>Once the weight is settled, the total dose is a multiplication:</p>
         <pre>Dose (mg) = Weight (kg) × Prescribed rate (mg/kg)</pre>
         <p>
           A 24 kg child prescribed 15 mg/kg of paracetamol needs 360 mg. That is

@@ -494,7 +494,6 @@ export default function PharmacodynamicsCalculator() {
 
         <h1>Pharmacodynamics Calculator — EC50, Emax, Therapeutic Index</h1>
 
-
         <p>
           Calculate therapeutic index, drug effect using the Emax model, and
           absolute or relative bioavailability — the core pharmacodynamic
@@ -722,7 +721,6 @@ export default function PharmacodynamicsCalculator() {
               Clear
             </button>
           </div>
-          {result && <div className="calc-result">Result: {result}</div>}
         </div>
 
         <div className="cr-mobile-slot">
@@ -777,7 +775,9 @@ export default function PharmacodynamicsCalculator() {
                 <td>
                   Midpoints of three separate curves for three different effects
                 </td>
-                <td>Where benefit, toxicity and lethality each become likely</td>
+                <td>
+                  Where benefit, toxicity and lethality each become likely
+                </td>
               </tr>
             </tbody>
           </table>
@@ -798,8 +798,9 @@ export default function PharmacodynamicsCalculator() {
         </p>
         <p>
           <strong>Potency</strong> is about dose. A more potent drug achieves a
-          given effect at a lower concentration — its curve sits further left. It
-          is measured by EC50 or ED50, and a lower value means greater potency.
+          given effect at a lower concentration — its curve sits further left.
+          It is measured by EC50 or ED50, and a lower value means greater
+          potency.
         </p>
         <p>
           <strong>Efficacy</strong> is about ceiling. A drug with greater
@@ -822,9 +823,7 @@ export default function PharmacodynamicsCalculator() {
         </p>
 
         <h2>Reading the Emax Model</h2>
-        <p>
-          The Emax equation is the algebraic form of the curve:
-        </p>
+        <p>The Emax equation is the algebraic form of the curve:</p>
         <pre>Effect = (Emax × C) ÷ (EC50 + C)</pre>
         <p>
           Substituting C = EC50 gives Effect = Emax ÷ 2, which is the definition
@@ -879,9 +878,7 @@ export default function PharmacodynamicsCalculator() {
           with a TI near 2 has almost none, and small errors in dose, absorption
           or clearance can cross from therapy into toxicity.
         </p>
-        <p>
-          Three qualifications keep the number in proportion.
-        </p>
+        <p>Three qualifications keep the number in proportion.</p>
         <p>
           First, the index compares two midpoints and says nothing about the
           curves&apos; steepness. If the toxicity curve rises very sharply, a
@@ -937,9 +934,9 @@ export default function PharmacodynamicsCalculator() {
           Absolute F = (AUC oral ÷ AUC intravenous) × (Dose IV ÷ Dose oral)
         </pre>
         <p>
-          Intravenous administration is the reference because none of the dose is
-          lost. Any other route loses some fraction to incomplete absorption and
-          to first-pass metabolism in gut wall and liver, so oral doses are
+          Intravenous administration is the reference because none of the dose
+          is lost. Any other route loses some fraction to incomplete absorption
+          and to first-pass metabolism in gut wall and liver, so oral doses are
           usually larger than their intravenous equivalents for the same
           exposure.
         </p>

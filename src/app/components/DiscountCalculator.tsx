@@ -1,6 +1,248 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+
+/* ─────────────────────────────────────────
+   Types
+───────────────────────────────────────── */
+interface DiscountResult {
+  originalPrice: number;
+  discountAmount: number;
+  priceAfterDiscount: number;
+  taxAmount: number;
+  finalPrice: number;
+  totalSavings: number;
+  effectiveDiscountPct: number;
+  symbol: string;
+  discountLabel: string;
+  taxRatePct: number;
+}
+
+/* ─────────────────────────────────────────
+   Pure helper
+───────────────────────────────────────── */
+function needleDeg(pct: number): number {
+  const clamped = Math.min(Math.max(pct, 0), 100);
+  return -90 + (clamped / 100) * 180;
+}
+
+/* ─────────────────────────────────────────
+   DiscountResultPanel
+   Gauge + meter read the effective discount —
+   savings as a share of the original price —
+   which is the figure a shelf label hides when
+   discounts are stacked or tax is added back.
+───────────────────────────────────────── */
+function DiscountResultPanel({ result }: { result: DiscountResult | null }) {
+  if (!result) {
+    return (
+      <div className="cr-panel-placeholder">
+        <div className="cr-ph-icon">
+          <i className="fa-solid fa-tags" aria-hidden="true" />
+        </div>
+        Enter a price and a discount to see what you actually pay here.
+      </div>
+    );
+  }
+
+  const {
+    originalPrice,
+    discountAmount,
+    priceAfterDiscount,
+    taxAmount,
+    finalPrice,
+    totalSavings,
+    effectiveDiscountPct,
+    symbol,
+    discountLabel,
+    taxRatePct,
+  } = result;
+
+  const money = (n: number) =>
+    symbol +
+    n.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+  const pct = Math.min(Math.max(effectiveDiscountPct, 0), 100);
+  const barPct = 2 + (pct / 100) * 96;
+
+  const depthLabel =
+    pct < 10 ? "Token" : pct < 25 ? "Modest" : pct < 50 ? "Strong" : "Deep";
+
+  const depthBadge =
+    pct < 10 ? "info" : pct < 25 ? "normal" : pct < 50 ? "good" : "good";
+
+  return (
+    <div className="cr-panel">
+      {/* Gauge + headline figure */}
+      <div className="cr-gauge-wrap">
+        <svg
+          className="cr-gauge-svg"
+          width="100"
+          height="60"
+          viewBox="0 0 120 70"
+          role="img"
+          aria-label={`Effective discount gauge showing ${pct.toFixed(1)} percent off`}
+        >
+          <defs>
+            <clipPath id="disc-half">
+              <rect x="0" y="0" width="120" height="65" />
+            </clipPath>
+          </defs>
+          <circle
+            cx="60"
+            cy="65"
+            r="52"
+            fill="none"
+            stroke="#B5D4F4"
+            strokeWidth="12"
+            strokeDasharray="33 326"
+            strokeDashoffset="-163"
+            clipPath="url(#disc-half)"
+          />
+          <circle
+            cx="60"
+            cy="65"
+            r="52"
+            fill="none"
+            stroke="#C0DD97"
+            strokeWidth="12"
+            strokeDasharray="49 326"
+            strokeDashoffset="-196"
+            clipPath="url(#disc-half)"
+          />
+          <circle
+            cx="60"
+            cy="65"
+            r="52"
+            fill="none"
+            stroke="#97C459"
+            strokeWidth="12"
+            strokeDasharray="82 326"
+            strokeDashoffset="-245"
+            clipPath="url(#disc-half)"
+          />
+          <circle
+            cx="60"
+            cy="65"
+            r="52"
+            fill="none"
+            stroke="#4E9A51"
+            strokeWidth="12"
+            strokeDasharray="163 326"
+            strokeDashoffset="-327"
+            clipPath="url(#disc-half)"
+          />
+          <line
+            x1="60"
+            y1="65"
+            x2="60"
+            y2="20"
+            stroke="#111111"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            style={{
+              transformOrigin: "60px 65px",
+              transform: `rotate(${needleDeg(pct)}deg)`,
+              transition: "transform 0.5s ease",
+            }}
+          />
+          <circle cx="60" cy="65" r="5" fill="#111111" />
+        </svg>
+
+        <div className="cr-score-block">
+          <div className="cr-score">{money(finalPrice)}</div>
+          <div className="cr-score-label">Final price you pay</div>
+          <span className={`cr-badge ${depthBadge}`}>
+            {depthLabel} discount
+          </span>
+        </div>
+      </div>
+
+      <hr className="cr-divider" />
+
+      {/* Effective discount meter */}
+      <div>
+        <div className="cr-bar-label">
+          effective discount ({pct.toFixed(1)}% of the original price)
+        </div>
+        <div
+          className="cr-bar-track"
+          style={{
+            background:
+              "linear-gradient(to right, #B5D4F4 0%, #C0DD97 10%, #97C459 25%, #4E9A51 100%)",
+          }}
+        >
+          <div className="cr-bar-thumb" style={{ left: `${barPct}%` }} />
+        </div>
+        <div className="cr-bar-ticks">
+          <span>0%</span>
+          <span>10%</span>
+          <span>25%</span>
+          <span>50%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      <hr className="cr-divider" />
+
+      {/* Breakdown */}
+      <div className="cr-metrics-grid">
+        <div className="cr-metric-card">
+          <div className="cr-m-label">Original price</div>
+          <div className="cr-m-value">{money(originalPrice)}</div>
+          <div className="cr-m-sub">before any reduction</div>
+        </div>
+        <div className="cr-metric-card">
+          <div className="cr-m-label">Discount ({discountLabel})</div>
+          <div className="cr-m-value">− {money(discountAmount)}</div>
+          <div className="cr-m-sub">taken off the price</div>
+        </div>
+        <div className="cr-metric-card">
+          <div className="cr-m-label">After discount</div>
+          <div className="cr-m-value">{money(priceAfterDiscount)}</div>
+          <div className="cr-m-sub">before tax</div>
+        </div>
+        {taxAmount > 0 && (
+          <div className="cr-metric-card">
+            <div className="cr-m-label">Tax ({taxRatePct}%)</div>
+            <div className="cr-m-value">+ {money(taxAmount)}</div>
+            <div className="cr-m-sub">added back on</div>
+          </div>
+        )}
+        <div className="cr-metric-card">
+          <div className="cr-m-label">You save</div>
+          <div className="cr-m-value">{money(totalSavings)}</div>
+          <div className="cr-m-sub">{pct.toFixed(1)}% off</div>
+        </div>
+      </div>
+
+      <hr className="cr-divider" />
+
+      {/* Working shown transparently */}
+      <div>
+        <div className="cr-bar-label">calculation</div>
+        <div className="cr-world-note">
+          {money(originalPrice)} − {money(discountAmount)}
+          {taxAmount > 0 ? ` + ${money(taxAmount)} tax` : ""} ={" "}
+          <strong>{money(finalPrice)}</strong>
+        </div>
+      </div>
+
+      {taxAmount > 0 && (
+        <>
+          <hr className="cr-divider" />
+          <div className="cr-world-note" style={{ fontStyle: "italic" }}>
+            Tax is charged on the discounted price, not the original, so the
+            saving shown above is measured after tax has been added back.
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 /* ─────────────────────────────────────────
    FAQ data (also used to build the FAQPage
@@ -60,15 +302,7 @@ export default function DiscountCalculator() {
   const [currency, setCurrency] = useState("USD ($)");
   const [currencyOpen, setCurrencyOpen] = useState(false);
 
-  const [result, setResult] = useState<{
-    originalPrice: number;
-    discountAmount: number;
-    priceAfterDiscount: number;
-    taxAmount: number;
-    finalPrice: number;
-    totalSavings: number;
-    effectiveDiscountPct: number;
-  } | null>(null);
+  const [result, setResult] = useState<DiscountResult | null>(null);
 
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const toggleFAQ = (index: number) =>
@@ -98,12 +332,6 @@ export default function DiscountCalculator() {
     return s === "" ? 0 : Number(s);
   };
 
-  const fmt = (n: number) =>
-    n.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-
   const currencySymbol = currency.includes("$")
     ? "$"
     : currency.includes("£")
@@ -128,11 +356,11 @@ export default function DiscountCalculator() {
   ];
 
   /* ---- CALCULATE ---- */
-  const calculate = () => {
+  const compute = (): DiscountResult | null => {
     const price = toNum(originalPrice);
     const dVal = toNum(discountValue);
     const tax = toNum(taxRate);
-    if (!price) return;
+    if (!price || price <= 0) return null;
 
     const discountAmount =
       discountType === "percent" ? (price * dVal) / 100 : dVal;
@@ -143,7 +371,7 @@ export default function DiscountCalculator() {
     const totalSavings = price - priceAfterDiscount;
     const effectiveDiscountPct = price > 0 ? (totalSavings / price) * 100 : 0;
 
-    setResult({
+    return {
       originalPrice: price,
       discountAmount,
       priceAfterDiscount,
@@ -151,8 +379,22 @@ export default function DiscountCalculator() {
       finalPrice,
       totalSavings,
       effectiveDiscountPct,
-    });
+      symbol: currencySymbol,
+      discountLabel:
+        discountType === "percent" && discountValue
+          ? `${discountValue}%`
+          : "flat",
+      taxRatePct: tax,
+    };
   };
+
+  /* The panel tracks the inputs live; the button re-runs the same
+     calculation so the control still does what a user expects. */
+  useEffect(() => {
+    setResult(compute());
+  }, [originalPrice, discountValue, taxRate, discountType, currency]);
+
+  const calculate = () => setResult(compute());
 
   /* ---- CLEAR ---- */
   const handleClear = () => {
@@ -186,218 +428,138 @@ export default function DiscountCalculator() {
 
       <div className="single-page-padding">
         <h1>Discount Calculator — Sale Price, Savings and Stacked Offers</h1>
-          <p>
-            Calculate Sale Price, Savings &amp; Final Price After Discount —
-            Free &amp; Instant
-          </p>
+        <p>
+          Calculate Sale Price, Savings &amp; Final Price After Discount — Free
+          &amp; Instant
+        </p>
 
-          <div className="calc-card single-calc">
-            {/* Row 1 — Original Price + Discount Type */}
+        <div className="calc-card single-calc">
+          {/* Row 1 — Original Price + Discount Type */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gap: "10px",
+            }}
+          >
+            <input
+              className="calc-input"
+              type="text"
+              inputMode="decimal"
+              placeholder="Original Price"
+              value={originalPrice}
+              onChange={handleChange(setOriginalPrice)}
+              style={{ margin: 0 }}
+            />
+
+            {/* Discount Type Dropdown */}
             <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr",
-                gap: "10px",
-              }}
+              className="modern-dropdown"
+              onClick={() => setDiscountTypeOpen(!discountTypeOpen)}
+              style={{ margin: 0 }}
             >
-              <input
-                className="calc-input"
-                type="text"
-                inputMode="decimal"
-                placeholder="Original Price"
-                value={originalPrice}
-                onChange={handleChange(setOriginalPrice)}
-                style={{ margin: 0 }}
-              />
-
-              {/* Discount Type Dropdown */}
-              <div
-                className="modern-dropdown"
-                onClick={() => setDiscountTypeOpen(!discountTypeOpen)}
-                style={{ margin: 0 }}
-              >
-                {discountType === "percent"
-                  ? "Percentage Discount (%)"
-                  : "Flat Amount Off"}
-                <span className="dropdown-indicator">▼</span>
-                {discountTypeOpen && (
-                  <ul className="dropdown-list">
-                    <li
-                      onClick={() => {
-                        setDiscountType("percent");
-                        setDiscountTypeOpen(false);
-                      }}
-                    >
-                      Percentage Discount (%)
-                    </li>
-                    <li
-                      onClick={() => {
-                        setDiscountType("flat");
-                        setDiscountTypeOpen(false);
-                      }}
-                    >
-                      Flat Amount Off
-                    </li>
-                  </ul>
-                )}
-              </div>
-            </div>
-
-            {/* Row 2 — Discount Value + Tax Rate */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr",
-                gap: "10px",
-                marginTop: "10px",
-              }}
-            >
-              <input
-                className="calc-input"
-                type="text"
-                inputMode="decimal"
-                placeholder={
-                  discountType === "percent"
-                    ? "Discount Percentage (e.g. 20)"
-                    : "Flat Discount Amount (e.g. 500)"
-                }
-                value={discountValue}
-                onChange={handleChange(setDiscountValue)}
-                style={{ margin: 0 }}
-              />
-              <input
-                className="calc-input"
-                type="text"
-                inputMode="decimal"
-                placeholder="Tax / GST / VAT Rate % — optional"
-                value={taxRate}
-                onChange={handleChange(setTaxRate)}
-                style={{ margin: 0 }}
-              />
-            </div>
-
-            {/* Row 3 — Currency */}
-            <div style={{ marginTop: "10px" }}>
-              <div
-                className="modern-dropdown"
-                onClick={() => setCurrencyOpen(!currencyOpen)}
-                style={{ margin: 0 }}
-              >
-                {currency}
-                <span className="dropdown-indicator">▼</span>
-                {currencyOpen && (
-                  <ul className="dropdown-list">
-                    {currencies.map((c) => (
-                      <li
-                        key={c}
-                        onClick={() => {
-                          setCurrency(c);
-                          setCurrencyOpen(false);
-                        }}
-                      >
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-              <button className="calc-button" onClick={calculate}>
-                Calculate
-              </button>
-              <button className="calc-button calc-clear" onClick={handleClear}>
-                Clear
-              </button>
-            </div>
-
-            {/* Result */}
-            {result && (
-              <div className="calc-result" style={{ lineHeight: "2" }}>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr",
-                    gap: "6px 20px",
-                  }}
-                >
-                  <div>Original Price:</div>
-                  <div>
-                    <strong>
-                      {currencySymbol}
-                      {fmt(result.originalPrice)}
-                    </strong>
-                  </div>
-
-                  <div>
-                    Discount (
-                    {discountType === "percent" ? `${discountValue}%` : "Flat"}
-                    ):
-                  </div>
-                  <div>
-                    <strong style={{ color: "red" }}>
-                      − {currencySymbol}
-                      {fmt(result.discountAmount)}
-                    </strong>
-                  </div>
-
-                  <div>Price After Discount:</div>
-                  <div>
-                    <strong>
-                      {currencySymbol}
-                      {fmt(result.priceAfterDiscount)}
-                    </strong>
-                  </div>
-
-                  {result.taxAmount > 0 && (
-                    <>
-                      <div>Tax / GST / VAT ({taxRate}%):</div>
-                      <div>
-                        <strong style={{ color: "#b45309" }}>
-                          + {currencySymbol}
-                          {fmt(result.taxAmount)}
-                        </strong>
-                      </div>
-                    </>
-                  )}
-
-                  <div
-                    style={{
-                      borderTop: "1px solid #e5e7eb",
-                      paddingTop: "6px",
-                      fontWeight: 600,
+              {discountType === "percent"
+                ? "Percentage Discount (%)"
+                : "Flat Amount Off"}
+              <span className="dropdown-indicator">▼</span>
+              {discountTypeOpen && (
+                <ul className="dropdown-list">
+                  <li
+                    onClick={() => {
+                      setDiscountType("percent");
+                      setDiscountTypeOpen(false);
                     }}
                   >
-                    Final Price You Pay:
-                  </div>
-                  <div
-                    style={{
-                      borderTop: "1px solid #e5e7eb",
-                      paddingTop: "6px",
+                    Percentage Discount (%)
+                  </li>
+                  <li
+                    onClick={() => {
+                      setDiscountType("flat");
+                      setDiscountTypeOpen(false);
                     }}
                   >
-                    <strong style={{ fontSize: "1.15em" }}>
-                      {currencySymbol}
-                      {fmt(result.finalPrice)}
-                    </strong>
-                  </div>
-
-                  <div style={{ color: "green", fontWeight: 600 }}>
-                    You Save:
-                  </div>
-                  <div>
-                    <strong style={{ color: "green", fontSize: "1.05em" }}>
-                      {currencySymbol}
-                      {fmt(result.totalSavings)} (
-                      {result.effectiveDiscountPct.toFixed(1)}% off)
-                    </strong>
-                  </div>
-                </div>
-              </div>
-            )}
+                    Flat Amount Off
+                  </li>
+                </ul>
+              )}
+            </div>
           </div>
+
+          {/* Row 2 — Discount Value + Tax Rate */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gap: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <input
+              className="calc-input"
+              type="text"
+              inputMode="decimal"
+              placeholder={
+                discountType === "percent"
+                  ? "Discount Percentage (e.g. 20)"
+                  : "Flat Discount Amount (e.g. 500)"
+              }
+              value={discountValue}
+              onChange={handleChange(setDiscountValue)}
+              style={{ margin: 0 }}
+            />
+            <input
+              className="calc-input"
+              type="text"
+              inputMode="decimal"
+              placeholder="Tax / GST / VAT Rate % — optional"
+              value={taxRate}
+              onChange={handleChange(setTaxRate)}
+              style={{ margin: 0 }}
+            />
+          </div>
+
+          {/* Row 3 — Currency */}
+          <div style={{ marginTop: "10px" }}>
+            <div
+              className="modern-dropdown"
+              onClick={() => setCurrencyOpen(!currencyOpen)}
+              style={{ margin: 0 }}
+            >
+              {currency}
+              <span className="dropdown-indicator">▼</span>
+              {currencyOpen && (
+                <ul className="dropdown-list">
+                  {currencies.map((c) => (
+                    <li
+                      key={c}
+                      onClick={() => {
+                        setCurrency(c);
+                        setCurrencyOpen(false);
+                      }}
+                    >
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+            <button className="calc-button" onClick={calculate}>
+              Calculate
+            </button>
+            <button className="calc-button calc-clear" onClick={handleClear}>
+              Clear
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile-only result panel */}
+        <div className="cr-mobile-slot">
+          <DiscountResultPanel result={result} />
+        </div>
 
         {/* ---- SEO CONTENT ---- */}
 
@@ -433,10 +595,10 @@ export default function DiscountCalculator() {
           {"\n"}Total reduction: 44%, not 50%
         </pre>
         <p>
-          The shortcut is to multiply the multipliers: 0.70 × 0.80 = 0.56, so you
-          pay 56% of the original and save 44%. Stacking always produces less
-          than the sum of the parts, and the gap widens as the discounts get
-          larger.
+          The shortcut is to multiply the multipliers: 0.70 × 0.80 = 0.56, so
+          you pay 56% of the original and save 44%. Stacking always produces
+          less than the sum of the parts, and the gap widens as the discounts
+          get larger.
         </p>
 
         <div className="table-wrap">
@@ -514,8 +676,8 @@ export default function DiscountCalculator() {
         <p>
           This is worth knowing when a price is inflated before a sale. An item
           marked up 50% and then advertised at &quot;50% off&quot; ends up below
-          its original price, but an item marked up 100% and then sold at 50% off
-          is back exactly where it started while appearing to be half price.
+          its original price, but an item marked up 100% and then sold at 50%
+          off is back exactly where it started while appearing to be half price.
         </p>
 
         <h2>Is It Actually a Good Deal?</h2>
@@ -525,16 +687,18 @@ export default function DiscountCalculator() {
         </p>
         <ul className="custom-list">
           <li>
-            <strong>Compare against the price elsewhere, not the reference
-            price.</strong> The crossed-out figure on the label is set by the
-            seller. The only meaningful comparison is what the same item costs
-            somewhere else today.
+            <strong>
+              Compare against the price elsewhere, not the reference price.
+            </strong>{" "}
+            The crossed-out figure on the label is set by the seller. The only
+            meaningful comparison is what the same item costs somewhere else
+            today.
           </li>
           <li>
             <strong>Work out the unit price.</strong> A larger pack at a
             discount is not automatically better value. Divide by weight, volume
-            or count and compare the per-unit figures — this reverses the ranking
-            more often than people expect.
+            or count and compare the per-unit figures — this reverses the
+            ranking more often than people expect.
           </li>
           <li>
             <strong>Include the cost of getting it.</strong> Delivery, a trip
@@ -545,7 +709,8 @@ export default function DiscountCalculator() {
         <p>
           The framing that helps most is that a discount is a reduction in what
           you spend only if you were going to buy the thing anyway. Spending 60
-          to save 40 on something you did not need leaves you 60 down, not 40 up.
+          to save 40 on something you did not need leaves you 60 down, not 40
+          up.
         </p>
         <p>
           For percentage arithmetic in other contexts — increases, reverse
@@ -562,103 +727,92 @@ export default function DiscountCalculator() {
         </p>
         <h2>Discount Questions</h2>
 
-          {FAQ_DATA.map(([q, a], i) => {
-            const isOpen = openFAQ === i;
-            return (
-              <div className="faq-item" key={i}>
-                <h3
-                  onClick={() => toggleFAQ(i)}
-                  onKeyDown={(e) => handleFAQKey(e, i)}
-                  role="button"
-                  tabIndex={0}
-                  aria-expanded={isOpen}
-                  aria-controls={`faq-answer-${i}`}
-                >
-                  {q}
-                  <i
-                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
-                    aria-hidden="true"
-                  />
-                </h3>
-                <div
-                  id={`faq-answer-${i}`}
-                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
-                  aria-hidden={!isOpen}
-                >
-                  <div className="faq-answer-inner">
-                    <p>{a}</p>
-                  </div>
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => handleFAQKey(e, i)}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
       </div>
 
-        {/* ---- SIDEBAR ---- */}
-        <aside className="sidebar">
-          <div className="sidebar-box">
-            <p style={{ fontSize: "20px", fontWeight: 600 }}>
-              Related Calculators
-            </p>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              <li>
-                <Link href="/salary-hike-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Salary Hike Calculator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/bill-split-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Bill Split Calculator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/net-worth-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Net Worth Calculator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/freelancer-tax-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Freelancer Tax Calculator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/emi-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    EMI Calculator
-                  </span>
-                </Link>
-              </li>
+      {/* ---- SIDEBAR ---- */}
+      <aside className="sidebar">
+        <div className="cr-desktop-slot">
+          <DiscountResultPanel result={result} />
+        </div>
 
-              <style jsx>{`
-                .hover-item:hover {
-                  text-decoration: underline;
-                }
-              `}</style>
-            </ul>
-          </div>
+        <div className="sidebar-box">
+          <p style={{ fontSize: "20px", fontWeight: 600 }}>
+            Related Calculators
+          </p>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            <li>
+              <Link href="/salary-hike-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  Salary Hike Calculator
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/bill-split-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  Bill Split Calculator
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/net-worth-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  Net Worth Calculator
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/freelancer-tax-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  Freelancer Tax Calculator
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/emi-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  EMI Calculator
+                </span>
+              </Link>
+            </li>
+
+            <style jsx>{`
+              .hover-item:hover {
+                text-decoration: underline;
+              }
+            `}</style>
+          </ul>
+        </div>
       </aside>
     </div>
   );

@@ -1,6 +1,233 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+
+/* ─────────────────────────────────────────
+   Types
+───────────────────────────────────────── */
+interface HikeResult {
+  periodLabel: string;
+  oldSalary: number;
+  hikeAmount: number;
+  newSalary: number;
+  hikePct: number;
+}
+
+/* ─────────────────────────────────────────
+   Pure helper — gauge runs 0–30%, the range
+   almost every real raise falls inside.
+───────────────────────────────────────── */
+function needleDeg(pct: number): number {
+  const clamped = Math.min(Math.max(pct, 0), 30);
+  return -90 + (clamped / 30) * 180;
+}
+
+/* ─────────────────────────────────────────
+   HikeResultPanel
+───────────────────────────────────────── */
+function HikeResultPanel({ result }: { result: HikeResult | null }) {
+  if (!result) {
+    return (
+      <div className="cr-panel-placeholder">
+        <div className="cr-ph-icon">
+          <i className="fa-solid fa-arrow-trend-up" aria-hidden="true" />
+        </div>
+        Enter your salary and the rise to see your new pay here.
+      </div>
+    );
+  }
+
+  const { periodLabel, oldSalary, hikeAmount, newSalary, hikePct } = result;
+
+  const money = (n: number) =>
+    n.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+  const capped = Math.min(Math.max(hikePct, 0), 30);
+  const barPct = 2 + (capped / 30) * 96;
+
+  // Bands reflect how a raise is normally read: below ~3% it is at or under
+  // typical inflation, 3–7% is a standard annual review, 7–15% is a strong
+  // rise, and above that is usually a promotion or a job move.
+  const bandLabel =
+    hikePct < 3
+      ? "Below typical inflation"
+      : hikePct < 7
+        ? "Standard review"
+        : hikePct < 15
+          ? "Strong rise"
+          : "Promotion level";
+
+  const bandBadge =
+    hikePct < 3
+      ? "warning"
+      : hikePct < 7
+        ? "normal"
+        : hikePct < 15
+          ? "good"
+          : "good";
+
+  // Multiplier is the durable way to express a rise — it does not depend on
+  // the currency or the size of the salary.
+  const multiplier = oldSalary > 0 ? newSalary / oldSalary : 0;
+
+  return (
+    <div className="cr-panel">
+      <div className="cr-gauge-wrap">
+        <svg
+          className="cr-gauge-svg"
+          width="100"
+          height="60"
+          viewBox="0 0 120 70"
+          role="img"
+          aria-label={`Salary rise gauge showing ${hikePct.toFixed(1)} percent`}
+        >
+          <defs>
+            <clipPath id="hike-half">
+              <rect x="0" y="0" width="120" height="65" />
+            </clipPath>
+          </defs>
+          <circle
+            cx="60"
+            cy="65"
+            r="52"
+            fill="none"
+            stroke="#F09595"
+            strokeWidth="12"
+            strokeDasharray="33 326"
+            strokeDashoffset="-163"
+            clipPath="url(#hike-half)"
+          />
+          <circle
+            cx="60"
+            cy="65"
+            r="52"
+            fill="none"
+            stroke="#FAC775"
+            strokeWidth="12"
+            strokeDasharray="44 326"
+            strokeDashoffset="-196"
+            clipPath="url(#hike-half)"
+          />
+          <circle
+            cx="60"
+            cy="65"
+            r="52"
+            fill="none"
+            stroke="#C0DD97"
+            strokeWidth="12"
+            strokeDasharray="87 326"
+            strokeDashoffset="-240"
+            clipPath="url(#hike-half)"
+          />
+          <circle
+            cx="60"
+            cy="65"
+            r="52"
+            fill="none"
+            stroke="#4E9A51"
+            strokeWidth="12"
+            strokeDasharray="163 326"
+            strokeDashoffset="-327"
+            clipPath="url(#hike-half)"
+          />
+          <line
+            x1="60"
+            y1="65"
+            x2="60"
+            y2="20"
+            stroke="#111111"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            style={{
+              transformOrigin: "60px 65px",
+              transform: `rotate(${needleDeg(hikePct)}deg)`,
+              transition: "transform 0.5s ease",
+            }}
+          />
+          <circle cx="60" cy="65" r="5" fill="#111111" />
+        </svg>
+
+        <div className="cr-score-block">
+          <div className="cr-score">{money(newSalary)}</div>
+          <div className="cr-score-label">
+            New {periodLabel.toLowerCase()} salary
+          </div>
+          <span className={`cr-badge ${bandBadge}`}>{bandLabel}</span>
+        </div>
+      </div>
+
+      <hr className="cr-divider" />
+
+      <div>
+        <div className="cr-bar-label">
+          where a {hikePct.toFixed(1)}% rise sits
+        </div>
+        <div
+          className="cr-bar-track"
+          style={{
+            background:
+              "linear-gradient(to right, #F09595 0%, #FAC775 10%, #C0DD97 23%, #4E9A51 100%)",
+          }}
+        >
+          <div className="cr-bar-thumb" style={{ left: `${barPct}%` }} />
+        </div>
+        <div className="cr-bar-ticks">
+          <span>0%</span>
+          <span>3%</span>
+          <span>7%</span>
+          <span>15%</span>
+          <span>30%+</span>
+        </div>
+      </div>
+
+      <hr className="cr-divider" />
+
+      <div className="cr-metrics-grid">
+        <div className="cr-metric-card">
+          <div className="cr-m-label">Current {periodLabel.toLowerCase()}</div>
+          <div className="cr-m-value">{money(oldSalary)}</div>
+          <div className="cr-m-sub">before the rise</div>
+        </div>
+        <div className="cr-metric-card">
+          <div className="cr-m-label">Increase</div>
+          <div className="cr-m-value">+ {money(hikeAmount)}</div>
+          <div className="cr-m-sub">per {periodLabel.toLowerCase()}</div>
+        </div>
+        <div className="cr-metric-card">
+          <div className="cr-m-label">Rise</div>
+          <div className="cr-m-value">{hikePct.toFixed(2)}%</div>
+          <div className="cr-m-sub">on the current base</div>
+        </div>
+        <div className="cr-metric-card">
+          <div className="cr-m-label">Multiplier</div>
+          <div className="cr-m-value">× {multiplier.toFixed(3)}</div>
+          <div className="cr-m-sub">old salary to new</div>
+        </div>
+      </div>
+
+      <hr className="cr-divider" />
+
+      <div>
+        <div className="cr-bar-label">calculation</div>
+        <div className="cr-world-note">
+          {money(oldSalary)} × {multiplier.toFixed(3)} ={" "}
+          <strong>{money(newSalary)}</strong>
+        </div>
+      </div>
+
+      <hr className="cr-divider" />
+
+      <div className="cr-world-note" style={{ fontStyle: "italic" }}>
+        This is the rise before tax. A percentage added to gross pay does not
+        reach take-home pay unchanged, because the extra can fall in a higher
+        band than the salary underneath it.
+      </div>
+    </div>
+  );
+}
 
 const FAQ_DATA: [string, string][] = [
   [
@@ -49,12 +276,7 @@ export default function SalaryHikeCalculator() {
     "annual",
   );
 
-  const [result, setResult] = useState<{
-    periodLabel: string;
-    oldSalary: number;
-    hikeAmount: number;
-    newSalary: number;
-  } | null>(null);
+  const [result, setResult] = useState<HikeResult | null>(null);
 
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [periodOpen, setPeriodOpen] = useState(false);
@@ -83,10 +305,10 @@ export default function SalaryHikeCalculator() {
   };
 
   /* ---- CALCULATE ---- */
-  const calculateHike = () => {
+  const compute = (): HikeResult | null => {
     const entered = toNum(currentSalary);
     const pct = toNum(hikePercent);
-    if (!entered || !pct) return;
+    if (!entered || entered <= 0 || !pct) return null;
 
     const hikeAmount = (entered * pct) / 100;
     const newSalary = entered + hikeAmount;
@@ -97,8 +319,22 @@ export default function SalaryHikeCalculator() {
           ? "Quarterly"
           : "Annual";
 
-    setResult({ periodLabel, oldSalary: entered, hikeAmount, newSalary });
+    return {
+      periodLabel,
+      oldSalary: entered,
+      hikeAmount,
+      newSalary,
+      hikePct: pct,
+    };
   };
+
+  /* The panel follows the inputs live; the button re-runs the same
+     calculation so the control still behaves as expected. */
+  useEffect(() => {
+    setResult(compute());
+  }, [currentSalary, hikePercent, period]);
+
+  const calculateHike = () => setResult(compute());
 
   /* ---- CLEAR ---- */
   const handleClear = () => {
@@ -108,12 +344,6 @@ export default function SalaryHikeCalculator() {
     setPeriodOpen(false);
     setResult(null);
   };
-
-  const fmt = (n: number) =>
-    n.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
 
   return (
     <div className="page-layout">
@@ -133,144 +363,113 @@ export default function SalaryHikeCalculator() {
       />
       <div className="single-page-padding">
         <h1>Salary Hike Calculator — Percentage, Real Terms and Offers</h1>
-          <p>
-            Calculate Your New Salary After Appraisal — Instantly &amp; Free
-          </p>
+        <p>Calculate Your New Salary After Appraisal — Instantly &amp; Free</p>
 
-          <div className="calc-card single-calc">
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr",
-                gap: "10px",
-              }}
-            >
-              <input
-                className="calc-input"
-                type="text"
-                inputMode="decimal"
-                placeholder={
-                  period === "monthly"
-                    ? "Current Monthly Salary"
-                    : period === "quarterly"
-                      ? "Current Quarterly Salary"
-                      : "Current Annual Salary"
-                }
-                value={currentSalary}
-                onChange={handleChange(setCurrentSalary)}
-                style={{ margin: 0 }}
-              />
-              <input
-                className="calc-input"
-                type="text"
-                inputMode="decimal"
-                placeholder="Hike Percentage (%)"
-                value={hikePercent}
-                onChange={handleChange(setHikePercent)}
-                style={{ margin: 0 }}
-              />
-              <div
-                className="modern-dropdown"
-                onClick={() => setPeriodOpen(!periodOpen)}
-                style={{ margin: 0 }}
-              >
-                {period === "monthly"
-                  ? "Monthly"
+        <div className="calc-card single-calc">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gap: "10px",
+            }}
+          >
+            <input
+              className="calc-input"
+              type="text"
+              inputMode="decimal"
+              placeholder={
+                period === "monthly"
+                  ? "Current Monthly Salary"
                   : period === "quarterly"
-                    ? "Quarterly"
-                    : "Annual"}
-                <span className="dropdown-indicator">▼</span>
-                {periodOpen && (
-                  <ul className="dropdown-list">
-                    <li
-                      onClick={() => {
-                        setPeriod("annual");
-                        setPeriodOpen(false);
-                      }}
-                    >
-                      Annual
-                    </li>
-                    <li
-                      onClick={() => {
-                        setPeriod("monthly");
-                        setPeriodOpen(false);
-                      }}
-                    >
-                      Monthly
-                    </li>
-                    <li
-                      onClick={() => {
-                        setPeriod("quarterly");
-                        setPeriodOpen(false);
-                      }}
-                    >
-                      Quarterly
-                    </li>
-                  </ul>
-                )}
-              </div>
+                    ? "Current Quarterly Salary"
+                    : "Current Annual Salary"
+              }
+              value={currentSalary}
+              onChange={handleChange(setCurrentSalary)}
+              style={{ margin: 0 }}
+            />
+            <input
+              className="calc-input"
+              type="text"
+              inputMode="decimal"
+              placeholder="Hike Percentage (%)"
+              value={hikePercent}
+              onChange={handleChange(setHikePercent)}
+              style={{ margin: 0 }}
+            />
+            <div
+              className="modern-dropdown"
+              onClick={() => setPeriodOpen(!periodOpen)}
+              style={{ margin: 0 }}
+            >
+              {period === "monthly"
+                ? "Monthly"
+                : period === "quarterly"
+                  ? "Quarterly"
+                  : "Annual"}
+              <span className="dropdown-indicator">▼</span>
+              {periodOpen && (
+                <ul className="dropdown-list">
+                  <li
+                    onClick={() => {
+                      setPeriod("annual");
+                      setPeriodOpen(false);
+                    }}
+                  >
+                    Annual
+                  </li>
+                  <li
+                    onClick={() => {
+                      setPeriod("monthly");
+                      setPeriodOpen(false);
+                    }}
+                  >
+                    Monthly
+                  </li>
+                  <li
+                    onClick={() => {
+                      setPeriod("quarterly");
+                      setPeriodOpen(false);
+                    }}
+                  >
+                    Quarterly
+                  </li>
+                </ul>
+              )}
             </div>
-
-            {/* Buttons */}
-            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-              <button
-                className="calc-button"
-                onClick={calculateHike}
-                style={{ flex: "7" }}
-              >
-                Calculate
-              </button>
-
-              <button
-                className="calc-button calc-clear"
-                onClick={handleClear}
-                style={{ flex: "3" }}
-              >
-                Clear
-              </button>
-            </div>
-
-            {/* Result */}
-            {result && (
-              <div className="calc-result" style={{ lineHeight: "2" }}>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "6px 20px",
-                  }}
-                >
-                  <div>Current {result.periodLabel} Salary:</div>
-                  <div>
-                    <strong>{fmt(result.oldSalary)}</strong>
-                  </div>
-
-                  <div>Hike Amount ({result.periodLabel}):</div>
-                  <div>
-                    <strong style={{ color: "green" }}>
-                      + {fmt(result.hikeAmount)}
-                    </strong>
-                  </div>
-
-                  <div style={{ fontWeight: 600 }}>
-                    New {result.periodLabel} Salary:
-                  </div>
-                  <div>
-                    <strong style={{ fontSize: "1.1em" }}>
-                      {fmt(result.newSalary)}
-                    </strong>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
+
+          {/* Buttons */}
+          <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+            <button
+              className="calc-button"
+              onClick={calculateHike}
+              style={{ flex: "7" }}
+            >
+              Calculate
+            </button>
+
+            <button
+              className="calc-button calc-clear"
+              onClick={handleClear}
+              style={{ flex: "3" }}
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile-only result panel */}
+        <div className="cr-mobile-slot">
+          <HikeResultPanel result={result} />
+        </div>
 
         {/* ---- SEO CONTENT ---- */}
 
         <h2>The Percentage Is Easy. The Base Is the Argument.</h2>
         <pre>
-          Hike % = (New salary − Old salary) ÷ Old salary × 100{"\n"}New salary =
-          Old salary × (1 + Hike % ÷ 100)
+          Hike % = (New salary − Old salary) ÷ Old salary × 100{"\n"}New salary
+          = Old salary × (1 + Hike % ÷ 100)
         </pre>
         <p>
           Going from 60,000 to 66,000 is (66,000 − 60,000) ÷ 60,000 × 100 = 10%.
@@ -359,9 +558,7 @@ export default function SalaryHikeCalculator() {
           about deferred increases. A 20% cut followed by a 20% rise does not
           restore the original salary.
         </p>
-        <pre>
-          60,000 × 0.80 = 48,000{"\n"}48,000 × 1.20 = 57,600
-        </pre>
+        <pre>60,000 × 0.80 = 48,000{"\n"}48,000 × 1.20 = 57,600</pre>
         <p>
           The 20% came off a larger base than it went back on to, leaving a
           permanent 4% gap. Restoring 48,000 to 60,000 requires a 25% rise, not
@@ -438,9 +635,7 @@ export default function SalaryHikeCalculator() {
               </tr>
               <tr>
                 <td>Unvested equity or bonus</td>
-                <td>
-                  What are you forfeiting by leaving before it lands?
-                </td>
+                <td>What are you forfeiting by leaving before it lands?</td>
               </tr>
               <tr>
                 <td>Commute and location</td>
@@ -486,8 +681,8 @@ export default function SalaryHikeCalculator() {
           </li>
           <li>
             Bring the real-terms calculation. &quot;That is a 1.9% increase
-            after inflation&quot; is a factual statement, not a complaint, and it
-            reframes an offer that sounded reasonable.
+            after inflation&quot; is a factual statement, not a complaint, and
+            it reframes an offer that sounded reasonable.
           </li>
           <li>
             Where the budget genuinely will not move, ask what will — timing of
@@ -501,109 +696,98 @@ export default function SalaryHikeCalculator() {
         </ul>
         <h2>Salary Increase Questions</h2>
 
-          {FAQ_DATA.map(([q, a], i) => {
-            const isOpen = openFAQ === i;
-            return (
-              <div className="faq-item" key={i}>
-                <h3
-                  onClick={() => toggleFAQ(i)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      toggleFAQ(i);
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-expanded={isOpen}
-                  aria-controls={`faq-answer-${i}`}
-                >
-                  {q}
-                  <i
-                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
-                    aria-hidden="true"
-                  />
-                </h3>
-                <div
-                  id={`faq-answer-${i}`}
-                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
-                  aria-hidden={!isOpen}
-                >
-                  <div className="faq-answer-inner">
-                    <p>{a}</p>
-                  </div>
+        {FAQ_DATA.map(([q, a], i) => {
+          const isOpen = openFAQ === i;
+          return (
+            <div className="faq-item" key={i}>
+              <h3
+                onClick={() => toggleFAQ(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleFAQ(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${i}`}
+              >
+                {q}
+                <i
+                  className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                  aria-hidden="true"
+                />
+              </h3>
+              <div
+                id={`faq-answer-${i}`}
+                className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                aria-hidden={!isOpen}
+              >
+                <div className="faq-answer-inner">
+                  <p>{a}</p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ---- SIDEBAR ---- */}
+      <aside className="sidebar">
+        <div className="cr-desktop-slot">
+          <HikeResultPanel result={result} />
         </div>
 
-        {/* ---- SIDEBAR ---- */}
-        <aside className="sidebar">
-          <div className="sidebar-box">
-            <p style={{ fontSize: "20px", fontWeight: 600 }}>
-              Related Calculators
-            </p>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              <li>
-                <Link href="/net-worth-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Net Worth Calculator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/income-tax-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Income Tax Calculator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/emi-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    EMI Calculator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/loan-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Loan Calculator
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/freelancer-tax-calculator/">
-                  <span
-                    style={{ textDecoration: "none" }}
-                    className="hover-item"
-                  >
-                    Freelancer Tax Calculator
-                  </span>
-                </Link>
-              </li>
+        <div className="sidebar-box">
+          <p style={{ fontSize: "20px", fontWeight: 600 }}>
+            Related Calculators
+          </p>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            <li>
+              <Link href="/net-worth-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  Net Worth Calculator
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/income-tax-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  Income Tax Calculator
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/emi-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  EMI Calculator
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/loan-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  Loan Calculator
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/freelancer-tax-calculator/">
+                <span style={{ textDecoration: "none" }} className="hover-item">
+                  Freelancer Tax Calculator
+                </span>
+              </Link>
+            </li>
 
-              <style jsx>{`
-                .hover-item:hover {
-                  text-decoration: underline;
-                }
-              `}</style>
-            </ul>
-          </div>
-        </aside>
-      </div>
+            <style jsx>{`
+              .hover-item:hover {
+                text-decoration: underline;
+              }
+            `}</style>
+          </ul>
+        </div>
+      </aside>
+    </div>
   );
 }

@@ -7,10 +7,7 @@ import ReviewedBy from "./ReviewedBy";
    Types
 ───────────────────────────────────────── */
 type Mode =
-  | "Body Weight Dose"
-  | "Infusion Rate"
-  | "Drip Rate"
-  | "Dose from Vial";
+  "Body Weight Dose" | "Infusion Rate" | "Drip Rate" | "Dose from Vial";
 
 interface IVResult {
   mode: Mode;
@@ -174,8 +171,8 @@ function IVResultPanel({ result }: { result: IVResult | null }) {
           style={{ marginRight: "6px" }}
         />
         This meter is a general reference, not drug-specific. Always verify
-        against the prescribing physician&apos;s instructions and your institution&apos;s
-        protocols before administration.
+        against the prescribing physician&apos;s instructions and your
+        institution&apos;s protocols before administration.
       </div>
     </div>
   );
@@ -435,7 +432,6 @@ export default function IVCalculator() {
       <div className="single-page-padding">
         <h1>IV Infusion Rate Calculator — Drip Rate, IVIG & Vial Dose</h1>
 
-
         <p>
           Calculate IV infusion rate in mL/hr, drip rate in drops/min,
           weight-based IV dosing in mg, or the volume to draw from a medication
@@ -611,7 +607,6 @@ export default function IVCalculator() {
               Clear
             </button>
           </div>
-          {result && <div className="calc-result">Result: {result}</div>}
         </div>
 
         <div className="cr-mobile-slot">
@@ -686,8 +681,8 @@ export default function IVCalculator() {
           A 250 mL piggyback over 90 minutes is 250 ÷ 1.5 = 166.7 mL/hr. Most
           pumps accept one decimal place, so this is programmed as 166.7 mL/hr
           rather than rounded to 167. The difference is trivial over 90 minutes
-          and meaningless for an antibiotic, but the habit matters: on a
-          72-hour heparin infusion, rounding at every rate change compounds.
+          and meaningless for an antibiotic, but the habit matters: on a 72-hour
+          heparin infusion, rounding at every rate change compounds.
         </p>
 
         <h3>When the Order Is in mcg/kg/min</h3>
@@ -785,12 +780,10 @@ export default function IVCalculator() {
           at one rate. It is started low, held, and stepped up at intervals,
           because the adverse effects associated with it — headache, chills,
           flushing, rigors, and less commonly thrombotic or renal events — track
-          with the rate of delivery rather than the total dose. A calculator that
-          returns a single mL/hr figure cannot describe that order.
+          with the rate of delivery rather than the total dose. A calculator
+          that returns a single mL/hr figure cannot describe that order.
         </p>
-        <p>
-          There are three separate numbers to work out, in this sequence.
-        </p>
+        <p>There are three separate numbers to work out, in this sequence.</p>
 
         <h3>1. The Grams, From Body Weight</h3>
         <p>
@@ -948,8 +941,8 @@ export default function IVCalculator() {
         <pre>Time (hours) = Volume (mL) ÷ Rate (mL/hr)</pre>
         <p>
           A 500 mL unit running at 125 mL/hr takes four hours exactly, which
-          leaves no margin at all against a four-hour limit. Any interruption — a
-          line flush, a positional occlusion alarm, a patient going to the
+          leaves no margin at all against a four-hour limit. Any interruption —
+          a line flush, a positional occlusion alarm, a patient going to the
           bathroom — pushes it past. Whether to build in a margin is a clinical
           judgement, but making that judgement consciously requires knowing the
           finishing time before you start rather than discovering it at hour

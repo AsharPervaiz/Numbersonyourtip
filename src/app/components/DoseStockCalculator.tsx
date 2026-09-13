@@ -373,7 +373,6 @@ export default function DoseStockCalculator() {
       <div className="single-page-padding">
         <h1>Dose Stock Calculator — Desired Over Have (D ÷ H × Q)</h1>
 
-
         <p>
           Select tablet or syrup mode, enter the prescribed dose and the
           strength of your available stock, and find out exactly how many
@@ -463,8 +462,6 @@ export default function DoseStockCalculator() {
               Clear
             </button>
           </div>
-
-          {result && <div className="calc-result">Result: {result}</div>}
         </div>
 
         {/* Mobile-only result panel */}
@@ -540,9 +537,7 @@ export default function DoseStockCalculator() {
           against the prescription is the step that catches the errors
           arithmetic cannot.
         </p>
-        <p>
-          If the prescription asks for 400 mg:
-        </p>
+        <p>If the prescription asks for 400 mg:</p>
         <pre>(400 ÷ 250) × 5 = 1.6 × 5 = 8 mL</pre>
         <p>
           A useful habit is to state the answer with its unit attached from the
@@ -652,10 +647,10 @@ export default function DoseStockCalculator() {
         </p>
         <p>
           Two label conventions cause trouble here. Some vials are labelled as a
-          total (80 mg/2 mL); others as a concentration (40 mg/mL). They describe
-          the same vial. If the label gives a concentration, Q is 1 mL and the
-          calculation is a plain division. Reading 40 mg/mL as though it were 40
-          mg in the whole vial halves every dose drawn from it.
+          total (80 mg/2 mL); others as a concentration (40 mg/mL). They
+          describe the same vial. If the label gives a concentration, Q is 1 mL
+          and the calculation is a plain division. Reading 40 mg/mL as though it
+          were 40 mg in the whole vial halves every dose drawn from it.
         </p>
         <p>
           Percentage-strength solutions are the second. A 2% solution is 2 g per
@@ -681,18 +676,18 @@ export default function DoseStockCalculator() {
           A 100 mL bottle giving 8 mL per dose holds 12 full doses. At three
           times daily that is four days — short of a five-day course, and the
           kind of thing better noticed at the counter than at the weekend.
-          Fractional doses at the end of a bottle count as unusable; twelve and a
-          half doses is twelve.
+          Fractional doses at the end of a bottle count as unusable; twelve and
+          a half doses is twelve.
         </p>
 
         <h2>Checking Your Own Answer</h2>
         <p>
           Estimation before calculation catches most order-of-magnitude errors.
-          If the dose required is larger than the stock strength, the answer must
-          be more than one unit of stock. If it is smaller, the answer must be
-          less than one. A 400 mg dose from a 250 mg/5 mL bottle must therefore
-          land between 5 and 10 mL, which makes 8 mL believable and instantly
-          rules out 1.6 mL or 80 mL.
+          If the dose required is larger than the stock strength, the answer
+          must be more than one unit of stock. If it is smaller, the answer must
+          be less than one. A 400 mg dose from a 250 mg/5 mL bottle must
+          therefore land between 5 and 10 mL, which makes 8 mL believable and
+          instantly rules out 1.6 mL or 80 mL.
         </p>
         <ul className="custom-list">
           <li>
@@ -717,8 +712,8 @@ export default function DoseStockCalculator() {
           </li>
         </ul>
         <p>
-          Where the prescription gives a rate per kilogram rather than a finished
-          dose, work that out first with the{" "}
+          Where the prescription gives a rate per kilogram rather than a
+          finished dose, work that out first with the{" "}
           <Link href="/dose-calculator/" className="my-link">
             dosage calculator
           </Link>

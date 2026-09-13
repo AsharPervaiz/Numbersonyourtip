@@ -939,7 +939,6 @@ export default function PharmacokineticsCalculator() {
               Clear
             </button>
           </div>
-          {result && <div className="calc-result">Result: {result}</div>}
         </div>
 
         <div className="cr-mobile-slot">
@@ -973,9 +972,7 @@ export default function PharmacokineticsCalculator() {
           In practice half-life is often not given — it is derived from two
           concentrations taken a known time apart:
         </p>
-        <pre>
-          k = (ln C₁ − ln C₂) ÷ (t₂ − t₁){"\n"}t½ = 0.693 ÷ k
-        </pre>
+        <pre>k = (ln C₁ − ln C₂) ÷ (t₂ − t₁){"\n"}t½ = 0.693 ÷ k</pre>
         <p>
           A level of 18 mg/L falling to 6 mg/L over eight hours gives ln 18 =
           2.890, ln 6 = 1.792, so k = (2.890 − 1.792) ÷ 8 = 0.137 per hour, and
@@ -1063,12 +1060,10 @@ export default function PharmacokineticsCalculator() {
           at the concentration actually measured in plasma. If a drug leaves the
           bloodstream and binds extensively to tissue, very little remains in
           plasma to be measured, the denominator is small, and the calculated Vd
-          becomes enormous — larger than the body, which is the clue that it is a
-          ratio rather than a compartment.
+          becomes enormous — larger than the body, which is the clue that it is
+          a ratio rather than a compartment.
         </p>
-        <p>
-          Read that way, Vd tells you where the drug is:
-        </p>
+        <p>Read that way, Vd tells you where the drug is:</p>
 
         <div className="table-wrap">
           <table>
@@ -1125,8 +1120,8 @@ export default function PharmacokineticsCalculator() {
           poor clearance can still have a short half-life if its Vd is small. A
           drug with excellent clearance can have a very long half-life if it is
           extensively distributed into tissue, because clearance can only act on
-          the fraction currently in plasma. Half-life alone therefore says little
-          about how efficiently the body is eliminating a drug.
+          the fraction currently in plasma. Half-life alone therefore says
+          little about how efficiently the body is eliminating a drug.
         </p>
 
         <h2>Loading and Maintenance Answer Different Questions</h2>
@@ -1140,13 +1135,13 @@ export default function PharmacokineticsCalculator() {
           (Target concentration × Cl × Dosing interval) ÷ F
         </pre>
         <p>
-          Notice that the loading dose depends on Vd and not at all on clearance,
-          while the maintenance dose depends on clearance and not at all on Vd.
-          A patient with impaired renal function needs the same loading dose as
-          anyone else — their distribution space has not changed — but a reduced
-          maintenance dose, because the drug they are given now leaves more
-          slowly. Reducing the loading dose in renal impairment is a common error
-          that simply delays reaching a therapeutic concentration.
+          Notice that the loading dose depends on Vd and not at all on
+          clearance, while the maintenance dose depends on clearance and not at
+          all on Vd. A patient with impaired renal function needs the same
+          loading dose as anyone else — their distribution space has not changed
+          — but a reduced maintenance dose, because the drug they are given now
+          leaves more slowly. Reducing the loading dose in renal impairment is a
+          common error that simply delays reaching a therapeutic concentration.
         </p>
         <p>
           F is bioavailability, the fraction of an administered dose reaching
@@ -1183,8 +1178,8 @@ export default function PharmacokineticsCalculator() {
         <h2>What Renal Impairment Actually Changes</h2>
         <p>
           Impaired renal function reduces clearance for renally eliminated
-          drugs. Vd is largely unaffected. Since half-life is 0.693 × Vd ÷ Cl,
-          a fall in clearance with unchanged Vd lengthens half-life
+          drugs. Vd is largely unaffected. Since half-life is 0.693 × Vd ÷ Cl, a
+          fall in clearance with unchanged Vd lengthens half-life
           proportionally, and time to steady state lengthens with it.
         </p>
         <p>

@@ -326,13 +326,6 @@ const FAQ_DATA: [string, string][] = [
 export default function RentCalculator() {
   const [monthlyIncome, setMonthlyIncome] = useState("");
   const [monthlyDebts, setMonthlyDebts] = useState("");
-  const [affordableRent, setAffordableRent] = useState<{
-    low: string;
-    medium: string;
-    high: string;
-    available: string;
-  } | null>(null);
-
   // Structured result for the side panel
   const [panelResult, setPanelResult] = useState<RentResult | null>(null);
 
@@ -360,50 +353,20 @@ export default function RentCalculator() {
 
   const stripCommas = (v: string) => Number(v.replace(/,/g, ""));
 
-  const calculateRent = () => {
-    if (!monthlyIncome) return;
-
-    const income = stripCommas(monthlyIncome);
-    const debts = monthlyDebts ? stripCommas(monthlyDebts) : 0;
-
-    if (income <= 0) return;
-
-    const availableIncome = income - debts;
-    if (availableIncome <= 0) return;
-
-    const low = availableIncome * 0.25;
-    const medium = availableIncome * 0.3;
-    const high = availableIncome * 0.35;
-
-    setAffordableRent({
-      low: formatNumber(low),
-      medium: formatNumber(medium),
-      high: formatNumber(high),
-      available: formatNumber(availableIncome),
-    });
-  };
-
-  /* ── Auto-calculate for the side panel only ── */
-  useEffect(() => {
+  const compute = (): RentResult | null => {
     const income = monthlyIncome ? stripCommas(monthlyIncome) : 0;
     const debts = monthlyDebts ? stripCommas(monthlyDebts) : 0;
 
-    if (!income || income <= 0) {
-      setPanelResult(null);
-      return;
-    }
+    if (!income || income <= 0) return null;
 
     const availableIncome = income - debts;
-    if (availableIncome <= 0) {
-      setPanelResult(null);
-      return;
-    }
+    if (availableIncome <= 0) return null;
 
     const lowNum = availableIncome * 0.25;
     const mediumNum = availableIncome * 0.3;
     const highNum = availableIncome * 0.35;
 
-    setPanelResult({
+    return {
       low: formatNumber(lowNum),
       medium: formatNumber(mediumNum),
       high: formatNumber(highNum),
@@ -413,13 +376,19 @@ export default function RentCalculator() {
       mediumNum,
       highNum,
       incomeNum: income,
-    });
+    };
+  };
+
+  useEffect(() => {
+    setPanelResult(compute());
   }, [monthlyIncome, monthlyDebts]);
+
+  /* ---- Calculate button ---- */
+  const calculateRent = () => setPanelResult(compute());
 
   const handleClear = () => {
     setMonthlyIncome("");
     setMonthlyDebts("");
-    setAffordableRent(null);
     setPanelResult(null);
   };
 
@@ -476,42 +445,6 @@ export default function RentCalculator() {
               Clear
             </button>
           </div>
-
-          {affordableRent && (
-            <div className="calc-result">
-              <p>
-                <strong>Income After Debts:</strong> {affordableRent.available}
-                /month
-              </p>
-              <p style={{ marginTop: "10px" }}>
-                <strong>Affordable Rent Range:</strong>
-              </p>
-              <ul style={{ marginTop: "5px" }}>
-                <li>
-                  Conservative (25%): <strong>{affordableRent.low}</strong>{" "}
-                  /month
-                </li>
-                <li>
-                  Recommended (30%): <strong>{affordableRent.medium}</strong>{" "}
-                  /month
-                </li>
-                <li>
-                  Upper Limit (35%): <strong>{affordableRent.high}</strong>{" "}
-                  /month
-                </li>
-              </ul>
-              <p
-                style={{
-                  fontSize: "0.85rem",
-                  color: "#555",
-                  marginTop: "8px",
-                }}
-              >
-                25% = low financial risk • 30% = widely recommended guideline •
-                35% = maximum before housing becomes a financial strain
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Mobile-only result panel */}
@@ -521,7 +454,9 @@ export default function RentCalculator() {
 
         {/* ---- SEO CONTENT ---- */}
 
-        <h2>Three Different Questions Get Called &quot;Rent Calculator&quot;</h2>
+        <h2>
+          Three Different Questions Get Called &quot;Rent Calculator&quot;
+        </h2>
         <p>
           People arrive here wanting one of three things, and the answers are
           not the same number.
@@ -542,7 +477,9 @@ export default function RentCalculator() {
               </tr>
               <tr>
                 <td>Is the rent I already pay reasonable?</td>
-                <td>Rent as a percentage of income, and of what is left over</td>
+                <td>
+                  Rent as a percentage of income, and of what is left over
+                </td>
               </tr>
               <tr>
                 <td>Will a landlord accept my application?</td>
@@ -585,12 +522,12 @@ export default function RentCalculator() {
 
         <h2>Where the 30% Rule Came From</h2>
         <p>
-          The familiar guideline did not originate as advice to private
-          tenants. It comes from American public-housing policy, where a
-          percentage of income was used to set subsidised rents administratively
-          — a formula for calculating what a household should be charged, not a
-          finding about what households can afford. It was adopted as general
-          guidance later, largely because it is easy to remember.
+          The familiar guideline did not originate as advice to private tenants.
+          It comes from American public-housing policy, where a percentage of
+          income was used to set subsidised rents administratively — a formula
+          for calculating what a household should be charged, not a finding
+          about what households can afford. It was adopted as general guidance
+          later, largely because it is easy to remember.
         </p>
         <p>
           That history explains why it fits some situations badly. A single
@@ -709,8 +646,8 @@ export default function RentCalculator() {
         <h2>Splitting Rent Without an Argument</h2>
         <p>
           Shared households usually default to dividing equally, which is fine
-          when the rooms are similar and quietly resented when they are not.
-          Two alternatives work better.
+          when the rooms are similar and quietly resented when they are not. Two
+          alternatives work better.
         </p>
         <p>
           <strong>By room size.</strong> Add up the floor area of the private
@@ -754,8 +691,8 @@ export default function RentCalculator() {
             for housing.
           </li>
           <li>
-            The arrangement is short and deliberate — a fixed contract, a course,
-            a year in a specific city.
+            The arrangement is short and deliberate — a fixed contract, a
+            course, a year in a specific city.
           </li>
         </ul>
         <p>
@@ -813,7 +750,6 @@ export default function RentCalculator() {
             </div>
           );
         })}
-
       </div>
 
       {/* ---- SIDEBAR ---- */}
