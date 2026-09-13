@@ -28,8 +28,13 @@ export default function Header() {
   const menuData = {
     "bmi-calculator": {
       title: "Health & Fitness",
+      eyebrow: "Health",
+      blurb:
+        "Body composition, medication dosing and pharmacology — {n} calculators built on standard clinical formulas.",
+      ctaLabel: "View all calculators",
       columns: [
         {
+          heading: "Body Metrics",
           items: [
             {
               name: "BMI Calculator",
@@ -78,7 +83,6 @@ export default function Header() {
                 </svg>
               ),
             },
-
             {
               name: "Calorie Calculator",
               desc: "Daily calorie needs tracker",
@@ -104,6 +108,7 @@ export default function Header() {
           ],
         },
         {
+          heading: "Medication Dosing",
           items: [
             {
               name: "Dose Calculator",
@@ -143,6 +148,31 @@ export default function Header() {
               ),
             },
             {
+              name: "IV Calculator",
+              desc: "Intravenous drip rates",
+              href: "/iv-calculator/",
+              iconColor: "green",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+              ),
+            },
+          ],
+        },
+        {
+          heading: "Pharmacology",
+          items: [
+            {
               name: "Pharmacodynamics Calculator",
               desc: "The core pharmacodynamic parameters",
               href: "/pharmacodynamics-calculator/",
@@ -166,30 +196,6 @@ export default function Header() {
                   <line x1="14" y1="8" x2="17" y2="11" />
                   <line x1="17" y1="13" x2="14" y2="16" />
                   <line x1="10" y1="16" x2="7" y2="13" />
-                </svg>
-              ),
-            },
-          ],
-        },
-        {
-          items: [
-            {
-              name: "IV Calculator",
-              desc: "Intravenous drip rates",
-              href: "/iv-calculator/",
-              iconColor: "green",
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
                 </svg>
               ),
             },
@@ -221,8 +227,13 @@ export default function Header() {
     },
     "unit-conversion-calculator": {
       title: "Finance & Numbers",
+      eyebrow: "Finance",
+      blurb:
+        "Loans, tax, rent and payroll — {n} calculators for the numbers that move money.",
+      ctaLabel: "View all calculators",
       columns: [
         {
+          heading: "Loans & Property",
           items: [
             {
               name: "EMI Calculator",
@@ -263,56 +274,24 @@ export default function Header() {
               ),
             },
             {
-              name: "Net Worth Calculator",
-              desc: "Calculate Your Total Net Worth",
-              href: "/net-worth-calculator/",
-              iconColor: "amber",
+              name: "Loan Calculator",
+              desc: "Loan repayment estimator",
+              href: "/loan-calculator/",
+              iconColor: "coral",
               icon: (
                 <svg
                   viewBox="0 0 24 24"
-                  width="22"
-                  height="22"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <ellipse cx="12" cy="6" rx="8" ry="3" />
-                  <path d="M4 6v4c0 1.66 3.58 3 8 3s8-1.34 8-3V6" />
-                  <path d="M4 10v4c0 1.66 3.58 3 8 3s8-1.34 8-3v-4" />
-                  <path d="M4 14v4c0 1.66 3.58 3 8 3s8-1.34 8-3v-4" />
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <line x1="2" y1="10" x2="22" y2="10" />
                 </svg>
               ),
             },
-            {
-              name: "Fuel Cost Calculator",
-              desc: "Calculate Trip Fuel Cost",
-              href: "/fuel-cost-calculator/",
-              iconColor: "teal",
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  width="22"
-                  height="22"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 22V6a2 2 0 012-2h8a2 2 0 012 2v16" />
-                  <path d="M3 22h12" />
-                  <path d="M7 10h4" />
-                  <path d="M15 6h1a2 2 0 012 2v3a2 2 0 002 2h0V8l-3-3" />
-                  <path d="M20 13v6a1 1 0 01-1 1h-1" />
-                </svg>
-              ),
-            },
-          ],
-        },
-        {
-          items: [
             {
               name: "Rent Calculator",
               desc: "Monthly rent affordability",
@@ -334,73 +313,10 @@ export default function Header() {
                 </svg>
               ),
             },
-            {
-              name: "Loan Calculator",
-              desc: "Loan repayment estimator",
-              href: "/loan-calculator/",
-              iconColor: "coral",
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="2" y="5" width="20" height="14" rx="2" />
-                  <line x1="2" y1="10" x2="22" y2="10" />
-                </svg>
-              ),
-            },
-            {
-              name: "Freelancer Tax Calculator",
-              desc: "Take-Home Pay After Tax & Platform Fees",
-              href: "/freelancer-tax-calculator/",
-              iconColor: "blue",
-              icon: (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
-                  <path d="M14 8h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5m2 0v1.5m0 -9v1.5" />
-                </svg>
-              ),
-            },
-            {
-              name: "Salary Hike Calculator",
-              desc: "New Salary After Appraisal",
-              href: "/salary-hike-calculator/",
-              iconColor: "purple",
-              icon: (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 4h-6a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h8" />
-                  <path d="M18 20v-17" />
-                  <path d="M15 6l3 -3l3 3" />
-                </svg>
-              ),
-            },
           ],
         },
         {
+          heading: "Tax",
           items: [
             {
               name: "Income Tax Calculator",
@@ -444,6 +360,79 @@ export default function Header() {
               ),
             },
             {
+              name: "Freelancer Tax Calculator",
+              desc: "Take-Home Pay After Tax & Platform Fees",
+              href: "/freelancer-tax-calculator/",
+              iconColor: "blue",
+              icon: (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
+                  <path d="M14 8h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5m2 0v1.5m0 -9v1.5" />
+                </svg>
+              ),
+            },
+          ],
+        },
+        {
+          heading: "Income & Assets",
+          items: [
+            {
+              name: "Salary Hike Calculator",
+              desc: "New Salary After Appraisal",
+              href: "/salary-hike-calculator/",
+              iconColor: "purple",
+              icon: (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 4h-6a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h8" />
+                  <path d="M18 20v-17" />
+                  <path d="M15 6l3 -3l3 3" />
+                </svg>
+              ),
+            },
+            {
+              name: "Net Worth Calculator",
+              desc: "Calculate Your Total Net Worth",
+              href: "/net-worth-calculator/",
+              iconColor: "amber",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <ellipse cx="12" cy="6" rx="8" ry="3" />
+                  <path d="M4 6v4c0 1.66 3.58 3 8 3s8-1.34 8-3V6" />
+                  <path d="M4 10v4c0 1.66 3.58 3 8 3s8-1.34 8-3v-4" />
+                  <path d="M4 14v4c0 1.66 3.58 3 8 3s8-1.34 8-3v-4" />
+                </svg>
+              ),
+            },
+            {
               name: "Gold Calculator",
               desc: "Value, purity, resale & zakat",
               href: "/gold-calculator/",
@@ -467,14 +456,43 @@ export default function Header() {
                 </svg>
               ),
             },
+            {
+              name: "Fuel Cost Calculator",
+              desc: "Calculate Trip Fuel Cost",
+              href: "/fuel-cost-calculator/",
+              iconColor: "teal",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 22V6a2 2 0 012-2h8a2 2 0 012 2v16" />
+                  <path d="M3 22h12" />
+                  <path d="M7 10h4" />
+                  <path d="M15 6h1a2 2 0 012 2v3a2 2 0 002 2h0V8l-3-3" />
+                  <path d="M20 13v6a1 1 0 01-1 1h-1" />
+                </svg>
+              ),
+            },
           ],
         },
       ],
     },
     "time-calculator": {
       title: "Daily Use Calculators",
+      eyebrow: "Daily Use",
+      blurb:
+        "Dates, grades and shopping arithmetic — {n} calculators for the small questions that come up every day.",
+      ctaLabel: "View all calculators",
       columns: [
         {
+          heading: "Dates & Time",
           items: [
             {
               name: "Days Between Dates",
@@ -540,6 +558,7 @@ export default function Header() {
           ],
         },
         {
+          heading: "Grades & Percentages",
           items: [
             {
               name: "GPA Calculator",
@@ -602,6 +621,7 @@ export default function Header() {
           ],
         },
         {
+          heading: "Home & Shopping",
           items: [
             {
               name: "Unit Conversion Calculator",
@@ -649,6 +669,30 @@ export default function Header() {
               ),
             },
             {
+              name: "Gravel Calculator",
+              desc: "Cubic yards, tons & cost",
+              href: "/gravel-calculator/",
+              iconColor: "amber",
+              isNew: true,
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="7" cy="16" r="3" />
+                  <circle cx="16" cy="17" r="2.5" />
+                  <circle cx="12" cy="9" r="2.5" />
+                  <path d="M3 21h18" />
+                </svg>
+              ),
+            },
+            {
               name: "Bill Split Calculator",
               desc: "Split Any Bill Equally or Unevenly",
               href: "/bill-split-calculator/",
@@ -669,11 +713,15 @@ export default function Header() {
         },
       ],
     },
-
     "dns-lookup": {
       title: "Network & Security",
+      eyebrow: "Networking",
+      blurb:
+        "Domains, connections and inbox checks — {n} tools that answer what your browser will not tell you.",
+      ctaLabel: "View all tools",
       columns: [
         {
+          heading: "Domains & DNS",
           items: [
             {
               name: "DNS Lookup",
@@ -697,51 +745,6 @@ export default function Header() {
                 </svg>
               ),
             },
-            {
-              name: "IP Detector",
-              desc: "Find your public IP address",
-              href: "/ip-detector/",
-              iconColor: "teal",
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="2" y1="12" x2="22" y2="12" />
-                  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
-                </svg>
-              ),
-            },
-            {
-              name: "Email Validator",
-              desc: "Check Syntax & Mail Server (MX) Records",
-              href: "/email-validator/",
-              iconColor: "blue",
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  width="22"
-                  height="22"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="2" y="4" width="20" height="16" rx="2" />
-                  <polyline points="2,4 12,13 22,4" />
-                </svg>
-              ),
-            },
-          ],
-        },
-        {
-          items: [
             {
               name: "Domain Name Checker",
               desc: "Check domain name availability",
@@ -780,6 +783,31 @@ export default function Header() {
                 </svg>
               ),
             },
+          ],
+        },
+        {
+          heading: "Connection",
+          items: [
+            {
+              name: "IP Detector",
+              desc: "Find your public IP address",
+              href: "/ip-detector/",
+              iconColor: "teal",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                </svg>
+              ),
+            },
             {
               name: "Internet Speed Test",
               desc: "Check WiFi download, upload & ping",
@@ -807,13 +835,43 @@ export default function Header() {
             },
           ],
         },
+        {
+          heading: "Email",
+          items: [
+            {
+              name: "Email Validator",
+              desc: "Check Syntax & Mail Server (MX) Records",
+              href: "/email-validator/",
+              iconColor: "blue",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <polyline points="2,4 12,13 22,4" />
+                </svg>
+              ),
+            },
+          ],
+        },
       ],
     },
-
     "median-mode-mean-calculator": {
       title: "Mathematics & Solutions",
+      eyebrow: "Maths",
+      blurb:
+        "Statistics, matrices and fractions — {n} calculators for classroom and coursework maths.",
+      ctaLabel: "View all calculators",
       columns: [
         {
+          heading: "Statistics",
           items: [
             {
               name: "Median Mode Mean Calculator",
@@ -835,6 +893,11 @@ export default function Header() {
                 </svg>
               ),
             },
+          ],
+        },
+        {
+          heading: "Matrices & Fractions",
+          items: [
             {
               name: "Matrix Calculator",
               desc: "Add, multiply & solve matrices",
@@ -881,32 +944,16 @@ export default function Header() {
         },
       ],
     },
-
     "gpa-calculator": {
       title: "Tools",
+      eyebrow: "Tools",
+      blurb:
+        "Images, text and everyday conversions — {n} tools for the jobs too small to open an app for.",
+      ctaLabel: "View all tools",
       columns: [
         {
+          heading: "Images",
           items: [
-            {
-              name: "Currency Converter",
-              desc: "Live exchange rate tool",
-              href: "/currency-converter/",
-              iconColor: "green",
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="16" />
-                  <line x1="8" y1="12" x2="16" y2="12" />
-                </svg>
-              ),
-            },
             {
               name: "Image Converter",
               desc: "Convert image formats fast",
@@ -968,12 +1015,13 @@ export default function Header() {
           ],
         },
         {
+          heading: "Text & Content",
           items: [
             {
-              name: "Password Generator",
-              desc: "Generate secure passwords",
-              href: "/password-generator/",
-              iconColor: "amber",
+              name: "Text Generator",
+              desc: "AI-powered text creator",
+              href: "/text-generator/",
+              iconColor: "purple",
               icon: (
                 <svg
                   viewBox="0 0 24 24"
@@ -983,8 +1031,8 @@ export default function Header() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0110 0v4" />
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
               ),
             },
@@ -1011,51 +1059,6 @@ export default function Header() {
                 </svg>
               ),
             },
-            {
-              name: "Text Generator",
-              desc: "AI-powered text creator",
-              href: "/text-generator/",
-              iconColor: "purple",
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 20h9" />
-                  <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-                </svg>
-              ),
-            },
-            {
-              name: "Color Picker & Pallete Generator",
-              desc: "Pick & generate colors",
-              href: "/color-picker/",
-              iconColor: "pink",
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
-                  <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
-                  <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
-                  <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
-                  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
-                </svg>
-              ),
-            },
-          ],
-        },
-        {
-          items: [
             {
               name: "Text Case Converter",
               desc: "Transform text case & style",
@@ -1099,27 +1102,69 @@ export default function Header() {
                 </svg>
               ),
             },
+          ],
+        },
+        {
+          heading: "Everyday Utilities",
+          items: [
             {
-              name: "Carbon Footprint Calculator",
-              desc: "See Your CO₂ Impact Instantly",
-              href: "/carbon-footprint-calculator/",
-              iconColor: "teal",
+              name: "Currency Converter",
+              desc: "Live exchange rate tool",
+              href: "/currency-converter/",
+              iconColor: "green",
               icon: (
                 <svg
                   viewBox="0 0 24 24"
-                  width="22"
-                  height="22"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M17.5 19H9a7 7 0 110-14 7 7 0 017 6h1.5a3.5 3.5 0 010 7" />
-                  <line x1="9" y1="7" x2="9" y2="7.01" />
-                  <path d="M8 19c0 1.5-1 3-1 3" />
-                  <path d="M12 19c0 1.5-1 3-1 3" />
-                  <path d="M16 19c0 1.5-1 3-1 3" />
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="16" />
+                  <line x1="8" y1="12" x2="16" y2="12" />
+                </svg>
+              ),
+            },
+            {
+              name: "Password Generator",
+              desc: "Generate secure passwords",
+              href: "/password-generator/",
+              iconColor: "amber",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0110 0v4" />
+                </svg>
+              ),
+            },
+            {
+              name: "Color Picker & Pallete Generator",
+              desc: "Pick & generate colors",
+              href: "/color-picker/",
+              iconColor: "pink",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                  <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+                  <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                  <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
                 </svg>
               ),
             },
@@ -1147,6 +1192,30 @@ export default function Header() {
                 </svg>
               ),
             },
+            {
+              name: "Carbon Footprint Calculator",
+              desc: "See Your CO₂ Impact Instantly",
+              href: "/carbon-footprint-calculator/",
+              iconColor: "teal",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17.5 19H9a7 7 0 110-14 7 7 0 017 6h1.5a3.5 3.5 0 010 7" />
+                  <line x1="9" y1="7" x2="9" y2="7.01" />
+                  <path d="M8 19c0 1.5-1 3-1 3" />
+                  <path d="M12 19c0 1.5-1 3-1 3" />
+                  <path d="M16 19c0 1.5-1 3-1 3" />
+                </svg>
+              ),
+            },
           ],
         },
       ],
@@ -1154,13 +1223,7 @@ export default function Header() {
   };
 
   type IconColor =
-    | "purple"
-    | "blue"
-    | "teal"
-    | "coral"
-    | "amber"
-    | "green"
-    | "pink";
+    "purple" | "blue" | "teal" | "coral" | "amber" | "green" | "pink";
 
   const iconColorMap: Record<IconColor, { bg: string; color: string }> = {
     purple: { bg: "#EEEDFE", color: "#534AB7" },
@@ -1171,6 +1234,34 @@ export default function Header() {
     green: { bg: "#EAF3DE", color: "#3B6D11" },
     pink: { bg: "#FBEAF0", color: "#993556" },
   };
+
+  // The mega-menu blurb quotes how many tools the category holds. Spelling it
+  // from the data means the number can never drift out of date when a tool is
+  // added or moved between categories.
+  const spellCount = (n: number) =>
+    [
+      "zero",
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven",
+      "eight",
+      "nine",
+      "ten",
+      "eleven",
+      "twelve",
+      "thirteen",
+      "fourteen",
+      "fifteen",
+      "sixteen",
+      "seventeen",
+      "eighteen",
+      "nineteen",
+      "twenty",
+    ][n] ?? String(n);
 
   const mainMenuItems = [
     { label: "Health", key: "bmi-calculator", href: "/health-calculators/" },
@@ -1262,63 +1353,108 @@ export default function Header() {
             onMouseLeave={handleMegaMenuLeave}
           >
             {activeMegaMenu &&
-              menuData[activeMegaMenu as keyof typeof menuData] && (
-                <div className="mega-menu">
-                  <div className="mega-menu-content">
-                    <h3 className="mega-menu-title">
-                      {menuData[activeMegaMenu as keyof typeof menuData].title}
-                    </h3>
-                    <div className="mega-menu-columns">
-                      {menuData[
-                        activeMegaMenu as keyof typeof menuData
-                      ].columns.map((column, colIndex) => (
-                        <div key={colIndex} className="mega-menu-column">
-                          <ul className="column-list">
-                            {column.items.map((subItem, itemIndex) => {
-                              const colors =
-                                iconColorMap[
-                                  (subItem as any).iconColor as IconColor
-                                ] ?? iconColorMap.blue;
-                              return (
-                                <li key={itemIndex}>
-                                  <Link
-                                    href={subItem.href}
-                                    className="column-link"
-                                    onClick={closeMegaMenu}
-                                  >
-                                    <span
-                                      className="menu-icon-circle"
-                                      style={{
-                                        backgroundColor: colors.bg,
-                                        color: colors.color,
-                                      }}
+              menuData[activeMegaMenu as keyof typeof menuData] &&
+              (() => {
+                const menu = menuData[activeMegaMenu as keyof typeof menuData];
+                const columns = menu.columns as unknown as {
+                  heading: string;
+                  items: readonly any[];
+                }[];
+                // The "view all" target is the same category landing page the
+                // top-level nav item points at, so the two can never diverge.
+                const navItem = mainMenuItems.find(
+                  (i) => i.key === activeMegaMenu,
+                );
+                const toolCount = columns.reduce(
+                  (n, c) => n + c.items.length,
+                  0,
+                );
+                return (
+                  <div className="mega-menu">
+                    <div className="mega-menu-panel">
+                      <span className="mega-menu-eyebrow">{menu.eyebrow}</span>
+                      <h3 className="mega-menu-title">{menu.title}</h3>
+                      <p className="mega-menu-blurb">
+                        {menu.blurb.replace("{n}", spellCount(toolCount))}
+                      </p>
+                      {navItem?.href && (
+                        <Link
+                          href={navItem.href}
+                          className="mega-menu-cta"
+                          onClick={closeMegaMenu}
+                        >
+                          {menu.ctaLabel}
+                          <svg
+                            viewBox="0 0 24 24"
+                            width="16"
+                            height="16"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                          </svg>
+                        </Link>
+                      )}
+                    </div>
+                    <div className="mega-menu-content">
+                      <div className="mega-menu-columns">
+                        {columns.map((column, colIndex) => (
+                          <div key={colIndex} className="mega-menu-column">
+                            <h4 className="mega-menu-heading">
+                              {column.heading}
+                            </h4>
+                            <ul className="column-list">
+                              {column.items.map((subItem, itemIndex) => {
+                                const colors =
+                                  iconColorMap[
+                                    (subItem as any).iconColor as IconColor
+                                  ] ?? iconColorMap.blue;
+                                return (
+                                  <li key={itemIndex}>
+                                    <Link
+                                      href={subItem.href}
+                                      className="column-link"
+                                      onClick={closeMegaMenu}
                                     >
-                                      {(subItem as any).icon}
-                                    </span>
-                                    <span className="menu-link-text">
-                                      <span className="menu-link-title">
-                                        {subItem.name}
-                                        {(subItem as any).isNew && (
-                                          <span className="menu-new-chip">
-                                            New
-                                          </span>
-                                        )}
+                                      <span
+                                        className="menu-icon-circle"
+                                        style={{
+                                          backgroundColor: colors.bg,
+                                          color: colors.color,
+                                        }}
+                                      >
+                                        {(subItem as any).icon}
                                       </span>
-                                      <span className="menu-link-desc">
-                                        {(subItem as any).desc}
+                                      <span className="menu-link-text">
+                                        <span className="menu-link-title">
+                                          {subItem.name}
+                                          {(subItem as any).isNew && (
+                                            <span className="menu-new-chip">
+                                              New
+                                            </span>
+                                          )}
+                                        </span>
+                                        <span className="menu-link-desc">
+                                          {(subItem as any).desc}
+                                        </span>
                                       </span>
-                                    </span>
-                                  </Link>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
-                      ))}
+                                    </Link>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
           </div>
         </nav>
 

@@ -480,6 +480,9 @@ input::placeholder {
   overflow: hidden;
   width: 100%; /* Full width of container */
   animation: fadeIn 0.2s ease-out;
+  /* Navy intro panel on the left, tool columns on the right. */
+  display: flex;
+  align-items: stretch;
 }
 
 @keyframes fadeIn {
@@ -493,28 +496,95 @@ input::placeholder {
   }
 }
 
-.mega-menu-content {
-  padding: 30px 20px;
+/* ── Left intro panel ── */
+.mega-menu-panel {
+  flex: 0 0 262px;
+  background: #12275c;
+  padding: 32px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mega-menu-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8fa6d8;
+  margin-bottom: 14px;
 }
 
 .mega-menu-title {
-  color: #001f54;
-  margin-bottom: 25px;
-  font-size: 22px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.18;
+  margin: 0 0 16px;
+}
+
+.mega-menu-blurb {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0 0 26px;
+}
+
+/* Pushed to the bottom so the button lines up across categories whose
+   blurbs run to different lengths. */
+.mega-menu-cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 13.5px;
   font-weight: 700;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #f0f0f0;
+  text-decoration: none;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.mega-menu-cta:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.mega-menu-cta svg {
+  flex-shrink: 0;
+}
+
+/* ── Right-hand columns ── */
+.mega-menu-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 30px 26px 34px;
 }
 
 .mega-menu-columns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  gap: 24px;
 }
 
 .mega-menu-column {
   display: flex;
   flex-direction: column;
+}
+
+.mega-menu-heading {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 0 0 14px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid #e3e7ee;
 }
 
 /* ── Mega menu card items (icon style) ── */
@@ -780,6 +850,20 @@ input::placeholder {
   .mega-menu-columns {
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
+  }
+
+  /* Narrow the intro panel rather than the tool columns on smaller laptops. */
+  .mega-menu-panel {
+    flex-basis: 230px;
+    padding: 26px 22px;
+  }
+
+  .mega-menu-title {
+    font-size: 25px;
+  }
+
+  .mega-menu-content {
+    padding: 26px 22px 30px;
   }
 
   .desktop-menu {
@@ -6795,7 +6879,9 @@ ul.custom-list li {
   background: transparent;
   color: #ffffff;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 .gc-metal:hover {
   border-color: #d8a13a;
@@ -7077,7 +7163,9 @@ ul.custom-list li {
   padding: 4px 10px;
   border-radius: 10px;
   word-break: break-all;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 .ip-hero-value:hover {
   background: rgba(31, 159, 184, 0.09);

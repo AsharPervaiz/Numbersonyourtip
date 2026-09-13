@@ -1,13 +1,7 @@
 import React from "react";
 
 export type IconColor =
-  | "purple"
-  | "blue"
-  | "teal"
-  | "coral"
-  | "amber"
-  | "green"
-  | "pink";
+  "purple" | "blue" | "teal" | "coral" | "amber" | "green" | "pink";
 
 export const iconColorMap: Record<IconColor, { bg: string; color: string }> = {
   purple: { bg: "#EEEDFE", color: "#534AB7" },
@@ -607,6 +601,23 @@ export const Icons = {
       height="22"
     >
       <path d="M136,40V216a8,8,0,0,1-16,0V40a8,8,0,0,1,16,0ZM96,120H35.31l18.35-18.34A8,8,0,0,0,42.34,90.34l-32,32a8,8,0,0,0,0,11.32l32,32a8,8,0,0,0,11.32-11.32L35.31,136H96a8,8,0,0,0,0-16Zm149.66,2.34-32-32a8,8,0,0,0-11.32,11.32L220.69,120H160a8,8,0,0,0,0,16h60.69l-18.35,18.34a8,8,0,0,0,11.32,11.32l32-32A8,8,0,0,0,245.66,122.34Z" />
+    </svg>
+  ),
+  Gravel: () => (
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="7" cy="16" r="3" />
+      <circle cx="16" cy="17" r="2.5" />
+      <circle cx="12" cy="9" r="2.5" />
+      <path d="M3 21h18" />
     </svg>
   ),
   Gold: () => (
