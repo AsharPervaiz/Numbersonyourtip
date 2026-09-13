@@ -65,6 +65,7 @@ export const PAGES: Record<string, Entry> = {
   "/percentage-calculator/": { label: "Percentage Calculator", parent: "/daily-use-calculators/" },
   "/time-calculator/": { label: "Time Calculator", parent: "/daily-use-calculators/" },
   "/unit-conversion-calculator/": { label: "Unit Conversion", parent: "/daily-use-calculators/" },
+  "/gravel-calculator/": { label: "Gravel Calculator", parent: "/daily-use-calculators/" },
   "/bill-split-calculator/": { label: "Bill Split Calculator", parent: "/daily-use-calculators/" },
   "/discount-calculator/": { label: "Discount Calculator", parent: "/daily-use-calculators/" },
 

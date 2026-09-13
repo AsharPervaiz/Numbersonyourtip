@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | Numbers on Your Tip",
   },
   description:
-    "Explore 48 free online calculators and tools — health, finance, daily use & utilities. Get instant, accurate results right in your browser.",
+    "Explore 49 free online calculators and tools — health, finance, daily use & utilities. Get instant, accurate results right in your browser.",
   applicationName: "Numbers on Your Tip",
   authors: [{ name: "Ashar Pervaiz" }],
   creator: "Ashar Pervaiz",
@@ -572,6 +572,14 @@ export default function RootLayout({
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     Unit Conversion
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/gravel-calculator/"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Gravel Calculator
                   </Link>
                 </li>
                 <li>

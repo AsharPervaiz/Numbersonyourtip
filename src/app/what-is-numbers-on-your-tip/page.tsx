@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "What Is Numbers on Your Tip? Free Online Calculators, Zero Sign-Up",
     description:
-      "48 free calculators across health, finance, and daily use. No account, no data stored — here's everything the site offers and who it's for.",
+      "49 free calculators across health, finance, and daily use. No account, no data stored — here's everything the site offers and who it's for.",
     url: "/blog/what-is-numbers-on-your-tip/",
     type: "article",
     publishedTime: "2026-07-03T00:00:00.000Z",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   twitter: {
     title: "What Is Numbers on Your Tip?",
     description:
-      "48 free calculators, no sign-up, nothing stored. Here's the tour.",
+      "49 free calculators, no sign-up, nothing stored. Here's the tour.",
   },
 };
 

@@ -73,7 +73,7 @@ export default function AboutUs() {
         <h1>About Us – Numbers On Your Tip</h1>
 
         <p>
-          Numbers On Your Tip is a free calculator and tools platform — 48
+          Numbers On Your Tip is a free calculator and tools platform — 49
           calculators covering health, finance, daily-use math, and digital
           utilities, built to give you accurate answers in seconds without
           sign-ups, paywalls, or clutter.

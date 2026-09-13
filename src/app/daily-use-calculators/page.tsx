@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { IconCircle, Icons } from "../components/MenuIcons";
 import { Metadata } from "next";
@@ -38,15 +37,21 @@ export default function Dailycals() {
           <section>
             {" "}
             <h1 className="more-tools">Daily Use Calculators</h1>
-            <p style={{ maxWidth: "640px", marginBottom: "28px", lineHeight: 1.7 }}>
+            <p
+              style={{
+                maxWidth: "640px",
+                marginBottom: "28px",
+                lineHeight: 1.7,
+              }}
+            >
               The small, everyday calculations that come up constantly — your
-              exact age, the days between two dates, a GPA conversion, a
-              quick percentage, converting between units, or splitting a
-              dinner bill fairly. This page groups the tools people reach for
-              most often day to day, alongside a few finance calculators
-              (net worth, discounts, salary hikes) that fit the same
-              &quot;quick answer, right now&quot; use case. Every tool is free, works
-              on mobile, and needs no sign-up.
+              exact age, the days between two dates, a GPA conversion, a quick
+              percentage, converting between units, or splitting a dinner bill
+              fairly. This page groups the tools people reach for most often day
+              to day, alongside a few finance calculators (net worth, discounts,
+              salary hikes) that fit the same &quot;quick answer, right
+              now&quot; use case. Every tool is free, works on mobile, and needs
+              no sign-up.
             </p>
             <div
               className="icon-grid1"
@@ -275,6 +280,23 @@ export default function Dailycals() {
                         gap: "8px", // space between icon & text
                       }}
                     >
+                      <IconCircle color="amber">
+                        <Icons.Gravel />
+                      </IconCircle>{" "}
+                      <h4>Gravel Calculator</h4>
+                    </div>
+                  ),
+                  href: "/gravel-calculator/",
+                },
+                {
+                  name: (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px", // space between icon & text
+                      }}
+                    >
                       <IconCircle color="teal">
                         <Icons.Fuel />
                       </IconCircle>{" "}
@@ -323,7 +345,6 @@ export default function Dailycals() {
               shopping and splitting costs. They group into four kinds of
               question.
             </p>
-
             <div className="table-wrap">
               <table>
                 <thead>
@@ -399,7 +420,6 @@ export default function Dailycals() {
                 </tbody>
               </table>
             </div>
-
             <h2>Five Traps That Account for Most Wrong Answers</h2>
             <p>
               Everyday arithmetic goes wrong in a small number of predictable
@@ -435,7 +455,6 @@ export default function Dailycals() {
                 percentage is always a division.
               </li>
             </ul>
-
             <h2>Where the Answers Feed Into Each Other</h2>
             <p>
               Several of these tools are more useful in combination than alone.
@@ -453,51 +472,68 @@ export default function Dailycals() {
               the scale your transcript actually uses, since a weighted average
               above 4.0 cannot be converted with the usual multiplier.
             </p>
-
             <h2>Why These Answers Are Exact</h2>
             <p>
               This section differs from the health and finance tools in a way
-              worth stating. Those produce estimates: a calorie target depends on
-              an activity level you chose, and a loan repayment depends on rates
-              behaving as entered. The tools here mostly do not estimate at all.
+              worth stating. Those produce estimates: a calorie target depends
+              on an activity level you chose, and a loan repayment depends on
+              rates behaving as entered. The tools here mostly do not estimate
+              at all.
             </p>
             <p>
-              A day count between two dates is exact. A percentage of a number is
-              exact. A conversion between metres and feet uses a factor that is
-              exact by international definition rather than measured. Where these
-              tools return a wrong answer, it is because the wrong question was
-              asked — the wrong base for a percentage, the wrong scale for a GPA,
-              the wrong counting convention for a date range — rather than
-              because the arithmetic is approximate.
+              A day count between two dates is exact. A percentage of a number
+              is exact. A conversion between metres and feet uses a factor that
+              is exact by international definition rather than measured. Where
+              these tools return a wrong answer, it is because the wrong
+              question was asked — the wrong base for a percentage, the wrong
+              scale for a GPA, the wrong counting convention for a date range —
+              rather than because the arithmetic is approximate.
             </p>
             <p>
-              The three genuine exceptions are worth naming. Converting days into
-              months or years is approximate, because months and years vary in
-              length. Currency conversion uses a rate that changes rather than a
-              fixed factor. And any figure you enter carries its own precision,
-              which no calculation can improve on. Everything else on this page
-              is arithmetic you could check by hand, and each page shows the
-              working so you can.
+              The three genuine exceptions are worth naming. Converting days
+              into months or years is approximate, because months and years vary
+              in length. Currency conversion uses a rate that changes rather
+              than a fixed factor. And any figure you enter carries its own
+              precision, which no calculation can improve on. Everything else on
+              this page is arithmetic you could check by hand, and each page
+              shows the working so you can.
             </p>
             <section className="related-guides">
               <h2>The Edge Cases Behind the Everyday Tools</h2>
-              <p>Two guides cover the edge cases behind the everyday tools above:</p>
+              <p>
+                Two guides cover the edge cases behind the everyday tools above:
+              </p>
               <ul>
                 <li>
-                  <Link href="/blog/how-to-calculate-exact-age/" className="related-card">
-                    <span className="related-title">How To Calculate Exact Age?</span>
-                    <span className="related-blurb">Borrowing across months, and how a 29 February birthday is handled legally.</span>
+                  <Link
+                    href="/blog/how-to-calculate-exact-age/"
+                    className="related-card"
+                  >
+                    <span className="related-title">
+                      How To Calculate Exact Age?
+                    </span>
+                    <span className="related-blurb">
+                      Borrowing across months, and how a 29 February birthday is
+                      handled legally.
+                    </span>
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog/what-is-numbers-on-your-tip/" className="related-card">
-                    <span className="related-title">What Is Numbers on Your Tip?</span>
-                    <span className="related-blurb">What this site is, how it is funded, and what happens to what you type.</span>
+                  <Link
+                    href="/blog/what-is-numbers-on-your-tip/"
+                    className="related-card"
+                  >
+                    <span className="related-title">
+                      What Is Numbers on Your Tip?
+                    </span>
+                    <span className="related-blurb">
+                      What this site is, how it is funded, and what happens to
+                      what you type.
+                    </span>
                   </Link>
                 </li>
               </ul>
             </section>
-
           </section>
         </div>
       </div>

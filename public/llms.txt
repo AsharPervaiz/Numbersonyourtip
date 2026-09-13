@@ -48,6 +48,7 @@ Contact: https://numbersonyourtip.com/contact-us/
 - /unit-conversion-calculator/ - length, weight, volume and temperature, with exact factors and the temperature offset
 - /discount-calculator/ - sale price, savings, reverse discounts, and why stacked offers do not add up
 - /bill-split-calculator/ - split a bill equally, by item or proportionally, with tip and tax applied correctly
+- /gravel-calculator/ - how much gravel a driveway or landscaping project needs, in cubic yards, tons, cubic metres, bags and cost
 
 ## Maths calculators
 - /mean-median-mode-calculator/ - mean, median, mode, range and standard deviation, and which average to trust

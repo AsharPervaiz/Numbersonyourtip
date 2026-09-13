@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title:
     "Numbers on Your Tip | Free Online Calculators & Tools for Everyday Use",
   description:
-    "48 free calculators for health, finance, math, and daily use. No sign-up, no data stored — every result runs instantly in your browser.",
+    "49 free calculators for health, finance, math, and daily use. No sign-up, no data stored — every result runs instantly in your browser.",
   alternates: {
     canonical: "/",
   },
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title:
       "Numbers on Your Tip | Free Online Calculators & Tools for Everyday Use",
     description:
-      "From BMI and body fat to EMI, tax, and unit conversion — 48 calculators and tools organised by category, built for quick, accurate answers with no account required.",
+      "From BMI and body fat to EMI, tax, and unit conversion — 49 calculators and tools organised by category, built for quick, accurate answers with no account required.",
     type: "website",
     url: "/",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title:
       "Numbers on Your Tip | Free Online Calculators & Tools for Everyday Use",
     description:
-      "48 free calculators. No sign-up. No data stored. Just answers.",
+      "49 free calculators. No sign-up. No data stored. Just answers.",
   },
 };
 
@@ -85,6 +85,7 @@ export const categories = [
       { label: "Unit Conversion", href: "/unit-conversion-calculator/" },
       { label: "Discount Calculator", href: "/discount-calculator/" },
       { label: "Bill Split Calculator", href: "/bill-split-calculator/" },
+      { label: "Gravel Calculator", href: "/gravel-calculator/" },
     ],
   },
   {

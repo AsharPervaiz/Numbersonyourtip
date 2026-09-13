@@ -254,6 +254,28 @@ export const calculators = [
     ],
   },
   {
+    name: "Gravel Calculator",
+    slug: "/gravel-calculator/",
+    keywords: [
+      "gravel",
+      "driveway gravel",
+      "pea gravel",
+      "crushed stone",
+      "river rock",
+      "limestone",
+      "landscape gravel",
+      "rock",
+      "aggregate",
+      "cubic yards",
+      "cubic yard",
+      "tons",
+      "tonnage",
+      "how much gravel",
+      "stone calculator",
+      "yardage",
+    ],
+  },
+  {
     name: "Gold Calculator",
     slug: "/gold-calculator/",
     keywords: [

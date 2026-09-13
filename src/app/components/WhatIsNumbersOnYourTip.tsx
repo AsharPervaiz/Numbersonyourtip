@@ -7,7 +7,7 @@ import BlogSidebar from "./BlogSidebar";
 const FAQ_DATA: [string, string][] = [
   [
     "What is Numbers on Your Tip?",
-    "Numbers on Your Tip (numbersonyourtip.com) is a free online calculator and tools platform with 48 tools across health, finance, daily use, maths, networking, and utility categories. Everything is completely free, requires no account or sign-up, and stores zero user data. It is built for students, freelancers, healthcare professionals, and anyone who needs a fast, accurate calculation without friction.",
+    "Numbers on Your Tip (numbersonyourtip.com) is a free online calculator and tools platform with 49 tools across health, finance, daily use, maths, networking, and utility categories. Everything is completely free, requires no account or sign-up, and stores zero user data. It is built for students, freelancers, healthcare professionals, and anyone who needs a fast, accurate calculation without friction.",
   ],
   [
     "Do I need to create an account to use the calculators?",
@@ -15,7 +15,7 @@ const FAQ_DATA: [string, string][] = [
   ],
   [
     "Is Numbers on Your Tip really free?",
-    "Yes, entirely. There is no freemium tier, no premium version, and no paid features. The plan is to fund it through contextual advertising, in the same way most free reference sites are funded. Every one of the 48 tools is free to use, unlimited, for anyone.",
+    "Yes, entirely. There is no freemium tier, no premium version, and no paid features. The plan is to fund it through contextual advertising, in the same way most free reference sites are funded. Every one of the 49 tools is free to use, unlimited, for anyone.",
   ],
   [
     "What makes it different from calculator.net?",
@@ -138,7 +138,7 @@ export default function WhatIsNumbersOnYourTip() {
             <h2 style={{ color: "white" }}>What Is Numbers on Your Tip?</h2>
             <p style={{ marginBottom: 0, color: "white" }}>
               <strong>Numbers on Your Tip</strong> (numbersonyourtip.com) is a
-              free online calculator and tools platform offering 48 calculators
+              free online calculator and tools platform offering 49 calculators
               across health, finance, daily use, maths, networking, and utility
               categories. Everything is{" "}
               <strong>100% free with zero sign-up required</strong>, zero data
@@ -199,7 +199,7 @@ export default function WhatIsNumbersOnYourTip() {
               get it.
             </p>
             <p>
-              The site currently offers 48 calculators and tools, organized into
+              The site currently offers 49 calculators and tools, organized into
               six clear categories: Health, Finance, Daily Use, Maths,
               Networking, and Tools. Every single one of them is free to use.
               Not freemium. Not free with a limited number of uses before a
@@ -247,7 +247,7 @@ export default function WhatIsNumbersOnYourTip() {
           {/* SECTION 3 — THE FULL TOOL LIBRARY */}
           <section id="tool-library" style={{ marginBottom: "48px" }}>
             <h2>
-              The Complete Calculator Library: 48 Free Tools Across 6 Categories
+              The Complete Calculator Library: 49 Free Tools Across 6 Categories
             </h2>
             <p>
               One of the defining features of Numbers on Your Tip as a platform
@@ -1239,8 +1239,8 @@ export default function WhatIsNumbersOnYourTip() {
             <p>
               There is no freemium model. There is no "premium version" with
               more features. There is no email list you are covertly added to
-              when you use a tool. There is no account created. The 48 tools
-              that exist on the platform today are the same 48 tools that a
+              when you use a tool. There is no account created. The 49 tools
+              that exist on the platform today are the same 49 tools that a
               first-time visitor sees as a returning user. No gates, no ladders,
               no friction.
             </p>
@@ -1257,7 +1257,7 @@ export default function WhatIsNumbersOnYourTip() {
           <section id="whats-next" style={{ marginBottom: "48px" }}>
             <h2>What Is Being Built Next</h2>
             <p>
-              The platform currently sits at 48 tools and is expanding steadily.
+              The platform currently sits at 49 tools and is expanding steadily.
               The guiding principle for what gets built next is the same as what
               drove the original library: does a real person regularly need this
               calculation, and is there a better-than-acceptable free version
