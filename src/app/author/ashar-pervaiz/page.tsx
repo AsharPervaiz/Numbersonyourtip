@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     title: "Ashar Pervaiz — Author and Founder",
     description:
-      "The software engineer behind the 49 calculators on Numbers On Your Tip.",
+      "The software engineer behind the 50 calculators on Numbers On Your Tip.",
   },
 };
 
@@ -157,7 +157,7 @@ export default function AuthorPage() {
         <p>
           Numbers On Your Tip is mine. I designed it, wrote the code for all{" "}
           <Link href="/" className="my-link">
-            49 calculators and tools
+            50 calculators and tools
           </Link>
           , and wrote the eighteen{" "}
           <Link href="/blog/" className="my-link">

@@ -25,7 +25,7 @@ const FAQ_DATA: [string, string][] = [
   ],
   [
     "How many calculators and tools are available?",
-    "Forty-seven calculators and tools across six categories: health, finance, daily use, maths, networking, and general utilities. New calculators are added periodically based on what people actually search for.",
+    "Fifty calculators and tools across seven categories: health, finance, daily use, maths, networking, construction, and general utilities. New calculators are added periodically based on what people actually search for.",
   ],
   [
     "Can I suggest a new calculator or report an error?",

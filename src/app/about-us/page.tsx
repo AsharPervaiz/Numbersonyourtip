@@ -73,7 +73,7 @@ export default function AboutUs() {
         <h1>About Us – Numbers On Your Tip</h1>
 
         <p>
-          Numbers On Your Tip is a free calculator and tools platform — 49
+          Numbers On Your Tip is a free calculator and tools platform — 50
           calculators covering health, finance, daily-use math, and digital
           utilities, built to give you accurate answers in seconds without
           sign-ups, paywalls, or clutter.
@@ -89,37 +89,32 @@ export default function AboutUs() {
 
         <h2 id="review-process">How We Build and Verify Every Calculator</h2>
         <p>
-          Each tool starts with the same published source that professionals
-          in that field actually use — WHO growth and BMI standards for
-          health metrics, the standard reducing-balance amortization formula
-          for loans and EMIs, IRS/HMRC published rates for tax calculators,
+          Each tool starts with the same published source that professionals in
+          that field actually use — WHO growth and BMI standards for health
+          metrics, the standard reducing-balance amortization formula for loans
+          and EMIs, IRS/HMRC published rates for tax calculators,
           NIST-recommended thresholds for security tools, and official SI/
-          imperial conversion factors for unit tools. Before a calculator
-          goes live, it is tested against known worked examples — cases
-          where the correct answer is already published — to confirm the
-          formula produces the right result, not just a plausible-looking
-          one. Every page also includes the underlying formula and a worked
-          example in plain text, so you can verify the math yourself rather
-          than trusting a black box.
+          imperial conversion factors for unit tools. Before a calculator goes
+          live, it is tested against known worked examples — cases where the
+          correct answer is already published — to confirm the formula produces
+          the right result, not just a plausible-looking one. Every page also
+          includes the underlying formula and a worked example in plain text, so
+          you can verify the math yourself rather than trusting a black box.
         </p>
         <p>
-          When a calculator depends on a rate or standard that changes over
-          time — a tax bracket, a WHO cut-off, an interest rate assumption —
-          we note the year it applies to and update the page when the
-          underlying figure changes.
+          When a calculator depends on a rate or standard that changes over time
+          — a tax bracket, a WHO cut-off, an interest rate assumption — we note
+          the year it applies to and update the page when the underlying figure
+          changes.
         </p>
         <p>
           <strong>
             The last site-wide review was completed on 27 August 2026.
           </strong>{" "}
           Calculators published after that date are verified against worked
-          examples before they go live — the{" "}
-          <Link className="my-link" href="/mixed-number-calculator/">
-            mixed number calculator
-          </Link>{" "}
-          was added and checked on 30 August 2026. Each calculator page shows
-          its own review date, and that date is updated whenever the formula,
-          the underlying standard, or the supporting content changes.
+          examples before they go live. Each calculator page shows its own
+          review date, and that date is updated whenever the formula, the
+          underlying standard, or the supporting content changes.
         </p>
 
         <h2 id="medical-reviewer">Medical Review</h2>
@@ -196,13 +191,13 @@ export default function AboutUs() {
             </p>
             <p style={{ margin: 0, fontSize: "14px" }}>
               Dr. Syeda Khadija Akbar reviewed the clinical formulas, dosing
-              logic, unit handling, and safety wording used across every
-              medical calculator and health guide on this site, to confirm they
-              reflect standard pharmacy practice and carry appropriate
-              warnings. This review covers clinical accuracy only; it is not a
-              personal recommendation, and these tools remain educational
-              references rather than a substitute for professional judgment.
-              Medical content last reviewed: <strong>27 August 2026</strong>.
+              logic, unit handling, and safety wording used across every medical
+              calculator and health guide on this site, to confirm they reflect
+              standard pharmacy practice and carry appropriate warnings. This
+              review covers clinical accuracy only; it is not a personal
+              recommendation, and these tools remain educational references
+              rather than a substitute for professional judgment. Medical
+              content last reviewed: <strong>27 August 2026</strong>.
             </p>
           </div>
         </div>
@@ -264,10 +259,10 @@ export default function AboutUs() {
         </p>
         <p>
           What that review confirms is that the arithmetic matches the standard
-          method — reducing-balance amortisation for loans and mortgages, band-by-band
-          application for income tax, the statutory basis for adding and
-          reversing VAT. It is expressly not financial, tax or investment
-          advice, and it cannot account for your jurisdiction, your
+          method — reducing-balance amortisation for loans and mortgages,
+          band-by-band application for income tax, the statutory basis for
+          adding and reversing VAT. It is expressly not financial, tax or
+          investment advice, and it cannot account for your jurisdiction, your
           circumstances, or rules that changed after the review date. Tax
           thresholds and VAT rates in particular are revised regularly, so
           confirm any figure with your own tax authority before relying on it.
@@ -291,8 +286,8 @@ export default function AboutUs() {
             <Link className="my-link" href="#medical-reviewer">
               Dr. Syeda Khadija Akbar, PharmD
             </Link>
-            . They remain educational references only — never a substitute for
-            a licensed healthcare professional. Please read our{" "}
+            . They remain educational references only — never a substitute for a
+            licensed healthcare professional. Please read our{" "}
             <Link className="my-link" href="/disclaimer/">
               disclaimer
             </Link>
@@ -315,9 +310,8 @@ export default function AboutUs() {
             standards change (e.g., tax brackets, WHO BMI cut-offs).
           </li>
           <li>
-            No account, no data collection, and no calculator results are
-            ever stored on a server — everything runs in your browser. Read
-            our full{" "}
+            No account, no data collection, and no calculator results are ever
+            stored on a server — everything runs in your browser. Read our full{" "}
             <Link className="my-link" href="/privacy-policy/">
               privacy policy
             </Link>{" "}
@@ -327,7 +321,7 @@ export default function AboutUs() {
 
         <h2>Explore Our Calculators</h2>
         <p>
-          Tools are organized into five categories so you can find what you
+          Tools are organized into seven categories so you can find what you
           need quickly:
         </p>
         <ul className="custom-list">
@@ -360,6 +354,18 @@ export default function AboutUs() {
               Daily Use Calculators
             </Link>{" "}
             — age, dates, GPA, percentages, and unit conversion
+          </li>
+          <li>
+            <Link className="my-link" href="/construction-calculators/">
+              Construction Calculators
+            </Link>{" "}
+            — gravel and mulch quantities by area, depth, bag and ton
+          </li>
+          <li>
+            <Link className="my-link" href="/tools/">
+              Online Tools
+            </Link>{" "}
+            — images, text, passwords, colour and time zones
           </li>
         </ul>
 
@@ -407,8 +413,9 @@ export default function AboutUs() {
                 padding: 0,
               }}
             >
-              &quot;Great decisions begin with accurate numbers. Our mission is to
-              put reliable tools at your fingertips&mdash;simple, fast, and free.&quot;
+              &quot;Great decisions begin with accurate numbers. Our mission is
+              to put reliable tools at your fingertips&mdash;simple, fast, and
+              free.&quot;
             </p>
             <p
               style={{

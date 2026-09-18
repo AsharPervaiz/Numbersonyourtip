@@ -7,7 +7,7 @@ import BlogSidebar from "./BlogSidebar";
 const FAQ_DATA: [string, string][] = [
   [
     "What is Numbers on Your Tip?",
-    "Numbers on Your Tip (numbersonyourtip.com) is a free online calculator and tools platform with 49 tools across health, finance, daily use, maths, networking, and utility categories. Everything is completely free, requires no account or sign-up, and stores zero user data. It is built for students, freelancers, healthcare professionals, and anyone who needs a fast, accurate calculation without friction.",
+    "Numbers on Your Tip (numbersonyourtip.com) is a free online calculator and tools platform with 50 tools across health, finance, daily use, maths, networking, construction, and utility categories. Everything is completely free, requires no account or sign-up, and stores zero user data. It is built for students, freelancers, healthcare professionals, and anyone who needs a fast, accurate calculation without friction.",
   ],
   [
     "Do I need to create an account to use the calculators?",
@@ -15,7 +15,7 @@ const FAQ_DATA: [string, string][] = [
   ],
   [
     "Is Numbers on Your Tip really free?",
-    "Yes, entirely. There is no freemium tier, no premium version, and no paid features. The plan is to fund it through contextual advertising, in the same way most free reference sites are funded. Every one of the 49 tools is free to use, unlimited, for anyone.",
+    "Yes, entirely. There is no freemium tier, no premium version, and no paid features. The plan is to fund it through contextual advertising, in the same way most free reference sites are funded. Every one of the 50 tools is free to use, unlimited, for anyone.",
   ],
   [
     "What makes it different from calculator.net?",
@@ -83,12 +83,12 @@ export default function WhatIsNumbersOnYourTip() {
               }}
             >
               <Link href="/author/ashar-pervaiz/" className="byline-author">
-              <img
-                className="founder-photo"
-                src="/founder_photo.webp"
-                alt="Ashar Pervaiz"
-              />
-              Ashar Pervaiz
+                <img
+                  className="founder-photo"
+                  src="/founder_photo.webp"
+                  alt="Ashar Pervaiz"
+                />
+                Ashar Pervaiz
               </Link>
             </span>
             <span
@@ -138,7 +138,7 @@ export default function WhatIsNumbersOnYourTip() {
             <h2 style={{ color: "white" }}>What Is Numbers on Your Tip?</h2>
             <p style={{ marginBottom: 0, color: "white" }}>
               <strong>Numbers on Your Tip</strong> (numbersonyourtip.com) is a
-              free online calculator and tools platform offering 49 calculators
+              free online calculator and tools platform offering 50 calculators
               across health, finance, daily use, maths, networking, and utility
               categories. Everything is{" "}
               <strong>100% free with zero sign-up required</strong>, zero data
@@ -199,12 +199,12 @@ export default function WhatIsNumbersOnYourTip() {
               get it.
             </p>
             <p>
-              The site currently offers 49 calculators and tools, organized into
-              six clear categories: Health, Finance, Daily Use, Maths,
-              Networking, and Tools. Every single one of them is free to use.
-              Not freemium. Not free with a limited number of uses before a
-              paywall appears. Just free — the same way a calculator in your
-              pocket is free.
+              The site currently offers 50 calculators and tools, organized into
+              seven clear categories: Health, Finance, Daily Use, Maths,
+              Networking, Construction, and Tools. Every single one of them is
+              free to use. Not freemium. Not free with a limited number of uses
+              before a paywall appears. Just free — the same way a calculator in
+              your pocket is free.
             </p>
             <p>
               Zero data is stored. No cookies track your calculations. No
@@ -247,7 +247,7 @@ export default function WhatIsNumbersOnYourTip() {
           {/* SECTION 3 — THE FULL TOOL LIBRARY */}
           <section id="tool-library" style={{ marginBottom: "48px" }}>
             <h2>
-              The Complete Calculator Library: 49 Free Tools Across 6 Categories
+              The Complete Calculator Library: 50 Free Tools Across 6 Categories
             </h2>
             <p>
               One of the defining features of Numbers on Your Tip as a platform
@@ -627,9 +627,9 @@ export default function WhatIsNumbersOnYourTip() {
             {/* MATHS */}
             <h3>Maths Calculators</h3>
             <p>
-              Three purpose-built maths tools that go beyond basic arithmetic
-              — designed for students and anyone working with statistics,
-              matrices or fractions.
+              Three purpose-built maths tools that go beyond basic arithmetic —
+              designed for students and anyone working with statistics, matrices
+              or fractions.
             </p>
             <ul style={{ paddingLeft: "20px", lineHeight: 2 }}>
               <li>
@@ -1239,8 +1239,8 @@ export default function WhatIsNumbersOnYourTip() {
             <p>
               There is no freemium model. There is no "premium version" with
               more features. There is no email list you are covertly added to
-              when you use a tool. There is no account created. The 49 tools
-              that exist on the platform today are the same 49 tools that a
+              when you use a tool. There is no account created. The 50 tools
+              that exist on the platform today are the same 50 tools that a
               first-time visitor sees as a returning user. No gates, no ladders,
               no friction.
             </p>
@@ -1257,7 +1257,7 @@ export default function WhatIsNumbersOnYourTip() {
           <section id="whats-next" style={{ marginBottom: "48px" }}>
             <h2>What Is Being Built Next</h2>
             <p>
-              The platform currently sits at 49 tools and is expanding steadily.
+              The platform currently sits at 50 tools and is expanding steadily.
               The guiding principle for what gets built next is the same as what
               drove the original library: does a real person regularly need this
               calculation, and is there a better-than-acceptable free version
@@ -1289,36 +1289,36 @@ export default function WhatIsNumbersOnYourTip() {
             {FAQ_DATA.map(([q, a], i) => {
               const isOpen = openFAQ === i;
               return (
-              <div className="faq-item" key={i}>
-                <h3
-                  onClick={() => toggleFAQ(i)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      toggleFAQ(i);
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-expanded={isOpen}
-                  aria-controls={`faq-answer-${i}`}
-                >
-                  {q}
-                  <i
-                    className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
-                    aria-hidden="true"
-                  />
-                </h3>
-                <div
-                  id={`faq-answer-${i}`}
-                  className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
-                  aria-hidden={!isOpen}
-                >
-                  <div className="faq-answer-inner">
-                    <p style={{ margin: 0 }}>{a}</p>
+                <div className="faq-item" key={i}>
+                  <h3
+                    onClick={() => toggleFAQ(i)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleFAQ(i);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${i}`}
+                  >
+                    {q}
+                    <i
+                      className={`fa-solid fa-chevron-down ${isOpen ? "rotate" : ""}`}
+                      aria-hidden="true"
+                    />
+                  </h3>
+                  <div
+                    id={`faq-answer-${i}`}
+                    className={`faq-answer-wrap ${isOpen ? "open" : ""}`}
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="faq-answer-inner">
+                      <p style={{ margin: 0 }}>{a}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
               );
             })}
           </section>
@@ -1340,7 +1340,10 @@ export default function WhatIsNumbersOnYourTip() {
             "/blog/healthy-bodyfat-percentage-by-age-and-gender/",
             "Healthy Body Fat % by Age & Gender",
           ],
-          ["/blog/matrix-calculator-guide/", "Every Matrix Operation, Worked by Hand"],
+          [
+            "/blog/matrix-calculator-guide/",
+            "Every Matrix Operation, Worked by Hand",
+          ],
         ]}
       />
     </div>

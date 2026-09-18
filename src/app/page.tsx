@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title:
     "Numbers on Your Tip | Free Online Calculators & Tools for Everyday Use",
   description:
-    "49 free calculators for health, finance, math, and daily use. No sign-up, no data stored — every result runs instantly in your browser.",
+    "50 free calculators for health, finance, math, and daily use. No sign-up, no data stored — every result runs instantly in your browser.",
   alternates: {
     canonical: "/",
   },
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title:
       "Numbers on Your Tip | Free Online Calculators & Tools for Everyday Use",
     description:
-      "From BMI and body fat to EMI, tax, and unit conversion — 49 calculators and tools organised by category, built for quick, accurate answers with no account required.",
+      "From BMI and body fat to EMI, tax, and unit conversion — 50 calculators and tools organised by category, built for quick, accurate answers with no account required.",
     type: "website",
     url: "/",
   },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title:
       "Numbers on Your Tip | Free Online Calculators & Tools for Everyday Use",
     description:
-      "49 free calculators. No sign-up. No data stored. Just answers.",
+      "50 free calculators. No sign-up. No data stored. Just answers.",
   },
 };
 
@@ -85,7 +85,16 @@ export const categories = [
       { label: "Unit Conversion", href: "/unit-conversion-calculator/" },
       { label: "Discount Calculator", href: "/discount-calculator/" },
       { label: "Bill Split Calculator", href: "/bill-split-calculator/" },
+    ],
+  },
+  {
+    id: "construction",
+    icon: "🧱",
+    title: "Construction",
+    href: "/construction-calculators/",
+    tools: [
       { label: "Gravel Calculator", href: "/gravel-calculator/" },
+      { label: "Mulch Calculator", href: "/mulch-calculator/" },
     ],
   },
   {
@@ -216,9 +225,7 @@ export default function Home() {
       <section className="section-new how-it-works-section">
         <div className="header-new">
           <h2 className="title-new">How It Works</h2>
-          <p className="subtitle-new">
-            Three steps, no account, no waiting.
-          </p>
+          <p className="subtitle-new">Three steps, no account, no waiting.</p>
         </div>
         <div className="grid-new how-it-works-grid">
           <div className="card">
@@ -231,8 +238,8 @@ export default function Home() {
               </div>
             </div>
             <p style={{ color: "#6b6b7b", lineHeight: 1.6, margin: 0 }}>
-              Search or browse by category — health, finance, math, daily
-              use, or networking — and open the calculator that matches your
+              Search or browse by category — health, finance, math, daily use,
+              or networking — and open the calculator that matches your
               question.
             </p>
           </div>
@@ -246,8 +253,8 @@ export default function Home() {
               </div>
             </div>
             <p style={{ color: "#6b6b7b", lineHeight: 1.6, margin: 0 }}>
-              Type in the numbers that apply to you. Nothing is uploaded —
-              every calculation runs locally in your browser.
+              Type in the numbers that apply to you. Nothing is uploaded — every
+              calculation runs locally in your browser.
             </p>
           </div>
           <div className="card">
@@ -273,8 +280,8 @@ export default function Home() {
             All {toolTotal} free calculators and tools
           </h2>
           <p className="subtitle-new">
-            The complete library across six categories — health, finance, daily
-            use, maths, networking and utilities.
+            The complete library across seven categories — health, finance,
+            daily use, maths, networking, construction and utilities.
           </p>
         </div>
 
