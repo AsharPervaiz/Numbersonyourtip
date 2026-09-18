@@ -367,6 +367,7 @@ input::placeholder {
   margin: 0 auto;
   padding-left: 20px;
   padding-right: 20px;
+  gap: 24px;
 }
 
 /* Logo Styles */
@@ -383,7 +384,6 @@ input::placeholder {
 /* Desktop Menu Styles */
 .desktop-nav {
   display: block;
-  position: relative;
   width: auto;
 }
 
@@ -392,7 +392,7 @@ input::placeholder {
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 40px;
+  gap: 26px;
 }
 
 .desktop-menu-item {
@@ -404,7 +404,8 @@ input::placeholder {
   text-decoration: none;
   font-weight: 600;
   color: #dfdede;
-  font-size: 15px;
+  font-size: 14px;
+  white-space: nowrap;
   padding: 8px 0;
   display: flex;
   align-items: center;
@@ -448,18 +449,18 @@ input::placeholder {
 .desktop-nav .mega-menu-container {
   position: absolute;
   top: 100%;
-  left: -250;
-  right: 0;
-
-  width: 1200px; /* Same as container-header */
-  margin: 0 auto; /* Center it like header */
+  /* Match the header's own content box, so the panel lines up with the logo. */
+  left: 20px;
+  right: 20px;
+  width: auto;
+  margin: 0;
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-15px);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
-  padding: 0 20px; /* Same horizontal padding as container-header */
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -810,7 +811,7 @@ input::placeholder {
 }
 
 /* Responsive Styles */
-@media (min-width: 769px) {
+@media (min-width: 1024px) {
   /* Ensure desktop menu is visible */
   .desktop-nav {
     display: block !important;
@@ -826,8 +827,8 @@ input::placeholder {
   }
 }
 
-@media (max-width: 768px) {
-  /* Hide mega menu and desktop nav on mobile */
+@media (max-width: 1023.98px) {
+  /* Hide mega menu and desktop nav on mobile and tablet */
   .mega-menu-container {
     display: none;
   }
@@ -843,6 +844,28 @@ input::placeholder {
   .container-header {
     padding-left: 15px;
     padding-right: 15px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .desktop-menu {
+    gap: 22px;
+  }
+}
+
+@media (max-width: 1120px) {
+  .desktop-menu {
+    gap: 16px;
+  }
+
+  .site-logo {
+    height: 34px;
+  }
+}
+
+@media (max-width: 1060px) {
+  .desktop-menu {
+    gap: 12px;
   }
 }
 
@@ -867,17 +890,7 @@ input::placeholder {
   }
 
   .desktop-menu {
-    gap: 25px;
-  }
-}
-
-@media (max-width: 900px) {
-  .desktop-menu {
-    gap: 20px;
-  }
-
-  .desktop-menu-link {
-    font-size: 15px;
+    gap: 10px;
   }
 }
 
@@ -5792,6 +5805,99 @@ ul.custom-list li {
   }
 }
 
+/* ── Content tables authored without the wrapper ────────────────────────
+   Older posts write a bare <table>, which picked up no borders and no
+   header shading at all and rendered as plain spaced text. Giving the
+   content areas the same treatment fixes every one of them at once,
+   without editing the markup of each post. */
+.blog-content table,
+.single-page-padding table,
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.blog-content th,
+.blog-content td,
+.single-page-padding th,
+.single-page-padding td,
+article th,
+article td {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  vertical-align: top;
+}
+.blog-content thead th,
+.single-page-padding thead th,
+article thead th {
+  background: var(--card-bg, #f5f5f5);
+  font-weight: 700;
+}
+.blog-content tbody tr:nth-child(even),
+.single-page-padding tbody tr:nth-child(even),
+article tbody tr:nth-child(even) {
+  background: #fafbfd;
+}
+
+/* Formula and diagram blocks. These had no rule of their own, so they
+   inherited a 16.8px monospace default that pushed ASCII matrix diagrams
+   well past the width of a phone. */
+pre {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* ── Phones ─────────────────────────────────────────────────────────────
+   Analytics showed visitors scrolling sideways inside tables rather than
+   on the page itself. Dropping the enforced min-width lets a table wrap
+   to fit instead, which removes the sideways swipe on most of them; the
+   scroll wrapper stays as a fallback for anything still too wide. */
+@media (max-width: 480px) {
+  .table-wrap table,
+  .blog-content table,
+  .single-page-padding table,
+  article table {
+    min-width: 0;
+    display: table;
+    font-size: 13px;
+  }
+  .table-wrap th,
+  .table-wrap td,
+  .blog-content th,
+  .blog-content td,
+  .single-page-padding th,
+  .single-page-padding td,
+  article th,
+  article td {
+    padding: 7px 8px;
+  }
+  /* A table is only as narrow as its least-breakable cell, so long words
+     have to be allowed to break or the table keeps its full width however
+     small the font gets. */
+  .blog-content th,
+  .blog-content td,
+  .single-page-padding th,
+  .single-page-padding td,
+  article th,
+  article td,
+  .table-wrap th,
+  .table-wrap td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  /* Long single-line formulas wrap rather than forcing a sideways swipe.
+     Short ASCII diagrams stay on one line at this size, so their alignment
+     survives. */
+  pre {
+    font-size: 12.5px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
 /* ============================================================
    BREADCRUMBS (site-wide, rendered from the root layout)
    ============================================================ */
@@ -6642,9 +6748,29 @@ ul.custom-list li {
 }
 
 /* Library cards size to their content. Stretching a 3-tool category to match
-   a 12-tool one beside it left a large blank area in the short card. */
+   a 12-tool one beside it left a large blank area in the short card.
+   A grid also forces each row down to the taller card and leaves the odd
+   seventh category sitting alone, so the library flows in balanced columns
+   instead: the browser evens the two column heights by itself. */
 .grid-new:not(.how-it-works-grid) {
+  display: block;
+  column-count: 2;
+  column-gap: 20px;
   align-items: start;
+}
+
+.grid-new:not(.how-it-works-grid) > .card {
+  display: block;
+  width: 100%;
+  margin: 0 0 20px;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+
+@media (max-width: 768px) {
+  .grid-new:not(.how-it-works-grid) {
+    column-count: 1;
+  }
 }
 
 /* ============================================================

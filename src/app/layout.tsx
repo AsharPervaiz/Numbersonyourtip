@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | Numbers on Your Tip",
   },
   description:
-    "Explore 49 free online calculators and tools — health, finance, daily use & utilities. Get instant, accurate results right in your browser.",
+    "Explore 50 free online calculators and tools — health, finance, daily use & utilities. Get instant, accurate results right in your browser.",
   applicationName: "Numbers on Your Tip",
   authors: [{ name: "Ashar Pervaiz" }],
   creator: "Ashar Pervaiz",
@@ -222,7 +222,7 @@ export default function RootLayout({
             className="container-header"
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(5, 1fr)",
+              gridTemplateColumns: "1.7fr 1fr 1fr 1fr",
               gap: "30px",
               padding: "40px 0",
               alignItems: "start",
@@ -251,14 +251,41 @@ export default function RootLayout({
                 Smart, fast & private calculators & tools for daily life,
                 fitness, finance and education.
               </p>
-              <ul className="footer-social" aria-label="Follow Numbers On Your Tip">
+              <ul
+                className="footer-social"
+                aria-label="Follow Numbers On Your Tip"
+              >
                 {[
-                  ["Facebook", "fa-brands fa-facebook-f", "https://www.facebook.com/share/1WXWd29Bkp/"],
-                  ["Instagram", "fa-brands fa-instagram", "https://www.instagram.com/numbersonyourtip/"],
-                  ["YouTube", "fa-brands fa-youtube", "https://www.youtube.com/@Numbersonyourtip"],
-                  ["TikTok", "fa-brands fa-tiktok", "https://www.tiktok.com/@numberstip"],
-                  ["Threads", "fa-brands fa-threads", "https://www.threads.com/@numbersonyourtip"],
-                  ["Medium", "fa-brands fa-medium", "https://medium.com/@numbersonyourtip"],
+                  [
+                    "Facebook",
+                    "fa-brands fa-facebook-f",
+                    "https://www.facebook.com/share/1WXWd29Bkp/",
+                  ],
+                  [
+                    "Instagram",
+                    "fa-brands fa-instagram",
+                    "https://www.instagram.com/numbersonyourtip/",
+                  ],
+                  [
+                    "YouTube",
+                    "fa-brands fa-youtube",
+                    "https://www.youtube.com/@Numbersonyourtip",
+                  ],
+                  [
+                    "TikTok",
+                    "fa-brands fa-tiktok",
+                    "https://www.tiktok.com/@numberstip",
+                  ],
+                  [
+                    "Threads",
+                    "fa-brands fa-threads",
+                    "https://www.threads.com/@numbersonyourtip",
+                  ],
+                  [
+                    "Medium",
+                    "fa-brands fa-medium",
+                    "https://medium.com/@numbersonyourtip",
+                  ],
                 ].map(([name, icon, href]) => (
                   <li key={name}>
                     <a
@@ -275,7 +302,7 @@ export default function RootLayout({
               </ul>
             </div>
 
-            {/* Column 2: Finance */}
+            {/* Column 2: Calculator categories */}
             <div
               className="footer-li"
               style={{
@@ -293,547 +320,205 @@ export default function RootLayout({
                   marginTop: "0",
                 }}
               >
-                Finance
+                Calculators
               </p>
               <ul
                 style={{
                   listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  fontSize: "13px",
+                  fontSize: "15px",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "8px",
+                  gap: "10px",
                 }}
               >
                 <li>
                   <Link
-                    href="/emi-calculator/"
+                    href="/health-calculators/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    EMI Calculator
+                    Health Calculators
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/currency-converter/"
+                    href="/finance-calculators/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Currency Converter
+                    Finance Calculators
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/loan-calculator/"
+                    href="/daily-use-calculators/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Loan Calculator
+                    Daily Use Calculators
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/home-mortgage-calculator/"
+                    href="/math-calculators/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Mortgage Calculator
+                    Maths Calculators
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/income-tax-calculator/"
+                    href="/construction-calculators/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Income Tax Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/rent-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Rent Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/vat-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    VAT Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/net-worth-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Net Worth Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/freelancer-tax-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Freelancer Tax Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/salary-hike-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Salary Hike Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/fuel-cost-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Fuel Cost Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/gold-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Gold Calculator
+                    Construction Calculators
                   </Link>
                 </li>
               </ul>
             </div>
 
-            {/* Column 3: Health */}
-            <div className="footer-li">
-              <h4
+            {/* Column 3: Tools and the blog */}
+            <div
+              className="footer-li"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <p
                 style={{
                   color: "white",
                   fontSize: "20px",
+                  fontWeight: "800",
                   marginBottom: "10px",
                   marginTop: "0",
                 }}
               >
-                Health
-              </h4>
+                Tools & Reading
+              </p>
               <ul
                 style={{
                   listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  fontSize: "13px",
+                  fontSize: "15px",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "8px",
+                  gap: "10px",
                 }}
               >
                 <li>
                   <Link
-                    href="/bmi-calculator/"
+                    href="/tools/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    BMI Calculator
+                    Online Tools
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/body-fat-calculator/"
+                    href="/networking-tools/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Body Fat Calculator
+                    Networking Tools
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/calorie-calculator/"
+                    href="/blog/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Calorie Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/dose-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Dose Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/dose-stock-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Dose Stock Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/iv-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    IV Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/pharmacokinetics-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Pharmacokinetics Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/pharmacodynamics-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Pharmacodynamics Calculator
+                    Blog
                   </Link>
                 </li>
               </ul>
             </div>
 
-            {/* Column 4: Daily Use */}
-            <div className="footer-li">
-              <h4
+            {/* Column 4: Company and policies */}
+            <div
+              className="footer-li"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <p
                 style={{
                   color: "white",
                   fontSize: "20px",
+                  fontWeight: "800",
                   marginBottom: "10px",
                   marginTop: "0",
                 }}
               >
-                Daily Use
-              </h4>
+                Company
+              </p>
               <ul
                 style={{
                   listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  fontSize: "13px",
+                  fontSize: "15px",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "8px",
+                  gap: "10px",
                 }}
               >
                 <li>
                   <Link
-                    href="/age-calculator/"
+                    href="/about-us/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Age Calculator
+                    About Us
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/days-between-calculator/"
+                    href="/author/ashar-pervaiz/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Days Calculator
+                    Author
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/gpa-calculator/"
+                    href="/contact-us/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    GPA Calculator
+                    Contact
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/gpa-percentage/"
+                    href="/privacy-policy/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    GPA Percentage Calculator
+                    Privacy Policy
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/percentage-calculator/"
+                    href="/terms-conditions/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Percentage Calculator
+                    Terms &amp; Conditions
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/time-calculator/"
+                    href="/cookies/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Time Calculator
+                    Cookies
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/unit-conversion-calculator/"
+                    href="/disclaimer/"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    Unit Conversion
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/gravel-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Gravel Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/bill-split-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Bill Split Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/discount-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Discount Calculator
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 5: Other Tools */}
-            <div className="footer-li">
-              <h4
-                style={{
-                  color: "white",
-                  fontSize: "20px",
-                  marginBottom: "10px",
-                  marginTop: "0",
-                }}
-              >
-                Other Tools
-              </h4>
-              <ul
-                style={{
-                  listStyle: "none",
-                  padding: 0,
-                  margin: 0,
-                  fontSize: "13px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                }}
-              >
-                <li>
-                  <Link
-                    href="/currency-converter/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Currency Converter
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/image-converter/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Image Converter
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/image-compressor/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Image Compressor
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/image-resizer/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Image Resizer
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/password-generator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Password Generator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/lorem-ipsum-generator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Lorem Ipsum Generator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/text-converter/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Text Case Converter
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/text-generator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Text Generator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/word-char-counter/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Words Counter
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/color-picker/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Color Picker & Palletes
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/carbon-footprint-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Carbon Footprint Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/time-zone-converter/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Time Zone & World Clock
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 6: Networking */}
-            <div className="footer-li">
-              <h4
-                style={{
-                  color: "white",
-                  fontSize: "20px",
-                  marginBottom: "10px",
-                  marginTop: "0",
-                }}
-              >
-                Networking
-              </h4>
-              <ul
-                style={{
-                  listStyle: "none",
-                  padding: 0,
-                  margin: 0,
-                  fontSize: "13px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                }}
-              >
-                <li>
-                  <Link
-                    href="/dns-lookup/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    DNS Lookup
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/ip-detector/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    IP Detector
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/email-validator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Email Validator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/domain-name-checker/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Domain Name Checker
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/internet-speed-test/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Internet Speed Test
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 6: Maths */}
-            <div className="footer-li">
-              <h4
-                style={{
-                  color: "white",
-                  fontSize: "20px",
-                  marginBottom: "10px",
-                  marginTop: "0",
-                }}
-              >
-                Mathematics
-              </h4>
-              <ul
-                style={{
-                  listStyle: "none",
-                  padding: 0,
-                  margin: 0,
-                  fontSize: "13px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                }}
-              >
-                <li>
-                  <Link
-                    href="/mean-median-mode-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Mean Median Mode
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/matrix-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Matrix Calculator
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/mixed-number-calculator/"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    Mixed Number Calculator
+                    Disclaimer
                   </Link>
                 </li>
               </ul>
@@ -852,60 +537,6 @@ export default function RootLayout({
             }}
           >
             © 2026 Numbers On Your Tip. All rights reserved.
-            <div
-              className="footer-line-tags"
-              style={{
-                marginTop: "10px",
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: "20px",
-                fontSize: "15px",
-              }}
-            >
-              <Link
-                href="/about-us/"
-                style={{ color: "#c7c7c7", textDecoration: "none" }}
-              >
-                About
-              </Link>
-              <Link
-                href="/blog/"
-                style={{ color: "#c7c7c7", textDecoration: "none" }}
-              >
-                Blogs
-              </Link>
-              <Link
-                href="/contact-us/"
-                style={{ color: "#c7c7c7", textDecoration: "none" }}
-              >
-                Contact
-              </Link>
-              <Link
-                href="/privacy-policy/"
-                style={{ color: "#c7c7c7", textDecoration: "none" }}
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms-conditions/"
-                style={{ color: "#c7c7c7", textDecoration: "none" }}
-              >
-                Terms & Conditions
-              </Link>
-              <Link
-                href="/cookies/"
-                style={{ color: "#c7c7c7", textDecoration: "none" }}
-              >
-                Cookies
-              </Link>
-              <Link
-                href="/disclaimer/"
-                style={{ color: "#c7c7c7", textDecoration: "none" }}
-              >
-                Disclaimer
-              </Link>
-            </div>
             <div
               style={{
                 marginTop: "10px",

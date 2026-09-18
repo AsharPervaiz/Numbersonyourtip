@@ -621,7 +621,7 @@ export default function Header() {
           ],
         },
         {
-          heading: "Home & Shopping",
+          heading: "Shopping & Conversion",
           items: [
             {
               name: "Unit Conversion Calculator",
@@ -665,30 +665,6 @@ export default function Header() {
                   <line x1="20" y1="4" x2="8.12" y2="15.88" />
                   <line x1="14.47" y1="14.48" x2="20" y2="20" />
                   <line x1="8.12" y1="8.12" x2="12" y2="12" />
-                </svg>
-              ),
-            },
-            {
-              name: "Gravel Calculator",
-              desc: "Cubic yards, tons & cost",
-              href: "/gravel-calculator/",
-              iconColor: "amber",
-              isNew: true,
-              icon: (
-                <svg
-                  viewBox="0 0 24 24"
-                  width="22"
-                  height="22"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="7" cy="16" r="3" />
-                  <circle cx="16" cy="17" r="2.5" />
-                  <circle cx="12" cy="9" r="2.5" />
-                  <path d="M3 21h18" />
                 </svg>
               ),
             },
@@ -937,6 +913,66 @@ export default function Header() {
                   <line x1="19" y1="5" x2="5" y2="19" />
                   <circle cx="6.5" cy="6.5" r="2.5" />
                   <circle cx="17.5" cy="17.5" r="2.5" />
+                </svg>
+              ),
+            },
+          ],
+        },
+      ],
+    },
+    "gravel-calculator": {
+      title: "Construction & Materials",
+      eyebrow: "Construction",
+      blurb:
+        "Driveways, paths and garden beds — {n} calculators that turn an area and a depth into an order.",
+      ctaLabel: "View all calculators",
+      columns: [
+        {
+          heading: "Landscaping Materials",
+          items: [
+            {
+              name: "Gravel Calculator",
+              desc: "Cubic yards, tons & cost",
+              href: "/gravel-calculator/",
+              iconColor: "amber",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="7" cy="16" r="3" />
+                  <circle cx="16" cy="17" r="2.5" />
+                  <circle cx="12" cy="9" r="2.5" />
+                  <path d="M3 21h18" />
+                </svg>
+              ),
+            },
+            {
+              name: "Mulch Calculator",
+              desc: "Bags, cubic yards & cost",
+              href: "/mulch-calculator/",
+              iconColor: "green",
+              isNew: true,
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 20c0-5 3-8 8-8 0 5-3 8-8 8z" />
+                  <path d="M12 20c0-5-3-8-8-8 0 5 3 8 8 8z" />
+                  <path d="M12 20v-6" />
                 </svg>
               ),
             },
@@ -1280,6 +1316,11 @@ export default function Header() {
       label: "Maths",
       key: "median-mode-mean-calculator",
       href: "/math-calculators/",
+    },
+    {
+      label: "Construction",
+      key: "gravel-calculator",
+      href: "/construction-calculators/",
     },
     { label: "Tools", key: "gpa-calculator", href: "/tools/" },
     { label: "Blogs", href: "/blog/" },
