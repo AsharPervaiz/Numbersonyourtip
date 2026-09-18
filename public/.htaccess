@@ -38,3 +38,4 @@ RewriteRule ^blog/why-was-my-bonus-taxed-so-much/?$ /why-was-my-bonus-taxed-so-m
 RewriteRule ^blog/online-privacy-security-basics/?$ /online-privacy-security-basics/ [L]
 RewriteRule ^blog/zakat-on-gold-nisab-and-karat/?$ /zakat-on-gold-nisab-and-karat/ [L]
 RewriteRule ^blog/shrinkflation-and-unit-price/?$ /shrinkflation-and-unit-price/ [L]
+RewriteRule ^blog/energy-price-cap-what-it-actually-caps/?$ /energy-price-cap-what-it-actually-caps/ [L]

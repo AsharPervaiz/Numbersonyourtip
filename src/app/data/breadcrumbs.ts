@@ -17,6 +17,7 @@ export const SECTIONS: Record<string, string> = {
   "/health-calculators/": "Health Calculators",
   "/finance-calculators/": "Finance Calculators",
   "/daily-use-calculators/": "Daily Use Calculators",
+  "/construction-calculators/": "Construction Calculators",
   "/math-calculators/": "Maths Calculators",
   "/networking-tools/": "Networking Tools",
   "/tools/": "Tools",
@@ -35,51 +36,161 @@ export const PAGES: Record<string, Entry> = {
   "/blog/": { label: "Blog" },
 
   // --- health ------------------------------------------------------------
-  "/bmi-calculator/": { label: "BMI Calculator", parent: "/health-calculators/" },
-  "/body-fat-calculator/": { label: "Body Fat Calculator", parent: "/health-calculators/" },
-  "/calorie-calculator/": { label: "Calorie Calculator", parent: "/health-calculators/" },
-  "/dose-calculator/": { label: "Dose Calculator", parent: "/health-calculators/" },
-  "/dose-stock-calculator/": { label: "Dose Stock Calculator", parent: "/health-calculators/" },
-  "/iv-calculator/": { label: "IV Infusion Calculator", parent: "/health-calculators/" },
-  "/pharmacokinetics-calculator/": { label: "Pharmacokinetics Calculator", parent: "/health-calculators/" },
-  "/pharmacodynamics-calculator/": { label: "Pharmacodynamics Calculator", parent: "/health-calculators/" },
+  "/bmi-calculator/": {
+    label: "BMI Calculator",
+    parent: "/health-calculators/",
+  },
+  "/body-fat-calculator/": {
+    label: "Body Fat Calculator",
+    parent: "/health-calculators/",
+  },
+  "/calorie-calculator/": {
+    label: "Calorie Calculator",
+    parent: "/health-calculators/",
+  },
+  "/dose-calculator/": {
+    label: "Dose Calculator",
+    parent: "/health-calculators/",
+  },
+  "/dose-stock-calculator/": {
+    label: "Dose Stock Calculator",
+    parent: "/health-calculators/",
+  },
+  "/iv-calculator/": {
+    label: "IV Infusion Calculator",
+    parent: "/health-calculators/",
+  },
+  "/pharmacokinetics-calculator/": {
+    label: "Pharmacokinetics Calculator",
+    parent: "/health-calculators/",
+  },
+  "/pharmacodynamics-calculator/": {
+    label: "Pharmacodynamics Calculator",
+    parent: "/health-calculators/",
+  },
 
   // --- finance -----------------------------------------------------------
-  "/emi-calculator/": { label: "EMI Calculator", parent: "/finance-calculators/" },
-  "/loan-calculator/": { label: "Loan Calculator", parent: "/finance-calculators/" },
-  "/home-mortgage-calculator/": { label: "Mortgage Calculator", parent: "/finance-calculators/" },
-  "/income-tax-calculator/": { label: "Income Tax Calculator", parent: "/finance-calculators/" },
-  "/rent-calculator/": { label: "Rent Calculator", parent: "/finance-calculators/" },
-  "/vat-calculator/": { label: "VAT Calculator", parent: "/finance-calculators/" },
-  "/net-worth-calculator/": { label: "Net Worth Calculator", parent: "/finance-calculators/" },
-  "/freelancer-tax-calculator/": { label: "Freelancer Tax Calculator", parent: "/finance-calculators/" },
-  "/salary-hike-calculator/": { label: "Salary Hike Calculator", parent: "/finance-calculators/" },
-  "/fuel-cost-calculator/": { label: "Fuel Cost Calculator", parent: "/finance-calculators/" },
-  "/gold-calculator/": { label: "Gold Calculator", parent: "/finance-calculators/" },
+  "/emi-calculator/": {
+    label: "EMI Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/loan-calculator/": {
+    label: "Loan Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/home-mortgage-calculator/": {
+    label: "Mortgage Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/income-tax-calculator/": {
+    label: "Income Tax Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/rent-calculator/": {
+    label: "Rent Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/vat-calculator/": {
+    label: "VAT Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/net-worth-calculator/": {
+    label: "Net Worth Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/freelancer-tax-calculator/": {
+    label: "Freelancer Tax Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/salary-hike-calculator/": {
+    label: "Salary Hike Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/fuel-cost-calculator/": {
+    label: "Fuel Cost Calculator",
+    parent: "/finance-calculators/",
+  },
+  "/gold-calculator/": {
+    label: "Gold Calculator",
+    parent: "/finance-calculators/",
+  },
 
   // --- daily use ---------------------------------------------------------
-  "/age-calculator/": { label: "Age Calculator", parent: "/daily-use-calculators/" },
-  "/days-between-calculator/": { label: "Days Between Calculator", parent: "/daily-use-calculators/" },
-  "/gpa-calculator/": { label: "GPA Calculator", parent: "/daily-use-calculators/" },
-  "/gpa-percentage/": { label: "GPA to Percentage", parent: "/daily-use-calculators/" },
-  "/percentage-calculator/": { label: "Percentage Calculator", parent: "/daily-use-calculators/" },
-  "/time-calculator/": { label: "Time Calculator", parent: "/daily-use-calculators/" },
-  "/unit-conversion-calculator/": { label: "Unit Conversion", parent: "/daily-use-calculators/" },
-  "/gravel-calculator/": { label: "Gravel Calculator", parent: "/daily-use-calculators/" },
-  "/bill-split-calculator/": { label: "Bill Split Calculator", parent: "/daily-use-calculators/" },
-  "/discount-calculator/": { label: "Discount Calculator", parent: "/daily-use-calculators/" },
+  "/age-calculator/": {
+    label: "Age Calculator",
+    parent: "/daily-use-calculators/",
+  },
+  "/days-between-calculator/": {
+    label: "Days Between Calculator",
+    parent: "/daily-use-calculators/",
+  },
+  "/gpa-calculator/": {
+    label: "GPA Calculator",
+    parent: "/daily-use-calculators/",
+  },
+  "/gpa-percentage/": {
+    label: "GPA to Percentage",
+    parent: "/daily-use-calculators/",
+  },
+  "/percentage-calculator/": {
+    label: "Percentage Calculator",
+    parent: "/daily-use-calculators/",
+  },
+  "/time-calculator/": {
+    label: "Time Calculator",
+    parent: "/daily-use-calculators/",
+  },
+  "/unit-conversion-calculator/": {
+    label: "Unit Conversion",
+    parent: "/daily-use-calculators/",
+  },
+  "/construction-calculators/": { label: "Construction Calculators" },
+  "/gravel-calculator/": {
+    label: "Gravel Calculator",
+    parent: "/construction-calculators/",
+  },
+  "/mulch-calculator/": {
+    label: "Mulch Calculator",
+    parent: "/construction-calculators/",
+  },
+  "/bill-split-calculator/": {
+    label: "Bill Split Calculator",
+    parent: "/daily-use-calculators/",
+  },
+  "/discount-calculator/": {
+    label: "Discount Calculator",
+    parent: "/daily-use-calculators/",
+  },
 
   // --- maths -------------------------------------------------------------
-  "/mean-median-mode-calculator/": { label: "Mean, Median and Mode", parent: "/math-calculators/" },
-  "/matrix-calculator/": { label: "Matrix Calculator", parent: "/math-calculators/" },
-  "/mixed-number-calculator/": { label: "Mixed Number Calculator", parent: "/math-calculators/" },
+  "/mean-median-mode-calculator/": {
+    label: "Mean, Median and Mode",
+    parent: "/math-calculators/",
+  },
+  "/matrix-calculator/": {
+    label: "Matrix Calculator",
+    parent: "/math-calculators/",
+  },
+  "/mixed-number-calculator/": {
+    label: "Mixed Number Calculator",
+    parent: "/math-calculators/",
+  },
 
   // --- networking --------------------------------------------------------
   "/dns-lookup/": { label: "DNS Lookup", parent: "/networking-tools/" },
   "/ip-detector/": { label: "IP Detector", parent: "/networking-tools/" },
-  "/email-validator/": { label: "Email Validator", parent: "/networking-tools/" },
-  "/domain-name-checker/": { label: "Domain Name Checker", parent: "/networking-tools/" },
-  "/internet-speed-test/": { label: "Internet Speed Test", parent: "/networking-tools/" },
+  "/email-validator/": {
+    label: "Email Validator",
+    parent: "/networking-tools/",
+  },
+  "/domain-name-checker/": {
+    label: "Domain Name Checker",
+    parent: "/networking-tools/",
+  },
+  "/internet-speed-test/": {
+    label: "Internet Speed Test",
+    parent: "/networking-tools/",
+  },
 
   // --- tools -------------------------------------------------------------
   "/currency-converter/": { label: "Currency Converter", parent: "/tools/" },
@@ -87,21 +198,36 @@ export const PAGES: Record<string, Entry> = {
   "/image-compressor/": { label: "Image Compressor", parent: "/tools/" },
   "/image-resizer/": { label: "Image Resizer", parent: "/tools/" },
   "/password-generator/": { label: "Password Generator", parent: "/tools/" },
-  "/lorem-ipsum-generator/": { label: "Lorem Ipsum Generator", parent: "/tools/" },
+  "/lorem-ipsum-generator/": {
+    label: "Lorem Ipsum Generator",
+    parent: "/tools/",
+  },
   "/text-converter/": { label: "Text Case Converter", parent: "/tools/" },
   "/text-generator/": { label: "Text Generator", parent: "/tools/" },
-  "/word-char-counter/": { label: "Word and Character Counter", parent: "/tools/" },
+  "/word-char-counter/": {
+    label: "Word and Character Counter",
+    parent: "/tools/",
+  },
   "/color-picker/": { label: "Colour Picker", parent: "/tools/" },
-  "/carbon-footprint-calculator/": { label: "Carbon Footprint Calculator", parent: "/tools/" },
+  "/carbon-footprint-calculator/": {
+    label: "Carbon Footprint Calculator",
+    parent: "/tools/",
+  },
   "/time-zone-converter/": { label: "Time Zone Converter", parent: "/tools/" },
 
   // --- blog posts (served at root, canonical under /blog/) ---------------
-  "/what-is-vat/": { label: "What Is VAT?", parent: "/blog/", canonical: "/blog/what-is-vat/" },
-  "/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/": {
-    label: "Medication Dose Calculation",
+  "/what-is-vat/": {
+    label: "What Is VAT?",
     parent: "/blog/",
-    canonical: "/blog/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/",
+    canonical: "/blog/what-is-vat/",
   },
+  "/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/":
+    {
+      label: "Medication Dose Calculation",
+      parent: "/blog/",
+      canonical:
+        "/blog/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/",
+    },
   "/ultimate-iv-infusion-calculator-guide/": {
     label: "IV Infusion Calculations",
     parent: "/blog/",
@@ -120,7 +246,8 @@ export const PAGES: Record<string, Entry> = {
   "/best-free-financial-calculators-for-everyday-money-questions/": {
     label: "Free Financial Calculators Worth Using",
     parent: "/blog/",
-    canonical: "/blog/best-free-financial-calculators-for-everyday-money-questions/",
+    canonical:
+      "/blog/best-free-financial-calculators-for-everyday-money-questions/",
   },
   "/can-ai-replace-financial-calculators/": {
     label: "Can AI Replace Financial Calculators?",
@@ -186,6 +313,11 @@ export const PAGES: Record<string, Entry> = {
     label: "Zakat on Gold: Why Karat Decides the Answer",
     parent: "/blog/",
     canonical: "/blog/zakat-on-gold-nisab-and-karat/",
+  },
+  "/energy-price-cap-what-it-actually-caps/": {
+    label: "The Energy Price Cap Is Not a Cap on Your Bill",
+    parent: "/blog/",
+    canonical: "/blog/energy-price-cap-what-it-actually-caps/",
   },
   "/shrinkflation-and-unit-price/": {
     label: "Shrinkflation and the True Unit Price",

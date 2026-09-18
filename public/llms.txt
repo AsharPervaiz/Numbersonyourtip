@@ -9,11 +9,11 @@ Site: https://numbersonyourtip.com
 Contact: https://numbersonyourtip.com/contact-us/
 
 ## What the site does
-- Runs 47 calculators and tools for everyday, professional and clinical use
+- Runs 50 calculators and tools for everyday, professional and clinical use
 - All calculations execute in the browser; inputs are never uploaded or stored
 - No account, no sign-up, no download limit, no watermark
 - Mobile-friendly and works on any modern browser
-- Grouped into six categories: Health, Finance, Daily Use, Networking, Maths and Tools
+- Grouped into seven categories: Health, Finance, Daily Use, Networking, Maths, Construction and Tools
 
 ## Health & Fitness calculators
 - /bmi-calculator/ - body mass index in kg/cm, feet and inches, or pounds
@@ -48,7 +48,11 @@ Contact: https://numbersonyourtip.com/contact-us/
 - /unit-conversion-calculator/ - length, weight, volume and temperature, with exact factors and the temperature offset
 - /discount-calculator/ - sale price, savings, reverse discounts, and why stacked offers do not add up
 - /bill-split-calculator/ - split a bill equally, by item or proportionally, with tip and tax applied correctly
+
+## Construction calculators
+- /construction-calculators/ - material quantity calculators for driveways, paths and garden beds
 - /gravel-calculator/ - how much gravel a driveway or landscaping project needs, in cubic yards, tons, cubic metres, bags and cost
+- /mulch-calculator/ - how much mulch a garden bed needs, in bags, cubic feet, cubic yards or cubic metres, with coverage per bag by depth
 
 ## Maths calculators
 - /mean-median-mode-calculator/ - mean, median, mode, range and standard deviation, and which average to trust
@@ -102,6 +106,7 @@ Contact: https://numbersonyourtip.com/contact-us/
 - /blog/online-privacy-security-basics/ - what your IP address, DNS, email and passwords actually reveal, and how to check each one
 - /blog/zakat-on-gold-nisab-and-karat/ - zakat on gold: nisab is a weight of pure gold, what each karat must weigh to reach it, the two nisab conversions, and where the schools differ
 - /blog/shrinkflation-and-unit-price/ - shrinkflation: why a tenth smaller is an eleventh dearer, when a discount fails to offset a shrink, and how to compare packs labelled in different units
+- /blog/energy-price-cap-what-it-actually-caps/ - the energy price cap limits unit rates and standing charges but not the total bill; how the headline figure is built and why cutting usage cuts the bill by less
 
 ## Blog: About the site
 - /blog/what-is-numbers-on-your-tip/ - what the site is, who it is for, and how it stays free

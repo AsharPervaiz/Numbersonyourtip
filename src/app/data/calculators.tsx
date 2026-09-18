@@ -254,6 +254,23 @@ export const calculators = [
     ],
   },
   {
+    name: "Mulch Calculator",
+    slug: "/mulch-calculator/",
+    keywords: [
+      "mulch",
+      "bark",
+      "wood chip",
+      "garden bed",
+      "landscaping",
+      "bags of mulch",
+      "how much mulch",
+      "coverage",
+      "flower bed",
+      "borders",
+      "compost",
+    ],
+  },
+  {
     name: "Gravel Calculator",
     slug: "/gravel-calculator/",
     keywords: [
