@@ -1278,6 +1278,15 @@ export default function GravelCalculator() {
           the pieces to interlock at all, which is why a nominal two-inch stone
           cannot make a sensible two-inch layer.
         </p>
+        <p>
+          Depths get quoted in fractions on site — two and a half inches, three
+          and three quarters — while this calculator wants a decimal. The{" "}
+          <Link href="/mixed-number-calculator/" className="my-link">
+            mixed number calculator
+          </Link>{" "}
+          converts one into the other, which is quicker than reasoning about
+          eighths at the tape.
+        </p>
 
         <h2>Yards, Tons and the Number That Connects Them</h2>
         <p>
