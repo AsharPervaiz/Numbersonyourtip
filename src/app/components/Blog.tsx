@@ -278,6 +278,19 @@ const blogs: Post[] = [
     excerpt:
       "A pack that quietly loses a tenth of its contents costs 11.11% more per gram, not 10% — and a discount can be smaller than the shrink it follows.",
   },
+  {
+    id: "21",
+    title: "The Energy Price Cap Is Not a Cap on Your Bill",
+    category: "Daily Use",
+    image: "/blog21.webp",
+    author: "Ashar Pervaiz",
+    date: "19 September 2026",
+    dateISO: "2026-09-19",
+    slug: "/blog/energy-price-cap-what-it-actually-caps/",
+    words: 1981,
+    excerpt:
+      "£1,723 is not the most you can be charged — it is one assumed household's arithmetic. Here is how the headline is built, and why using a fifth less energy takes only a sixth off the bill.",
+  },
 ];
 
 const GROUP_NOTES: [string, string][] = [
