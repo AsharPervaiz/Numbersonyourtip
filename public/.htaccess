@@ -39,3 +39,4 @@ RewriteRule ^blog/online-privacy-security-basics/?$ /online-privacy-security-bas
 RewriteRule ^blog/zakat-on-gold-nisab-and-karat/?$ /zakat-on-gold-nisab-and-karat/ [L]
 RewriteRule ^blog/shrinkflation-and-unit-price/?$ /shrinkflation-and-unit-price/ [L]
 RewriteRule ^blog/energy-price-cap-what-it-actually-caps/?$ /energy-price-cap-what-it-actually-caps/ [L]
+RewriteRule ^blog/payments-on-account-first-tax-bill/?$ /payments-on-account-first-tax-bill/ [L]

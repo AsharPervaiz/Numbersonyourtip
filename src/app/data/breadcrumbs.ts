@@ -314,6 +314,11 @@ export const PAGES: Record<string, Entry> = {
     parent: "/blog/",
     canonical: "/blog/zakat-on-gold-nisab-and-karat/",
   },
+  "/payments-on-account-first-tax-bill/": {
+    label: "Your First Tax Bill Is 150% of the Tax You Owe",
+    parent: "/blog/",
+    canonical: "/blog/payments-on-account-first-tax-bill/",
+  },
   "/energy-price-cap-what-it-actually-caps/": {
     label: "The Energy Price Cap Is Not a Cap on Your Bill",
     parent: "/blog/",
