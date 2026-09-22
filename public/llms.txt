@@ -85,6 +85,7 @@ Contact: https://numbersonyourtip.com/contact-us/
 - /blog/2026-tax-brackets/ - updated 2026 tax brackets and how they apply
 - /blog/marginal-vs-effective-tax-rate/ - the difference between marginal and effective tax rates
 - /blog/why-was-my-bonus-taxed-so-much/ - why bonuses appear taxed at a higher rate and how withholding works
+- /blog/payments-on-account-first-tax-bill/ - why the first Self Assessment demand is one and a half times the tax, the £1,000 and 80% tests, and how to reduce the instalments safely
 - /blog/how-do-i-calculate-my-net-worth/ - assets minus liabilities, step by step
 - /blog/how-much-house-can-i-afford/ - working out an honest home-buying budget
 - /blog/the-smart-renters-guide-what-you-can-actually-afford/ - working out affordable rent from take-home pay
@@ -118,7 +119,7 @@ Contact: https://numbersonyourtip.com/contact-us/
 - /math-calculators/ - index of maths calculators
 - /networking-tools/ - index of networking tools
 - /tools/ - index of general utilities
-- /blog/ - eighteen guides, grouped by category, each written to be read alongside the tool it explains
+- /blog/ - twenty-two guides, grouped by category, each written to be read alongside the tool it explains
 - /about-us/ - who built the site and how it works
 - /author/ashar-pervaiz/ - who builds and writes the site: background, what is and is not claimed as expertise, and how each calculator is verified
 - /contact-us/ - contact form

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
+import { POSTS_NEWEST_FIRST, POST_COUNT_WORD } from "../../data/posts";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export const metadata: Metadata = {
@@ -23,26 +24,20 @@ export const metadata: Metadata = {
   },
 };
 
-const ARTICLES: [string, string, string][] = [
-  ["/blog/online-privacy-security-basics/", "Online Privacy & Security Basics", "27 Aug 2026"],
-  ["/blog/why-was-my-bonus-taxed-so-much/", "Why Was My Bonus Taxed So Much?", "7 Aug 2026"],
-  ["/blog/marginal-vs-effective-tax-rate/", "Marginal vs Effective Tax Rate", "5 Aug 2026"],
-  ["/blog/how-to-calculate-exact-age/", "How To Calculate Exact Age?", "3 Aug 2026"],
-  ["/blog/how-much-house-can-i-afford/", "How Much House Can I Afford?", "30 Jul 2026"],
-  ["/blog/how-many-calories-to-lose-weight/", "How Many Calories Should I Eat to Lose Weight?", "26 Jul 2026"],
-  ["/blog/2026-tax-brackets/", "2026 Tax Brackets, Deductions and What Changed", "17 Jul 2026"],
-  ["/blog/matrix-calculator-guide/", "Every Matrix Operation, Worked by Hand", "12 Jul 2026"],
-  ["/blog/what-is-numbers-on-your-tip/", "What Is Numbers on Your Tip?", "3 Jul 2026"],
-  ["/blog/healthy-bodyfat-percentage-by-age-and-gender/", "Healthy Body Fat Percentage by Age and Gender", "20 Jun 2026"],
-  ["/blog/renting-vs-buying-a-home/", "Renting vs. Buying a Home", "14 Jun 2026"],
-  ["/blog/can-ai-replace-financial-calculators/", "Can AI Replace Financial Calculators?", "7 Jun 2026"],
-  ["/blog/best-free-financial-calculators-for-everyday-money-questions/", "Best Free Financial Calculators", "30 May 2026"],
-  ["/blog/how-do-i-calculate-my-net-worth/", "How Do I Calculate My Net Worth?", "10 May 2026"],
-  ["/blog/the-smart-renters-guide-what-you-can-actually-afford/", "The Smart Renter's Guide", "1 May 2026"],
-  ["/blog/ultimate-iv-infusion-calculator-guide/", "IV Infusion Calculations", "13 Apr 2026"],
-  ["/blog/medication-dose-calculation-complete-guide-to-dose-calculator-safe-drug-dosing/", "Medication Dose Calculation", "3 Apr 2026"],
-  ["/blog/what-is-vat/", "What Is VAT?", "25 Mar 2026"],
-];
+/* Built from the blog index rather than kept by hand: the previous list had
+   silently fallen three posts behind. */
+const ARTICLES: [string, string, string][] = POSTS_NEWEST_FIRST.map((post) => [
+  post.slug,
+  post.title,
+  // en-GB renders September as "Sept"; the rest of this list is three letters.
+  new Date(post.dateISO)
+    .toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
+    .replace("Sept", "Sep"),
+]);
 
 const SKILLS: [string, string][] = [
   ["Frontend", "React, Next.js, JavaScript, HTML5, CSS3, Tailwind CSS"],
@@ -124,7 +119,8 @@ export default function AuthorPage() {
                   target="_blank"
                   rel="noopener noreferrer me"
                 >
-                  <i className="fa-solid fa-globe" aria-hidden="true" /> Portfolio
+                  <i className="fa-solid fa-globe" aria-hidden="true" />{" "}
+                  Portfolio
                 </a>
               </li>
               <li>
@@ -139,7 +135,8 @@ export default function AuthorPage() {
               </li>
               <li>
                 <Link href="/contact-us/">
-                  <i className="fa-solid fa-envelope" aria-hidden="true" /> Contact
+                  <i className="fa-solid fa-envelope" aria-hidden="true" />{" "}
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -150,21 +147,21 @@ export default function AuthorPage() {
         <p>
           I am a software engineer from Karachi, Pakistan, with a degree in
           Software Engineering from the University of Karachi (UBIT), where I
-          studied from 2021 to 2024. I work as a web developer at Social
-          Gravity and have been building for the web for over two years,
-          mostly in React, Next.js and WordPress.
+          studied from 2021 to 2024. I work as a web developer at Social Gravity
+          and have been building for the web for over two years, mostly in
+          React, Next.js and WordPress.
         </p>
         <p>
           Numbers On Your Tip is mine. I designed it, wrote the code for all{" "}
           <Link href="/" className="my-link">
             50 calculators and tools
           </Link>
-          , and wrote the eighteen{" "}
+          , and wrote the {POST_COUNT_WORD}{" "}
           <Link href="/blog/" className="my-link">
             guides
           </Link>{" "}
-          that sit alongside them. There is no content team and no
-          ghostwriter — if something on this site is wrong, it is my mistake.
+          that sit alongside them. There is no content team and no ghostwriter —
+          if something on this site is wrong, it is my mistake.
         </p>
 
         <h2>What I Am Qualified to Say, and What I Am Not</h2>
@@ -179,8 +176,8 @@ export default function AuthorPage() {
           financial adviser, and this site never claims otherwise.
         </p>
         <p>
-          That is why the clinical calculators and health guides are reviewed
-          by someone who is qualified.{" "}
+          That is why the clinical calculators and health guides are reviewed by
+          someone who is qualified.{" "}
           <Link href="/about-us/#medical-reviewer" className="my-link">
             Dr. Syeda Khadija Akbar, PharmD
           </Link>{" "}
@@ -194,20 +191,19 @@ export default function AuthorPage() {
         <p>
           Every tool starts from the source that professionals in that field
           actually use — WHO standards for BMI, the U.S. Navy method for body
-          fat, Mifflin-St Jeor for calorie needs, the standard
-          reducing-balance formula for loans, published IRS and HMRC rates for
-          tax.
+          fat, Mifflin-St Jeor for calorie needs, the standard reducing-balance
+          formula for loans, published IRS and HMRC rates for tax.
         </p>
         <p>
           Before a calculator goes live I test it against worked examples where
           the correct answer is already published, so I am checking the output
           against a known result rather than against my own arithmetic. Each
-          page then shows the formula and a worked example in plain text, so
-          you can verify the maths yourself instead of trusting a black box.
+          page then shows the formula and a worked example in plain text, so you
+          can verify the maths yourself instead of trusting a black box.
         </p>
         <p>
-          Where a figure changes over time — a tax bracket, a clinical cut-off
-          — the page states the year it applies to and gets updated when the
+          Where a figure changes over time — a tax bracket, a clinical cut-off —
+          the page states the year it applies to and gets updated when the
           underlying number moves. Review dates are recorded on the{" "}
           <Link href="/about-us/#review-process" className="my-link">
             about page
@@ -254,9 +250,9 @@ export default function AuthorPage() {
         </div>
         <p>
           Numbers On Your Tip runs on Next.js and React as a fully static
-          export, which is why pages load quickly and why no calculation needs
-          a server round trip. Other work of mine — PHP applications,
-          WordPress themes and Shopify storefronts — is on my{" "}
+          export, which is why pages load quickly and why no calculation needs a
+          server round trip. Other work of mine — PHP applications, WordPress
+          themes and Shopify storefronts — is on my{" "}
           <a
             href="https://asharpervaiz.dev/"
             target="_blank"
@@ -270,10 +266,10 @@ export default function AuthorPage() {
 
         <h2>Corrections</h2>
         <p>
-          If you find a wrong result, a broken edge case or an out-of-date
-          rate, tell me and I will fix it. Corrections to a live calculator go
-          out the same week, and the page&apos;s review date is updated when
-          they do. The fastest route is the{" "}
+          If you find a wrong result, a broken edge case or an out-of-date rate,
+          tell me and I will fix it. Corrections to a live calculator go out the
+          same week, and the page&apos;s review date is updated when they do.
+          The fastest route is the{" "}
           <Link href="/contact-us/" className="my-link">
             contact page
           </Link>
@@ -282,8 +278,9 @@ export default function AuthorPage() {
 
         <h2>Articles by Ashar Pervaiz</h2>
         <p>
-          Eighteen guides, newest first. Each one is written to be read
-          alongside the calculator it relates to.
+          {POST_COUNT_WORD.charAt(0).toUpperCase() + POST_COUNT_WORD.slice(1)}{" "}
+          guides, newest first. Each one is written to be read alongside the
+          calculator it relates to.
         </p>
         <ol className="author-articles">
           {ARTICLES.map(([href, title, date]) => (

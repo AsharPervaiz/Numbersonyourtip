@@ -1,10 +1,12 @@
 import { Metadata } from "next";
 import BlogsPage from "../components/Blog";
+import { POST_COUNT_WORD } from "../data/posts";
 
 export const metadata: Metadata = {
   title: "Guides Behind the Calculators",
-  description:
-    "Eighteen guides covering what the calculators cannot: what the inputs mean, where the standard formula stops being reliable, and how to spot a wrong answer.",
+  description: `${
+    POST_COUNT_WORD.charAt(0).toUpperCase() + POST_COUNT_WORD.slice(1)
+  } guides covering what the calculators cannot: what the inputs mean, where the standard formula stops being reliable, and how to spot a wrong answer.`,
   alternates: {
     canonical: "/blog/",
   },
