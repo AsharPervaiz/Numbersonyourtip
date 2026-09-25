@@ -1,5 +1,0 @@
-# Saved 21 September 2026, when ads.txt was switched over to RevBid.
-# This is the AdSense ads.txt line for numbersonyourtip.com. Restore it
-# (or add it alongside the RevBid lines) when reapplying to AdSense.
-
-google.com, pub-1466808362272721, DIRECT, f08c47fec0942fa0
