@@ -114,6 +114,7 @@ export default function Header() {
               name: "Dose Calculator",
               desc: "Medication dosage helper",
               href: "/dose-calculator/",
+              isPopular: true,
               iconColor: "coral",
               icon: (
                 <svg
@@ -203,6 +204,7 @@ export default function Header() {
               name: "Pharmacokinetics Calculator",
               desc: "the six core PK parameters",
               href: "/pharmacokinetics-calculator/",
+              isPopular: true,
               iconColor: "purple",
               icon: (
                 <svg
@@ -498,6 +500,7 @@ export default function Header() {
               name: "Days Between Dates",
               desc: "Calculate date difference",
               href: "/days-between-calculator/",
+              isPopular: true,
               iconColor: "purple",
               icon: (
                 <svg
@@ -519,6 +522,7 @@ export default function Header() {
               name: "Time Calculator",
               desc: "Add & subtract time easily",
               href: "/time-calculator/",
+              isPopular: true,
               iconColor: "blue",
               icon: (
                 <svg
@@ -843,7 +847,7 @@ export default function Header() {
       title: "Mathematics & Solutions",
       eyebrow: "Maths",
       blurb:
-        "Statistics, matrices and fractions — {n} calculators for classroom and coursework maths.",
+        "Statistics, algebra, matrices and fractions — {n} tools for classroom and coursework maths.",
       ctaLabel: "View all calculators",
       columns: [
         {
@@ -866,6 +870,31 @@ export default function Header() {
                   <line x1="18" y1="20" x2="18" y2="10" />
                   <line x1="12" y1="20" x2="12" y2="4" />
                   <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+              ),
+            },
+          ],
+        },
+        {
+          heading: "Algebra",
+          items: [
+            {
+              name: "Quadratic Equation Calculator",
+              desc: "Roots, discriminant and full working",
+              href: "/quadratic-equation-calculator/",
+              isNew: true,
+              iconColor: "purple",
+              icon: (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 7l8 10M12 7l-8 10" />
+                  <path d="M15 4l2 4 5-5" />
                 </svg>
               ),
             },
@@ -1477,6 +1506,11 @@ export default function Header() {
                                           {(subItem as any).isNew && (
                                             <span className="menu-new-chip">
                                               New
+                                            </span>
+                                          )}
+                                          {(subItem as any).isPopular && (
+                                            <span className="menu-hot-chip">
+                                              Most used
                                             </span>
                                           )}
                                         </span>

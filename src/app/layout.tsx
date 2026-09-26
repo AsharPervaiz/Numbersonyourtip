@@ -222,7 +222,7 @@ export default function RootLayout({
             className="container-header"
             style={{
               display: "grid",
-              gridTemplateColumns: "1.7fr 1fr 1fr 1fr",
+              gridTemplateColumns: "1.5fr 1fr 1fr 1fr 1fr",
               gap: "30px",
               padding: "40px 0",
               alignItems: "start",
@@ -243,8 +243,8 @@ export default function RootLayout({
               </Link>
               <p
                 style={{
-                  fontSize: "17px",
-                  lineHeight: "1.6",
+                  fontSize: "14px",
+                  lineHeight: "1.65",
                   color: "#c7c7c7",
                 }}
               >
@@ -314,8 +314,8 @@ export default function RootLayout({
               <p
                 style={{
                   color: "white",
-                  fontSize: "20px",
-                  fontWeight: "800",
+                  fontSize: "16px",
+                  fontWeight: "700",
                   marginBottom: "10px",
                   marginTop: "0",
                 }}
@@ -327,7 +327,7 @@ export default function RootLayout({
                   listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  fontSize: "15px",
+                  fontSize: "13.5px",
                   display: "flex",
                   flexDirection: "column",
                   gap: "10px",
@@ -388,8 +388,8 @@ export default function RootLayout({
               <p
                 style={{
                   color: "white",
-                  fontSize: "20px",
-                  fontWeight: "800",
+                  fontSize: "16px",
+                  fontWeight: "700",
                   marginBottom: "10px",
                   marginTop: "0",
                 }}
@@ -401,7 +401,7 @@ export default function RootLayout({
                   listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  fontSize: "15px",
+                  fontSize: "13.5px",
                   display: "flex",
                   flexDirection: "column",
                   gap: "10px",
@@ -434,7 +434,7 @@ export default function RootLayout({
               </ul>
             </div>
 
-            {/* Column 4: Company and policies */}
+            {/* Column 4: Learning — second from last, ahead of Company */}
             <div
               className="footer-li"
               style={{
@@ -446,8 +446,50 @@ export default function RootLayout({
               <p
                 style={{
                   color: "white",
-                  fontSize: "20px",
-                  fontWeight: "800",
+                  fontSize: "16px",
+                  fontWeight: "700",
+                  marginBottom: "10px",
+                  marginTop: "0",
+                }}
+              >
+                Learning &amp; Practice
+              </p>
+              <ul
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                  fontSize: "13.5px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                <li>
+                  <Link
+                    href="/math-formulas/"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Maths Formula Library
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 5: Company and policies */}
+            <div
+              className="footer-li"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <p
+                style={{
+                  color: "white",
+                  fontSize: "16px",
+                  fontWeight: "700",
                   marginBottom: "10px",
                   marginTop: "0",
                 }}
@@ -459,7 +501,7 @@ export default function RootLayout({
                   listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  fontSize: "15px",
+                  fontSize: "13.5px",
                   display: "flex",
                   flexDirection: "column",
                   gap: "10px",
@@ -521,6 +563,14 @@ export default function RootLayout({
                     Disclaimer
                   </Link>
                 </li>
+                <li>
+                  <a
+                    href="/sitemap.xml"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Sitemap
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -531,8 +581,8 @@ export default function RootLayout({
             style={{
               borderTop: "1px solid rgba(255,255,255,0.1)",
               textAlign: "center",
-              padding: "20px 0",
-              fontSize: "17px",
+              padding: "18px 0",
+              fontSize: "14px",
               color: "#ffffff",
             }}
           >

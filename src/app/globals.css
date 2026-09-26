@@ -404,7 +404,7 @@ input::placeholder {
   text-decoration: none;
   font-weight: 600;
   color: #dfdede;
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
   padding: 8px 0;
   display: flex;
@@ -508,7 +508,7 @@ input::placeholder {
 }
 
 .mega-menu-eyebrow {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -518,14 +518,14 @@ input::placeholder {
 
 .mega-menu-title {
   color: #fff;
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 800;
   line-height: 1.18;
   margin: 0 0 16px;
 }
 
 .mega-menu-blurb {
-  font-size: 13.5px;
+  font-size: 12.5px;
   line-height: 1.65;
   color: rgba(255, 255, 255, 0.72);
   margin: 0 0 26px;
@@ -537,12 +537,12 @@ input::placeholder {
   margin-top: auto;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
+  gap: 9px;
+  padding: 10px 16px;
   border: 1px solid rgba(255, 255, 255, 0.38);
   border-radius: 6px;
   color: #fff;
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 700;
   text-decoration: none;
   transition:
@@ -563,7 +563,7 @@ input::placeholder {
 .mega-menu-content {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 30px 26px 34px;
+  padding: 26px 22px 28px;
 }
 
 .mega-menu-columns {
@@ -578,7 +578,7 @@ input::placeholder {
 }
 
 .mega-menu-heading {
-  font-size: 11.5px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -616,8 +616,8 @@ input::placeholder {
 }
 
 .menu-icon-circle {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: 20%;
   display: flex;
   align-items: center;
@@ -626,8 +626,8 @@ input::placeholder {
 }
 
 .menu-icon-circle svg {
-  width: 22px;
-  height: 22px;
+  width: 19px;
+  height: 19px;
   stroke: currentColor;
 }
 
@@ -637,13 +637,30 @@ input::placeholder {
 }
 
 .menu-link-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #111;
   line-height: 1.3;
   display: inline-flex;
   align-items: center;
   gap: 7px;
+}
+
+/* "Most used" flag, for the tools that carry the most traffic. Muted
+   against the red "New" chip so the two never compete. */
+.menu-hot-chip {
+  display: inline-block;
+  background: #eef1fd;
+  color: #3949a6;
+  border: 1px solid #d5dcf7;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 /* "New" flag on recently added tools in the mega menu */
@@ -662,7 +679,7 @@ input::placeholder {
 }
 
 .menu-link-desc {
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
   line-height: 1.4;
   margin-top: 2px;
@@ -7367,5 +7384,370 @@ pre {
     grid-template-columns: 1fr;
     gap: 14px;
     padding: 16px 12px 18px;
+  }
+}
+
+/* ============================================================
+   FORMULA LIBRARY  (/math-formulas/)
+   Equations are plain text rather than rendered maths, so they
+   must be allowed to wrap. A fixed-width box here would put the
+   page straight back into the sideways-scrolling problem the
+   tables had.
+   ============================================================ */
+
+.fl-lede {
+  max-width: 680px;
+  line-height: 1.7;
+  margin-bottom: 26px;
+}
+
+.fl-controls {
+  position: sticky;
+  /* The site header is 76px tall here and is itself sticky, so anything less
+     tucks the search box underneath it. */
+  top: 76px;
+  z-index: 5;
+  background: #faf9f6;
+  padding: 14px 0 12px;
+  margin-bottom: 4px;
+  box-shadow:
+    0 10px 10px -10px rgba(16, 23, 54, 0.1),
+    0 -12px 0 0 #faf9f6;
+}
+
+/* Between the tablet breakpoint and the desktop one the header loses its
+   nav row and shrinks, so the offset has to come down with it. */
+@media (max-width: 1023.98px) {
+  .fl-controls {
+    top: 48px;
+  }
+}
+
+.fl-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.fl-search > .fa-magnifying-glass {
+  position: absolute;
+  left: 14px;
+  color: #8a90a2;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.fl-search-input {
+  width: 100%;
+  padding: 12px 40px 12px 38px;
+  font-size: 15px;
+  font-family: inherit;
+  color: #1b2340;
+  background: #ffffff;
+  border: 1px solid #d9dced;
+  border-radius: 10px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.fl-search-input:focus {
+  border-color: #001f54;
+  box-shadow: 0 0 0 3px rgba(0, 31, 84, 0.12);
+}
+
+.fl-search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.fl-clear {
+  position: absolute;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 50%;
+  background: #eef0f7;
+  color: #5a6180;
+  cursor: pointer;
+}
+
+.fl-clear:hover {
+  background: #e0e3ee;
+}
+
+.fl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.fl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: inherit;
+  color: #2a3154;
+  background: #ffffff;
+  border: 1px solid #d9dced;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.fl-chip:hover {
+  border-color: #b9bfd6;
+}
+
+.fl-chip.is-active {
+  color: #ffffff;
+  background: #001f54;
+  border-color: #001f54;
+}
+
+.fl-chip-n {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #eef0f7;
+  color: #5a6180;
+}
+
+.fl-chip.is-active .fl-chip-n {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.fl-count {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+  color: #6b7190;
+  margin: 14px 0 16px;
+}
+
+.fl-reset,
+.fl-inline-btn {
+  font: inherit;
+  font-size: 13.5px;
+  color: #1a57c4;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.fl-grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.fl-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #e4e6ee;
+  border-radius: 12px;
+  padding: 18px 18px 16px;
+  /* Clears both the header and the sticky controls when a #id link lands. */
+  scroll-margin-top: 250px;
+}
+
+.fl-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.fl-card-head h3 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.35;
+  color: #101736;
+}
+
+.fl-tag {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #eef0f7;
+  color: #4a5178;
+}
+
+.fl-tag-algebra {
+  background: #eef1fd;
+  color: #3949a6;
+}
+.fl-tag-geometry {
+  background: #e9f6ee;
+  color: #1f7a45;
+}
+.fl-tag-trigonometry {
+  background: #fdf0e7;
+  color: #a5541a;
+}
+.fl-tag-statistics {
+  background: #f2ecfb;
+  color: #6b3fa8;
+}
+.fl-tag-finance {
+  background: #fdf4e3;
+  color: #96690d;
+}
+.fl-tag-measurement {
+  background: #e8f4f8;
+  color: #17627d;
+}
+
+.fl-eq {
+  font-family: "Cambria Math", Cambria, "Times New Roman", Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #001f54;
+  background: #f6f7fb;
+  border: 1px solid #e7e9f3;
+  border-radius: 8px;
+  padding: 11px 13px;
+  margin-bottom: 14px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.fl-meta {
+  margin: 0;
+  flex: 1;
+}
+
+.fl-meta dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #8a90a2;
+  margin-bottom: 3px;
+}
+
+.fl-meta dd {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #333a52;
+  overflow-wrap: anywhere;
+}
+
+.fl-meta dd:last-child {
+  margin-bottom: 0;
+}
+
+.fl-example {
+  color: #1b2340;
+  background: #fcfbf7;
+  border-left: 3px solid #d8b24a;
+  padding: 9px 11px;
+  border-radius: 0 6px 6px 0;
+}
+
+.fl-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  align-self: flex-start;
+  margin-top: 14px;
+  padding: 8px 13px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #001f54;
+  background: #f1f4fc;
+  border: 1px solid #dde3f5;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.15s ease;
+}
+
+.fl-tool:hover {
+  background: #e4eafb;
+  border-color: #c6d2f0;
+}
+
+.fl-empty {
+  padding: 34px 22px;
+  margin-bottom: 48px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px dashed #d9dced;
+  border-radius: 12px;
+  color: #4a5178;
+}
+
+.fl-empty p {
+  margin: 0 0 8px;
+  line-height: 1.7;
+}
+
+.fl-empty p:last-child {
+  margin-bottom: 0;
+}
+
+.fl-prose {
+  max-width: 720px;
+}
+
+.fl-prose h2 {
+  margin-top: 34px;
+}
+
+.fl-prose p {
+  line-height: 1.75;
+}
+
+@media (max-width: 768px) {
+  .fl-controls {
+    position: static;
+    padding-top: 0;
+  }
+
+  .fl-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .fl-eq {
+    font-size: 15.5px;
+    padding: 10px 11px;
+  }
+
+  .fl-card {
+    padding: 16px 14px 14px;
+  }
+
+  .fl-card-head h3 {
+    font-size: 15.5px;
+  }
+
+  .fl-chip {
+    font-size: 12.5px;
+    padding: 6px 11px;
   }
 }
