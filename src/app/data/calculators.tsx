@@ -205,6 +205,18 @@ export const calculators = [
     keywords: ["determinant", "inverse", "linear algebra", "rank"],
   },
   {
+    name: "Quadratic Equation Calculator",
+    slug: "/quadratic-equation-calculator/",
+    keywords: [
+      "quadratic formula",
+      "roots",
+      "discriminant",
+      "parabola",
+      "solve for x",
+      "algebra",
+    ],
+  },
+  {
     name: "Carbon Footprint Calculator",
     slug: "/carbon-footprint-calculator/",
     keywords: ["co2", "emissions", "climate"],
@@ -318,3 +330,54 @@ export const calculators = [
     ],
   },
 ];
+
+/* The tool total is quoted in prose on five pages and inside two JSON-LD
+   answer strings. Deriving it here means adding a calculator updates all
+   of them, instead of leaving a number behind to go stale. */
+export const TOOL_COUNT = calculators.length;
+
+const SPELLED = [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen",
+];
+
+const TENS = [
+  "",
+  "",
+  "twenty",
+  "thirty",
+  "forty",
+  "fifty",
+  "sixty",
+  "seventy",
+  "eighty",
+  "ninety",
+];
+
+export function spellNumber(n: number): string {
+  if (n < 20) return SPELLED[n] ?? String(n);
+  if (n > 99) return String(n);
+  const t = TENS[Math.floor(n / 10)];
+  const u = n % 10;
+  return u === 0 ? t : `${t}-${SPELLED[u]}`;
+}
+
+export const TOOL_COUNT_WORD = spellNumber(TOOL_COUNT);

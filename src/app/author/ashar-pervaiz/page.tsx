@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { POSTS_NEWEST_FIRST, POST_COUNT_WORD } from "../../data/posts";
+import { TOOL_COUNT } from "../../data/calculators";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export const metadata: Metadata = {
@@ -19,8 +20,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: "Ashar Pervaiz — Author and Founder",
-    description:
-      "The software engineer behind the 50 calculators on Numbers On Your Tip.",
+    description: `The software engineer behind the ${TOOL_COUNT} calculators on Numbers On Your Tip.`,
   },
 };
 
@@ -154,7 +154,7 @@ export default function AuthorPage() {
         <p>
           Numbers On Your Tip is mine. I designed it, wrote the code for all{" "}
           <Link href="/" className="my-link">
-            50 calculators and tools
+            {TOOL_COUNT} calculators and tools
           </Link>
           , and wrote the {POST_COUNT_WORD}{" "}
           <Link href="/blog/" className="my-link">

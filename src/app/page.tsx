@@ -1,3 +1,4 @@
+import { TOOL_COUNT } from "./data/calculators";
 import { Metadata } from "next";
 import Link from "next/link";
 import SimpleCalculator from "./components/SimpleCalculator";
@@ -17,8 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title:
       "Numbers on Your Tip | Free Online Calculators & Tools for Everyday Use",
-    description:
-      "From BMI and body fat to EMI, tax, and unit conversion — 50 calculators and tools organised by category, built for quick, accurate answers with no account required.",
+    description: `From BMI and body fat to EMI, tax, and unit conversion — ${TOOL_COUNT} calculators and tools organised by category, built for quick, accurate answers with no account required.`,
     type: "website",
     url: "/",
   },
@@ -129,6 +129,10 @@ export const categories = [
     title: "Maths",
     href: "/math-calculators/",
     tools: [
+      {
+        label: "Quadratic Equation Calculator",
+        href: "/quadratic-equation-calculator/",
+      },
       { label: "Mixed Number Calculator", href: "/mixed-number-calculator/" },
       { label: "Matrix Calculator", href: "/matrix-calculator/" },
       {
