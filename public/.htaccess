@@ -40,3 +40,4 @@ RewriteRule ^blog/zakat-on-gold-nisab-and-karat/?$ /zakat-on-gold-nisab-and-kara
 RewriteRule ^blog/shrinkflation-and-unit-price/?$ /shrinkflation-and-unit-price/ [L]
 RewriteRule ^blog/energy-price-cap-what-it-actually-caps/?$ /energy-price-cap-what-it-actually-caps/ [L]
 RewriteRule ^blog/payments-on-account-first-tax-bill/?$ /payments-on-account-first-tax-bill/ [L]
+RewriteRule ^blog/high-income-child-benefit-charge/?$ /high-income-child-benefit-charge/ [L]

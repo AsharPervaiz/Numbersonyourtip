@@ -167,6 +167,10 @@ export const PAGES: Record<string, Entry> = {
     label: "Mean, Median and Mode",
     parent: "/math-calculators/",
   },
+  "/quadratic-equation-calculator/": {
+    label: "Quadratic Equation Calculator",
+    parent: "/math-calculators/",
+  },
   "/matrix-calculator/": {
     label: "Matrix Calculator",
     parent: "/math-calculators/",
@@ -314,6 +318,11 @@ export const PAGES: Record<string, Entry> = {
     parent: "/blog/",
     canonical: "/blog/zakat-on-gold-nisab-and-karat/",
   },
+  "/high-income-child-benefit-charge/": {
+    label: "£80,000 Loses Child Benefit. £118,000 Keeps It.",
+    parent: "/blog/",
+    canonical: "/blog/high-income-child-benefit-charge/",
+  },
   "/payments-on-account-first-tax-bill/": {
     label: "Your First Tax Bill Is 150% of the Tax You Owe",
     parent: "/blog/",
@@ -331,6 +340,7 @@ export const PAGES: Record<string, Entry> = {
   },
 
   // --- standalone pages --------------------------------------------------
+  "/math-formulas/": { label: "Maths Formula Library" },
   "/about-us/": { label: "About Us" },
   "/author/ashar-pervaiz/": { label: "Ashar Pervaiz", parent: "/about-us/" },
   "/contact-us/": { label: "Contact Us" },

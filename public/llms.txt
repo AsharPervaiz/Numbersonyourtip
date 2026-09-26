@@ -9,7 +9,7 @@ Site: https://numbersonyourtip.com
 Contact: https://numbersonyourtip.com/contact-us/
 
 ## What the site does
-- Runs 50 calculators and tools for everyday, professional and clinical use
+- Runs 51 calculators and tools for everyday, professional and clinical use
 - All calculations execute in the browser; inputs are never uploaded or stored
 - No account, no sign-up, no download limit, no watermark
 - Mobile-friendly and works on any modern browser
@@ -55,6 +55,7 @@ Contact: https://numbersonyourtip.com/contact-us/
 - /mulch-calculator/ - how much mulch a garden bed needs, in bags, cubic feet, cubic yards or cubic metres, with coverage per bag by depth
 
 ## Maths calculators
+- /quadratic-equation-calculator/ - solves ax2 + bx + c = 0 with the discriminant, exact surds, the vertex and every step of the substitution
 - /mean-median-mode-calculator/ - mean, median, mode, range and standard deviation, and which average to trust
 - /matrix-calculator/ - matrix products, determinant, inverse, adjoint, rank, RREF and solving AX = B
 - /mixed-number-calculator/ - add, subtract, multiply and divide mixed numbers with the LCD, simplification and every step shown
@@ -86,6 +87,7 @@ Contact: https://numbersonyourtip.com/contact-us/
 - /blog/marginal-vs-effective-tax-rate/ - the difference between marginal and effective tax rates
 - /blog/why-was-my-bonus-taxed-so-much/ - why bonuses appear taxed at a higher rate and how withholding works
 - /blog/payments-on-account-first-tax-bill/ - why the first Self Assessment demand is one and a half times the tax, the £1,000 and 80% tests, and how to reduce the instalments safely
+- /blog/high-income-child-benefit-charge/ - why the child benefit charge reads one income and not the household, the £200 steps, and the marginal rate by number of children
 - /blog/how-do-i-calculate-my-net-worth/ - assets minus liabilities, step by step
 - /blog/how-much-house-can-i-afford/ - working out an honest home-buying budget
 - /blog/the-smart-renters-guide-what-you-can-actually-afford/ - working out affordable rent from take-home pay
@@ -113,6 +115,7 @@ Contact: https://numbersonyourtip.com/contact-us/
 - /blog/what-is-numbers-on-your-tip/ - what the site is, who it is for, and how it stays free
 
 ## Reference pages
+- /math-formulas/ - searchable library of maths formulas across algebra, geometry, trigonometry, statistics, finance and measurement, each with its symbols named and a worked example
 - /health-calculators/ - index of health and clinical calculators
 - /finance-calculators/ - index of finance calculators
 - /daily-use-calculators/ - index of everyday calculators
