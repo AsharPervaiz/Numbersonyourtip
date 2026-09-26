@@ -280,6 +280,19 @@ export const blogs: Post[] = [
       "A pack that quietly loses a tenth of its contents costs 11.11% more per gram, not 10% — and a discount can be smaller than the shrink it follows.",
   },
   {
+    id: "23",
+    title: "£80,000 Loses Child Benefit. £118,000 Keeps It.",
+    category: "Finance",
+    image: "/blog23.webp",
+    author: "Ashar Pervaiz",
+    date: "26 September 2026",
+    dateISO: "2026-09-26",
+    slug: "/blog/high-income-child-benefit-charge/",
+    words: 2087,
+    excerpt:
+      "Two parents earning £59,000 each keep every penny of their child benefit. One parent earning £80,000 keeps none. The charge reads a single income, never the household's — and in that band a parent of four keeps 37p of every extra pound.",
+  },
+  {
     id: "22",
     title: "Your First Tax Bill Is 150% of the Tax You Owe",
     category: "Finance",
