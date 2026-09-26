@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { IconCircle, Icons } from "../components/MenuIcons";
 import { Metadata } from "next";
@@ -38,14 +37,20 @@ export default function Mathcals() {
           <section>
             {" "}
             <h1 className="more-tools">Math Calculators</h1>
-            <p style={{ maxWidth: "640px", marginBottom: "28px", lineHeight: 1.7 }}>
+            <p
+              style={{
+                maxWidth: "640px",
+                marginBottom: "28px",
+                lineHeight: 1.7,
+              }}
+            >
               Two focused tools for coursework and applied math: a statistics
-              calculator that returns mean, median, mode, range, variance,
-              and standard deviation from any list of numbers, and a matrix
+              calculator that returns mean, median, mode, range, variance, and
+              standard deviation from any list of numbers, and a matrix
               calculator that handles addition, multiplication, determinants,
               inverses, and Gauss-Jordan elimination up to 6×6. Both show the
-              full working, not just the final answer, so you can check your
-              own calculation or verify homework instantly in your browser.
+              full working, not just the final answer, so you can check your own
+              calculation or verify homework instantly in your browser.
             </p>
             <div
               className="icon-grid1"
@@ -108,6 +113,23 @@ export default function Mathcals() {
                   ),
                   href: "/mixed-number-calculator/",
                 },
+                {
+                  name: (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <IconCircle color="purple">
+                        <Icons.Percentage />
+                      </IconCircle>{" "}
+                      <h4>Quadratic Equation Calculator</h4>
+                    </div>
+                  ),
+                  href: "/quadratic-equation-calculator/",
+                },
 
                 // ... add more as needed
               ].map((item, index) => (
@@ -144,11 +166,10 @@ export default function Mathcals() {
             <h2>Two Tools, Two Different Branches of Maths</h2>
             <p>
               This section is deliberately small. It holds the two calculators
-              that do genuine mathematical work rather than applying a formula to
-              everyday quantities, and they belong to different fields that
+              that do genuine mathematical work rather than applying a formula
+              to everyday quantities, and they belong to different fields that
               rarely overlap.
             </p>
-
             <div className="table-wrap">
               <table>
                 <thead>
@@ -192,7 +213,10 @@ export default function Mathcals() {
                       whole part and a fraction
                     </td>
                     <td>
-                      <Link className="my-link" href="/mixed-number-calculator/">
+                      <Link
+                        className="my-link"
+                        href="/mixed-number-calculator/"
+                      >
                         Mixed number calculator
                       </Link>
                     </td>
@@ -200,7 +224,6 @@ export default function Mathcals() {
                 </tbody>
               </table>
             </div>
-
             <p>
               The distinction is worth stating plainly because the two are
               sometimes confused by the shape of the input. A single row of
@@ -208,18 +231,16 @@ export default function Mathcals() {
               different things with it: one summarises the values, the other
               treats them as a vector to be transformed.
             </p>
-
             <h2>Descriptive Statistics in One Sentence</h2>
             <p>
               Descriptive statistics reduce a set of observations to a few
               numbers that stand in for the whole. The useful part is knowing
-              which summary to trust: the mean uses every value and is dragged by
-              extremes, the median ignores magnitude and resists them, and the
-              mode is the only one that works on categories rather than numbers.
-              When those three disagree, the disagreement is itself informative
-              about the shape of the data.
+              which summary to trust: the mean uses every value and is dragged
+              by extremes, the median ignores magnitude and resists them, and
+              the mode is the only one that works on categories rather than
+              numbers. When those three disagree, the disagreement is itself
+              informative about the shape of the data.
             </p>
-
             <h2>Linear Algebra in One Sentence</h2>
             <p>
               A matrix is a transformation written as a grid, and the operations
@@ -230,7 +251,6 @@ export default function Mathcals() {
               in this area are dimension errors rather than arithmetic ones,
               which is why the matrix page leads with the shape rules.
             </p>
-
             <h2>Maths That Lives in Other Sections</h2>
             <p>
               Several calculations that are unambiguously mathematical sit
@@ -271,7 +291,6 @@ export default function Mathcals() {
               If you arrived looking for one of those, the links above are
               faster than the tools on this page.
             </p>
-
             <h2>Where Floating-Point Arithmetic Shows Through</h2>
             <p>
               Both tools compute in the browser using standard double-precision
@@ -286,28 +305,27 @@ export default function Mathcals() {
             </p>
             <p>
               The second is not harmless. When a determinant sits very close to
-              zero, the inverse divides by that tiny number and produces enormous
-              entries. Such a matrix is described as ill-conditioned: a change in
-              the fourth decimal place of an input can move the output by orders
-              of magnitude. If your determinant is near zero, treat the inverse
-              as an indication rather than an answer.
+              zero, the inverse divides by that tiny number and produces
+              enormous entries. Such a matrix is described as ill-conditioned: a
+              change in the fourth decimal place of an input can move the output
+              by orders of magnitude. If your determinant is near zero, treat
+              the inverse as an indication rather than an answer.
             </p>
             <p>
               Statistical results carry a different caveat entirely. They
               describe exactly the numbers you entered and say nothing about
-              whether those numbers were collected well. No summary statistic can
-              detect a biased sample, and a precise mean of unrepresentative data
-              is precisely wrong.
+              whether those numbers were collected well. No summary statistic
+              can detect a biased sample, and a precise mean of unrepresentative
+              data is precisely wrong.
             </p>
-
             <h2>Verification and Review Date</h2>
             <p>
               Matrix results are checked by multiplying inverses back to the
               identity and by confirming products against hand-computed entries;
               statistical measures are checked against sets whose mean, median,
               spread and standard deviation were worked out by hand first. Both
-              calculators were last reviewed on{" "}
-              <strong>27 August 2026</strong>. Our{" "}
+              calculators were last reviewed on <strong>27 August 2026</strong>.
+              Our{" "}
               <Link className="my-link" href="/about-us/#review-process">
                 about page
               </Link>{" "}
@@ -315,17 +333,27 @@ export default function Mathcals() {
             </p>
             <section className="related-guides">
               <h2>See the Working, Not Just the Output</h2>
-              <p>If you want to see the working rather than take the output on trust:</p>
+              <p>
+                If you want to see the working rather than take the output on
+                trust:
+              </p>
               <ul>
                 <li>
-                  <Link href="/blog/matrix-calculator-guide/" className="related-card">
-                    <span className="related-title">Every Matrix Operation, Worked by Hand</span>
-                    <span className="related-blurb">Each operation step by step, with the shape rules that decide whether it is defined at all.</span>
+                  <Link
+                    href="/blog/matrix-calculator-guide/"
+                    className="related-card"
+                  >
+                    <span className="related-title">
+                      Every Matrix Operation, Worked by Hand
+                    </span>
+                    <span className="related-blurb">
+                      Each operation step by step, with the shape rules that
+                      decide whether it is defined at all.
+                    </span>
                   </Link>
                 </li>
               </ul>
             </section>
-
           </section>
         </div>
       </div>
